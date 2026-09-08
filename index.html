@@ -41,15 +41,13 @@
         body {
             background-color: #050505;
             color: #e2e8f0;
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='white' stroke-width='1.5' d='M4.5,19.5 L9,9 L19.5,4.5 L15,15 Z'/%3E%3Cpath fill='white' d='M9,9 L15,15 L11,13 Z'/%3E%3C/svg%3E") 4 4, auto;
+            cursor: none !important;
             overflow-x: hidden;
         }
 
         a,
         button,
-        .clickable {
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%2300aaff' stroke-width='1.5' d='M4.5,19.5 L9,9 L19.5,4.5 L15,15 Z'/%3E%3Cpath fill='%2300aaff' d='M9,9 L15,15 L11,13 Z'/%3E%3C/svg%3E") 4 4, pointer;
-        }
+        .clickable { cursor: none !important; }
 
         .glass-panel {
             background: rgba(15, 23, 42, 0.6);
@@ -369,21 +367,25 @@
             {
                 id: 'bo2_gsc_msclients',
                 categories: ['GameModding'],
-                image: 'https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png',
+                images: [
+                    'https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png',
+                    'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo1gsc.png',
+                    'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo2.png'
+                ],
                 live: 'https://gitlab.com/Spet001/msclients',
                 pt: {
-                    title: 'BO2 GSC Injector + Clients MS Store',
+                    title: 'BO2/BO1 GSC Injector + Clients MS Store',
                     bullets: [
-                        'GSC Injector para Black Ops 2 desenvolvido em C++.',
-                        'Clients em C++ contendo melhorias e modificações (como DLC Unlocker) para jogos COD da MS Store.',
+                        'GSC Injector para Black Ops 1 e Black Ops 2 desenvolvido em C++.',
+                        'Clients em C++ contendo modificações avançadas, como Full Client Manipulation no BO2 (Unlocks, etc) e DLC Unlocker no AW.',
                         'Engenharia reversa focada na quebra de restrições do ecossistema UWP/Xbox.'
                     ]
                 },
                 en: {
-                    title: 'BO2 GSC Injector + MS Store Clients',
+                    title: 'BO2/BO1 GSC Injector + MS Store Clients',
                     bullets: [
-                        'GSC Injector for Black Ops 2 developed in C++.',
-                        'C++ Clients featuring improvements and modifications (such as DLC Unlocker) for MS Store COD games.',
+                        'GSC Injector for Black Ops 1 and Black Ops 2 developed in C++.',
+                        'C++ Clients featuring advanced modifications, such as Full Client Manipulation in BO2 (Unlocks, etc) and DLC Unlocker in AW.',
                         'Reverse engineering focused on breaking UWP/Xbox ecosystem restrictions.'
                     ]
                 }
@@ -492,7 +494,15 @@
         const Starfield = () => {
             const canvasRef = useRef(null);
             const moonPosRef = useRef({ x: window.innerWidth * 0.7, y: window.innerHeight * 0.3 });
+            
+            // Rocket follows mouse
+            const rocketRef = useRef({ x: -100, y: -100, angle: -Math.PI/2 });
+            // Astro controlled by keyboard
+            const astroRef = useRef({ x: -100, y: -100, vx: 0, vy: 0, angle: 0 });
+            const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2, lastX: window.innerWidth / 2, lastY: window.innerHeight / 2 });
+            const particlesRef = useRef([]);
             const keysRef = useRef({});
+            const hasMouseMovedRef = useRef(false);
 
             useEffect(() => {
                 const canvas = canvasRef.current;
@@ -512,55 +522,49 @@
                 const handleResize = () => {
                     canvas.width = window.innerWidth;
                     canvas.height = window.innerHeight;
+                    moonPosRef.current = { x: window.innerWidth * 0.7, y: window.innerHeight * 0.3 };
                     initStars();
                 };
 
                 handleResize();
 
-                const handleKeyDown = (e) => keysRef.current[e.key] = true;
+                const handleKeyDown = (e) => {
+                    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                    keysRef.current[e.key] = true;
+                };
                 const handleKeyUp = (e) => keysRef.current[e.key] = false;
-                window.addEventListener('keydown', handleKeyDown);
+                
+                const handleMouseMove = (e) => {
+                    if (!hasMouseMovedRef.current) {
+                        // Teleport to avoid initial physics explosion
+                        mouseRef.current = { x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY };
+                        rocketRef.current.x = e.clientX;
+                        rocketRef.current.y = e.clientY;
+                        astroRef.current.x = e.clientX + 50; // offset so they don't spawn exactly on top of each other
+                        astroRef.current.y = e.clientY + 50;
+                        hasMouseMovedRef.current = true;
+                    } else {
+                        mouseRef.current.x = e.clientX;
+                        mouseRef.current.y = e.clientY;
+                    }
+                };
+
+                window.addEventListener('keydown', handleKeyDown, { passive: false });
                 window.addEventListener('keyup', handleKeyUp);
                 window.addEventListener('resize', handleResize);
+                window.addEventListener('mousemove', handleMouseMove);
 
                 const render = () => {
-                    const speed = 4;
-                    if (keysRef.current['ArrowUp']) moonPosRef.current.y -= speed;
-                    if (keysRef.current['ArrowDown']) moonPosRef.current.y += speed;
-                    if (keysRef.current['ArrowLeft']) moonPosRef.current.x -= speed;
-                    if (keysRef.current['ArrowRight']) moonPosRef.current.x += speed;
-
+                    // Clear canvas
                     ctx.fillStyle = '#050505';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // Draw Moon
-                    const gradient = ctx.createRadialGradient(
-                        moonPosRef.current.x, moonPosRef.current.y, 10,
-                        moonPosRef.current.x, moonPosRef.current.y, 60
-                    );
-                    gradient.addColorStop(0, 'rgba(0, 170, 255, 0.15)');
-                    gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
-
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.arc(moonPosRef.current.x, moonPosRef.current.y, 80, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    ctx.fillStyle = '#e2e8f0';
-                    ctx.beginPath();
-                    ctx.arc(moonPosRef.current.x, moonPosRef.current.y, 30, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    // Craters
-                    ctx.fillStyle = 'rgba(15, 23, 42, 0.2)';
-                    ctx.beginPath(); ctx.arc(moonPosRef.current.x - 10, moonPosRef.current.y - 10, 6, 0, Math.PI * 2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(moonPosRef.current.x + 12, moonPosRef.current.y + 5, 8, 0, Math.PI * 2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(moonPosRef.current.x - 5, moonPosRef.current.y + 15, 4, 0, Math.PI * 2); ctx.fill();
-
-                    // Move & Draw Stars
+                    // Stars
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                     stars.forEach(star => {
-                        star.z -= 0.5; // speed
+                        star.z -= 0.5;
                         if (star.z <= 0) {
                             star.z = canvas.width;
                             star.x = Math.random() * canvas.width;
@@ -576,6 +580,177 @@
                         ctx.fill();
                     });
 
+                    // Static Moon
+                    const gradient = ctx.createRadialGradient(
+                        moonPosRef.current.x, moonPosRef.current.y, 10,
+                        moonPosRef.current.x, moonPosRef.current.y, 60
+                    );
+                    gradient.addColorStop(0, 'rgba(0, 170, 255, 0.15)');
+                    gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath(); ctx.arc(moonPosRef.current.x, moonPosRef.current.y, 80, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath(); ctx.arc(moonPosRef.current.x, moonPosRef.current.y, 30, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.2)';
+                    ctx.beginPath(); ctx.arc(moonPosRef.current.x - 10, moonPosRef.current.y - 10, 6, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(moonPosRef.current.x + 12, moonPosRef.current.y + 5, 8, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(moonPosRef.current.x - 5, moonPosRef.current.y + 15, 4, 0, Math.PI * 2); ctx.fill();
+
+
+                    // Wait for first mouse movement before drawing and running physics for the actors
+                    if (!hasMouseMovedRef.current) {
+                        animationFrameId = requestAnimationFrame(render);
+                        return;
+                    }
+
+                    const rocket = rocketRef.current;
+                    const astro = astroRef.current;
+                    const mouse = mouseRef.current;
+                    
+                    // --- PHYSICS ---
+                    const friction = 0.92;
+                    const astroThrust = 0.8;
+
+                    let isThrusting = false;
+                    if (keysRef.current['ArrowLeft']) { astro.vx -= astroThrust; isThrusting = true; }
+                    if (keysRef.current['ArrowRight']) { astro.vx += astroThrust; isThrusting = true; }
+                    if (keysRef.current['ArrowUp']) { astro.vy -= astroThrust; isThrusting = true; }
+                    if (keysRef.current['ArrowDown']) { astro.vy += astroThrust; isThrusting = true; }
+
+                    if (isThrusting && Math.random() < 0.4) {
+                        particlesRef.current.push({
+                            type: 'oxy',
+                            x: astro.x - Math.cos(astro.angle) * 12,
+                            y: astro.y - Math.sin(astro.angle) * 12,
+                            vx: -Math.cos(astro.angle) * 2 + (Math.random() - 0.5),
+                            vy: -Math.sin(astro.angle) * 2 + (Math.random() - 0.5),
+                            life: 1.0,
+                            size: Math.random() * 3 + 1
+                        });
+                    }
+
+                    if (Math.abs(astro.vx) > 0.5 || Math.abs(astro.vy) > 0.5) {
+                        const targetAngle = Math.atan2(astro.vy, astro.vx);
+                        let diff = targetAngle - astro.angle;
+                        while (diff < -Math.PI) diff += Math.PI * 2;
+                        while (diff > Math.PI) diff -= Math.PI * 2;
+                        astro.angle += diff * 0.15;
+                    }
+
+                    rocket.x = mouse.x;
+                    rocket.y = mouse.y;
+                    
+                    const dxMouse = mouse.x - mouse.lastX;
+                    const dyMouse = mouse.y - mouse.lastY;
+                    if (dxMouse * dxMouse + dyMouse * dyMouse > 1) {
+                        const targetAngle = Math.atan2(dyMouse, dxMouse);
+                        let diff = targetAngle - rocket.angle;
+                        while (diff < -Math.PI) diff += Math.PI * 2;
+                        while (diff > Math.PI) diff -= Math.PI * 2;
+                        rocket.angle += diff * 0.25;
+                        
+                        if (Math.random() < 0.6) {
+                            particlesRef.current.push({
+                                type: 'fire',
+                                x: rocket.x - Math.cos(rocket.angle) * 15,
+                                y: rocket.y - Math.sin(rocket.angle) * 15,
+                                vx: -Math.cos(rocket.angle) * 2 + (Math.random() - 0.5) * 2,
+                                vy: -Math.sin(rocket.angle) * 2 + (Math.random() - 0.5) * 2,
+                                life: 1.0,
+                                size: Math.random() * 4 + 2
+                            });
+                        }
+                    }
+                    mouse.lastX = mouse.x;
+                    mouse.lastY = mouse.y;
+
+                    const dxTether = astro.x - rocket.x;
+                    const dyTether = astro.y - rocket.y;
+                    const distance = Math.hypot(dxTether, dyTether);
+                    const tetherLength = 150;
+
+                    if (distance > tetherLength) {
+                        const stretch = distance - tetherLength;
+                        const force = stretch * 0.1; 
+                        const angle = Math.atan2(dyTether, dxTether);
+                        astro.vx -= Math.cos(angle) * force;
+                        astro.vy -= Math.sin(angle) * force;
+                    }
+
+                    astro.vx *= friction;
+                    astro.vy *= friction;
+                    astro.x += astro.vx;
+                    astro.y += astro.vy;
+
+                    const wrap = (val, max) => (val < 0 ? max : val > max ? 0 : val);
+                    astro.x = wrap(astro.x, canvas.width);
+                    astro.y = wrap(astro.y, canvas.height);
+
+                    // --- DRAWING ---
+                    if (distance < canvas.width / 2) {
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(astro.x, astro.y);
+                        ctx.lineTo(rocket.x, rocket.y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+
+                    for (let i = particlesRef.current.length - 1; i >= 0; i--) {
+                        let p = particlesRef.current[i];
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.life -= p.type === 'fire' ? 0.04 : 0.02;
+                        if (p.life <= 0) {
+                            particlesRef.current.splice(i, 1);
+                        } else {
+                            if (p.type === 'fire') {
+                                ctx.fillStyle = `rgba(255, ${Math.random()*100 + 100}, 0, ${p.life})`;
+                            } else {
+                                ctx.fillStyle = `rgba(200, 230, 255, ${p.life * 0.8})`;
+                            }
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    ctx.save();
+                    ctx.translate(astro.x, astro.y);
+                    ctx.rotate(astro.angle + Math.PI/2); 
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.fillRect(-6, -2, 12, 14); 
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath(); ctx.arc(0, -6, 8, 0, Math.PI * 2); ctx.fill(); 
+                    ctx.fillStyle = '#00aaff';
+                    ctx.beginPath(); ctx.arc(2, -6, 4, 0, Math.PI * 2); ctx.fill(); 
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.fillRect(-9, 0, 4, 10); 
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.fillRect(-5, 12, 4, 8); 
+                    ctx.fillRect(1, 12, 4, 8); 
+                    ctx.restore();
+
+                    ctx.save();
+                    ctx.translate(rocket.x, rocket.y);
+                    ctx.rotate(rocket.angle);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath();
+                    ctx.moveTo(20, 0); 
+                    ctx.lineTo(-15, 12); 
+                    ctx.lineTo(-8, 0); 
+                    ctx.lineTo(-15, -12); 
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#00aaff';
+                    ctx.beginPath(); ctx.arc(5, 0, 4, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
+
+                    ctx.fillStyle = 'rgba(0, 170, 255, 0.8)';
+                    ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 2, 0, Math.PI * 2); ctx.fill();
+
                     animationFrameId = requestAnimationFrame(render);
                 };
 
@@ -585,6 +760,7 @@
                     window.removeEventListener('keydown', handleKeyDown);
                     window.removeEventListener('keyup', handleKeyUp);
                     window.removeEventListener('resize', handleResize);
+                    window.removeEventListener('mousemove', handleMouseMove);
                     cancelAnimationFrame(animationFrameId);
                 };
             }, []);
@@ -810,14 +986,26 @@
         const ProjectCard = ({ project, lang }) => {
             const data = project[lang];
             const { t } = useContext(LanguageContext);
+            const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+            useEffect(() => {
+                if (project.images && project.images.length > 1) {
+                    const interval = setInterval(() => {
+                        setCurrentImageIndex(prev => (prev + 1) % project.images.length);
+                    }, 3000);
+                    return () => clearInterval(interval);
+                }
+            }, [project.images]);
+
+            const displayImage = project.images ? project.images[currentImageIndex] : project.image;
 
             return (
                 <FadeInSection>
                     <div className="glass-panel rounded-2xl overflow-hidden flex flex-col h-full group">
                         {/* Image section */}
                         <div className="h-48 overflow-hidden relative bg-slate-900 border-b border-slate-800">
-                            {project.image ? (
-                                <img src={project.image} alt={data.title} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
+                            {displayImage ? (
+                                <img src={displayImage} alt={data.title} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-4xl text-slate-700">
                                     <i className="fas fa-code"></i>
