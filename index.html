@@ -107,7 +107,7 @@
         // --- DATA & TRANSLATIONS ---
         const translations = {
             pt: {
-                nav: { about: "Sobre", projects: "Projetos", cv: "Currículo", github: "GitHub" },
+                nav: { about: "Sobre", projects: "Projetos", cv: "Currículo", github: "GitHub", journal: "Journal" },
                 hero: {
                     status: "",
                     role: "Software & Game Developer",
@@ -142,7 +142,7 @@
                 }
             },
             en: {
-                nav: { about: "About", projects: "Projects", cv: "Resume", github: "GitHub" },
+                nav: { about: "About", projects: "Projects", cv: "Resume", github: "GitHub", journal: "Journal" },
                 hero: {
                     status: "",
                     role: "Software & Game Developer",
@@ -812,6 +812,7 @@
                         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
                             <a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a>
                             <a href="#projects" className="hover:text-primary transition-colors">{t('nav.projects')}</a>
+                            <a href="/journal" className="hover:text-primary transition-colors font-bold text-primary">{t('nav.journal')}</a>
                             {/* <a href={cvLink} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">{t('nav.cv')}</a> */}
                             <div className="flex items-center gap-4">
                                 <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-github text-lg"></i></a>

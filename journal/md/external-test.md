@@ -1,0 +1,1 @@
+<external>https://gitlab.com/Spet001/CW-UWP-GSC-Injector/-/blob/master/README.md
