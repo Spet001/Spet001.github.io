@@ -682,9 +682,9 @@
                     astro.x += astro.vx;
                     astro.y += astro.vy;
 
-                    const wrap = (val, max) => (val < 0 ? max : val > max ? 0 : val);
-                    astro.x = wrap(astro.x, canvas.width);
-                    astro.y = wrap(astro.y, canvas.height);
+                    const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+                    astro.x = clamp(astro.x, 0, canvas.width);
+                    astro.y = clamp(astro.y, 0, canvas.height);
 
                     // --- DRAWING ---
                     if (distance < canvas.width / 2) {
