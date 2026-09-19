@@ -1,17 +1,17 @@
 [
     {
         "title": "Crossplay Relay POC (PS5 x PC)",
-        "date": "19 Set 2026",
-        "file": "Crossplay PS5 x XBOX PC findings.md"
+        "date": "Sep 19, 2026",
+        "file": "Crossplay-PS5-XBOX-PC.md"
     },
     {
         "title": "CW GSC Injection Findings",
-        "date": "18 Set 2026",
-        "file": "CW GSC Injection Findings.md"
+        "date": "Sep 18, 2026",
+        "file": "CW-GSC-Injection.md"
     },
     {
-        "title": "Primeiro Post do Journal!",
-        "date": "17 Set 2026",
-        "file": "primeiro-post.md"
+        "title": "First Post: Hello World!",
+        "date": "Sep 17, 2026",
+        "file": "First-Post.md"
     }
 ]

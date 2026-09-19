@@ -95,7 +95,7 @@
                 <div class="glass-panel rounded-2xl p-6 sticky top-24">
                     <h2 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2">Posts</h2>
                     <ul id="entries-list" class="space-y-3">
-                        <li class="text-slate-400 text-sm italic">Carregando...</li>
+                        <li class="text-slate-400 text-sm italic">Loading...</li>
                     </ul>
                 </div>
             </aside>
@@ -103,7 +103,7 @@
             <!-- Article Content -->
             <article class="md:col-span-3 glass-panel rounded-2xl p-8 md:p-12 min-h-[60vh]">
                 <div id="content" class="markdown-body">
-                    <h1 class="text-center text-slate-500 mt-10">Selecione um post</h1>
+                    <h1 class="text-center text-slate-500 mt-10">Select a post</h1>
                 </div>
             </article>
 
@@ -115,14 +115,14 @@
         async function init() {
             try {
                 const response = await fetch('entries.json');
-                if (!response.ok) throw new Error('Não foi possível carregar entries.json');
+                if (!response.ok) throw new Error('Could not load entries.json');
                 const entries = await response.json();
                 
                 const listEl = document.getElementById('entries-list');
                 listEl.innerHTML = '';
                 
                 if (entries.length === 0) {
-                    listEl.innerHTML = '<li class="text-slate-500 text-sm">Nenhum post encontrado.</li>';
+                    listEl.innerHTML = '<li class="text-slate-500 text-sm">No posts found.</li>';
                     return;
                 }
 
@@ -135,7 +135,7 @@
                     
                     a.onclick = (e) => {
                         e.preventDefault();
-                        window.location.hash = entry.file;
+                        window.location.hash = encodeURIComponent(entry.file);
                         loadPost(entry.file);
                     };
 
@@ -144,17 +144,17 @@
                 });
 
                 // Load initial post from hash or the latest one
-                const hash = window.location.hash.replace('#', '');
+                const hash = window.location.hash ? decodeURIComponent(window.location.hash.replace('#', '')) : '';
                 if (hash) {
                     loadPost(hash);
                 } else {
                     loadPost(entries[0].file);
-                    window.location.hash = entries[0].file;
+                    window.location.hash = encodeURIComponent(entries[0].file);
                 }
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('entries-list').innerHTML = '<li class="text-red-400 text-sm">Erro ao carregar posts.</li>';
+                document.getElementById('entries-list').innerHTML = '<li class="text-red-400 text-sm">Error loading posts.</li>';
             }
         }
 
@@ -163,8 +163,10 @@
             contentEl.innerHTML = '<div class="flex justify-center mt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i></div>';
             
             try {
-                const res = await fetch(`md/${filename}`);
-                if (!res.ok) throw new Error('Post não encontrado localmente');
+                // Remove encoding if passed
+                const safeFilename = decodeURIComponent(filename);
+                const res = await fetch(`md/${safeFilename}`);
+                if (!res.ok) throw new Error('Local post not found (' + res.status + ')');
                 
                 let mdText = await res.text();
                 
@@ -179,8 +181,13 @@
                         externalUrl = externalUrl.replace('/-/blob/', '/-/raw/');
                     }
                     
+                    // Usar corsproxy caso o site não permita cross-origin requests
+                    if (!externalUrl.includes('githubusercontent.com')) {
+                        externalUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(externalUrl);
+                    }
+                    
                     const extRes = await fetch(externalUrl);
-                    if (!extRes.ok) throw new Error('Não foi possível carregar o post externo: ' + externalUrl);
+                    if (!extRes.ok) throw new Error('External post failed (' + extRes.status + ')');
                     mdText = await extRes.text();
                 }
                 
@@ -192,7 +199,7 @@
                 
                 // Update active state in sidebar
                 document.querySelectorAll('#entries-list a').forEach(a => {
-                    if (a.getAttribute('href') === `#${filename}`) {
+                    if (decodeURIComponent(a.getAttribute('href').replace('#','')) === safeFilename) {
                         a.classList.add('border-l-2', 'border-primary', 'bg-slate-800/50');
                         a.querySelector('.font-medium').classList.add('text-primary');
                         a.querySelector('.font-medium').classList.remove('text-white');
@@ -208,8 +215,8 @@
                 contentEl.innerHTML = `
                     <div class="text-center mt-10">
                         <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
-                        <h2 class="text-xl font-bold text-white">Erro ao carregar o post</h2>
-                        <p class="text-slate-400 mt-2">O arquivo ${filename} não foi encontrado ou não pode ser carregado.</p>
+                        <h2 class="text-xl font-bold text-white">Error loading post</h2>
+                        <p class="text-slate-400 mt-2">${err.message}</p>
                     </div>
                 `;
             }
