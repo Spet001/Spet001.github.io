@@ -111,12 +111,15 @@
     </main>
 
     <script>
+        let g_entries = [];
+
         // Load entries.json and render the sidebar
         async function init() {
             try {
                 const response = await fetch('entries.json');
                 if (!response.ok) throw new Error('Could not load entries.json');
                 const entries = await response.json();
+                g_entries = entries;
                 
                 const listEl = document.getElementById('entries-list');
                 listEl.innerHTML = '';
@@ -129,14 +132,15 @@
                 entries.forEach((entry, idx) => {
                     const li = document.createElement('li');
                     const a = document.createElement('a');
-                    a.href = `#${entry.file}`;
+                    const linkId = entry.id || entry.file;
+                    a.href = `#${linkId}`;
                     a.className = 'block text-slate-400 hover:text-primary transition-colors cursor-pointer p-2 rounded-lg hover:bg-slate-800/50';
                     a.innerHTML = `<div class="font-medium text-white">${entry.title}</div><div class="text-xs text-slate-500 mt-1">${entry.date}</div>`;
                     
                     a.onclick = (e) => {
                         e.preventDefault();
-                        window.location.hash = encodeURIComponent(entry.file);
-                        loadPost(entry.file);
+                        window.location.hash = linkId;
+                        loadPost(linkId);
                     };
 
                     li.appendChild(a);
@@ -148,8 +152,9 @@
                 if (hash) {
                     loadPost(hash);
                 } else {
-                    loadPost(entries[0].file);
-                    window.location.hash = encodeURIComponent(entries[0].file);
+                    const firstId = entries[0].id || entries[0].file;
+                    loadPost(firstId);
+                    window.location.hash = firstId;
                 }
 
             } catch (err) {
@@ -158,12 +163,15 @@
             }
         }
 
-        async function loadPost(filename) {
+        async function loadPost(postId) {
             const contentEl = document.getElementById('content');
             contentEl.innerHTML = '<div class="flex justify-center mt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i></div>';
             
             try {
-                // Remove encoding if passed
+                const entry = g_entries.find(e => e.id === postId || e.file === postId || decodeURIComponent(e.file) === postId);
+                if (!entry) throw new Error('Post not found in index.');
+
+                const filename = entry.file;
                 const safeFilename = decodeURIComponent(filename);
                 const res = await fetch(`md/${safeFilename}`);
                 if (!res.ok) throw new Error('Local post not found (' + res.status + ')');
@@ -199,7 +207,8 @@
                 
                 // Update active state in sidebar
                 document.querySelectorAll('#entries-list a').forEach(a => {
-                    if (decodeURIComponent(a.getAttribute('href').replace('#','')) === safeFilename) {
+                    const currentId = entry.id || entry.file;
+                    if (decodeURIComponent(a.getAttribute('href').replace('#','')) === currentId) {
                         a.classList.add('border-l-2', 'border-primary', 'bg-slate-800/50');
                         a.querySelector('.font-medium').classList.add('text-primary');
                         a.querySelector('.font-medium').classList.remove('text-white');

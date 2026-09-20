@@ -90,6 +90,30 @@
             opacity: 1;
             transform: none;
         }
+
+        /* Custom Cursor */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, background-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        #custom-cursor.hovering {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
     </style>
 
     <!-- React & Babel -->
@@ -99,6 +123,7 @@
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white">
+    <div id="custom-cursor"></div>
     <div id="root"></div>
 
     <script type="text/babel">
@@ -1177,6 +1202,28 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('custom-cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
 
+            // Adiciona classe hovering quando o mouse passa por algo clicável
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable')) {
+                    cursor.classList.add('hovering');
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable')) {
+                    cursor.classList.remove('hovering');
+                }
+            });
+        });
+    </script>
+</body>
 </html>
