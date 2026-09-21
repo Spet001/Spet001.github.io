@@ -12,6 +12,11 @@
        <priority>0.8000</priority>
   </url>
   <url>
+       <loc>https://spet01.dev/journal/#entry_0006</loc>
+       <lastmod>2026-09-21T14:20:00+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
        <loc>https://spet01.dev/journal/#entry_0005</loc>
        <lastmod>2026-09-20T23:45:00+00:00</lastmod>
        <priority>0.6400</priority>
