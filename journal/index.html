@@ -72,6 +72,9 @@
 
 <body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
     
+    <!-- Canvas Background -->
+    <canvas id="space-canvas" class="fixed inset-0 -z-10 opacity-70"></canvas>
+
     <!-- Navbar -->
     <nav class="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
         <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -111,9 +114,103 @@
     </main>
 
     <script>
+        // Space Canvas Logic
+        function initSpaceCanvas() {
+            const canvas = document.getElementById('space-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let w, h;
+            let stars = [];
+            let astro = { x: 0, y: 0, vx: 0.8, vy: 0.3, angle: 0, rotVel: 0.015 };
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                stars = Array.from({ length: 400 }).map(() => ({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    z: Math.random() * w,
+                    size: Math.random() * 1.5 + 0.5
+                }));
+                astro.x = w / 4;
+                astro.y = h / 4;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function render() {
+                ctx.fillStyle = '#050505';
+                ctx.fillRect(0, 0, w, h);
+
+                // Moon
+                const moonX = w * 0.8;
+                const moonY = h * 0.3;
+                const gradient = ctx.createRadialGradient(moonX, moonY, 10, moonX, moonY, 60);
+                gradient.addColorStop(0, 'rgba(0, 170, 255, 0.15)');
+                gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath(); ctx.arc(moonX, moonY, 80, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#e2e8f0';
+                ctx.beginPath(); ctx.arc(moonX, moonY, 30, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.2)';
+                ctx.beginPath(); ctx.arc(moonX - 10, moonY - 10, 6, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX + 12, moonY + 5, 8, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX - 5, moonY + 15, 4, 0, Math.PI * 2); ctx.fill();
+
+                // Stars
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                stars.forEach(star => {
+                    star.z -= 0.2;
+                    if (star.z <= 0) {
+                        star.z = w;
+                        star.x = Math.random() * w;
+                        star.y = Math.random() * h;
+                    }
+                    const perspective = w / star.z;
+                    const px = (star.x - w / 2) * perspective + w / 2;
+                    const py = (star.y - h / 2) * perspective + h / 2;
+                    const pSize = star.size * perspective * 0.5;
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Astro wandering
+                astro.x += astro.vx;
+                astro.y += astro.vy;
+                astro.angle += astro.rotVel;
+
+                if (astro.x > w + 50) astro.x = -50;
+                if (astro.x < -50) astro.x = w + 50;
+                if (astro.y > h + 50) astro.y = -50;
+                if (astro.y < -50) astro.y = h + 50;
+
+                ctx.save();
+                ctx.translate(astro.x, astro.y);
+                ctx.rotate(astro.angle); 
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-6, -2, 12, 14); 
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath(); ctx.arc(0, -6, 8, 0, Math.PI * 2); ctx.fill(); 
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath(); ctx.arc(2, -6, 4, 0, Math.PI * 2); ctx.fill(); 
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(-9, 0, 4, 10); 
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-5, 12, 4, 8); 
+                ctx.fillRect(1, 12, 4, 8); 
+                ctx.restore();
+
+                requestAnimationFrame(render);
+            }
+            render();
+        }
+        initSpaceCanvas();
+
         let g_entries = [];
 
-        // Load entries.json and render the sidebar
         async function init() {
             try {
                 const response = await fetch('entries.json');
@@ -147,7 +244,6 @@
                     listEl.appendChild(li);
                 });
 
-                // Load initial post from hash or the latest one
                 const hash = window.location.hash ? decodeURIComponent(window.location.hash.replace('#', '')) : '';
                 if (hash) {
                     loadPost(hash);
@@ -182,6 +278,15 @@
                 if (mdText.trim().startsWith('<external>')) {
                     let externalUrl = mdText.replace('<external>', '').trim();
                     
+                    // Mostra aviso de carregamento de plataforma externa
+                    contentEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center mt-20 text-center">
+                            <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-6"></i>
+                            <h2 class="text-xl font-bold text-white mb-2">Fetching External Entry...</h2>
+                            <p class="text-slate-400 font-medium">This journal entry is from an external platform, it might take some seconds to load!</p>
+                        </div>
+                    `;
+
                     // Auto-converte links amigáveis do GitHub/GitLab para raw (texto puro) pra não dar erro!
                     if (externalUrl.includes('github.com') && externalUrl.includes('/blob/')) {
                         externalUrl = externalUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');

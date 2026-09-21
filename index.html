@@ -160,8 +160,10 @@
                 },
                 easter: {
                     hint: "P.S. Não há easter eggs aqui...",
+                    joke: "É Spet, Spet01 ou Spet001? O meu username depende puramente de quantos Spets já existiam naquela plataforma!",
                     doom: "Jogar DOOM",
                     gta: "Jogar GTA VC",
+                    zombies: "Jogar COD Zombies Errius",
                     exit: "Sair do Jogo",
                     openNew: "Abrir em nova aba"
                 }
@@ -195,8 +197,10 @@
                 },
                 easter: {
                     hint: "P.S. There are no easter eggs here...",
+                    joke: "Is it Spet, Spet01, or Spet001? My username purely depends on how many Spets were already taken on that platform!",
                     doom: "Play DOOM",
                     gta: "Play GTA VC",
+                    zombies: "Play COD Zombies Errius",
                     exit: "Exit Game",
                     openNew: "Open in new tab"
                 }
@@ -562,17 +566,27 @@
                 const handleKeyUp = (e) => keysRef.current[e.key] = false;
                 
                 const handleMouseMove = (e) => {
+                    updateMouse(e.clientX, e.clientY);
+                };
+
+                const handleTouchMove = (e) => {
+                    if (e.touches.length > 0) {
+                        updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+                    }
+                };
+
+                const updateMouse = (clientX, clientY) => {
                     if (!hasMouseMovedRef.current) {
                         // Teleport to avoid initial physics explosion
-                        mouseRef.current = { x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY };
-                        rocketRef.current.x = e.clientX;
-                        rocketRef.current.y = e.clientY;
-                        astroRef.current.x = e.clientX + 50; // offset so they don't spawn exactly on top of each other
-                        astroRef.current.y = e.clientY + 50;
+                        mouseRef.current = { x: clientX, y: clientY, lastX: clientX, lastY: clientY };
+                        rocketRef.current.x = clientX;
+                        rocketRef.current.y = clientY;
+                        astroRef.current.x = clientX + 50;
+                        astroRef.current.y = clientY + 50;
                         hasMouseMovedRef.current = true;
                     } else {
-                        mouseRef.current.x = e.clientX;
-                        mouseRef.current.y = e.clientY;
+                        mouseRef.current.x = clientX;
+                        mouseRef.current.y = clientY;
                     }
                 };
 
@@ -580,6 +594,8 @@
                 window.addEventListener('keyup', handleKeyUp);
                 window.addEventListener('resize', handleResize);
                 window.addEventListener('mousemove', handleMouseMove);
+                window.addEventListener('touchmove', handleTouchMove, { passive: true });
+                window.addEventListener('touchstart', handleTouchMove, { passive: true });
 
                 const render = () => {
                     // Clear canvas
@@ -805,41 +821,33 @@
 
         const Navbar = ({ setEasterEgg }) => {
             const { lang, setLang, t } = useContext(LanguageContext);
-            const cvLink = lang === 'en' ? './assets/Eduardo_Gelain_Dev.pt.en.pdf' : './assets/Eduardo_Gelain_Dev.pdf';
             const [showMenu, setShowMenu] = useState(false);
 
             return (
                 <nav className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 transition-all">
-                    <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                        <div className="flex items-center gap-6">
-                            <a href="#top"><Logo /></a>
+                    <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+                        <div className="flex items-center gap-2 md:gap-6">
+                            <a href="#top" className="scale-75 origin-left md:scale-100"><Logo /></a>
 
-                            {/* Easter egg switch */}
+                            {/* Easter egg switch (Hidden on mobile) */}
                             <div className="relative hidden md:block">
                                 <button
-                                    onClick={() => setShowMenu(!showMenu)}
+                                    onClick={() => setEasterEgg('showModal')}
                                     className="opacity-20 hover:opacity-100 transition-opacity flex items-center"
                                     title="Easter Eggs"
                                 >
                                     <img src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png" alt="Sign" className="h-8 w-auto object-contain" />
                                 </button>
-
-                                {showMenu && (
-                                    <div className="absolute top-full left-0 mt-4 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-50">
-                                        <button onClick={() => { setEasterEgg('doom'); setShowMenu(false); }} className="w-full text-left px-4 py-3 hover:bg-primary/20 hover:text-primary text-white transition">
-                                            <i className="fas fa-ghost mr-2"></i>{t('easter.doom')}
-                                        </button>
-                                    </div>
-                                )}
                             </div>
                         </div>
 
-                        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                        {/* Navigation Links - Visible on both desktop and mobile now */}
+                        <div className="flex items-center gap-3 md:gap-8 text-[11px] md:text-sm font-medium text-slate-300">
                             <a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a>
                             <a href="#projects" className="hover:text-primary transition-colors">{t('nav.projects')}</a>
                             <a href="/journal" className="hover:text-primary transition-colors font-bold text-primary">{t('nav.journal')}</a>
-                            {/* <a href={cvLink} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">{t('nav.cv')}</a> */}
-                            <div className="flex items-center gap-4">
+                            
+                            <div className="hidden md:flex items-center gap-4">
                                 <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-github text-lg"></i></a>
                                 <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-gitlab text-lg"></i></a>
                                 <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-itch-io text-lg"></i></a>
@@ -850,34 +858,16 @@
                                 <a href="mailto:gelain15mj@gmail.com" className="hover:text-primary transition-colors"><i className="fas fa-envelope text-lg"></i></a>
                             </div>
 
-                            <div className="w-px h-5 bg-slate-700 mx-2"></div>
+                            <div className="hidden md:block w-px h-5 bg-slate-700 mx-2"></div>
 
-                            <div className="flex gap-2 bg-slate-900 rounded-full p-1 border border-slate-800">
+                            {/* Desktop Lang Toggle */}
+                            <div className="hidden md:flex gap-2 bg-slate-900 rounded-full p-1 border border-slate-800">
                                 <button onClick={() => setLang('pt')} className={`px-3 py-1 rounded-full text-xs transition-colors ${lang === 'pt' ? 'bg-primary text-white' : 'hover:text-white'}`}>PT</button>
                                 <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-full text-xs transition-colors ${lang === 'en' ? 'bg-primary text-white' : 'hover:text-white'}`}>EN</button>
                             </div>
-                        </div>
 
-                        {/* Mobile Lang Toggle */}
-                        <div className="md:hidden flex items-center gap-4">
-                            {/* Easter egg switch mobile */}
-                            <div className="relative">
-                                <button
-                                    onClick={() => setShowMenu(!showMenu)}
-                                    className="opacity-50 hover:opacity-100 transition-opacity flex items-center"
-                                >
-                                    <img src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png" alt="Sign" className="h-6 w-auto object-contain" />
-                                </button>
-                                {showMenu && (
-                                    <div className="absolute top-full right-0 mt-4 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-50">
-                                        <button onClick={() => { setEasterEgg('doom'); setShowMenu(false); }} className="w-full text-left px-4 py-3 hover:bg-primary/20 hover:text-primary text-white transition">
-                                            <i className="fas fa-ghost mr-2"></i>{t('easter.doom')}
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            <button onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')} className="text-xs font-bold border border-slate-700 px-3 py-1 rounded-full hover:border-primary text-primary transition">
+                            {/* Mobile Lang Toggle */}
+                            <button onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')} className="md:hidden text-[10px] font-bold border border-slate-700 px-2 py-1 rounded-full hover:border-primary text-primary transition shrink-0 ml-1">
                                 {lang === 'pt' ? 'EN' : 'PT'}
                             </button>
                         </div>
@@ -932,7 +922,7 @@
                         </FadeInSection>
 
                         <FadeInSection delay="400ms">
-                            <p className="mt-16 text-sm text-slate-500 flex items-center gap-2">
+                            <p className="mt-16 text-sm text-slate-500 hidden md:flex items-center gap-2">
                                 <i className="fas fa-keyboard opacity-50"></i> {t('hero.hint')}
                             </p>
                         </FadeInSection>
@@ -1117,12 +1107,44 @@
 
         const EasterEgg = ({ active, setActive }) => {
             const { t } = useContext(LanguageContext);
+            const [showMenu, setShowMenu] = useState(false);
 
             if (!active) return null;
 
-            const url = active === 'doom'
-                ? 'https://ustymukhman.github.io/webDOOM/public/'
-                : 'https://cdn.dos.zone/vcsky/release/vc-sky-en-v4/index.html?lang=en';
+            if (active === 'showModal') {
+                return (
+                    <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4">
+                        <button onClick={() => {setActive(null); setShowMenu(false);}} className="absolute top-6 right-6 text-white text-3xl hover:text-red-500 transition">
+                            <i className="fas fa-times"></i>
+                        </button>
+                        
+                        <div className="relative group cursor-pointer" onClick={() => setShowMenu(!showMenu)}>
+                            <img src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png" alt="No Easter Eggs" className="max-w-full max-h-[70vh] object-contain rounded-xl shadow-2xl transition-transform transform group-hover:scale-105" />
+                            {!showMenu && (
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
+                                    <span className="text-white font-bold text-xl drop-shadow-md">Click me...</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {showMenu && (
+                            <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in">
+                                <button onClick={() => setActive('doom')} className="px-6 py-3 bg-slate-800 hover:bg-primary text-white font-bold rounded-lg transition-colors shadow-lg">
+                                    <i className="fas fa-ghost mr-2"></i>{t('easter.doom')}
+                                </button>
+                                <button onClick={() => setActive('zombies')} className="px-6 py-3 bg-slate-800 hover:bg-primary text-white font-bold rounded-lg transition-colors shadow-lg">
+                                    <i className="fas fa-skull mr-2"></i>{t('easter.zombies')}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            let url = '';
+            if (active === 'doom') url = 'https://ustymukhman.github.io/webDOOM/public/';
+            else if (active === 'zombies') url = './easter eggs/GSC VM/gsc.html';
+            else url = 'https://cdn.dos.zone/vcsky/release/vc-sky-en-v4/index.html?lang=en';
 
             return (
                 <div className="fixed inset-0 z-[100] bg-black flex flex-col">
@@ -1136,7 +1158,7 @@
                             <i className="fas fa-times"></i> {t('easter.exit')}
                         </button>
                     </div>
-                    <iframe src={url} className="w-full flex-grow border-none" title="Easter Egg Game"></iframe>
+                    <iframe src={url} className="w-full flex-grow border-none bg-white" title="Easter Egg Game"></iframe>
                 </div>
             );
         };
@@ -1147,7 +1169,7 @@
 
             return (
                 <footer className="py-12 border-t border-slate-800/50 relative mt-12 bg-slate-950/50">
-                    <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-slate-500 text-sm">
+                    <div className="max-w-6xl mx-auto px-6 flex flex-col items-center justify-center text-center gap-4 text-slate-500 text-sm">
                         {/* Easter egg hidden menu */}
                         <div className="relative">
                             <button
@@ -1158,13 +1180,17 @@
                             </button>
 
                             {showMenu && (
-                                <div className="absolute bottom-full right-0 mb-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-50">
-                                    <button onClick={() => setEasterEgg('doom')} className="w-full text-left px-4 py-3 hover:bg-primary/20 hover:text-primary text-white transition">
-                                        <i className="fas fa-ghost mr-2"></i>{t('easter.doom')}
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-50">
+                                    <button onClick={() => setEasterEgg('showModal')} className="w-full text-left px-4 py-3 hover:bg-primary/20 hover:text-primary text-white transition">
+                                        <i className="fas fa-ghost mr-2"></i>Easter Eggs!
                                     </button>
                                 </div>
                             )}
                         </div>
+                        
+                        <p className="text-xs italic opacity-40 mt-4 max-w-xl">
+                            {t('easter.joke')}
+                        </p>
                     </div>
                 </footer>
             );
