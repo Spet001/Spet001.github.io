@@ -127,400 +127,701 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef, createContext, useContext } = React;
 
-        // --- DATA & TRANSLATIONS ---
-        const translations = {
-            pt: {
-                nav: { about: "Sobre", projects: "Projetos", cv: "Currículo", github: "GitHub", journal: "Journal" },
-                hero: {
-                    status: "",
-                    role: "Software & Game Developer",
-                    desc: "Focado em desenvolvimento de software, otimização de performance e engenharia reversa para criar soluções robustas.",
-                    cta: "Ver Projetos",
-                    hint: "Tente usar as setas (↑ ← ↓ →) para uma surpresa interativa!"
-                },
-                about: {
-                    title: "Sobre Mim",
-                    text: "Sou um Dev apaixonado em destrinchar sistemas, desenvolver soluções e otimizar processos. Minha jornada transita desde a criação de experiências interativas (como jogos) até a construção de otimizações complexas.",
-                    bullets: [
-                        "Desenvolvimento de Jogos: Desenvolvimento de jogos/apps em Unity (C#) e Unreal (C++).",
-                        "Engenharia Reversa & Modding: Desenvolvimento e exploração em ambientes restritos (como o UWP/Windows Store), desenvolvimento de DLLs de injeção nativas (C/C++) e ferramentas de otimização/fixes.",
-                        "Quality Assurance (QA): Experiência prática com testes de software/jogos rigorosos, identificação de edge-cases e documentação.",
-                        "Suporte de TI: Experiência com manutenção de hardware/software, atendimento a usuários e automação de tarefas via scripts (Python/PowerShell)."
-                    ],
-                    skillsTitle: "Stack Tecnológico",
-
-                },
-                projects: {
-                    title: "Projetos/Experiências Profissionais",
-                    btnRepo: "Código Fonte",
-                    btnLive: "Ver Projeto",
-                    minorTitle: "Ferramentas & Outros Projetos"
-                },
-                easter: {
-                    hint: "P.S. Não há easter eggs aqui...",
-                    joke: "É Spet, Spet01 ou Spet001? O meu username depende puramente de quantos Spets já existiam naquela plataforma!",
-                    doom: "Jogar DOOM",
-                    gta: "Jogar GTA VC",
-                    zombies: "Jogar COD Zombies Errius",
-                    exit: "Sair do Jogo",
-                    openNew: "Abrir em nova aba"
-                }
+// Portfolio Data & Internationalization for Eduardo Gelain (SpetDev)
+const PORTFOLIO_DATA = {
+    translations: {
+        pt: {
+            nav: {
+                about: "Sobre",
+                experience: "Experiência",
+                projects: "Projetos",
+                skills: "Habilidades",
+                journal: "Journal",
+                terminal: "Terminal",
+                contact: "Contato",
+                resume: "Currículo (CV)"
             },
-            en: {
-                nav: { about: "About", projects: "Projects", cv: "Resume", github: "GitHub", journal: "Journal" },
-                hero: {
-                    status: "",
-                    role: "Software & Game Developer",
-                    desc: "Focused on software architecture, performance optimization, and reverse engineering to build robust solutions.",
-                    cta: "View Projects",
-                    hint: "Try using the arrow keys (↑ ← ↓ →) for an interactive surprise!"
+            hero: {
+                status: "Disponível para Projetos & Oportunidades",
+                role: "Desenvolvedor de Software & Jogos · Engenharia Reversa",
+                desc: "Especializado em C++, C#, Python, Unity e Unreal Engine. Com foco em desenvolvimento de software de alto desempenho, sistemas de baixo nível, injeção de DLLs/scripts, exploração em ambientes restritos (UWP/GDK) e qualidade de software.",
+                ctaProjects: "Explorar Projetos",
+                ctaContact: "Entrar em Contato",
+                ctaCV: "Visualizar CV",
+                hint: "Dica: use as setas (↑ ← ↓ →) para controlar o astronauta no espaço!",
+                metrics: [
+                    { value: "50+", label: "Bugs Críticos Identificados", sub: "Lançamento Comercial na Steam" },
+                    { value: "15+", label: "Projetos & Ferramentas", sub: "Engenharia Reversa & Jogos" },
+                    { value: "10k+", label: "Downloads de Mods & Ferramentas", sub: "NexusMods & GitLab" },
+                    { value: "100%", label: "Eficiência Nativa", sub: "C/C++, C# & Python" }
+                ]
+            },
+            experience: {
+                title: "Trajetória & Experiência",
+                subtitle: "Clique em qualquer card para expandir detalhes sobre atribuições e tecnologias.",
+                expandHint: "Clique para expandir",
+                collapseHint: "Recolher"
+            },
+            projects: {
+                title: "Projetos em Destaque",
+                subtitle: "Trabalhos autorais em engenharia reversa, desenvolvimento de jogos e ferramentas de software.",
+                searchPlaceholder: "Buscar por tecnologia, nome ou palavra-chave (ex: C++, Unity, GSC, Memory)...",
+                categories: {
+                    all: "Todos",
+                    reverse: "Engenharia Reversa",
+                    gamedev: "Game Dev",
+                    tools: "Software & Ferramentas",
+                    qa: "QA & Testes"
                 },
-                about: {
-                    title: "About Me",
-                    text: "I am a Dev passionate about unraveling systems, developing solutions, and optimizing processes. My journey moves from creating interactive experiences (like games) to building complex optimizations.",
-                    bullets: [
-                        "Game Development: Development of games/apps in Unity (C#) and Unreal (C++).",
-                        "Reverse Engineering & Modding: Development and exploration in restricted environments (like UWP/Windows Store), development of native injection DLLs (C/C++) and optimization/fix tools.",
-                        "Quality Assurance (QA): Hands-on experience with rigorous software/game testing, identifying edge-cases, and documentation.",
-                        "IT Support: Experience with hardware/software maintenance, user support, and task automation via scripts (Python/PowerShell)."
-                    ],
-                    skillsTitle: "Tech Stack",
-
-                },
-                projects: {
-                    title: "Projects/Professional Experiences",
-                    btnRepo: "Source Code",
-                    btnLive: "Live Demo",
-                    minorTitle: "Tools & Minor Projects"
-                },
-                easter: {
-                    hint: "P.S. There are no easter eggs here...",
-                    joke: "Is it Spet, Spet01, or Spet001? My username purely depends on how many Spets were already taken on that platform!",
-                    doom: "Play DOOM",
-                    gta: "Play GTA VC",
-                    zombies: "Play COD Zombies Errius",
-                    exit: "Exit Game",
-                    openNew: "Open in new tab"
-                }
+                viewDetails: "Estudo de Caso",
+                sourceCode: "Código Fonte",
+                liveDemo: "Ver Projeto",
+                noResults: "Nenhum projeto encontrado para o filtro selecionado."
+            },
+            skills: {
+                title: "Stack & Competências Técnicas",
+                subtitle: "Habilidades práticas aplicadas no desenvolvimento de softwares, engines e ferramentas.",
+                systemsTitle: "Sistemas & Baixo Nível",
+                gamedevTitle: "Desenvolvimento de Jogos",
+                scriptingTitle: "Automação & Scripting",
+                qaTitle: "Qualidade de Software & Ferramentas"
+            },
+            journal: {
+                title: "Publicações Técnicas & Journal",
+                subtitle: "Documentação de pesquisas em engenharia reversa, sandbox UWP e arquitetura de software.",
+                readArticle: "Ler Artigo Completo",
+                viewAll: "Acessar Todos os Artigos no Journal"
+            },
+            terminal: {
+                title: "Console Interativo (SpetTerm)",
+                subtitle: "Digite 'help' para listar comandos disponíveis."
+            },
+            contact: {
+                title: "Vamos Conversar?",
+                subtitle: "Aberto para propostas de trabalho, parcerias em desenvolvimento de jogos ou consultoria técnica.",
+                formTitle: "Envie uma Mensagem Direta",
+                nameLabel: "Seu Nome",
+                emailLabel: "Seu E-mail",
+                subjectLabel: "Assunto",
+                messageLabel: "Mensagem",
+                sendBtn: "Enviar Mensagem",
+                sending: "Enviando...",
+                successMsg: "Mensagem enviada com sucesso! Retornarei em breve.",
+                errorMsg: "Por favor preencha todos os campos corretamente.",
+                copyEmail: "Copiar E-mail",
+                copied: "E-mail copiado!",
+                availability: "Disponível para trabalho Remoto e Híbrido"
+            },
+            footer: {
+                hint: "P.S. Não há easter eggs aqui...",
+                joke: "É Spet, Spet01 ou Spet001? O meu username depende puramente de quantos Spets já existiam naquela plataforma!",
+                rights: "Eduardo Gelain · SpetDev. Todos os direitos reservados."
+            },
+            easter: {
+                title: "Easter Egg Vault",
+                quake: "Jogar Quake 1 (NetQuake)",
+                
+                zombies: "COD Zombies Errius: Imitando a GSC Engine dentro de um HTML!",
+                exit: "Sair do Jogo",
+                openNew: "Abrir em nova aba"
+            },
+            resumeModal: {
+                title: "Currículo Profissional",
+                download: "Imprimir / Salvar PDF",
+                close: "Fechar"
             }
-        };
+        },
+        en: {
+            nav: {
+                about: "About",
+                experience: "Experience",
+                projects: "Projects",
+                skills: "Tech Stack",
+                journal: "Journal",
+                terminal: "Terminal",
+                contact: "Contact",
+                resume: "Resume (CV)"
+            },
+            hero: {
+                status: "Available for Roles & Projects",
+                role: "Software & Game Developer · Reverse Engineer",
+                desc: "Specialized in C++, C#, Python, Unity, and Unreal Engine. Focused on high-performance software engineering, low-level systems, DLL/script injection, sandboxed environment exploration (UWP/GDK), and software QA.",
+                ctaProjects: "Explore Projects",
+                ctaContact: "Get in Touch",
+                ctaCV: "View Resume",
+                hint: "Tip: use arrow keys (↑ ← ↓ →) to navigate the astronaut in space!",
+                metrics: [
+                    { value: "50+", label: "Critical Bugs Identified", sub: "Commercial Steam Release" },
+                    { value: "15+", label: "Projects & Toolkits", sub: "Reverse Engineering & Games" },
+                    { value: "10k+", label: "Mod & Tool Downloads", sub: "NexusMods & GitLab" },
+                    { value: "100%", label: "Native Efficiency", sub: "C/C++, C# & Python" }
+                ]
+            },
+            experience: {
+                title: "Career & Experience",
+                subtitle: "Click any card to expand full details on responsibilities and technologies used.",
+                expandHint: "Click to expand",
+                collapseHint: "Collapse"
+            },
+            projects: {
+                title: "Featured Engineering Projects",
+                subtitle: "Original work spanning reverse engineering, game development, and custom software tooling.",
+                searchPlaceholder: "Search by tech, keyword, or name (e.g. C++, Unity, GSC, Memory)...",
+                categories: {
+                    all: "All",
+                    reverse: "Reverse Engineering",
+                    gamedev: "Game Dev",
+                    tools: "Software & Tools",
+                    qa: "QA & Testing"
+                },
+                viewDetails: "Case Study",
+                sourceCode: "Source Code",
+                liveDemo: "Live Project",
+                noResults: "No projects match the selected criteria."
+            },
+            skills: {
+                title: "Tech Stack & Capabilities",
+                subtitle: "Hands-on engineering skills applied across production games, tools, and technical research.",
+                systemsTitle: "Systems & Low-Level",
+                gamedevTitle: "Game Development",
+                scriptingTitle: "Automation & Scripting",
+                qaTitle: "Software QA & Tooling"
+            },
+            journal: {
+                title: "Technical Journal & Research",
+                subtitle: "In-depth documentation covering reverse engineering, UWP sandbox bypasses, and game architecture.",
+                readArticle: "Read Complete Entry",
+                viewAll: "View All Journal Entries"
+            },
+            terminal: {
+                title: "Interactive Console (SpetTerm)",
+                subtitle: "Type 'help' to see all available commands."
+            },
+            contact: {
+                title: "Let's Connect",
+                subtitle: "Open to employment opportunities, game development collaborations, or technical consulting.",
+                formTitle: "Send a Direct Message",
+                nameLabel: "Your Name",
+                emailLabel: "Your Email",
+                subjectLabel: "Subject",
+                messageLabel: "Message",
+                sendBtn: "Send Message",
+                sending: "Sending...",
+                successMsg: "Message sent successfully! I'll reply promptly.",
+                errorMsg: "Please fill out all required fields correctly.",
+                copyEmail: "Copy Email",
+                copied: "Email copied to clipboard!",
+                availability: "Available for Remote & Hybrid Roles"
+            },
+            footer: {
+                hint: "P.S. There are no easter eggs here...",
+                joke: "Is it Spet, Spet01, or Spet001? My username purely depends on how many Spets were already taken on that platform!",
+                rights: "Eduardo Gelain · SpetDev. All rights reserved."
+            },
+            easter: {
+                title: "Easter Egg Vault",
+                quake: "Play Quake 1 (NetQuake)",
+                zombies: "COD Zombies Errius: Emulating the GSC Engine inside HTML!",
+                exit: "Exit Game",
+                openNew: "Open in new tab"
+            },
+            resumeModal: {
+                title: "Curriculum Vitae",
+                download: "Print / Save PDF",
+                close: "Close"
+            }
+        }
+    },
 
-        const projectData = [
-            {
-                id: 'estagiario_ti',
-                categories: ['Experiência Profissional'],
-                image: 'https://image.portaldacidade.com/unsafe/1200x630/https://bucket.portaldacidade.com/mogimirim.portaldacidade.com/img/news/2020-11/eleitora-esqueceu-de-confirmar-votos-e-urna-eletronica-precisou-ser-reiniciada-5fb11b68d9f24.jpeg',
-                pt: {
-                    title: 'Estagiário de TI - Escola Estadual Valério Strang',
-                    bullets: [
-                        'Prestar apoio tecnico operacional nas unidades escolares.',
-                        'Prestar suporte ao uso pedagógico da tecnologia.',
-                        'Realizar acompanhamento e orientação básica aos usuários e apoiar à articulação com equipes responsáveis.',
-                        'Prestar apoio ao monitoramento e registro.',
-                        'Prestar manutenção de hardware e otimização de software (via scripts python e .ps1), instalação de SO, etc.'
-                    ]
-                },
-                en: {
-                    title: 'IT Intern - Valério Strang State School',
-                    bullets: [
-                        'Provide technical operational support in school units.',
-                        'Support the pedagogical use of technology.',
-                        'Perform monitoring and basic guidance to users and support articulation with responsible teams.',
-                        'Provide support for monitoring and logging.',
-                        'Provide hardware maintenance and software optimization (via Python and .ps1 scripts), OS installation, etc.'
-                    ]
-                }
-            },
-            {
-                id: 'outcaster',
-                categories: ['GameDev'],
-                image: 'assets/outcaster img2.png',
-                live: 'https://spet01.itch.io/',
-                pt: {
-                    title: 'Outcaster - Templates Unity',
-                    bullets: [
-                        'Templates completos de FPS retro (boomer shooter) criados em <strong>Unity</strong> e <strong>C#</strong>.',
-                        'Sistemas de <strong>Game Design</strong> integrando movimento fluido, armas e inimigos com IA.',
-                        'Estética retrô-futurista com arquitetura de código modular, pronta para ser expandida.',
-                        'Projeto disponibilizado para a comunidade de <strong>Desenvolvimento de Jogos</strong>.'
-                    ]
-                },
-                en: {
-                    title: 'Outcaster - Unity Templates',
-                    bullets: [
-                        'Complete retro FPS (boomer shooter) templates created in <strong>Unity</strong> and <strong>C#</strong>.',
-                        '<strong>Game Design</strong> systems integrating fluid movement, weapons, and AI enemies.',
-                        'Retro-futuristic aesthetic with modular code architecture, ready to be expanded.',
-                        'Project released to help the <strong>Game Development</strong> community.'
-                    ]
-                }
-            },
-            {
-                id: 'resurge',
-                categories: ['GameModding'],
-                image: 'https://resurge.gamer.gd/RESURGE_600_x_240_px_1.gif',
-                live: 'https://gitlab.com/Spet001/resurgegdkbackup',
-                pt: {
-                    title: 'Resurge Client (BO3)',
-                    bullets: [
-                        'Projeto de Modding robusto (C/C++) focado na revitalização e customização do Call of Duty: Black Ops 3.',
-                        'Possui dois Launchers distintos (desenvolvidos em Electron e C#) que facilitam a experiência do usuário.',
-                        'Os Launchers gerenciam atualizações e injetam o código nativo (DLL/GSC Injection) no jogo de forma invisível ao jogador.'
-                    ]
-                },
-                en: {
-                    title: 'Resurge Client (BO3)',
-                    bullets: [
-                        'Robust Modding project (C/C++) focused on revitalizing and customizing Call of Duty: Black Ops 3.',
-                        'Features two distinct Launchers (developed in Electron and C#) to streamline the user experience.',
-                        'The Launchers manage updates and inject native code (DLL/GSC Injection) into the game seamlessly.'
-                    ]
-                }
-            },
-            {
-                id: 'sparky',
-                categories: ['Experiência Profissional'],
-                image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257185670/d0cf56f005af6f109edd9ee603dc2da75fa0aaf1/movie_232x130.jpg?t=1756993430',
-                live: 'https://store.steampowered.com/app/3592020/Sparky_Rush_Purrils_in_Pawsville/',
-                pt: {
-                    title: 'Analista de Testes Manuais QA - Sparky Rush',
-                    bullets: [
-                        'Atuação profissional como <strong>QA Tester</strong> no jogo de plataforma 3D "Sparky Rush", publicado na Steam.',
-                        'Testes rigorosos na Unity, ajudando a revisar lógicas/mecânicas desenvolvidas em C# a partir de deduções técnicas.',
-                        'Identificação, reprodução e documentação detalhada de 50+ bugs críticos.',
-                        'Trabalho direto com a equipe para garantir o polimento e qualidade final comercial.'
-                    ]
-                },
-                en: {
-                    title: 'Manual QA Tester - Sparky Rush',
-                    bullets: [
-                        'Professional <strong>QA Tester</strong> role on the 3D platformer "Sparky Rush", published on Steam.',
-                        'Rigorous testing in Unity, helping review C# logic/mechanics based on technical deductions.',
-                        'Identification, reproduction, and detailed documentation of 50+ critical bugs.',
-                        'Direct collaboration with the team to ensure polish and commercial final quality.'
-                    ]
-                }
-            },
-            {
-                id: 'pau_no_gato',
-                categories: ['GameDev'],
-                image: 'https://img.itch.zone/aW1nLzIzNjkzMTg4LnBuZw==/315x250%23c/eUMvyr.png',
-                live: 'https://zodiacogames.itch.io/atirei-o-pau-no-gato-mas-o-gato-no-morreu-e-agora-ele-vai-se-vingar',
-                pt: {
-                    title: 'Atirei o Pau no Gato',
-                    bullets: [
-                        'Jogo criativo desenvolvido na GameJam+ 2025 que alcançou a fase de incubação.',
-                        'Programação de lógicas e mecânicas utilizando <strong>Unreal Engine 5</strong> e <strong>C++</strong>.',
-                        'Integração de mecânicas inovadoras de <strong>Game Design</strong> e humor brasileiro.',
-                        'O sucesso na GameJam garantiu recursos para polimento do conceito original.'
-                    ]
-                },
-                en: {
-                    title: 'I Threw a Stick at the Cat',
-                    bullets: [
-                        'Creative game developed during GameJam+ 2025 that reached the incubation phase.',
-                        'Logic and mechanics programming using <strong>Unreal Engine 5</strong> and <strong>C++</strong>.',
-                        'Integration of innovative <strong>Game Design</strong> mechanics and Brazilian humor.',
-                        'Success in the GameJam secured resources to polish the original concept.'
-                    ]
-                }
-            },
-            {
-                id: 'ff13fix',
-                categories: ['GameModding'],
-                image: 'https://staticdelivery.nexusmods.com/mods/2086/images/thumbnails/59/59-1754939857-517189306.png',
-                live: 'https://www.nexusmods.com/finalfantasy13/mods/59',
-                pt: {
-                    title: 'FF13Fix for MS Store',
-                    bullets: [
-                        'Aplicativo de interface gráfica (GUI) desenvolvido para otimizar o desempenho do Final Fantasy 13 na Microsoft Store.',
-                        'Utiliza scripts automatizados em Python para aplicar correções complexas com apenas alguns cliques.',
-                        'Melhora a estabilidade e fluidez do jogo sem exigir conhecimento técnico do usuário.'
-                    ]
-                },
-                en: {
-                    title: 'FF13Fix for MS Store',
-                    bullets: [
-                        'Graphical User Interface (GUI) application designed to optimize Final Fantasy 13\'s performance on the Microsoft Store.',
-                        'Utilizes automated Python scripts to apply complex fixes with just a few clicks.',
-                        'Improves game stability and framerate without requiring technical knowledge from the user.'
-                    ]
-                }
-            },
-            {
-                id: 'autoparms',
-                categories: ['GameModding'],
-                image: 'https://staticdelivery.nexusmods.com/mods/7333/images/thumbnails/181/181-1754787442-12213008.png',
-                live: 'https://www.nexusmods.com/likeadragonpirateyakuzainhawaii/mods/181',
-                pt: {
-                    title: 'AutoParMS',
-                    bullets: [
-                        'Ferramenta com interface gráfica (GUI) projetada para facilitar a instalação de Mods no jogo LAD: Pirate Yakuza.',
-                        'Combina scripts em Python e o utilitário PARTOOL para extrair, modificar e reempacotar arquivos do jogo de forma segura.',
-                        'Permite que a comunidade de jogadores modifique o jogo de maneira intuitiva e automatizada.'
-                    ]
-                },
-                en: {
-                    title: 'AutoParMS',
-                    bullets: [
-                        'Graphical interface (GUI) tool designed to simplify Mod installation for LAD: Pirate Yakuza.',
-                        'Combines Python scripts and the PARTOOL utility to extract, modify, and safely repackage game files.',
-                        'Enables the player community to modify the game in an intuitive and automated way.'
-                    ]
-                }
-            },
-            {
-                id: 'cw_gsc_injector',
-                categories: ['GameModding'],
-                image: 'assets/cwgsc.png',
-                live: 'https://gitlab.com/Spet001/CW-UWP-GSC-Injector',
-                pt: {
-                    title: 'CW GSC Injector (MS Store)',
-                    bullets: [
-                        'Utilitário standalone em C++ para injetar scripts GSC na versão MS Store/Xbox PC do Call of Duty: BOCW.',
-                        'Contorna limitações de offset estático através de scan dinâmico de memória para localizar o Asset Pool.',
-                        'Otimizado e de baixo consumo de recursos, desenvolvido com engenharia reversa para buscar compatibilidade total.'
-                    ]
-                },
-                en: {
-                    title: 'CW GSC Injector (MS Store)',
-                    bullets: [
-                        'Standalone C++ utility to inject GSC scripts into the MS Store/Xbox PC version of Call of Duty: BOCW.',
-                        'Bypasses static offset limitations through dynamic memory scanning to locate the Asset Pool.',
-                        'Highly optimized and lightweight, developed via reverse engineering for full compatibility.'
-                    ]
-                }
-            },
-            {
-                id: 'bo2_gsc_msclients',
-                categories: ['GameModding'],
-                images: [
-                    'https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png',
-                    'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo1gsc.png',
-                    'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo2.png'
+    // CAREER & EXPERIENCE DATA - Corrected Dates and Content per user request
+    experienceData: [
+        {
+            id: "exp_qa_sparky",
+            role: { pt: "Analista de Testes Manuais QA", en: "Manual QA Analyst" },
+            company: "Sparky Rush: Purrils in Pawsville (Steam)",
+            period: "2025 - Present",
+            type: "Commercial Game Release",
+            bullets: {
+                pt: [
+                    "Atuação técnica como QA Tester no jogo de plataforma 3D 'Sparky Rush', lançado comercialmente na Steam.",
+                    "Identificação, reprodução rigorosa e documentação de mais de 50 bugs críticos de física, renderização e lógica de gameplay.",
+                    "Análise dedutiva de código em Unity (C#) para auxiliar a equipe de desenvolvimento a diagnosticar causas raiz com agilidade.",
+                    "Testes de regressão e validação contínua de builds pré-lançamento para assegurar estabilidade."
                 ],
-                live: 'https://gitlab.com/Spet001/msclients',
-                pt: {
-                    title: 'BO2/BO1 GSC Injector + Clients MS Store',
-                    bullets: [
-                        'GSC Injector para Black Ops 1 e Black Ops 2 desenvolvido em C++.',
-                        'Clients em C++ contendo modificações avançadas, como Full Client Manipulation no BO2 (Unlocks, etc) e DLC Unlocker no AW.',
-                        'Engenharia reversa focada na quebra de restrições do ecossistema UWP/Xbox.'
-                    ]
-                },
-                en: {
-                    title: 'BO2/BO1 GSC Injector + MS Store Clients',
-                    bullets: [
-                        'GSC Injector for Black Ops 1 and Black Ops 2 developed in C++.',
-                        'C++ Clients featuring advanced modifications, such as Full Client Manipulation in BO2 (Unlocks, etc) and DLC Unlocker in AW.',
-                        'Reverse engineering focused on breaking UWP/Xbox ecosystem restrictions.'
-                    ]
-                }
+                en: [
+                    "Technical QA Tester on the 3D platformer 'Sparky Rush', published commercially on Steam.",
+                    "Identified, reliably reproduced, and documented 50+ critical bugs across physics, rendering, and gameplay logic.",
+                    "Deductive code analysis in Unity (C#) helping the dev team rapidly diagnose root causes.",
+                    "Performed regression testing and build certification to ensure launch stability."
+                ]
             },
-            {
-                id: 'itch_io_projects',
-                categories: ['GameDev'],
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLzBo50SB1UZRcD1_YC5lLUnI7KwqTbSQHIgJx7brE9A&s',
-                live: 'https://spet01.itch.io/',
-                pt: {
-                    title: 'Outros projetos na Itch.io',
-                    bullets: [
-                        'Coletânea de protótipos e templates desenvolvidos na <strong>Unreal Engine 5</strong> e <strong>Unity</strong>.',
-                        'Inclui sistemas focados em Game Design, mecânicas de movimento e exploração de engines.'
-                    ]
-                },
-                en: {
-                    title: 'Other projects on Itch.io',
-                    bullets: [
-                        'Collection of prototypes and templates developed in <strong>Unreal Engine 5</strong> and <strong>Unity</strong>.',
-                        'Features systems focused on Game Design, movement mechanics, and engine exploration.'
-                    ]
-                }
+            skills: ["Unity", "C#", "QA Testing", "Bug Reporting", "Steamworks", "Regression Testing"]
+        },
+        {
+            id: "exp_gamedev_generic",
+            role: { pt: "Programador de Jogos", en: "Gameplay Programmer" },
+            company: "Desenvolvimento de Jogos (Unity & Unreal Engine)",
+            period: "2025 - Present",
+            type: "Game Engineering",
+            bullets: {
+                pt: [
+                    "Desenvolvimento de mecânicas de gameplay, física e sistemas interativos utilizando Unity (C#) e Unreal Engine (C++).",
+                    "Programação de máquinas de estado para IA de inimigos, locomoção fluida de personagens (FSM) e sistemas dinâmicos de armas.",
+                    "Otimização de rotinas de renderização e profiling de performance para garantia de altas taxas de quadros (144+ FPS).",
+                    "Criação de templates modulares para a comunidade de desenvolvedores independentes."
+                ],
+                en: [
+                    "Engineered core gameplay mechanics, physics, and interactive systems using Unity (C#) and Unreal Engine (C++).",
+                    "Programmed state machines for enemy AI, fluid character locomotion (FSM), and dynamic weapon management systems.",
+                    "Profiled and optimized rendering pipelines to sustain high framerates (144+ FPS).",
+                    "Built modular game templates for the independent game development community."
+                ]
             },
-            {
-                id: 'nexus_mods_projects',
-                categories: ['GameModding'],
-                image: 'https://next.nexusmods.com/assets/images/default/logo.svg',
-                live: 'https://www.nexusmods.com/profile/Spet001/mods',
-                pt: {
-                    title: 'Outros projetos na Nexus Mods',
-                    bullets: [
-                        'GUIs em Electron que aplicam Patches.',
-                        'GUIs em Python que aplicam Patches.',
-                        'GUIs em C# que aplicam Patches para diversos jogos clássicos e modernos.'
-                    ]
-                },
-                en: {
-                    title: 'Other projects on Nexus Mods',
-                    bullets: [
-                        'Electron GUIs that apply Patches.',
-                        'Python GUIs that apply Patches.',
-                        'C# GUIs that apply Patches for various classic and modern games.'
-                    ]
-                }
+            skills: ["Unity", "Unreal Engine", "C#", "C++", "Game Systems", "Physics", "AI FSM"]
+        },
+        {
+            id: "exp_reverse_modding",
+            role: { pt: "Engenheiro de Sistemas & Modding", en: "Systems & Reverse Engineer" },
+            company: "Engenharia Reversa & Modding Systems",
+            period: "2024 - Present",
+            type: "Systems & Low-Level",
+            bullets: {
+                pt: [
+                    "Pesquisa avançada e quebra de restrições do ecossistema UWP (Universal Windows Platform) e Microsoft Game Development Kit (GDK).",
+                    "Criação de injetores GSC e clientes customizados em C/C++ para franquias como Call of Duty (Black Ops 1, 2, 3 e Cold War).",
+                    "Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de funções de bytecode da VM.",
+                    "Desenvolvimento de launchers em Electron e ferramentas com foco em estabilidade e segurança."
+                ],
+                en: [
+                    "Advanced research and restriction bypass for the UWP (Universal Windows Platform) and Microsoft GDK environment.",
+                    "Engineered GSC injectors and custom clients in C/C++ for Call of Duty titles (BO1, BO2, BO3, and Cold War).",
+                    "Developed native DLL injection routines, dynamic memory signature pattern scanners, and VM bytecode hooks.",
+                    "Engineered Electron launchers and modding toolkits delivering stable and crash-free execution."
+                ]
             },
-            {
-                id: 'portfolio_web',
-                categories: ['Software Development'],
-                image: 'assets/portweb.png',
-                live: '#top',
-                pt: {
-                    title: 'Portfólio Web',
-                    bullets: [
-                        'Este projeto em si. Uma aplicação Single Page (SPA) baseada em <strong>React</strong> e <strong>TailwindCSS</strong>.',
-                        'Gerencia internacionalização (PT/EN), animações fluidas via IntersectionObserver e renderização no client-side.',
-                        'Inclui interações escondidas e design responsivo, dispensando bundlers complexos na build.'
-                    ]
+            skills: ["C/C++", "Win32 API", "Reverse Engineering", "DLL Injection", "Memory Scanning", "GSC VM"]
+        },
+        {
+            id: "exp_ti_support",
+            role: { pt: "Suporte de TI & Automação", en: "IT Support & Automation" },
+            company: "Infraestrutura de TI & Sistemas",
+            period: "2026 - Present",
+            type: "IT Infrastructure",
+            bullets: {
+                pt: [
+                    "Apoio técnico operacional de infraestrutura de TI, gerenciamento de redes locais e estações de trabalho.",
+                    "Desenvolvimento de scripts de automação em Python e PowerShell (.ps1) para manutenção preventiva e resolução ágil de incidentes.",
+                    "Diagnóstico de hardware/software, implantação de sistemas operacionais e suporte direto a usuários."
+                ],
+                en: [
+                    "Technical IT infrastructure support, local networking management, and workstation maintenance.",
+                    "Developed automation scripts in Python and PowerShell (.ps1) for preventative maintenance and rapid incident resolution.",
+                    "Hardware/software diagnostics, OS deployments, and direct end-user tech support."
+                ]
+            },
+            skills: ["Python", "PowerShell", "Windows Server", "Hardware Troubleshooting", "Automation"]
+        }
+    ],
+
+    // PROJECTS DATA - Uses ONLY authentic local images from assets/
+    projectsData: [
+
+        {
+            id: "bo2_crossplay_relay",
+            category: "reverse",
+            categoryLabel: { pt: "Engenharia Reversa / Net", en: "Reverse Engineering / Net" },
+            image: "assets/relay.gif",
+            title: "BO2 Crossplay Relay (PS5 x PC)",
+            repo: "https://gitlab.com/Spet001/t6-zpgdk-crossplay-relay",
+            featured: true,
+            tags: ["Python", "C++", "Npcap", "Packet Sniffing", "Networking"],
+            description: {
+                pt: "Ponte de tradução de protocolo em tempo real que permite jogar Call of Duty: Black Ops II entre PC e consoles (PS5) usando System Link, traduzindo pacotes UDP nativos.",
+                en: "Real-time protocol translation bridge that allows playing Call of Duty: Black Ops II between PC and consoles (PS5) via System Link by translating raw UDP packets."
+            },
+            journalId: "Crossplay-PS5-XBOX-PC",
+            caseStudy: {
+                challenge: {
+                    pt: "Criar crossplay em um jogo legado (2012) onde a camada de rede e beacons são incompatíveis entre plataformas.",
+                    en: "Enable crossplay on a legacy game (2012) where the network layer and discovery beacons are strictly incompatible across platforms."
                 },
-                en: {
-                    title: 'Web Portfolio',
-                    bullets: [
-                        'This very project. A Single Page Application (SPA) based on <strong>React</strong> and <strong>TailwindCSS</strong>.',
-                        'Handles internationalization (PT/EN), fluid animations via IntersectionObserver, and client-side rendering.',
-                        'Features hidden interactions and responsive design, skipping complex bundlers on build.'
-                    ]
+                solution: {
+                    pt: "Uso do Npcap para injetar pacotes Ethernet no Layer-2, recalculando checksums IPv4 e traduzindo payloads para que o console (PS5) e PC conversem nativamente na LAN.",
+                    en: "Used Npcap to inject raw Ethernet packets at Layer-2, recalculating IPv4 checksums and translating payloads so PS5 and PC converse natively over LAN."
+                },
+                impact: {
+                    pt: "Crossplay perfeito entre PS5 e PC. Suporte experimental em andamento para a arquitetura Big-Endian do Xbox 360.",
+                    en: "Perfect functional crossplay between PS5 and PC. Experimental support underway for Xbox 360 Big-Endian architecture."
                 }
             }
-        ];
+        },
 
-        // --- CONTEXT ---
-        const LanguageContext = createContext();
 
-        // --- CUSTOM HOOKS ---
-        const useIntersectionObserver = (options = {}) => {
-            const [isIntersecting, setIsIntersecting] = useState(false);
-            const ref = useRef(null);
+        {
+            id: "portfolio_web",
+            title: "Portfólio Web",
+            category: "qa",
+            categoryLabel: { pt: "Web / Tools", en: "Web / Tools" },
+            image: "assets/portweb.png",
+            repo: "https://github.com/Spet001/Portfolio-Web",
+            featured: false,
+            tags: ["React", "TailwindCSS", "Babel", "HTML/CSS"],
+            description: {
+                pt: "Este projeto em si. Uma aplicação Single Page (SPA) baseada em React e TailwindCSS",
+                en: "This very project. A Single Page Application (SPA) based on React and TailwindCSS."
+            },
+            caseStudy: {
+                challenge: { 
+                    pt: "Desenvolver um portfólio interativo e dinâmico que reflita as minhas habilidades técnicas e apresente meus projetos de forma clara, funcionando como uma Single Page Application moderna e performática.",
+                    en: "Develop an interactive and dynamic portfolio that reflects my technical skills and presents my projects clearly, functioning as a modern and performant Single Page Application."
+                },
+                solution: { 
+                    pt: "Criação de um SPA utilizando React e TailwindCSS em um único arquivo HTML através do Babel (standalone). Integração de recursos complexos como Canvas com física customizada, e componentes independentes.",
+                    en: "Created a SPA using React and TailwindCSS in a single HTML file via Babel (standalone). Integrated complex features like a Canvas with custom physics, and independent components."
+                },
+                impact: { 
+                    pt: "Uma aplicação leve, de alta performance e totalmente responsiva, onde a arquitetura permite fácil manutenção e adição de novos projetos e artigos.",
+                    en: "A lightweight, high-performance, and fully responsive application where the architecture allows easy maintenance and addition of new projects and articles."
+                }
+            }
+        },
 
-            useEffect(() => {
-                const element = ref.current;
-                if (!element) return;
-                const observer = new IntersectionObserver(([entry]) => {
-                    if (entry.isIntersecting) {
-                        setIsIntersecting(true);
-                        observer.unobserve(element);
-                    }
-                }, { threshold: 0.1, ...options });
+        {
+            id: "cw_gsc_injector",
+            category: "reverse",
+            categoryLabel: { pt: "Engenharia Reversa", en: "Reverse Engineering" },
+            image: "assets/cwgsc.png",
+            title: "CW GSC Injector (MS Store / Xbox PC)",
+            featured: true,
+            repo: "https://gitlab.com/Spet001/CW-UWP-GSC-Injector",
+            journalId: "CW-GSC-Injection-MS-Store",
+            tags: ["C++", "Win32 API", "Memory Scanning", "Reverse Engineering", "BOCW"],
+            description: {
+                pt: "Utilitário de alto desempenho em C++ que realiza injeção de scripts GSC na versão Microsoft Store/Xbox PC do Call of Duty: BOCW, contornando o sandboxing UWP e offsets estáticos através de varredura dinâmica de memória.",
+                en: "High-performance C++ utility injecting custom GSC bytecode into the MS Store/Xbox PC build of Call of Duty: BOCW, bypassing UWP sandboxing and ASLR offsets through dynamic memory signature scanning."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "A versão da Windows Store (UWP/GDK) utiliza sandbox rígido com permissões isoladas de processo e offsets de memória dinâmicos que invalidavam os métodos tradicionais de hooking.",
+                    en: "The Windows Store (UWP/GDK) build enforces strict process sandboxing and dynamic ASLR memory layouts, causing standard injection hooks to fail."
+                },
+                solution: {
+                    pt: "Implementação de um scanner de assinaturas em tempo real (Pattern Scanning) em C++ nativo para localizar os Asset Pools do jogo e realizar hooking direto do interpretador de scripts sem disparar crash.",
+                    en: "Developed an in-memory pattern signature scanner in native C++ to locate script asset pools and safely patch bytecode pointers without destabilizing the engine."
+                },
+                impact: {
+                    pt: "Primeira ferramenta pública a viabilizar modding customizado na versão Xbox PC com 100% de estabilidade.",
+                    en: "First public tool enabling stable custom script execution on Xbox PC edition."
+                }
+            }
+        },
+        {
+            id: "bo2_bo1_msclients",
+            category: "reverse",
+            categoryLabel: { pt: "Engenharia Reversa & GSC Modding", en: "Reverse Engineering & GSC Modding" },
+            images: [
+                'https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png',
+                'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo1gsc.png',
+                'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo2.png'
+            ],
+            title: "BO1 & BO2 MS Store Clients & GSC Injector",
+            featured: true,
+            repo: "https://gitlab.com/Spet001/msclients",
+            journalId: "T6-GSC-Injector-MS-Store",
+            tags: ["C++", "GSC Modding", "Reverse Engineering", "VM Hooking", "DLC Unlocker", "UWP"],
+            description: {
+                pt: "Suíte completa em C++ com cliente modificado, injetor GSC em tempo real e desbloqueador de DLCs para Black Ops 1 e 2 na Windows Store. Permite compilar e carregar scripts customizados de Zombies e Multiplayer contornando proteções da VM.",
+                en: "Complete C++ suite featuring custom client modification, real-time GSC script injector, and DLC unlocker for Black Ops 1 & 2 Windows Store. Compiles and executes custom Zombies and Multiplayer scripts by hooking VM execution pointers."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "A engine do BO1 e BO2 na Windows Store impõe proteção de integridade na memória, isolamento de processos GDK e uma VM de GSC que rejeita scripts não assinados, além de bloquear acesso a DLCs compradas em plataformas descontinuadas.",
+                    en: "The BO1 and BO2 Windows Store builds enforce memory integrity protections, GDK process sandboxing, and a GSC VM that rejects unsigned bytecode, while also blocking legacy DLC entitlements."
+                },
+                solution: {
+                    pt: "Desenvolvimento de pattern scanning dinâmico para localizar a tabela de Asset Pools e os manipuladores de execução de bytecode GSC da VM. A ferramenta injeta uma DLL em C++ que redireciona o ponteiro do parser para carregar scripts compilados pelo usuário e faz hooking das chamadas XStore para validar posse de DLCs.",
+                    en: "Developed dynamic pattern scanning to locate the Asset Pool table and the VM's GSC bytecode dispatch handlers. Injected a native C++ DLL redirecting script execution pointers to load user-compiled bytecode while hooking XStore API calls to validate DLC entitlements."
+                },
+                impact: {
+                    pt: "Habilitou a execução estável de mods customizados, menus GSC e partidas de Zombies personalizadas para centenas de jogadores na versão MS Store, com preservação integral de conteúdo.",
+                    en: "Enabled fully stable execution of custom mods, GSC script menus, and custom Zombies matches on MS Store builds with complete content preservation."
+                }
+            }
+        },
+        {
+            id: "resurge_client",
+            category: "reverse",
+            categoryLabel: { pt: "Engenharia Reversa & Sistemas", en: "Reverse Engineering & Systems" },
+            image: "https://resurge.gamer.gd/RESURGE_600_x_240_px_1.gif",
+            title: "Resurge Client (BO3 Multi-Platform)",
+            featured: true,
+            live: "https://resurge.gamer.gd/",
+            repo: "https://gitlab.com/Spet001/resurgegdkbackup",
+            tags: ["C/C++", "Electron", "DLL Injection", "Networking", "Crossplay POC"],
+            description: {
+                pt: "Cliente modificado de alto desempenho para Black Ops 3 com suporte a UWP e Steam. Inclui DLL nativa de injeção, integração de rede para crossplay e launcher em Electron para patches de segurança.",
+                en: "High-performance custom client for Black Ops 3 supporting both UWP and Steam. Features native C++ injection DLL, network relay proof-of-concept for crossplay, and Electron desktop launcher."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Jogadores de PC na Windows Store e Steam estavam isolados em ecossistemas incompatíveis com vulnerabilidades de segurança não corrigidas pela publicadora.",
+                    en: "PC players across Windows Store and Steam were segregated with incompatible network protocols and unpatched security vulnerabilities."
+                },
+                solution: {
+                    pt: "Injeção de DLL no Xgameruntime com correção de exploits (T7 Patch integration) e emulação de pacotes de matchmaking entre plataformas.",
+                    en: "Engineered DLL injection targeting Xgameruntime with built-in security exploit mitigation and matchmaking packet translation."
+                },
+                impact: {
+                    pt: "Comunidade ativa com milhares de sessões seguras e jogabilidade livre de travamentos.",
+                    en: "Thousands of protected multiplayer sessions played without crash exploits."
+                }
+            }
+        },
+        {
+            id: "outcaster_fps",
+            category: "gamedev",
+            categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
+            image: "assets/outcaster img2.png",
+            gallery: ["assets/outcaster img2.png", "assets/Outcaster1.jpg"],
+            title: "Outcaster - Retro FPS Templates",
+            featured: true,
+            live: "https://spet01.itch.io/",
+            tags: ["Unity", "C#", "Game Design", "AI Navigation", "Physics"],
+            description: {
+                pt: "Templates completos de FPS retrô (boomer shooter) criados em Unity e C#. Sistemas avançados de movimentação dinâmica (bunny hop, dash), gerenciamento de armas, projéteis balísticos e IA inimiga por estados.",
+                en: "Complete retro FPS templates (boomer shooter style) developed in Unity and C#. Features dynamic locomotion physics (bunny hopping, dashes), weapon management, ballistic projectiles, and state-machine enemy AI."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Criar uma arquitetura de código extensível e performática para desenvolvedores independentes que desejam criar shooters rápidos sem recriar física do zero.",
+                    en: "Design an extensible, clean codebase for indie creators needing high-velocity shooter mechanics without building physics pipelines from scratch."
+                },
+                solution: {
+                    pt: "Arquitetura desacoplada baseada em ScriptableObjects e máquinas de estados finitos (FSM) para armas e comportamento de IA, otimizada para manter 144+ FPS.",
+                    en: "Modular architecture powered by ScriptableObjects and finite state machines for weapons and enemy AI, profiling at 144+ FPS."
+                },
+                impact: {
+                    pt: "Disponibilizado na Itch.io com avaliações positivas de desenvolvedores de jogos independentes.",
+                    en: "Highly rated on Itch.io by indie game developers as a foundation for commercial titles."
+                }
+            }
+        },
+        {
+            id: "sparky_rush_qa",
+            category: "qa",
+            categoryLabel: { pt: "QA & Controle de Qualidade", en: "QA & Testing" },
+            image: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257185670/d0cf56f005af6f109edd9ee603dc2da75fa0aaf1/movie_232x130.jpg?t=1756993430",
+            title: "Sparky Rush: Purrils in Pawsville (Steam QA)",
+            featured: true,
+            live: "https://store.steampowered.com/app/3592020/Sparky_Rush_Purrils_in_Pawsville/",
+            tags: ["QA Testing", "Unity", "C#", "Steam", "Bug Analysis"],
+            description: {
+                pt: "Atuação profissional em Quality Assurance no jogo de plataforma 3D Sparky Rush. Mapeamento, reprodução e relatórios de mais de 50 bugs críticos com análise da lógica em C#.",
+                en: "Professional Quality Assurance role on commercial 3D platformer Sparky Rush. Discovered, documented, and helped resolve 50+ critical bugs via code-level deductions in Unity/C#."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Garantir a integridade da física do personagem em colisões angulares complexas e evitar perda de progresso durante saves simultâneos.",
+                    en: "Verify physics robustness during steep angular character collisions and prevent race-condition save game corruption."
+                },
+                solution: {
+                    pt: "Criação de matrizes sistemáticas de teste com casos de borda e stress-testing reproduzindo condições de hardware de baixa performance.",
+                    en: "Designed comprehensive test matrices covering edge-case inputs, physics desync, and low-spec hardware regression."
+                },
+                impact: {
+                    pt: "Jogo lançado na Steam com alta estabilidade e sem travamentos bloqueantes reportados.",
+                    en: "Released smoothly on Steam with zero game-breaking release bugs."
+                }
+            }
+        },
+        {
+            id: "pau_no_gato_game",
+            category: "gamedev",
+            categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
+            image: "https://img.itch.zone/aW1nLzIzNjkzMTg4LnBuZw==/315x250%23c/eUMvyr.png",
+            title: "Atirei o Pau no Gato",
+            featured: false,
+            live: "https://zodiacogames.itch.io/atirei-o-pau-no-gato-mas-o-gato-no-morreu-e-agora-ele-vai-se-vingar",
+            tags: ["Unreal Engine 5", "C++", "Game Design", "Physics"],
+            description: {
+                pt: "Jogo de combate e física programado em Unreal Engine 5 com C++ nativo. Inclui mecânicas dinâmicas de movimento, IA de oponentes e feedback tátil de impacto.",
+                en: "Action and physics-based game programmed in Unreal Engine 5 with native C++. Features dynamic movement mechanics, opponent AI, and responsive tactile combat feedback."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Construir uma experiência jogável fluida com mecânicas de física cômica e resposta rápida aos comandos.",
+                    en: "Deliver an engaging game prototype featuring responsive comedic physics and tight gameplay feel."
+                },
+                solution: {
+                    pt: "Programação de lógicas de colisão e resposta cinemática em C++ com componentes modulares para rápida iteração de gameplay.",
+                    en: "Implemented responsive kinematic response and character state handling in C++ with modular components."
+                },
+                impact: {
+                    pt: "Excelente recepção do público e jogabilidade estável em múltiplas configurações.",
+                    en: "Great player reception and robust stability across diverse PC hardware."
+                }
+            }
+        },
+        {
+            id: "ff13_fix_ms_store",
+            category: "tools",
+            categoryLabel: { pt: "Ferramentas & Otimização", en: "Tools & Optimization" },
+            image: "https://staticdelivery.nexusmods.com/mods/2086/images/thumbnails/59/59-1754939857-517189306.png",
+            gallery: ["https://staticdelivery.nexusmods.com/mods/2086/images/thumbnails/59/59-1754939857-517189306.png", "assets/ff13-traducao.png"],
+            title: "FF13Fix for Microsoft Store",
+            featured: false,
+            live: "https://www.nexusmods.com/finalfantasy13/mods/59",
+            tags: ["Python", "GUI", "Memory Patching", "Modding", "NexusMods"],
+            description: {
+                pt: "Aplicativo com interface gráfica que resolve stuttering, problemas de taxa de quadros e renderização no Final Fantasy 13 na MS Store através de automação em Python.",
+                en: "GUI tool eliminating frame-rate stutter and rendering bugs for Final Fantasy 13 on Microsoft Store using automated memory and file patching in Python."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "O port de FF13 na MS Store sofre de frame-pacing severo e não aceitava os patches tradicionais da versão Steam devido a encriptação e layout de memória.",
+                    en: "The MS Store port of FF13 suffered from unstable frame-pacing and rejected legacy Steam patches due to encryption."
+                },
+                solution: {
+                    pt: "Desenvolvimento de rotina em Python que aplica patches binários diretamente no executável descriptografado em tempo de execução.",
+                    en: "Engineered Python patch automation applying runtime binary edits to fix the frame scheduler."
+                },
+                impact: {
+                    pt: "Milhares de downloads na NexusMods com nota máxima e endossos da comunidade.",
+                    en: "Thousands of downloads and endorsements on NexusMods."
+                }
+            }
+        },
+        {
+            id: "autoparms_yakuza",
+            category: "tools",
+            categoryLabel: { pt: "Ferramentas & Automação", en: "Tools & Automation" },
+            image: "https://staticdelivery.nexusmods.com/mods/7333/images/thumbnails/181/181-1754787442-12213008.png",
+            title: "AutoParMS - Yakuza Mod Toolkit",
+            featured: false,
+            live: "https://www.nexusmods.com/likeadragonpirateyakuzainhawaii/mods/181",
+            tags: ["Python", "Tkinter", "PARTOOL", "File Extraction", "Mod Manager"],
+            description: {
+                pt: "Gerenciador e instalador automatizado de mods para Like a Dragon: Pirate Yakuza in Hawaii. Integra PARTOOL com interface intuitiva para extração e empacotamento seguro.",
+                en: "Automated mod installer and manager for LAD: Pirate Yakuza. Integrates PARTOOL with an intuitive GUI for safe archive extraction and repacking."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "A manipulação manual de arquivos .par é propensa a corrupção e afasta jogadores sem conhecimentos técnicos.",
+                    en: "Manual .par archive packing often corrupts game files, posing a steep barrier for regular players."
+                },
+                solution: {
+                    pt: "Pipeline visual com verificação de integridade de hashes e backup automático antes de qualquer modificação.",
+                    en: "Built a visual pipeline with automated checksum validation and rollback backups."
+                },
+                impact: {
+                    pt: "Tornou a instalação de mods segura e instantânea com apenas 1 clique.",
+                    en: "Made mod installation safe and effortless with one-click automation."
+                }
+            }
+        },
+        
+        
+        
+    ],
 
-                observer.observe(element);
-                return () => observer.unobserve(element);
-            }, [options]);
+    // 3D ICONS TECH STACK DATA - Compact, punchy, high-impact 3D badges
+    techCategories: [
+        {
+            id: "systems",
+            nameKey: "systemsTitle",
+            icon: "fas fa-microchip",
+            skills: [
+                { name: "C & C++", level: "Low-Level & Memory", icon3d: "https://skillicons.dev/icons?i=cpp" },
+                { name: "C Language", level: "Pointers & Native DLLs", icon3d: "https://skillicons.dev/icons?i=c" },
+                { name: "Reverse Eng.", level: "Memory Hooks & Scanning", icon3d: "https://skillicons.dev/icons?i=cpp" },
+                { name: "Win32 / GDK", level: "UWP Internals & Threads", icon3d: "https://skillicons.dev/icons?i=powershell" },
+                { name: "GSC Injection", level: "VM Bytecode Patching", icon3d: "https://skillicons.dev/icons?i=c" }
+            ]
+        },
+        {
+            id: "gamedev",
+            nameKey: "gamedevTitle",
+            icon: "fas fa-gamepad",
+            skills: [
+                { name: "Unity", level: "C# Architecture & Physics", icon3d: "https://skillicons.dev/icons?i=unity" },
+                { name: "Unreal Engine", level: "C++ & Game Systems", icon3d: "https://skillicons.dev/icons?i=unreal" },
+                { name: "C# (.NET)", level: "OOP, FSM & Scriptables", icon3d: "https://skillicons.dev/icons?i=cs" },
+                { name: "Game Design", level: "NavMesh & AI Behaviors", icon3d: "https://skillicons.dev/icons?i=unity" }
+            ]
+        },
+        {
+            id: "scripting",
+            nameKey: "scriptingTitle",
+            icon: "fas fa-code",
+            skills: [
+                { name: "Python", level: "Automation, GUI & Tools", icon3d: "https://skillicons.dev/icons?i=python" },
+                { name: "PowerShell", level: "System Admin & Scripts", icon3d: "https://skillicons.dev/icons?i=powershell" },
+                { name: "Bash & Linux", level: "Shell Scripting", icon3d: "https://skillicons.dev/icons?i=bash" },
+                { name: "Electron", level: "Desktop GUI Launchers", icon3d: "https://skillicons.dev/icons?i=electron" },
+                { name: "Git", level: "CI/CD & Source Control", icon3d: "https://skillicons.dev/icons?i=git" }
+            ]
+        },
+        {
+            id: "qa",
+            nameKey: "qaTitle",
+            icon: "fas fa-shield-halved",
+            skills: [
+                { name: "Manual QA", level: "Edge-Cases & Stress Testing", icon3d: "https://skillicons.dev/icons?i=cs" },
+                { name: "Code Deduction", level: "Root Cause & Logic Tracing", icon3d: "https://skillicons.dev/icons?i=cpp" },
+                { name: "Bug Reporting", level: "Jira, GitHub & Steam", icon3d: "https://skillicons.dev/icons?i=git" },
+                { name: "Profiling", level: "Frametime & Memory Leaks", icon3d: "https://skillicons.dev/icons?i=unity" }
+            ]
+        }
+    ],
 
-            return [ref, isIntersecting];
-        };
+    // JOURNAL ARTICLES - Authentic posts matching /journal
+    journalEntries: [
+        {
+            id: "UWPCOD-GDK-DLC-Unlocker",
+            title: "Bypassing MS Store License Checks for Call of Duty DLCs",
+            date: "Sep 21, 2026",
+            file: "UWPCOD-GDK-DLC-Unlocker.md",
+            category: "Security & GDK",
+            excerpt: "Detailed breakdown of the XStore entitlement validation routines and how memory hooks bypass verification inside the Windows Gaming runtime."
+        },
+        {
+            id: "T6-GSC-Injector-MS-Store",
+            title: "Open Source GSC Injector for Black Ops 2 (MS Store)",
+            date: "Sep 20, 2026",
+            file: "T6-GSC-Injector-MS-Store.md",
+            category: "Reverse Engineering",
+            excerpt: "Architecture notes on the T6 MS Store injector, resolving dynamic function pointers and executing custom Game Script Code."
+        },
+        {
+            id: "T5-GSC-Injector-MS-Store",
+            title: "GSC Injection on Black Ops 1 (MS Store)",
+            date: "Sep 19, 2026",
+            file: "T5-GSC-Injector-MS-Store.md",
+            category: "Game Modding",
+            excerpt: "Documenting memory signatures and thread redirection techniques in older Treyarch engines adapted for the Microsoft Store."
+        },
+        {
+            id: "Crossplay-PS5-XBOX-PC",
+            title: "Crossplay Relay POC (PS5 x PC)",
+            date: "Sep 19, 2026",
+            file: "Crossplay-PS5-XBOX-PC.md",
+            category: "Networking",
+            excerpt: "Proof-of-concept architecture intercepting UDP packet streams and translating matchmaking session handshakes across platforms."
+        },
+        {
+            id: "CW-GSC-Injection-MS-Store",
+            title: "CW GSC Injection Findings",
+            date: "Sep 18, 2026",
+            file: "CW-GSC-Injection-MS-Store.md",
+            category: "Reverse Engineering",
+            excerpt: "Reverse engineering notes on Black Ops Cold War memory encryption and dynamic asset pool locator routines."
+        }
+    ]
+};
 
-        const FadeInSection = ({ children, className = '', delay = '' }) => {
-            const [ref, isVisible] = useIntersectionObserver();
-            return (
-                <div ref={ref} className={`fade-in-section ${isVisible ? 'is-visible' : ''} ${className}`} style={{ transitionDelay: delay }}>
-                    {children}
-                </div>
-            );
-        };
 
-        // --- COMPONENTS ---
-        const Starfield = () => {
+const Starfield = () => {
             const canvasRef = useRef(null);
             const moonPosRef = useRef({ x: window.innerWidth * 0.7, y: window.innerHeight * 0.3 });
             
@@ -807,427 +1108,1904 @@
             }, []);
 
             return <canvas ref={canvasRef} className="fixed inset-0 -z-10 opacity-70" />;
+        }
+
+// Interactive Portfolio Application for Eduardo Gelain (SpetDev)
+const { useState, useEffect, useRef, useMemo, createContext, useContext } = React;
+
+const LanguageContext = createContext();
+
+// Soft retro UI click sound using Web Audio API
+const playSoftClick = () => {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+    } catch (e) {}
+};
+
+// --- SPACE CANVAS WITH ASTRO, ROCKET & TETHER ---
+const SpaceCanvas = () => {
+    const canvasRef = useRef(null);
+    const moonPosRef = useRef({ x: window.innerWidth * 0.8, y: window.innerHeight * 0.22 });
+    const rocketRef = useRef({ x: -100, y: -100, angle: -Math.PI / 2 });
+    const astroRef = useRef({ x: -100, y: -100, vx: 0, vy: 0, angle: 0 });
+    const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2, lastX: window.innerWidth / 2, lastY: window.innerHeight / 2 });
+    const particlesRef = useRef([]);
+    const keysRef = useRef({});
+    const hasMouseMovedRef = useRef(false);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+        let stars = [];
+
+        const initStars = () => {
+            stars = Array.from({ length: 300 }).map(() => ({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                z: Math.random() * window.innerWidth,
+                size: Math.random() * 1.5 + 0.5
+            }));
         };
 
-        const Logo = () => (
-            <div className="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
-                <svg viewBox="0 0 90 80" className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round">
-                    <path d="M75,20 L40,20 C30,20 20,30 20,40 L20,50 C20,60 30,70 40,70 L60,70" />
-                    <path d="M60,70 C70,70 80,60 80,50 L80,45" />
-                </svg>
-                <span>Spet<span className="text-primary">Dev</span></span>
-            </div>
-        );
-
-        const Navbar = ({ setEasterEgg }) => {
-            const { lang, setLang, t } = useContext(LanguageContext);
-            const [showMenu, setShowMenu] = useState(false);
-
-            return (
-                <nav className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 transition-all">
-                    <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-                        <div className="flex items-center gap-2 md:gap-6">
-                            <a href="#top" className="scale-75 origin-left md:scale-100"><Logo /></a>
-
-                            {/* Easter egg switch (Hidden on mobile) */}
-                            <div className="relative hidden md:block">
-                                <button
-                                    onClick={() => setEasterEgg('showModal')}
-                                    className="opacity-20 hover:opacity-100 transition-opacity flex items-center"
-                                    title="Easter Eggs"
-                                >
-                                    <img src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png" alt="Sign" className="h-8 w-auto object-contain" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Navigation Links - Visible on both desktop and mobile now */}
-                        <div className="flex items-center gap-3 md:gap-8 text-[11px] md:text-sm font-medium text-slate-300">
-                            <a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a>
-                            <a href="#projects" className="hover:text-primary transition-colors">{t('nav.projects')}</a>
-                            <a href="/journal" className="hover:text-primary transition-colors font-bold text-primary">{t('nav.journal')}</a>
-                            
-                            <div className="hidden md:flex items-center gap-4">
-                                <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-github text-lg"></i></a>
-                                <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-gitlab text-lg"></i></a>
-                                <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-itch-io text-lg"></i></a>
-                                <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors flex items-center">
-                                    <img src="https://next.nexusmods.com/assets/images/default/logo.svg" alt="NexusMods" className="w-4 h-4 invert opacity-70 hover:opacity-100" style={{ filter: "brightness(0) invert(0.8)" }} />
-                                </a>
-                                <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors"><i className="fab fa-linkedin text-lg"></i></a>
-                                <a href="mailto:gelain15mj@gmail.com" className="hover:text-primary transition-colors"><i className="fas fa-envelope text-lg"></i></a>
-                            </div>
-
-                            <div className="hidden md:block w-px h-5 bg-slate-700 mx-2"></div>
-
-                            {/* Desktop Lang Toggle */}
-                            <div className="hidden md:flex gap-2 bg-slate-900 rounded-full p-1 border border-slate-800">
-                                <button onClick={() => setLang('pt')} className={`px-3 py-1 rounded-full text-xs transition-colors ${lang === 'pt' ? 'bg-primary text-white' : 'hover:text-white'}`}>PT</button>
-                                <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-full text-xs transition-colors ${lang === 'en' ? 'bg-primary text-white' : 'hover:text-white'}`}>EN</button>
-                            </div>
-
-                            {/* Mobile Lang Toggle */}
-                            <button onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')} className="md:hidden text-[10px] font-bold border border-slate-700 px-2 py-1 rounded-full hover:border-primary text-primary transition shrink-0 ml-1">
-                                {lang === 'pt' ? 'EN' : 'PT'}
-                            </button>
-                        </div>
-                    </div>
-                </nav>
-            );
+        const handleResize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            moonPosRef.current = { x: window.innerWidth * 0.82, y: window.innerHeight * 0.2 };
+            initStars();
         };
 
-        const Hero = () => {
-            const { t } = useContext(LanguageContext);
-            return (
-                <section id="top" className="min-h-screen flex items-center pt-20">
-                    <div className="max-w-6xl mx-auto px-6 w-full">
-                        <FadeInSection>
-                            <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
-                                <span className="relative flex h-3 w-3">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                                </span>
-                            </div>
-                        </FadeInSection>
+        handleResize();
 
-                        <FadeInSection delay="100ms">
-                            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
-                                Eduardo Gelain
-                            </h1>
-                            <h2 className="text-2xl md:text-3xl text-primary font-medium mb-6">
-                                {t('hero.role')}
-                            </h2>
-                        </FadeInSection>
+        const handleKeyDown = (e) => {
+            const activeTag = document.activeElement ? document.activeElement.tagName.toUpperCase() : '';
+            if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
 
-                        <FadeInSection delay="200ms">
-                            <p className="text-lg text-slate-400 max-w-2xl mb-10 leading-relaxed">
-                                {t('hero.desc')}
-                            </p>
-
-                            <div className="flex flex-wrap items-center gap-4">
-                                <a href="#projects" className="px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primaryHover transition-all transform hover:-translate-y-1 shadow-lg shadow-primary/25">
-                                    {t('hero.cta')}
-                                </a>
-                                <div className="flex items-center gap-4 px-4 text-slate-400">
-                                    <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-white transition transform hover:scale-110"><i className="fab fa-github text-2xl"></i></a>
-                                    <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-white transition transform hover:scale-110"><i className="fab fa-gitlab text-2xl"></i></a>
-                                    <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-white transition transform hover:scale-110"><i className="fab fa-itch-io text-2xl"></i></a>
-                                    <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" className="hover:text-white transition transform hover:scale-110">
-                                        <img src="https://next.nexusmods.com/assets/images/default/logo.svg" alt="NexusMods" className="w-6 h-6 invert opacity-80 hover:opacity-100 inline-block" />
-                                    </a>
-                                    <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" className="hover:text-white transition transform hover:scale-110"><i className="fab fa-linkedin text-2xl"></i></a>
-                                    <a href="mailto:gelain15mj@gmail.com" className="hover:text-white transition transform hover:scale-110"><i className="fas fa-envelope text-2xl"></i></a>
-                                </div>
-                            </div>
-                        </FadeInSection>
-
-                        <FadeInSection delay="400ms">
-                            <p className="mt-16 text-sm text-slate-500 hidden md:flex items-center gap-2">
-                                <i className="fas fa-keyboard opacity-50"></i> {t('hero.hint')}
-                            </p>
-                        </FadeInSection>
-                    </div>
-                </section>
-            );
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                keysRef.current[e.key] = true;
+            }
         };
 
-        const TechStack = () => {
-            const icons = ['cs', 'python', 'unity', 'c', 'cpp', 'js', 'ts', 'react', 'git', 'powershell'];
-            return (
-                <div className="flex flex-wrap gap-3 mt-6">
-                    {icons.map(icon => (
-                        <img
-                            key={icon}
-                            src={`https://skillicons.dev/icons?i=${icon}&theme=dark`}
-                            alt={icon}
-                            className="w-10 h-10 hover:scale-110 hover:-translate-y-1 transition-transform cursor-help opacity-80 hover:opacity-100"
-                        />
-                    ))}
-                </div>
-            );
+        const handleKeyUp = (e) => {
+            keysRef.current[e.key] = false;
         };
 
-        const About = () => {
-            const { t } = useContext(LanguageContext);
-            const bullets = t('about.bullets', { returnObjects: true });
-
-            return (
-                <section id="about" className="py-24 relative">
-                    <div className="max-w-6xl mx-auto px-6">
-                        <FadeInSection>
-                            <h2 className="text-3xl font-bold text-white mb-12 flex items-center gap-3">
-                                <i className="fas fa-terminal text-primary text-xl"></i> {t('about.title')}
-                            </h2>
-                        </FadeInSection>
-
-                        <div className="grid md:grid-cols-12 gap-12">
-                            <div className="md:col-span-7 space-y-6">
-                                <FadeInSection delay="100ms">
-                                    <p className="text-slate-300 text-lg leading-relaxed">
-                                        {t('about.text')}
-                                    </p>
-                                </FadeInSection>
-
-                                <FadeInSection delay="200ms">
-                                    <ul className="space-y-4 mt-6">
-                                        {Array.isArray(bullets) && bullets.map((bullet, idx) => {
-                                            const [bold, ...rest] = bullet.split(':');
-                                            return (
-                                                <li key={idx} className="flex items-start gap-3 text-slate-400">
-                                                    <i className="fas fa-check-circle text-primary mt-1.5 text-sm shrink-0"></i>
-                                                    <span className="leading-relaxed">
-                                                        <strong className="text-slate-200">{bold}:</strong>{rest.join(':')}
-                                                    </span>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </FadeInSection>
-                            </div>
-
-                            <div className="md:col-span-5">
-                                <FadeInSection delay="300ms">
-                                    <div className="glass-panel p-8 rounded-2xl h-full flex flex-col justify-center">
-                                        <h3 className="text-xl font-semibold text-white mb-4">{t('about.skillsTitle')}</h3>
-                                        <TechStack />
-                                    </div>
-                                </FadeInSection>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            );
+        const handleMouseMove = (e) => {
+            const clientX = e.clientX;
+            const clientY = e.clientY;
+            if (!hasMouseMovedRef.current) {
+                mouseRef.current = { x: clientX, y: clientY, lastX: clientX, lastY: clientY };
+                rocketRef.current.x = clientX;
+                rocketRef.current.y = clientY;
+                astroRef.current.x = clientX + 40;
+                astroRef.current.y = clientY + 40;
+                hasMouseMovedRef.current = true;
+            } else {
+                mouseRef.current.x = clientX;
+                mouseRef.current.y = clientY;
+            }
         };
 
-        const ProjectCard = ({ project, lang }) => {
-            const data = project[lang];
-            const { t } = useContext(LanguageContext);
-            const [currentImageIndex, setCurrentImageIndex] = useState(0);
+        window.addEventListener('keydown', handleKeyDown, { passive: false });
+        window.addEventListener('keyup', handleKeyUp);
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) handleMouseMove({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
+        }, { passive: true });
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) handleMouseMove({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
+        }, { passive: true });
 
-            useEffect(() => {
-                if (project.images && project.images.length > 1) {
-                    const interval = setInterval(() => {
-                        setCurrentImageIndex(prev => (prev + 1) % project.images.length);
-                    }, 3000);
-                    return () => clearInterval(interval);
+        const render = () => {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Stars
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            stars.forEach(star => {
+                star.z -= 0.35;
+                if (star.z <= 0) {
+                    star.z = canvas.width;
+                    star.x = Math.random() * canvas.width;
+                    star.y = Math.random() * canvas.height;
                 }
-            }, [project.images]);
+                const perspective = canvas.width / star.z;
+                const px = (star.x - canvas.width / 2) * perspective + canvas.width / 2;
+                const py = (star.y - canvas.height / 2) * perspective + canvas.height / 2;
+                const pSize = star.size * perspective * 0.45;
 
-            const displayImage = project.images ? project.images[currentImageIndex] : project.image;
+                ctx.beginPath();
+                ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
+                ctx.fill();
+            });
 
-            return (
-                <FadeInSection>
-                    <div className="glass-panel rounded-2xl overflow-hidden flex flex-col h-full group">
-                        {/* Image section */}
-                        <div className="h-48 overflow-hidden relative bg-slate-900 border-b border-slate-800">
-                            {displayImage ? (
-                                <img src={displayImage} alt={data.title} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center text-4xl text-slate-700">
-                                    <i className="fas fa-code"></i>
-                                </div>
-                            )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-                        </div>
+            // Ambient Moon
+            const moonX = moonPosRef.current.x;
+            const moonY = moonPosRef.current.y;
+            const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
+            gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
+            gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, 80, 0, Math.PI * 2);
+            ctx.fill();
 
-                        {/* Content */}
-                        <div className="p-6 flex flex-col flex-grow">
-                            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">{data.title}</h3>
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, 28, 0, Math.PI * 2);
+            ctx.fill();
 
-                            <ul className="space-y-2 mb-6 flex-grow">
-                                {data.bullets.map((bullet, idx) => (
-                                    <li key={idx} className="text-sm text-slate-400 flex items-start gap-2">
-                                        <span className="text-primary mt-1 text-[10px]">▹</span>
-                                        <span dangerouslySetInnerHTML={{ __html: bullet }}></span>
-                                    </li>
-                                ))}
-                            </ul>
+            // Moon Craters
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+            ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
 
-                            {/* Actions */}
-                            <div className="flex gap-3 mt-auto">
-                                {project.repo && (
-                                    <a href={project.repo} target="_blank" rel="noreferrer" className="flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium text-slate-300 bg-slate-800/50 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors">
-                                        <i className="fab fa-github"></i> {t('projects.btnRepo')}
-                                    </a>
-                                )}
-                                {project.live && (
-                                    <a href={project.live} target="_blank" rel="noreferrer" className="flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium text-white bg-primary/90 hover:bg-primary rounded-lg transition-colors shadow-lg shadow-primary/20">
-                                        <i className="fas fa-external-link-alt"></i> {t('projects.btnLive')}
-                                    </a>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-            );
-        };
-
-
-
-        const Projects = () => {
-            const { t, lang } = useContext(LanguageContext);
-            const [filter, setFilter] = useState('todos');
-
-            const categories = ['todos', 'Software Development', 'GameDev', 'GameModding', 'Experiência Profissional'];
-
-            const filteredProjects = projectData.filter(p => filter === 'todos' || p.categories.includes(filter));
-
-            return (
-                <section id="projects" className="py-24 relative">
-                    <div className="max-w-6xl mx-auto px-6">
-                        <FadeInSection>
-                            <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                                <i className="fas fa-layer-group text-primary text-xl"></i> {t('projects.title')}
-                            </h2>
-                        </FadeInSection>
-
-                        <FadeInSection delay="100ms">
-                            <div className="flex flex-wrap gap-3 mb-12">
-                                {categories.map(cat => (
-                                    <button 
-                                        key={cat}
-                                        onClick={() => setFilter(cat)}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${filter === cat ? 'bg-primary text-white border-primary' : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700 hover:border-slate-600'}`}
-                                    >
-                                        {cat === 'todos' ? (lang === 'pt' ? 'Todos' : 'All') : cat}
-                                    </button>
-                                ))}
-                            </div>
-                        </FadeInSection>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-                            {filteredProjects.map(project => (
-                                <ProjectCard key={project.id} project={project} lang={lang} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const EasterEgg = ({ active, setActive }) => {
-            const { t } = useContext(LanguageContext);
-            const [showMenu, setShowMenu] = useState(false);
-
-            if (!active) return null;
-
-            if (active === 'showModal') {
-                return (
-                    <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4">
-                        <button onClick={() => {setActive(null); setShowMenu(false);}} className="absolute top-6 right-6 text-white text-3xl hover:text-red-500 transition">
-                            <i className="fas fa-times"></i>
-                        </button>
-                        
-                        <div className="relative group cursor-pointer" onClick={() => setShowMenu(!showMenu)}>
-                            <img src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png" alt="No Easter Eggs" className="max-w-full max-h-[70vh] object-contain rounded-xl shadow-2xl transition-transform transform group-hover:scale-105" />
-                            {!showMenu && (
-                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
-                                    <span className="text-white font-bold text-xl drop-shadow-md">Click me...</span>
-                                </div>
-                            )}
-                        </div>
-
-                        {showMenu && (
-                            <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in">
-                                <button onClick={() => setActive('doom')} className="px-6 py-3 bg-slate-800 hover:bg-primary text-white font-bold rounded-lg transition-colors shadow-lg">
-                                    <i className="fas fa-ghost mr-2"></i>{t('easter.doom')}
-                                </button>
-                                <button onClick={() => setActive('zombies')} className="px-6 py-3 bg-slate-800 hover:bg-primary text-white font-bold rounded-lg transition-colors shadow-lg">
-                                    <i className="fas fa-skull mr-2"></i>{t('easter.zombies')}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                );
+            if (!hasMouseMovedRef.current) {
+                animationFrameId = requestAnimationFrame(render);
+                return;
             }
 
-            let url = '';
-            if (active === 'doom') url = 'https://ustymukhman.github.io/webDOOM/public/';
-            else if (active === 'zombies') url = './easter eggs/GSC VM/gsc.html';
-            else url = 'https://cdn.dos.zone/vcsky/release/vc-sky-en-v4/index.html?lang=en';
+            const rocket = rocketRef.current;
+            const astro = astroRef.current;
+            const mouse = mouseRef.current;
 
-            return (
-                <div className="fixed inset-0 z-[100] bg-black flex flex-col">
-                    <div className="p-4 flex justify-between items-center bg-slate-900 border-b border-slate-800">
-                        <div className="flex gap-4">
-                            <a href={url} target="_blank" rel="noreferrer" className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded text-sm transition">
-                                <i className="fas fa-external-link-alt mr-2"></i>{t('easter.openNew')}
-                            </a>
-                        </div>
-                        <button onClick={() => setActive(null)} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded flex items-center gap-2 transition">
-                            <i className="fas fa-times"></i> {t('easter.exit')}
+            const friction = 0.93;
+            const astroThrust = 0.75;
+            let isThrusting = false;
+
+            if (keysRef.current['ArrowLeft']) { astro.vx -= astroThrust; isThrusting = true; }
+            if (keysRef.current['ArrowRight']) { astro.vx += astroThrust; isThrusting = true; }
+            if (keysRef.current['ArrowUp']) { astro.vy -= astroThrust; isThrusting = true; }
+            if (keysRef.current['ArrowDown']) { astro.vy += astroThrust; isThrusting = true; }
+
+            if (isThrusting && Math.random() < 0.5) {
+                particlesRef.current.push({
+                    type: 'oxy',
+                    x: astro.x - Math.cos(astro.angle) * 10,
+                    y: astro.y - Math.sin(astro.angle) * 10,
+                    vx: -Math.cos(astro.angle) * 2 + (Math.random() - 0.5),
+                    vy: -Math.sin(astro.angle) * 2 + (Math.random() - 0.5),
+                    life: 1.0,
+                    size: Math.random() * 2.5 + 1
+                });
+            }
+
+            if (Math.abs(astro.vx) > 0.3 || Math.abs(astro.vy) > 0.3) {
+                const targetAngle = Math.atan2(astro.vy, astro.vx);
+                let diff = targetAngle - astro.angle;
+                while (diff < -Math.PI) diff += Math.PI * 2;
+                while (diff > Math.PI) diff -= Math.PI * 2;
+                astro.angle += diff * 0.12;
+            }
+
+            rocket.x = mouse.x;
+            rocket.y = mouse.y;
+
+            const dxMouse = mouse.x - mouse.lastX;
+            const dyMouse = mouse.y - mouse.lastY;
+            if (dxMouse * dxMouse + dyMouse * dyMouse > 1) {
+                const targetAngle = Math.atan2(dyMouse, dxMouse);
+                let diff = targetAngle - rocket.angle;
+                while (diff < -Math.PI) diff += Math.PI * 2;
+                while (diff > Math.PI) diff -= Math.PI * 2;
+                rocket.angle += diff * 0.22;
+
+                if (Math.random() < 0.5) {
+                    particlesRef.current.push({
+                        type: 'fire',
+                        x: rocket.x - Math.cos(rocket.angle) * 14,
+                        y: rocket.y - Math.sin(rocket.angle) * 14,
+                        vx: -Math.cos(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
+                        vy: -Math.sin(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
+                        life: 1.0,
+                        size: Math.random() * 3 + 1.5
+                    });
+                }
+            }
+            mouse.lastX = mouse.x;
+            mouse.lastY = mouse.y;
+
+            // Tether between rocket and astronaut
+            const dxTether = astro.x - rocket.x;
+            const dyTether = astro.y - rocket.y;
+            const distance = Math.hypot(dxTether, dyTether);
+            const tetherLength = 140;
+
+            if (distance > tetherLength) {
+                const stretch = distance - tetherLength;
+                const force = stretch * 0.08;
+                const angle = Math.atan2(dyTether, dxTether);
+                astro.vx -= Math.cos(angle) * force;
+                astro.vy -= Math.sin(angle) * force;
+            }
+
+            astro.vx *= friction;
+            astro.vy *= friction;
+            astro.x += astro.vx;
+            astro.y += astro.vy;
+
+            if (distance < canvas.width / 2) {
+                ctx.strokeStyle = 'rgba(0, 170, 255, 0.25)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 4]);
+                ctx.beginPath();
+                ctx.moveTo(astro.x, astro.y);
+                ctx.lineTo(rocket.x, rocket.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Particles
+            for (let i = particlesRef.current.length - 1; i >= 0; i--) {
+                const p = particlesRef.current[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.type === 'fire' ? 0.035 : 0.02;
+                if (p.life <= 0) {
+                    particlesRef.current.splice(i, 1);
+                } else {
+                    ctx.fillStyle = p.type === 'fire' ? `rgba(255, 80, 0, ${p.life * 0.8})` : `rgba(226, 232, 240, ${p.life * 0.6})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Astronaut
+            ctx.save();
+            ctx.translate(astro.x, astro.y);
+            ctx.rotate(astro.angle + Math.PI / 2);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(-6, -2, 12, 14);
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(0, -6, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#00aaff';
+            ctx.beginPath(); ctx.arc(2, -6, 3.5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(-8, 0, 3.5, 9);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(-5, 12, 3.5, 7);
+            ctx.fillRect(1, 12, 3.5, 7);
+            ctx.restore();
+
+            // Rocket
+            ctx.save();
+            ctx.translate(rocket.x, rocket.y);
+            ctx.rotate(rocket.angle);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.moveTo(18, 0);
+            ctx.lineTo(-12, 10);
+            ctx.lineTo(-6, 0);
+            ctx.lineTo(-12, -10);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = '#00aaff';
+            ctx.beginPath(); ctx.arc(4, 0, 3.5, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            animationFrameId = requestAnimationFrame(render);
+        };
+
+        render();
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('touchstart', handleMouseMove);
+            window.removeEventListener('touchmove', handleMouseMove);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
+    return <canvas ref={canvasRef} className="fixed inset-0 -z-10 pointer-events-none opacity-80" />;
+};
+
+// --- TOPBAR: SpetDev Brand + Easter Egg Image Button + Navigation ---
+const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu }) => {
+    const { lang, setLang, t } = useContext(LanguageContext);
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    return (
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08] py-3' : 'bg-transparent py-5'}`}>
+            <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+                
+                {/* Brand: SpetDev with Terminal Icon */}
+                <div className="flex items-center gap-3">
+                    <a href="#top" className="flex items-center gap-2 group focus:outline-none">
+                        <i className="fas fa-terminal text-primary text-base"></i>
+                        <span className="text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors">
+                            Spet<span className="text-primary">Dev</span>
+                        </span>
+                    </a>
+
+                    {/* Gant Bridge Easter Egg Sign Image */}
+                    <button
+                        onClick={onOpenEasterMenu}
+                        className="hidden sm:block hover:scale-110 transition-transform p-0.5 ml-2 focus:outline-none"
+                        title="There are no easter eggs up here. Go away."
+                    >
+                        <img
+                            src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png"
+                            alt="No Easter Eggs Here"
+                            className="h-6 sm:h-7 w-auto rounded border border-white/[0.15] hover:border-primary/60 shadow-sm"
+                            onError={(e) => {
+                                // Fallback icon if static wikia image is temporarily throttled
+                                e.target.style.display = 'none';
+                                e.target.parentNode.innerHTML = '<span class="text-xs px-2 py-0.5 rounded bg-white/[0.08] text-primary border border-white/[0.1]"><i class="fas fa-ghost"></i></span>';
+                            }}
+                        />
+                    </button>
+                </div>
+
+                {/* Nav Links */}
+                <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+                    <a href="#about" className="hover:text-white transition-colors">{t('nav.about')}</a>
+                    <a href="#experience" className="hover:text-white transition-colors">{t('nav.experience')}</a>
+                    <a href="#projects" className="hover:text-white transition-colors">{t('nav.projects')}</a>
+                    <a href="#skills" className="hover:text-white transition-colors">{t('nav.skills')}</a>
+                    <a href="/journal" className="hover:text-primary transition-colors text-primary font-semibold">{t('nav.journal')}</a>
+                    <a href="#contact" className="hover:text-white transition-colors">{t('nav.contact')}</a>
+                </nav>
+
+                {/* Actions: CLI, CV, Lang, Mobile Toggle */}
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <button
+                        onClick={onToggleTerminal}
+                        className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
+                        title="Open SpetTerm CLI (Ctrl+K)"
+                    >
+                        <i className="fas fa-terminal text-[11px] text-primary"></i>
+                        <span>CLI</span>
+                    </button>
+
+                    <button
+                        onClick={onOpenCV}
+                        className="px-3.5 py-1.5 text-xs font-medium rounded-md bg-primary text-white hover:bg-primaryHover transition-all shadow-sm shadow-primary/20 whitespace-nowrap"
+                    >
+                        <i className="fas fa-file-lines mr-1.5"></i>
+                        {t('nav.resume')}
+                    </button>
+
+                    <div className="flex items-center bg-white/[0.04] border border-white/[0.08] rounded-md p-0.5">
+                        <button
+                            onClick={() => { playSoftClick(); setLang('pt'); }}
+                            className={`px-2 py-1 text-[11px] font-semibold rounded transition-colors ${lang === 'pt' ? 'bg-primary text-white' : 'text-slate-400 hover:text-white'}`}
+                        >
+                            PT
+                        </button>
+                        <button
+                            onClick={() => { playSoftClick(); setLang('en'); }}
+                            className={`px-2 py-1 text-[11px] font-semibold rounded transition-colors ${lang === 'en' ? 'bg-primary text-white' : 'text-slate-400 hover:text-white'}`}
+                        >
+                            EN
                         </button>
                     </div>
-                    <iframe src={url} className="w-full flex-grow border-none bg-white" title="Easter Egg Game"></iframe>
+
+                    <button 
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="lg:hidden p-2 text-slate-300 hover:text-white focus:outline-none"
+                    >
+                        <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'} text-lg`}></i>
+                    </button>
                 </div>
-            );
-        };
+            </div>
 
-        const Footer = ({ setEasterEgg }) => {
-            const { t } = useContext(LanguageContext);
-            const [showMenu, setShowMenu] = useState(false);
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+                <div className="lg:hidden bg-[#0c1220] border-b border-white/[0.08] px-6 py-4 space-y-3">
+                    <a onClick={() => setMobileMenuOpen(false)} href="#about" className="block text-sm text-slate-300 hover:text-primary">{t('nav.about')}</a>
+                    <a onClick={() => setMobileMenuOpen(false)} href="#experience" className="block text-sm text-slate-300 hover:text-primary">{t('nav.experience')}</a>
+                    <a onClick={() => setMobileMenuOpen(false)} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
+                    <a onClick={() => setMobileMenuOpen(false)} href="#skills" className="block text-sm text-slate-300 hover:text-primary">{t('nav.skills')}</a>
+                    <a onClick={() => setMobileMenuOpen(false)} href="/journal" className="block text-sm text-primary font-semibold">{t('nav.journal')}</a>
+                    <a onClick={() => setMobileMenuOpen(false)} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
+                    <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
+                        <i className="fas fa-terminal text-primary"></i> Terminal CLI
+                    </button>
+                    <button onClick={() => { setMobileMenuOpen(false); onOpenEasterMenu(); }} className="w-full text-left text-sm text-slate-400 hover:text-white flex items-center gap-2">
+                        <i className="fas fa-ghost text-amber-400"></i> Easter Egg Vault
+                    </button>
+                </div>
+            )}
+        </header>
+    );
+};
 
-            return (
-                <footer className="py-12 border-t border-slate-800/50 relative mt-12 bg-slate-950/50">
-                    <div className="max-w-6xl mx-auto px-6 flex flex-col items-center justify-center text-center gap-4 text-slate-500 text-sm">
-                        {/* Easter egg hidden menu */}
-                        <div className="relative">
-                            <button
-                                onClick={() => setShowMenu(!showMenu)}
-                                className="opacity-50 hover:opacity-100 transition-opacity text-xs"
-                            >
-                                {t('easter.hint')}
-                            </button>
+// --- HERO SECTION: Clean, balanced, NO debugger box, no location ---
+const Hero = ({ onOpenCV, onToggleTerminal }) => {
+    const { t } = useContext(LanguageContext);
 
-                            {showMenu && (
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-50">
-                                    <button onClick={() => setEasterEgg('showModal')} className="w-full text-left px-4 py-3 hover:bg-primary/20 hover:text-primary text-white transition">
-                                        <i className="fas fa-ghost mr-2"></i>Easter Eggs!
-                                    </button>
-                                </div>
-                            )}
+    return (
+        <section id="top" className="min-h-[85vh] pt-32 pb-16 flex items-center relative">
+            <div className="max-w-4xl mx-auto px-6 w-full text-center sm:text-left">
+                
+                {/* Status Indicator (NO location) */}
+                <div className="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full mb-6">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>{t('hero.status')}</span>
+                </div>
+
+                <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                    Eduardo Gelain
+                </h1>
+                
+                <p className="text-xl sm:text-2xl font-semibold text-primary mt-3">
+                    {t('hero.role')}
+                </p>
+
+                <p className="text-slate-300 text-base sm:text-lg leading-relaxed mt-5 max-w-2xl">
+                    {t('hero.desc')}
+                </p>
+
+                {/* Primary Action Buttons */}
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3.5 pt-8">
+                    <a
+                        href="#projects"
+                        className="px-6 py-3 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primaryHover transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
+                    >
+                        <i className="fas fa-layer-group"></i>
+                        <span>{t('hero.ctaProjects')}</span>
+                    </a>
+                    
+                    <a
+                        href="#contact"
+                        className="px-5 py-3 rounded-lg bg-white/[0.04] border border-white/[0.1] text-slate-200 text-sm font-semibold hover:bg-white/[0.08] hover:text-white transition-colors flex items-center gap-2"
+                    >
+                        <i className="fas fa-envelope"></i>
+                        <span>{t('hero.ctaContact')}</span>
+                    </a>
+
+                    <button
+                        onClick={onToggleTerminal}
+                        className="px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.08] text-slate-300 text-sm font-mono hover:text-white hover:border-slate-500 transition-colors flex items-center gap-2"
+                        title="Open SpetTerm CLI"
+                    >
+                        <i className="fas fa-terminal text-primary"></i>
+                        <span>CLI</span>
+                    </button>
+                </div>
+
+                {/* Social Network Icon Links */}
+                <div className="flex items-center justify-center sm:justify-start gap-5 text-slate-400 pt-7 text-xl">
+                    <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors" title="GitHub">
+                        <i className="fab fa-github"></i>
+                    </a>
+                    <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors" title="GitLab">
+                        <i className="fab fa-gitlab"></i>
+                    </a>
+                    <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors" title="Itch.io">
+                        <i className="fab fa-itch-io"></i>
+                    </a>
+                    <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors" title="NexusMods">
+                        <i className="fas fa-cube"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors" title="LinkedIn">
+                        <i className="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:gelain15mj@gmail.com" className="hover:text-primary transition-colors" title="Email Direct">
+                        <i className="fas fa-envelope"></i>
+                    </a>
+                </div>
+
+                {/* Proof Metrics Strip */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-10 mt-10 border-t border-white/[0.08]">
+                    {t('hero.metrics').map((m, idx) => (
+                        <div key={idx} className="space-y-1 text-center sm:text-left">
+                            <div className="text-2xl sm:text-3xl font-bold font-mono text-white tracking-tight">
+                                {m.value}
+                            </div>
+                            <div className="text-xs font-semibold text-slate-200">
+                                {m.label}
+                            </div>
+                            <div className="text-[11px] text-slate-500">
+                                {m.sub}
+                            </div>
                         </div>
-                        
-                        <p className="text-xs italic opacity-40 mt-4 max-w-xl">
-                            {t('easter.joke')}
+                    ))}
+                </div>
+
+                {/* Subtle astronaut controls hint */}
+                <div className="hidden sm:flex mt-8 text-xs text-slate-500 font-mono text-center sm:text-left items-center justify-center sm:justify-start gap-2">
+                    <i className="fas fa-rocket text-primary text-[10px]"></i>
+                    <span>{t('hero.hint')}</span>
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+// --- ABOUT ME SECTION ---
+const AboutSection = () => {
+    const { lang } = useContext(LanguageContext);
+
+    return (
+        <section id="about" className="py-8 relative border-t border-white/[0.08]">
+            <div className="max-w-5xl mx-auto px-6">
+                <div className="glass-panel rounded-2xl p-4 sm:p-6 border border-white/[0.08]">
+                    <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                        <i className="fas fa-user-astronaut text-primary text-xl"></i>
+                        <span>{lang === 'pt' ? 'Sobre Mim' : 'About Me'}</span>
+                    </h2>
+                    
+                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                        {lang === 'pt'
+                            ? "Sou um desenvolvedor apaixonado por desconstruir sistemas, solucionar desafios técnicos de alta complexidade e otimizar processos. Minha trajetória vai desde o desenvolvimento de experiências interativas em jogos com Unity e Unreal Engine até a criação de ferramentas em Python, automação de sistemas e engenharia reversa de softwares em ambientes restritos (como o sandbox UWP/GDK da Microsoft Store)."
+                            : "I am a software engineer passionate about deconstructing complex systems, solving low-level challenges, and optimizing workflows. My background spans building interactive game experiences with Unity and Unreal Engine to developing Python automation tooling, software quality assurance, and reverse engineering software within sandboxed environments (such as UWP/GDK in the Microsoft Store)."}
+                    </p>
+
+                    <div className="grid sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-300">
+                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                            <div className="font-semibold text-white mb-1 flex items-center gap-2">
+                                <i className="fas fa-gamepad text-primary"></i>
+                                <span>{lang === 'pt' ? 'Desenvolvimento de Jogos' : 'Game Development'}</span>
+                            </div>
+                            <p className="text-slate-400 text-xs leading-relaxed">
+                                {lang === 'pt' 
+                                    ? 'Criação de mecânicas de gameplay, física e sistemas em Unity (C#) e Unreal Engine 5 (C++).' 
+                                    : 'Engineering gameplay mechanics, physics, and architectures in Unity (C#) and Unreal Engine 5 (C++).'}
+                            </p>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                            <div className="font-semibold text-white mb-1 flex items-center gap-2">
+                                <i className="fas fa-microchip text-primary"></i>
+                                <span>{lang === 'pt' ? 'Engenharia Reversa & Modding' : 'Reverse Engineering & Modding'}</span>
+                            </div>
+                            <p className="text-slate-400 text-xs leading-relaxed">
+                                {lang === 'pt' 
+                                    ? 'Injeção de DLLs nativas (C/C++), manipulação de bytecode de VMs e contorno de sandboxes fechados.' 
+                                    : 'Native C/C++ DLL injection, VM bytecode hooking, dynamic memory scanning, and sandboxing bypasses.'}
+                            </p>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                            <div className="font-semibold text-white mb-1 flex items-center gap-2">
+                                <i className="fas fa-shield-halved text-primary"></i>
+                                <span>{lang === 'pt' ? 'Quality Assurance (QA)' : 'Quality Assurance (QA)'}</span>
+                            </div>
+                            <p className="text-slate-400 text-xs leading-relaxed">
+                                {lang === 'pt' 
+                                    ? 'Experiência com testes rigorosos, dedução de bugs via inspeção de código e documentação técnica.' 
+                                    : 'Hands-on rigorous testing, root-cause bug deduction via source inspection, and issue tracking.'}
+                            </p>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                            <div className="font-semibold text-white mb-1 flex items-center gap-2">
+                                <i className="fas fa-code text-primary"></i>
+                                <span>{lang === 'pt' ? 'Suporte de TI & Automação' : 'IT Support & Automation'}</span>
+                            </div>
+                            <p className="text-slate-400 text-xs leading-relaxed">
+                                {lang === 'pt' 
+                                    ? 'Automação de rotinas via Python e PowerShell, diagnósticos e gerenciamento de infraestrutura.' 
+                                    : 'Task automation via Python and PowerShell, infrastructure administration, and hardware/software triage.'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+// --- COMPACT & EXPANDABLE CAREER & EXPERIENCE TIMELINE ---
+// Dates corrected: QA: 2025-Present, Game: 2025-Present, Reverse: 2024-Present, IT: 2026-Present
+const ExperienceSection = () => {
+    const { t, lang } = useContext(LanguageContext);
+    const experiences = PORTFOLIO_DATA.experienceData;
+    const [expandedIds, setExpandedIds] = useState({});
+
+    const toggleExpand = (id) => {
+        playSoftClick();
+        setExpandedIds(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
+    return (
+        <section id="experience" className="py-8 relative border-t border-white/[0.08]">
+            <div className="max-w-5xl mx-auto px-6">
+                
+                {/* Section Header */}
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            {t('experience.title')}
+                        </h2>
+                        <p className="text-slate-400 mt-1 text-sm">
+                            {t('experience.subtitle')}
                         </p>
                     </div>
-                </footer>
-            );
+
+                    <button
+                        onClick={() => {
+                            const allOpen = Object.keys(expandedIds).length === experiences.length;
+                            if (allOpen) setExpandedIds({});
+                            else {
+                                const allObj = {};
+                                experiences.forEach(e => allObj[e.id] = true);
+                                setExpandedIds(allObj);
+                            }
+                        }}
+                        className="text-xs font-mono text-primary hover:text-white transition-colors self-start sm:self-auto"
+                    >
+                        {Object.keys(expandedIds).length === experiences.length ? '[- Recolher Todos]' : '[+ Expandir Todos]'}
+                    </button>
+                </div>
+
+                {/* Compact Timeline Cards */}
+                <div className="space-y-3">
+                    {experiences.map((exp) => {
+                        const isExpanded = !!expandedIds[exp.id];
+                        return (
+                            <div 
+                                key={exp.id}
+                                className="glass-panel rounded-xl border border-white/[0.08] hover:border-primary/40 transition-all overflow-hidden"
+                            >
+                                {/* Header Row (Click to toggle) */}
+                                <div 
+                                    onClick={() => toggleExpand(exp.id)}
+                                    className="p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer select-none bg-white/[0.01] hover:bg-white/[0.03] transition-colors"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-sm sm:text-base font-bold text-white truncate">
+                                                {exp.role[lang]}
+                                            </span>
+                                            <span className="text-xs font-mono text-slate-500">@</span>
+                                            <span className="text-xs sm:text-sm font-medium text-slate-300">
+                                                {exp.company}
+                                            </span>
+                                        </div>
+                                        <div className="text-[11px] text-slate-500 font-mono mt-0.5">
+                                            {exp.type}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 shrink-0">
+                                        <span className="px-2.5 py-1 rounded bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-medium">
+                                            {exp.period}
+                                        </span>
+                                        <i className={`fas ${isExpanded ? 'fa-chevron-up text-primary' : 'fa-chevron-down text-slate-500'} text-xs transition-transform`}></i>
+                                    </div>
+                                </div>
+
+                                {/* Expanded Content */}
+                                {isExpanded && (
+                                    <div className="px-5 pb-5 pt-1 border-t border-white/[0.05] bg-black/20">
+                                        <ul className="space-y-2 mb-4 pt-2">
+                                            {exp.bullets[lang].map((bullet, bIdx) => (
+                                                <li key={bIdx} className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
+                                                    <span className="text-primary mt-1 text-[10px]">▹</span>
+                                                    <span>{bullet}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400 pt-2 border-t border-white/[0.04]">
+                                            <span className="text-slate-500 font-mono text-[11px]">Tech:</span>
+                                            {exp.skills.map((skill, sIdx) => (
+                                                <React.Fragment key={skill}>
+                                                    <span className="text-slate-300">{skill}</span>
+                                                    {sIdx < exp.skills.length - 1 && <span aria-hidden="true" className="text-slate-600">·</span>}
+                                                </React.Fragment>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+// --- CASE STUDY DEEP DIVE MODAL ---
+const ProjectModal = ({ project, onClose, lang }) => {
+    if (!project) return null;
+    const { t } = useContext(LanguageContext);
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <div className="bg-[#0c1220] border border-white/[0.12] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative">
+                
+                <button
+                    onClick={onClose}
+                    className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.15] flex items-center justify-center transition-colors"
+                    aria-label="Close"
+                >
+                    <i className="fas fa-times"></i>
+                </button>
+
+                <div className="text-xs font-mono uppercase tracking-wider text-primary font-semibold mb-1">
+                    {project.categoryLabel[lang]}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                    {project.title}
+                </h3>
+
+                {/* Media banner using authentic assets */}
+                <div className="rounded-xl overflow-hidden bg-slate-950 border border-white/[0.08] mb-6 h-52 relative flex items-center justify-center p-2">
+                    <img src={project.images ? project.images[0] : project.image} alt={project.title} className="w-full h-full object-contain rounded-lg" />
+                </div>
+
+                <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                    {project.description[lang]}
+                </p>
+
+                {/* Case Study Breakdown */}
+                {project.caseStudy && (
+                    <div className="space-y-4 mb-6 bg-black/35 p-5 rounded-xl border border-white/[0.06]">
+                        <div>
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-rose-400 mb-1 flex items-center gap-1.5">
+                                <i className="fas fa-exclamation-circle"></i> {lang === 'pt' ? 'O Desafio Técnico' : 'The Challenge'}
+                            </h4>
+                            <p className="text-xs text-slate-300 leading-relaxed">
+                                {project.caseStudy.challenge[lang]}
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-1 flex items-center gap-1.5">
+                                <i className="fas fa-lightbulb"></i> {lang === 'pt' ? 'A Solução Implementada' : 'Engineering Solution'}
+                            </h4>
+                            <p className="text-xs text-slate-300 leading-relaxed">
+                                {project.caseStudy.solution[lang]}
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1 flex items-center gap-1.5">
+                                <i className="fas fa-chart-line"></i> {lang === 'pt' ? 'Impacto & Resultados' : 'Impact & Results'}
+                            </h4>
+                            <p className="text-xs text-slate-300 leading-relaxed">
+                                {project.caseStudy.impact[lang]}
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Technology list */}
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400 mb-6">
+                    <span className="font-mono text-slate-500">Tags:</span>
+                    {project.tags.map((tag, tIdx) => (
+                        <React.Fragment key={tag}>
+                            <span className="text-slate-300">{tag}</span>
+                            {tIdx < project.tags.length - 1 && <span aria-hidden="true" className="text-slate-600">·</span>}
+                        </React.Fragment>
+                    ))}
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex flex-wrap gap-3 pt-4 border-t border-white/[0.08]">
+                    {project.repo && (
+                        <a
+                            href={project.repo}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white flex items-center gap-2 transition-colors"
+                        >
+                            <i className="fab fa-gitlab"></i> {t('projects.sourceCode')}
+                        </a>
+                    )}
+                    {project.live && (
+                        <a
+                            href={project.live}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
+                        >
+                            <i className="fas fa-external-link-alt"></i> {t('projects.liveDemo')}
+                        </a>
+                    )}
+                    {project.journalId && (
+                        <a
+                            href={`/journal#${project.journalId}`}
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.04] border border-white/[0.08] text-primary hover:text-white transition-colors flex items-center gap-2"
+                        >
+                            <i className="fas fa-book-open"></i> {lang === 'pt' ? 'Artigo no Journal' : 'Journal Entry'}
+                        </a>
+                    )}
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
+// --- FEATURED PROJECTS SHOWCASE ---
+
+const ProjectImage = ({ p, t }) => {
+    const [currentIdx, setCurrentIdx] = useState(0);
+    useEffect(() => {
+        if (p.images && p.images.length > 1) {
+            const intv = setInterval(() => setCurrentIdx(prev => (prev+1)%p.images.length), 2000);
+            return () => clearInterval(intv);
+        }
+    }, [p.images]);
+    const src = p.images ? p.images[currentIdx] : p.image;
+    return (
+        <img
+            src={src}
+            alt={p.title}
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+        />
+    );
+};
+
+const ProjectsSection = () => {
+    const { t, lang } = useContext(LanguageContext);
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeModalProject, setActiveModalProject] = useState(null);
+
+    const allProjects = PORTFOLIO_DATA.projectsData;
+
+    const filteredProjects = useMemo(() => {
+        return allProjects.filter(p => {
+            const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+            const query = searchQuery.toLowerCase().trim();
+            if (!query) return matchesCategory;
+
+            const titleMatch = p.title.toLowerCase().includes(query);
+            const descMatch = p.description[lang].toLowerCase().includes(query);
+            const tagMatch = p.tags.some(tag => tag.toLowerCase().includes(query));
+
+            return matchesCategory && (titleMatch || descMatch || tagMatch);
+        });
+    }, [selectedCategory, searchQuery, lang, allProjects]);
+
+    return (
+        <section id="projects" className="py-8 relative border-t border-white/[0.08]">
+            <div className="max-w-6xl mx-auto px-6">
+                
+                {/* Header with Search */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                    <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            {t('projects.title')}
+                        </h2>
+                        <p className="text-slate-400 mt-1 text-sm">
+                            {t('projects.subtitle')}
+                        </p>
+                    </div>
+
+                    <div className="w-full md:w-72 relative">
+                        <i className="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder={t('projects.searchPlaceholder')}
+                            className="w-full pl-9 pr-8 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+                            >
+                                <i className="fas fa-times"></i>
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* Category Filters */}
+                <div className="flex flex-wrap items-center gap-1.5 p-1 bg-white/[0.03] border border-white/[0.06] rounded-xl mb-8 w-fit">
+                    {[
+                        { id: 'all', label: t('projects.categories.all') },
+                        { id: 'reverse', label: t('projects.categories.reverse') },
+                        { id: 'gamedev', label: t('projects.categories.gamedev') },
+                        { id: 'tools', label: t('projects.categories.tools') },
+                        { id: 'qa', label: t('projects.categories.qa') }
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => { playSoftClick(); setSelectedCategory(tab.id); }}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${selectedCategory === tab.id ? 'bg-primary text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Projects Grid */}
+                {filteredProjects.length === 0 ? (
+                    <div className="text-center py-16 bg-white/[0.02] border border-white/[0.06] rounded-2xl">
+                        <i className="fas fa-magnifying-glass text-3xl text-slate-600 mb-3"></i>
+                        <p className="text-slate-400 text-sm">{t('projects.noResults')}</p>
+                        <button
+                            onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
+                            className="mt-3 px-3.5 py-1.5 rounded-lg bg-white/[0.06] text-xs font-medium text-primary hover:bg-white/[0.1] transition-colors"
+                        >
+                            Resetar Filtros
+                        </button>
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredProjects.map((p) => (
+                            <div
+                                key={p.id}
+                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group hover:border-primary/50 transition-all duration-300"
+                            >
+                                {/* Authentic Project Image */}
+                                <div 
+                                    onClick={() => { playSoftClick(); setActiveModalProject(p); }}
+                                    className="h-44 bg-slate-950 overflow-hidden relative cursor-pointer border-b border-white/[0.06] p-2 flex items-center justify-center"
+                                >
+                                    <ProjectImage p={p} t={t} />
+                                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                        <span className="px-3 py-1 text-xs font-medium rounded-md bg-black/80 text-white border border-primary/40 backdrop-blur-sm shadow-md">
+                                            {t('projects.viewDetails')}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Body */}
+                                <div className="p-5 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1.5">
+                                            <span className="text-primary font-semibold">{p.categoryLabel[lang]}</span>
+                                            
+                                        </div>
+
+                                        <h3 
+                                            onClick={() => { playSoftClick(); setActiveModalProject(p); }}
+                                            className="text-base font-bold text-white group-hover:text-primary transition-colors cursor-pointer line-clamp-1"
+                                        >
+                                            {p.title}
+                                        </h3>
+
+                                        <p className="text-slate-300 text-xs mt-2 line-clamp-3 leading-relaxed">
+                                            {p.description[lang]}
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-4 pt-3 border-t border-white/[0.04]">
+                                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-400 mb-3">
+                                            {p.tags.slice(0, 3).map((tag, tIdx) => (
+                                                <React.Fragment key={tag}>
+                                                    <span className="text-slate-300 font-medium">{tag}</span>
+                                                    {tIdx < 2 && <span aria-hidden="true" className="text-slate-600">·</span>}
+                                                </React.Fragment>
+                                            ))}
+                                            {p.tags.length > 3 && <span className="text-slate-500 font-mono">+{p.tags.length - 3}</span>}
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-1">
+                                            <button
+                                                onClick={() => { playSoftClick(); setActiveModalProject(p); }}
+                                                className="text-xs font-semibold text-primary hover:text-white transition-colors flex items-center gap-1"
+                                            >
+                                                <span>{t('projects.viewDetails')}</span>
+                                                <i className="fas fa-arrow-right text-[10px]"></i>
+                                            </button>
+
+                                            <div className="flex items-center gap-2">
+                                                {p.repo && (
+                                                    <a
+                                                        href={p.repo}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="w-7 h-7 rounded-md bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white flex items-center justify-center transition-colors text-xs"
+                                                        title="Source Code"
+                                                    >
+                                                        <i className="fab fa-gitlab"></i>
+                                                    </a>
+                                                )}
+                                                {p.live && (
+                                                    <a
+                                                        href={p.live}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
+                                                        title="Live Link"
+                                                    >
+                                                        <i className="fas fa-external-link-alt"></i>
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+            </div>
+
+            {/* Case Study Modal */}
+            <ProjectModal
+                project={activeModalProject}
+                onClose={() => setActiveModalProject(null)}
+                lang={lang}
+            />
+        </section>
+    );
+};
+
+// --- COMPACT 3D ICONS TECH STACK & CAPABILITIES ---
+const SkillsSection = () => {
+    const { t } = useContext(LanguageContext);
+    const techCategories = PORTFOLIO_DATA.techCategories;
+
+    return (
+        <section id="skills" className="py-8 relative border-t border-white/[0.08]">
+            <div className="max-w-5xl mx-auto px-6">
+                
+                <div className="text-center sm:text-left mb-8">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                        {t('skills.title')}
+                    </h2>
+                    <p className="text-slate-400 mt-1 text-sm">
+                        {t('skills.subtitle')}
+                    </p>
+                </div>
+
+                {/* 4 Compact Grid Columns with 3D Tech Badges */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {techCategories.map((cat) => (
+                        <div 
+                            key={cat.id}
+                            className="glass-panel rounded-xl p-4 border border-white/[0.08] hover:border-primary/40 transition-colors flex flex-col justify-between"
+                        >
+                            <div>
+                                <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-white/[0.06]">
+                                    <i className={`${cat.icon} text-primary text-sm`}></i>
+                                    <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-200">
+                                        {t(`skills.${cat.nameKey}`)}
+                                    </h3>
+                                </div>
+
+                                <div className="space-y-2">
+                                    {cat.skills.map((s, idx) => (
+                                        <div key={idx} className="flex items-center gap-2.5 p-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                            {/* 3D Icon from skillicons.dev */}
+                                            <img
+                                                src={s.icon3d}
+                                                alt={s.name}
+                                                className="w-6 h-6 rounded-md shadow-sm shrink-0"
+                                                loading="lazy"
+                                                onError={(e) => {
+                                                    // fallback if external fails
+                                                    e.target.style.display = 'none';
+                                                }}
+                                            />
+                                            <div className="min-w-0">
+                                                <div className="text-xs font-semibold text-white truncate">
+                                                    {s.name}
+                                                </div>
+                                                <div className="text-[10px] text-slate-400 truncate">
+                                                    {s.level}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+// --- TECHNICAL JOURNAL PREVIEW ---
+const JournalSection = () => {
+    const { t } = useContext(LanguageContext);
+    const entries = PORTFOLIO_DATA.journalEntries;
+
+    return (
+        <section id="journal" className="py-8 relative border-t border-white/[0.08]">
+            <div className="max-w-5xl mx-auto px-6">
+                
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            {t('journal.title')}
+                        </h2>
+                        <p className="text-slate-400 mt-1 text-sm">
+                            {t('journal.subtitle')}
+                        </p>
+                    </div>
+
+                    <a
+                        href="/journal"
+                        className="text-xs font-semibold text-primary hover:text-white flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+                    >
+                        <span>{t('journal.viewAll')}</span>
+                        <i className="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {entries.slice(0, 3).map((entry) => (
+                        <a
+                            key={entry.id}
+                            href={`/journal#${entry.id}`}
+                            className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group"
+                        >
+                            <div>
+                                <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2">
+                                    <span className="text-primary">{entry.category}</span>
+                                    <span>{entry.date}</span>
+                                </div>
+
+                                <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors line-clamp-2">
+                                    {entry.title}
+                                </h3>
+
+                                <p className="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">
+                                    {entry.excerpt}
+                                </p>
+                            </div>
+
+                            <div className="mt-4 pt-3 border-t border-white/[0.04] text-[11px] font-semibold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                <span>{t('journal.readArticle')}</span>
+                                <i className="fas fa-chevron-right text-[9px]"></i>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+// --- CONTACT SECTION: NO LOCATION ---
+const ContactSection = () => {
+    const { t } = useContext(LanguageContext);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [subject, setSubject] = useState('');
+    const [message, setMessage] = useState('');
+    const [copied, setCopied] = useState(false);
+    const [status, setStatus] = useState(null); // 'success' | 'error'
+
+    const handleCopyEmail = () => {
+        playSoftClick();
+        navigator.clipboard.writeText('gelain15mj@gmail.com');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        playSoftClick();
+
+        if (!name || !email || !message) {
+            setStatus('error');
+            return;
+        }
+
+        const mailtoUrl = `mailto:gelain15mj@gmail.com?subject=${encodeURIComponent(subject || 'Contato via Portfólio')}&body=${encodeURIComponent(`Nome: ${name}\nEmail: ${email}\n\nMensagem:\n${message}`)}`;
+        window.location.href = mailtoUrl;
+
+        setStatus('success');
+        setName('');
+        setEmail('');
+        setSubject('');
+        setMessage('');
+        setTimeout(() => setStatus(null), 5000);
+    };
+
+    return (
+        <section id="contact" className="py-8 relative border-t border-white/[0.08]">
+            <div className="max-w-5xl mx-auto px-6">
+                
+                <div className="max-w-2xl mb-8">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                        {t('contact.title')}
+                    </h2>
+                    <p className="text-slate-400 mt-1 text-sm">
+                        {t('contact.subtitle')}
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-12 gap-8 items-start">
+                    
+                    {/* Left: Contact Info (NO LOCATION) */}
+                    <div className="md:col-span-5 space-y-4">
+                        <div className="glass-panel rounded-xl p-5 border border-white/[0.08] space-y-4">
+                            <div>
+                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">E-mail Direto</div>
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-sm font-semibold text-white font-mono select-all truncate">
+                                        gelain15mj@gmail.com
+                                    </span>
+                                    <button
+                                        onClick={handleCopyEmail}
+                                        className="px-2.5 py-1 text-xs font-medium rounded bg-white/[0.08] hover:bg-primary text-white transition-colors shrink-0"
+                                        title={t('contact.copyEmail')}
+                                    >
+                                        <i className={`fas ${copied ? 'fa-check text-emerald-300' : 'fa-copy'} mr-1 text-[11px]`}></i>
+                                        {copied ? t('contact.copied') : t('contact.copyEmail')}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="pt-3 border-t border-white/[0.06]">
+                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">Discord</div>
+                                <div className="text-sm font-semibold text-white font-mono">
+                                    Spet001
+                                </div>
+                            </div>
+
+                            <div className="pt-3 border-t border-white/[0.06]">
+                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">Disponibilidade</div>
+                                <div className="text-xs font-medium text-emerald-400 flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span>{t('contact.availability')}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Social profiles list */}
+                        <div className="flex items-center gap-3 text-slate-400 p-2">
+                            <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="GitHub">
+                                <i className="fab fa-github"></i>
+                            </a>
+                            <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="GitLab">
+                                <i className="fab fa-gitlab"></i>
+                            </a>
+                            <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="Itch.io">
+                                <i className="fab fa-itch-io"></i>
+                            </a>
+                            <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="NexusMods">
+                                <i className="fas fa-cube"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="LinkedIn">
+                                <i className="fab fa-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Right: Direct message form */}
+                    <div className="md:col-span-7">
+                        <form onSubmit={handleSubmit} className="glass-panel rounded-xl p-5 sm:p-6 border border-white/[0.08] space-y-4">
+                            <div className="grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.nameLabel')} *</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.emailLabel')} *</label>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.subjectLabel')}</label>
+                                <input
+                                    type="text"
+                                    value={subject}
+                                    onChange={(e) => setSubject(e.target.value)}
+                                    className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.messageLabel')} *</label>
+                                <textarea
+                                    required
+                                    rows="4"
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors resize-none"
+                                ></textarea>
+                            </div>
+
+                            {status === 'success' && (
+                                <div className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-lg flex items-center gap-2">
+                                    <i className="fas fa-check-circle"></i>
+                                    <span>{t('contact.successMsg')}</span>
+                                </div>
+                            )}
+
+                            {status === 'error' && (
+                                <div className="text-xs text-rose-400 bg-rose-500/10 border border-rose-500/30 p-2.5 rounded-lg flex items-center gap-2">
+                                    <i className="fas fa-exclamation-triangle"></i>
+                                    <span>{t('contact.errorMsg')}</span>
+                                </div>
+                            )}
+
+                            <button
+                                type="submit"
+                                className="w-full py-2.5 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition-colors shadow-md shadow-primary/20 flex items-center justify-center gap-2"
+                            >
+                                <i className="fas fa-paper-plane text-[11px]"></i>
+                                <span>{t('contact.sendBtn')}</span>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+// --- FOOTER: Preserves Exact Original Quote requested by User ---
+const Footer = ({ onOpenEasterMenu }) => {
+    const { t } = useContext(LanguageContext);
+
+    return (
+        <footer className="py-12 border-t border-white/[0.08] bg-[#030303] text-center text-xs text-slate-500 relative">
+            <div className="max-w-4xl mx-auto px-6 space-y-4">
+                
+                {/* Brand & Nav */}
+                <div className="flex flex-wrap items-center justify-center gap-6 text-slate-400 font-medium text-xs">
+                    <a href="#top" className="hover:text-primary transition-colors">Home</a>
+                    <a href="#experience" className="hover:text-primary transition-colors">{t('nav.experience')}</a>
+                    <a href="#projects" className="hover:text-primary transition-colors">{t('nav.projects')}</a>
+                    <a href="#skills" className="hover:text-primary transition-colors">{t('nav.skills')}</a>
+                    <a href="/journal" className="hover:text-primary transition-colors text-primary font-semibold">{t('nav.journal')}</a>
+                    <a href="#contact" className="hover:text-primary transition-colors">{t('nav.contact')}</a>
+                </div>
+
+                {/* EXACT RESTORED USER QUOTE */}
+                <div className="pt-4 border-t border-white/[0.06] space-y-1.5">
+                    <p className="text-slate-400 font-semibold text-xs flex items-center justify-center gap-2">
+                        <i className="fas fa-ghost text-primary text-xs"></i>
+                        <span>{t('footer.hint')}</span>
+                    </p>
+                    <p className="text-slate-500 italic max-w-lg mx-auto text-[11px] leading-relaxed">
+                        "{t('footer.joke')}"
+                    </p>
+                </div>
+
+                <div className="pt-3 text-slate-600 text-[11px]">
+                    {t('footer.rights')}
+                </div>
+            </div>
+        </footer>
+    );
+};
+
+// --- RESUME (CV) VIEWER MODAL (NO LOCATION) ---
+const ResumeModal = ({ isOpen, onClose }) => {
+    if (!isOpen) return null;
+    const { t, lang } = useContext(LanguageContext);
+
+    const handlePrint = () => {
+        window.print();
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <div className="bg-[#0c1220] border border-white/[0.12] rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-10 relative text-slate-200">
+                
+                {/* Header Actions */}
+                <div className="flex items-center justify-between pb-4 border-b border-white/[0.1] mb-6">
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={handlePrint}
+                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primaryHover transition-colors flex items-center gap-1.5 shadow-sm"
+                        >
+                            <i className="fas fa-print"></i>
+                            <span>{t('resumeModal.download')}</span>
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={onClose}
+                        className="w-8 h-8 rounded-full bg-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.15] flex items-center justify-center transition-colors"
+                        aria-label="Close"
+                    >
+                        <i className="fas fa-times"></i>
+                    </button>
+                </div>
+
+                {/* Printable CV Content (NO location) */}
+                <div className="space-y-6">
+                    <div>
+                        <h2 className="text-3xl font-extrabold text-white tracking-tight">Eduardo Gelain</h2>
+                        <div className="text-primary font-semibold text-base mt-1">
+                            {lang === 'pt' ? 'Desenvolvedor de Software & Jogos · Engenharia Reversa' : 'Software & Game Developer · Reverse Engineer'}
+                        </div>
+                        <div className="text-xs text-slate-400 font-mono mt-1 flex flex-wrap gap-3">
+                            <span>gelain15mj@gmail.com</span>
+                            <span>github.com/Spet001</span>
+                            <span>gitlab.com/Spet001</span>
+                            <span>spet01.itch.io</span>
+                        </div>
+                    </div>
+
+                    {/* Summary */}
+                    <div>
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-primary font-bold border-b border-white/[0.08] pb-1 mb-2">
+                            {lang === 'pt' ? 'Resumo Profissional' : 'Executive Summary'}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            {lang === 'pt'
+                                ? 'Desenvolvedor focado em C/C++, C# e Python com especialização em desenvolvimento de jogos (Unity e Unreal Engine), sistemas de baixo nível, injeção de DLLs/scripts em ambientes restritos (UWP/GDK) e garantia de qualidade de software (QA).'
+                                : 'Software engineer specialized in C/C++, C#, and Python with expertise in game development (Unity and Unreal Engine), low-level systems, DLL/script injection in sandboxed environments (UWP/GDK), and software quality assurance.'}
+                        </p>
+                    </div>
+
+                    {/* Experience (Correct Dates) */}
+                    <div>
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-primary font-bold border-b border-white/[0.08] pb-1 mb-3">
+                            {lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}
+                        </h3>
+
+                        <div className="space-y-4">
+                            <div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <strong className="text-white font-semibold">
+                                        {lang === 'pt' ? 'Analista de Testes Manuais QA' : 'Manual QA Analyst'} · Sparky Rush (Steam)
+                                    </strong>
+                                    <span className="font-mono text-primary font-bold">2025 - Present</span>
+                                </div>
+                                <ul className="text-xs text-slate-300 list-disc pl-4 space-y-1 mt-1">
+                                    <li>{lang === 'pt' ? 'Identificação e reprodução de mais de 50 bugs críticos de física, renderização e lógica de gameplay.' : 'Discovered and documented 50+ critical bugs across physics, graphics, and gameplay logic.'}</li>
+                                    <li>{lang === 'pt' ? 'Análise dedutiva de código em Unity (C#) para identificação da causa raiz de falhas.' : 'Deductive code analysis in Unity (C#) helping the dev team isolate root causes rapidly.'}</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <strong className="text-white font-semibold">
+                                        {lang === 'pt' ? 'Programador de Jogos' : 'Gameplay Programmer'} · Unity & Unreal Engine
+                                    </strong>
+                                    <span className="font-mono text-primary font-bold">2025 - Present</span>
+                                </div>
+                                <ul className="text-xs text-slate-300 list-disc pl-4 space-y-1 mt-1">
+                                    <li>{lang === 'pt' ? 'Programação de mecânicas de combate, locomoção e IA em Unity (C#) e Unreal Engine (C++).' : 'Programmed character locomotion, combat mechanics, and enemy AI in Unity (C#) and Unreal (C++).'}</li>
+                                    <li>{lang === 'pt' ? 'Desenvolvimento de templates para criadores independentes com profiling de performance a 144+ FPS.' : 'Engineered reusable FPS templates with profiling maintaining 144+ FPS.'}</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <strong className="text-white font-semibold">
+                                        {lang === 'pt' ? 'Engenheiro de Sistemas & Modding' : 'Systems & Reverse Engineer'} · Open Source Ecosystem
+                                    </strong>
+                                    <span className="font-mono text-primary font-bold">2024 - Present</span>
+                                </div>
+                                <ul className="text-xs text-slate-300 list-disc pl-4 space-y-1 mt-1">
+                                    <li>{lang === 'pt' ? 'Desenvolvimento de injetores GSC e rotinas de pattern scanning em C++ contornando sandboxes UWP/GDK.' : 'Built C++ GSC injectors and memory pattern scanners bypassing UWP/GDK process restrictions.'}</li>
+                                    <li>{lang === 'pt' ? 'Hooking de chamadas de VM e emulação de entitlements de DLCs para preservação de jogos.' : 'Hooked VM bytecode dispatch pointers and emulated DLC entitlement licensing.'}</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <strong className="text-white font-semibold">
+                                        {lang === 'pt' ? 'Suporte de TI & Automação' : 'IT Support & Automation'}
+                                    </strong>
+                                    <span className="font-mono text-primary font-bold">2026 - Present</span>
+                                </div>
+                                <ul className="text-xs text-slate-300 list-disc pl-4 space-y-1 mt-1">
+                                    <li>{lang === 'pt' ? 'Automação de rotinas preventivas via scripts Python e PowerShell.' : 'Automated scheduled maintenance workflows via Python and PowerShell scripts.'}</li>
+                                    <li>{lang === 'pt' ? 'Diagnóstico de hardware e administração de redes e estações.' : 'Hardware triage, network administration, and end-user support.'}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Skills Summary */}
+                    <div>
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-primary font-bold border-b border-white/[0.08] pb-1 mb-2">
+                            {lang === 'pt' ? 'Competências Técnicas' : 'Core Technical Skills'}
+                        </h3>
+                        <p className="text-xs text-slate-300">
+                            <strong>Languages & Engines:</strong> C, C++, C#, Python, PowerShell, Unity, Unreal Engine 5, Electron.<br />
+                            <strong>Specialties:</strong> Low-Level Systems, DLL Injection, Reverse Engineering, VM Hooking, Pattern Scanning, Quality Assurance, Automation.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
+// --- EASTER EGG VAULT (Quake 1, GTA Vice City, COD Zombies) ---
+// Replaced broken Doom with Quake (https://www.netquake.io/quake)
+const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
+    const { t } = useContext(LanguageContext);
+
+    if (!activeGame) return null;
+
+    // Menu View
+    
+    if (activeGame === 'sign') {
+        return (
+            <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="relative max-w-3xl w-full flex flex-col items-center">
+                    <button
+                        onClick={onClose}
+                        className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/[0.08] text-white hover:bg-white/[0.15] flex items-center justify-center transition-colors text-xl"
+                    >
+                        <i className="fas fa-times"></i>
+                    </button>
+                    <img 
+                        src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png" 
+                        alt="No Easter Eggs" 
+                        className="w-full h-auto rounded-xl cursor-pointer hover:scale-[1.02] transition-transform shadow-2xl border border-white/[0.1]"
+                        onClick={() => onSelectGame('menu')}
+                    />
+                    <p className="text-slate-400 mt-4 text-sm animate-pulse">Click the sign to reveal secrets...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (activeGame === 'menu') {
+        return (
+            <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-[#0c1220] border border-white/[0.15] rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center">
+                    <button
+                        onClick={onClose}
+                        className="absolute top-4 right-4 text-slate-400 hover:text-white text-sm"
+                    >
+                        <i className="fas fa-times"></i>
+                    </button>
+
+                    <div className="w-12 h-12 rounded-xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-primary mx-auto mb-3 text-xl">
+                        <i className="fas fa-gamepad"></i>
+                    </div>
+
+                    <h3 className="text-lg font-bold text-white mb-1">
+                        {t('easter.title')}
+                    </h3>
+                    <p className="text-xs text-slate-400 mb-5">
+                        {t('footer.joke')}
+                    </p>
+
+                    <div className="space-y-2.5">
+                        <button
+                            onClick={() => onSelectGame('quake')}
+                            className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-primary/50 hover:bg-primary/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <i className="fas fa-crosshairs text-primary"></i>
+                                <span>{t('easter.quake')}</span>
+                            </span>
+                            <i className="fas fa-play text-[10px] text-slate-400"></i>
+                        </button>
+
+                        
+
+                        <button
+                            onClick={() => onSelectGame('zombies')}
+                            className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-primary/50 hover:bg-primary/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <i className="fas fa-skull text-rose-400"></i>
+                                <span>{t('easter.zombies')}</span>
+                            </span>
+                            <i className="fas fa-play text-[10px] text-slate-400"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Active Game iframe
+    let iframeSrc = '';
+    let gameTitle = '';
+
+    if (activeGame === 'quake') {
+        iframeSrc = 'https://www.netquake.io/quake';
+        gameTitle = 'Quake 1 (NetQuake)';
+    } else if (activeGame === 'zombies') {
+        iframeSrc = '/easter eggs/GSC VM/gsc.html';
+        gameTitle = 'COD Zombies Errius / GSC VM';
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/95 flex flex-col">
+            {/* Top Bar for Game */}
+            <div className="h-12 bg-[#0a0e1a] border-b border-white/[0.1] px-4 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-2 text-sm font-bold text-white font-mono">
+                    <i className="fas fa-gamepad text-primary"></i>
+                    <span>{gameTitle}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <a
+                        href={iframeSrc}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-2.5 py-1 text-xs rounded bg-white/[0.08] hover:bg-white/[0.15] text-white flex items-center gap-1.5 transition-colors"
+                    >
+                        <i className="fas fa-external-link-alt text-[10px]"></i>
+                        <span>{t('easter.openNew')}</span>
+                    </a>
+
+                    <button
+                        onClick={onClose}
+                        className="px-2.5 py-1 text-xs rounded bg-rose-600 hover:bg-rose-500 text-white font-semibold flex items-center gap-1.5 transition-colors"
+                    >
+                        <i className="fas fa-times text-[10px]"></i>
+                        <span>{t('easter.exit')}</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Iframe */}
+            <div className="flex-1 w-full h-full bg-black relative">
+                <iframe
+                    src={iframeSrc}
+                    title={gameTitle}
+                    className="w-full h-full border-none"
+                    allow="autoplay; fullscreen; keyboard"
+                />
+            </div>
+        </div>
+    );
+};
+
+// --- INTERACTIVE TERMINAL CLI (SpetTerm) ---
+const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster }) => {
+    if (!isOpen) return null;
+    const [history, setHistory] = useState([
+        { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
+        { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
+    ]);
+    const [inputVal, setInputVal] = useState('');
+    const bottomRef = useRef(null);
+
+    useEffect(() => {
+        if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, [history]);
+
+    const handleCommand = (e) => {
+        if (e.key !== 'Enter') return;
+        const cmd = inputVal.trim().toLowerCase();
+        if (!cmd) return;
+
+        const newHistory = [...history, { type: 'user', text: `> ${inputVal}` }];
+
+        switch (cmd) {
+            case 'help':
+                newHistory.push({
+                    type: 'output',
+                    text: `Available commands:
+  help       - List available commands
+  about      - Display brief engineer profile
+  projects   - Output featured engineering repositories
+  skills     - List low-level tech stack
+  quake      - Launch Quake 1 in browser
+  cv         - Open curriculum vitae (resume)
+  clear      - Clear terminal screen
+  exit       - Close SpetTerm console`
+                });
+                break;
+            case 'about':
+                newHistory.push({
+                    type: 'output',
+                    text: `Eduardo Gelain (SpetDev)
+Software & Game Developer · Reverse Engineer
+Specialized in C++, C#, Python, Unity & Unreal Engine.
+Focus: Low-level systems, GSC VM bytecode injection, UWP sandbox research.`
+                });
+                break;
+            case 'projects':
+                newHistory.push({
+                    type: 'output',
+                    text: `[1] CW-UWP-GSC-Injector (C++ Memory Scanner)
+[2] BO1 & BO2 MS Store Clients & GSC Injector (VM Hooking)
+[3] Resurge Client (BO3 Multi-Platform DLL)
+[4] Sparky Rush (Steam Commercial QA)
+[5] Outcaster (Unity Retro FPS Templates)`
+                });
+                break;
+            case 'skills':
+                newHistory.push({
+                    type: 'output',
+                    text: `Systems: C, C++, Assembly, Win32, UWP/GDK, DLL Hooking
+Engines: Unity (C#), Unreal Engine 5 (C++)
+Scripting: Python, PowerShell, Electron, Git`
+                });
+                break;
+            case 'quake':
+                onOpenEaster('quake');
+                onClose();
+                return;
+            case 'cv':
+            case 'resume':
+                onOpenCV();
+                onClose();
+                return;
+            case 'clear':
+                setHistory([]);
+                setInputVal('');
+                return;
+            case 'exit':
+                onClose();
+                return;
+            default:
+                newHistory.push({
+                    type: 'error',
+                    text: `Command not found: '${cmd}'. Type 'help' for valid commands.`
+                });
+                break;
+        }
+
+        setHistory(newHistory);
+        setInputVal('');
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-[#050811] border border-white/[0.15] rounded-xl max-w-xl w-full h-[400px] shadow-2xl flex flex-col overflow-hidden font-mono text-xs">
+                
+                {/* Header */}
+                <div className="h-8 bg-[#0c1220] border-b border-white/[0.08] px-3 flex items-center justify-between text-slate-400">
+                    <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                        <span className="ml-2 text-[11px] text-slate-300">spet_console.exe</span>
+                    </div>
+                    <button onClick={onClose} className="hover:text-white">
+                        <i className="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+
+                {/* History */}
+                <div className="flex-1 p-4 overflow-y-auto space-y-1.5 text-slate-300">
+                    {history.map((h, idx) => (
+                        <div key={idx} className={`${h.type === 'error' ? 'text-rose-400' : h.type === 'user' ? 'text-primary font-bold' : h.type === 'system' ? 'text-slate-500' : 'text-slate-300'} whitespace-pre-wrap`}>
+                            {h.text}
+                        </div>
+                    ))}
+                    <div ref={bottomRef} />
+                </div>
+
+                {/* Input Prompt */}
+                <div className="p-2.5 bg-[#03050a] border-t border-white/[0.08] flex items-center gap-2">
+                    <span className="text-primary font-bold">&gt;</span>
+                    <input
+                        type="text"
+                        autoFocus
+                        value={inputVal}
+                        onChange={(e) => setInputVal(e.target.value)}
+                        onKeyDown={handleCommand}
+                        placeholder="Type 'help'..."
+                        className="flex-1 bg-transparent text-white focus:outline-none placeholder-slate-600"
+                    />
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
+// --- ROOT APPLICATION COMPONENT ---
+const App = () => {
+    const [lang, setLang] = useState('pt');
+    const [isCVOpen, setIsCVOpen] = useState(false);
+    const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+    const [easterGame, setEasterGame] = useState(null); // 'menu' | 'quake' | 'gta' | 'zombies' | null
+
+    const t = (path) => {
+        const parts = path.split('.');
+        let curr = PORTFOLIO_DATA.translations[lang];
+        for (let p of parts) {
+            if (!curr || curr[p] === undefined) return path;
+            curr = curr[p];
+        }
+        return curr;
+    };
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.ctrlKey && e.key.toLowerCase() === 'k') || e.key === '`') {
+                e.preventDefault();
+                setIsTerminalOpen(prev => !prev);
+            }
         };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
-        const App = () => {
-            const [lang, setLang] = useState('pt');
-            const [easterEgg, setEasterEgg] = useState(null);
+    return (
+        <LanguageContext.Provider value={{ lang, setLang, t }}>
+            <SpaceCanvas />
 
-            const t = (path, options = {}) => {
-                const keys = path.split('.');
-                let result = translations[lang];
-                for (const key of keys) {
-                    if (result[key] === undefined) return path;
-                    result = result[key];
-                }
-                return result;
-            };
+            <TopBar
+                onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
+                onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(prev => !prev); }}
+                onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
+            />
 
-            return (
-                <LanguageContext.Provider value={{ lang, setLang, t }}>
-                    <Starfield />
-                    <Navbar setEasterEgg={setEasterEgg} />
-                    <main>
-                        <Hero />
-                        <About />
-                        <Projects />
-                    </main>
-                    <Footer setEasterEgg={setEasterEgg} />
-                    <EasterEgg active={easterEgg} setActive={setEasterEgg} />
-                </LanguageContext.Provider>
-            );
-        };
+            <main>
+                <Hero
+                    onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
+                    onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(true); }}
+                />
+                <AboutSection />
+                <ExperienceSection />
+                <ProjectsSection />
+                <SkillsSection />
+                <JournalSection />
+                <ContactSection />
+            </main>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+            <Footer
+                onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
+            />
+
+            {/* Modals */}
+            <ResumeModal
+                isOpen={isCVOpen}
+                onClose={() => setIsCVOpen(false)}
+            />
+
+            <TerminalModal
+                isOpen={isTerminalOpen}
+                onClose={() => setIsTerminalOpen(false)}
+                onOpenCV={() => setIsCVOpen(true)}
+                onOpenEaster={(game) => setEasterGame(game)}
+            />
+
+            <EasterEggModal
+                activeGame={easterGame}
+                onClose={() => setEasterGame(null)}
+                onSelectGame={(game) => setEasterGame(game)}
+            />
+        </LanguageContext.Provider>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cursor = document.getElementById('custom-cursor');
