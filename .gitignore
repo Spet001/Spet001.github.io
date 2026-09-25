@@ -25,3 +25,7 @@ dist-ssr
 *.sln
 *.sw?
 texto.md
+
+# Env
+*.env
+*.example
