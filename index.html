@@ -529,41 +529,92 @@ const PORTFOLIO_DATA = {
 
     // PROJECTS DATA - Uses ONLY authentic local images from assets/
     projectsData: [
-
-        {
-            id: "bo2_crossplay_relay",
-            category: "reverse",
-            categoryLabel: { pt: "Engenharia Reversa / Net", en: "Reverse Engineering / Net" },
-            image: "assets/relay.gif",
-            title: "BO2 Crossplay Relay (PS5 x PC)",
-            repo: "https://gitlab.com/Spet001/t6-zpgdk-crossplay-relay",
+{
+            id: "outcaster_fps",
+            category: "gamedev",
+            categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
+            image: "assets/outcaster img2.png",
+            title: "Outcaster - Retro FPS Templates",
             featured: true,
-            tags: ["Python", "C++", "Npcap", "Packet Sniffing", "Networking"],
+            live: "https://spet01.itch.io/",
+            tags: ["Unity", "C#", "Game Design", "AI Navigation", "Physics"],
             description: {
-                pt: "Ponte de tradução de protocolo em tempo real que permite jogar Call of Duty: Black Ops II entre PC e consoles (PS5) usando System Link, traduzindo pacotes UDP nativos.",
-                en: "Real-time protocol translation bridge that allows playing Call of Duty: Black Ops II between PC and consoles (PS5) via System Link by translating raw UDP packets."
+                pt: "Templates completos de FPS retrô (boomer shooter) criados em Unity e C#. Sistemas avançados de movimentação dinâmica (bunny hop, dash), gerenciamento de armas, projéteis balísticos e IA inimiga por estados.",
+                en: "Complete retro FPS templates (boomer shooter style) developed in Unity and C#. Features dynamic locomotion physics (bunny hopping, dashes), weapon management, ballistic projectiles, and state-machine enemy AI."
             },
-            journalId: "Crossplay-PS5-XBOX-PC",
             caseStudy: {
                 challenge: {
-                    pt: "Criar crossplay em um jogo legado (2012) onde a camada de rede e beacons são incompatíveis entre plataformas.",
-                    en: "Enable crossplay on a legacy game (2012) where the network layer and discovery beacons are strictly incompatible across platforms."
+                    pt: "Criar uma arquitetura de código extensível e performática para desenvolvedores independentes que desejam criar shooters rápidos sem recriar física do zero.",
+                    en: "Design an extensible, clean codebase for indie creators needing high-velocity shooter mechanics without building physics pipelines from scratch."
                 },
                 solution: {
-                    pt: "Uso do Npcap para injetar pacotes Ethernet no Layer-2, recalculando checksums IPv4 e traduzindo payloads para que o console (PS5) e PC conversem nativamente na LAN.",
-                    en: "Used Npcap to inject raw Ethernet packets at Layer-2, recalculating IPv4 checksums and translating payloads so PS5 and PC converse natively over LAN."
+                    pt: "Arquitetura desacoplada baseada em ScriptableObjects e máquinas de estados finitos (FSM) para armas e comportamento de IA, otimizada para manter 144+ FPS.",
+                    en: "Modular architecture powered by ScriptableObjects and finite state machines for weapons and enemy AI, profiling at 144+ FPS."
                 },
                 impact: {
-                    pt: "Crossplay perfeito entre PS5 e PC. Suporte experimental em andamento para a arquitetura Big-Endian do Xbox 360.",
-                    en: "Perfect functional crossplay between PS5 and PC. Experimental support underway for Xbox 360 Big-Endian architecture."
+                    pt: "Disponibilizado na Itch.io com avaliações positivas de desenvolvedores de jogos independentes.",
+                    en: "Highly rated on Itch.io by indie game developers as a foundation for commercial titles."
                 }
             }
         },
-
-
-
-
-        {
+{
+            id: "sparky_rush_qa",
+            category: "qa",
+            categoryLabel: { pt: "QA & Controle de Qualidade", en: "QA & Testing" },
+            image: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257185670/d0cf56f005af6f109edd9ee603dc2da75fa0aaf1/movie_232x130.jpg?t=1756993430",
+            title: "Sparky Rush: Purrils in Pawsville (Steam QA)",
+            featured: true,
+            live: "https://store.steampowered.com/app/3592020/Sparky_Rush_Purrils_in_Pawsville/",
+            tags: ["QA Testing", "Unity", "C#", "Steam", "Bug Analysis"],
+            description: {
+                pt: "Atuação profissional em Quality Assurance no jogo de plataforma 3D Sparky Rush. Mapeamento, reprodução e relatórios de mais de 50 bugs críticos com análise da lógica em C#.",
+                en: "Professional Quality Assurance role on commercial 3D platformer Sparky Rush. Discovered, documented, and helped resolve 50+ critical bugs via code-level deductions in Unity/C#."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Garantir a integridade da física do personagem em colisões angulares complexas e evitar perda de progresso durante saves simultâneos.",
+                    en: "Verify physics robustness during steep angular character collisions and prevent race-condition save game corruption."
+                },
+                solution: {
+                    pt: "Criação de matrizes sistemáticas de teste com casos de borda e stress-testing reproduzindo condições de hardware de baixa performance.",
+                    en: "Designed comprehensive test matrices covering edge-case inputs, physics desync, and low-spec hardware regression."
+                },
+                impact: {
+                    pt: "Jogo lançado na Steam com alta estabilidade e sem travamentos bloqueantes reportados.",
+                    en: "Released smoothly on Steam with zero game-breaking release bugs."
+                }
+            }
+        },
+{
+            id: "resurge_client",
+            category: "reverse",
+            categoryLabel: { pt: "Engenharia Reversa & Sistemas", en: "Reverse Engineering & Systems" },
+            image: "https://resurge.gamer.gd/RESURGE_600_x_240_px_1.gif",
+            title: "Resurge Client (BO3 Multi-Platform)",
+            featured: true,
+            live: "https://resurge.gamer.gd/",
+            repo: "https://gitlab.com/Spet001/resurgegdkbackup",
+            tags: ["C/C++", "Electron", "DLL Injection", "Networking", "Crossplay POC"],
+            description: {
+                pt: "Cliente modificado de alto desempenho para Black Ops 3 com suporte a UWP e Steam. Inclui DLL nativa de injeção, integração de rede para crossplay e launcher em Electron para patches de segurança.",
+                en: "High-performance custom client for Black Ops 3 supporting both UWP and Steam. Features native C++ injection DLL, network relay proof-of-concept for crossplay, and Electron desktop launcher."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Jogadores de PC na Windows Store e Steam estavam isolados em ecossistemas incompatíveis com vulnerabilidades de segurança não corrigidas pela publicadora.",
+                    en: "PC players across Windows Store and Steam were segregated with incompatible network protocols and unpatched security vulnerabilities."
+                },
+                solution: {
+                    pt: "Injeção de DLL no Xgameruntime com correção de exploits (T7 Patch integration) e emulação de pacotes de matchmaking entre plataformas.",
+                    en: "Engineered DLL injection targeting Xgameruntime with built-in security exploit mitigation and matchmaking packet translation."
+                },
+                impact: {
+                    pt: "Comunidade ativa com milhares de sessões seguras e jogabilidade livre de travamentos.",
+                    en: "Thousands of protected multiplayer sessions played without crash exploits."
+                }
+            }
+        },
+{
             id: "cw_gsc_injector",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa", en: "Reverse Engineering" },
@@ -592,7 +643,7 @@ const PORTFOLIO_DATA = {
                 }
             }
         },
-        {
+{
             id: "bo2_bo1_msclients",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & GSC Modding", en: "Reverse Engineering & GSC Modding" },
@@ -626,7 +677,7 @@ const PORTFOLIO_DATA = {
                 }
             }
         },
-        {
+{
             id: "gsc_dumps_and_sources",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & GSC Dumps", en: "Reverse Engineering & GSC Dumps" },
@@ -657,92 +708,7 @@ const PORTFOLIO_DATA = {
                 }
             }
         },
-        {
-            id: "resurge_client",
-            category: "reverse",
-            categoryLabel: { pt: "Engenharia Reversa & Sistemas", en: "Reverse Engineering & Systems" },
-            image: "https://resurge.gamer.gd/RESURGE_600_x_240_px_1.gif",
-            title: "Resurge Client (BO3 Multi-Platform)",
-            featured: true,
-            live: "https://resurge.gamer.gd/",
-            repo: "https://gitlab.com/Spet001/resurgegdkbackup",
-            tags: ["C/C++", "Electron", "DLL Injection", "Networking", "Crossplay POC"],
-            description: {
-                pt: "Cliente modificado de alto desempenho para Black Ops 3 com suporte a UWP e Steam. Inclui DLL nativa de injeção, integração de rede para crossplay e launcher em Electron para patches de segurança.",
-                en: "High-performance custom client for Black Ops 3 supporting both UWP and Steam. Features native C++ injection DLL, network relay proof-of-concept for crossplay, and Electron desktop launcher."
-            },
-            caseStudy: {
-                challenge: {
-                    pt: "Jogadores de PC na Windows Store e Steam estavam isolados em ecossistemas incompatíveis com vulnerabilidades de segurança não corrigidas pela publicadora.",
-                    en: "PC players across Windows Store and Steam were segregated with incompatible network protocols and unpatched security vulnerabilities."
-                },
-                solution: {
-                    pt: "Injeção de DLL no Xgameruntime com correção de exploits (T7 Patch integration) e emulação de pacotes de matchmaking entre plataformas.",
-                    en: "Engineered DLL injection targeting Xgameruntime with built-in security exploit mitigation and matchmaking packet translation."
-                },
-                impact: {
-                    pt: "Comunidade ativa com milhares de sessões seguras e jogabilidade livre de travamentos.",
-                    en: "Thousands of protected multiplayer sessions played without crash exploits."
-                }
-            }
-        },
-        {
-            id: "outcaster_fps",
-            category: "gamedev",
-            categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
-            image: "assets/outcaster img2.png",
-            title: "Outcaster - Retro FPS Templates",
-            featured: true,
-            live: "https://spet01.itch.io/",
-            tags: ["Unity", "C#", "Game Design", "AI Navigation", "Physics"],
-            description: {
-                pt: "Templates completos de FPS retrô (boomer shooter) criados em Unity e C#. Sistemas avançados de movimentação dinâmica (bunny hop, dash), gerenciamento de armas, projéteis balísticos e IA inimiga por estados.",
-                en: "Complete retro FPS templates (boomer shooter style) developed in Unity and C#. Features dynamic locomotion physics (bunny hopping, dashes), weapon management, ballistic projectiles, and state-machine enemy AI."
-            },
-            caseStudy: {
-                challenge: {
-                    pt: "Criar uma arquitetura de código extensível e performática para desenvolvedores independentes que desejam criar shooters rápidos sem recriar física do zero.",
-                    en: "Design an extensible, clean codebase for indie creators needing high-velocity shooter mechanics without building physics pipelines from scratch."
-                },
-                solution: {
-                    pt: "Arquitetura desacoplada baseada em ScriptableObjects e máquinas de estados finitos (FSM) para armas e comportamento de IA, otimizada para manter 144+ FPS.",
-                    en: "Modular architecture powered by ScriptableObjects and finite state machines for weapons and enemy AI, profiling at 144+ FPS."
-                },
-                impact: {
-                    pt: "Disponibilizado na Itch.io com avaliações positivas de desenvolvedores de jogos independentes.",
-                    en: "Highly rated on Itch.io by indie game developers as a foundation for commercial titles."
-                }
-            }
-        },
-        {
-            id: "sparky_rush_qa",
-            category: "qa",
-            categoryLabel: { pt: "QA & Controle de Qualidade", en: "QA & Testing" },
-            image: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257185670/d0cf56f005af6f109edd9ee603dc2da75fa0aaf1/movie_232x130.jpg?t=1756993430",
-            title: "Sparky Rush: Purrils in Pawsville (Steam QA)",
-            featured: true,
-            live: "https://store.steampowered.com/app/3592020/Sparky_Rush_Purrils_in_Pawsville/",
-            tags: ["QA Testing", "Unity", "C#", "Steam", "Bug Analysis"],
-            description: {
-                pt: "Atuação profissional em Quality Assurance no jogo de plataforma 3D Sparky Rush. Mapeamento, reprodução e relatórios de mais de 50 bugs críticos com análise da lógica em C#.",
-                en: "Professional Quality Assurance role on commercial 3D platformer Sparky Rush. Discovered, documented, and helped resolve 50+ critical bugs via code-level deductions in Unity/C#."
-            },
-            caseStudy: {
-                challenge: {
-                    pt: "Garantir a integridade da física do personagem em colisões angulares complexas e evitar perda de progresso durante saves simultâneos.",
-                    en: "Verify physics robustness during steep angular character collisions and prevent race-condition save game corruption."
-                },
-                solution: {
-                    pt: "Criação de matrizes sistemáticas de teste com casos de borda e stress-testing reproduzindo condições de hardware de baixa performance.",
-                    en: "Designed comprehensive test matrices covering edge-case inputs, physics desync, and low-spec hardware regression."
-                },
-                impact: {
-                    pt: "Jogo lançado na Steam com alta estabilidade e sem travamentos bloqueantes reportados.",
-                    en: "Released smoothly on Steam with zero game-breaking release bugs."
-                }
-            }
-        },
-        {
+{
             id: "pau_no_gato_game",
             category: "gamedev",
             categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
@@ -770,7 +736,7 @@ const PORTFOLIO_DATA = {
                 }
             }
         },
-        {
+{
             id: "ff13_fix_ms_store",
             category: "tools",
             categoryLabel: { pt: "Ferramentas & Otimização", en: "Tools & Optimization" },
@@ -798,7 +764,7 @@ const PORTFOLIO_DATA = {
                 }
             }
         },
-        {
+{
             id: "autoparms_yakuza",
             category: "tools",
             categoryLabel: { pt: "Ferramentas & Automação", en: "Tools & Automation" },
@@ -826,7 +792,36 @@ const PORTFOLIO_DATA = {
                 }
             }
         },
-        {
+{
+            id: "bo2_crossplay_relay",
+            category: "reverse",
+            categoryLabel: { pt: "Engenharia Reversa / Net", en: "Reverse Engineering / Net" },
+            image: "assets/relay.gif",
+            title: "BO2 Crossplay Relay (PS5 x PC)",
+            repo: "https://gitlab.com/Spet001/t6-zpgdk-crossplay-relay",
+            featured: true,
+            tags: ["Python", "C++", "Npcap", "Packet Sniffing", "Networking"],
+            description: {
+                pt: "Ponte de tradução de protocolo em tempo real que permite jogar Call of Duty: Black Ops II entre PC e consoles (PS5) usando System Link, traduzindo pacotes UDP nativos.",
+                en: "Real-time protocol translation bridge that allows playing Call of Duty: Black Ops II between PC and consoles (PS5) via System Link by translating raw UDP packets."
+            },
+            journalId: "Crossplay-PS5-XBOX-PC",
+            caseStudy: {
+                challenge: {
+                    pt: "Criar crossplay em um jogo legado (2012) onde a camada de rede e beacons são incompatíveis entre plataformas.",
+                    en: "Enable crossplay on a legacy game (2012) where the network layer and discovery beacons are strictly incompatible across platforms."
+                },
+                solution: {
+                    pt: "Uso do Npcap para injetar pacotes Ethernet no Layer-2, recalculando checksums IPv4 e traduzindo payloads para que o console (PS5) e PC conversem nativamente na LAN.",
+                    en: "Used Npcap to inject raw Ethernet packets at Layer-2, recalculating IPv4 checksums and translating payloads so PS5 and PC converse natively over LAN."
+                },
+                impact: {
+                    pt: "Crossplay perfeito entre PS5 e PC. Suporte experimental em andamento para a arquitetura Big-Endian do Xbox 360.",
+                    en: "Perfect functional crossplay between PS5 and PC. Experimental support underway for Xbox 360 Big-Endian architecture."
+                }
+            }
+        },
+{
             id: "portfolio_web",
             title: "Portfólio Web (SpetDev)",
             category: "tools",
