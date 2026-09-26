@@ -2186,8 +2186,15 @@ const ProjectModal = ({ project, onClose, lang }) => {
                     {project.repo && (
                         <a
                             href={project.repo}
-                            target="_blank"
+                            target={project.id === 'bo2_crossplay_relay' ? "_self" : "_blank"}
                             rel="noreferrer"
+                            onClick={(e) => {
+                                if (project.id === 'bo2_crossplay_relay') {
+                                    e.preventDefault();
+                                    alert("This source code is NOT PUBLIC AT THE MOMENT, but you can read its journal entry for more info!");
+                                    window.location.href = `/journal#${project.journalId}`;
+                                }
+                            }}
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white flex items-center gap-2 transition-colors"
                         >
                             <i className="fab fa-gitlab"></i> {t('projects.sourceCode')}
@@ -2453,8 +2460,15 @@ const ProjectsSection = () => {
                                                 {p.repo && (
                                                     <a
                                                         href={p.repo}
-                                                        target="_blank"
+                                                        target={p.id === 'bo2_crossplay_relay' ? "_self" : "_blank"}
                                                         rel="noreferrer"
+                                                        onClick={(e) => {
+                                                            if (p.id === 'bo2_crossplay_relay') {
+                                                                e.preventDefault();
+                                                                alert("This source code is NOT PUBLIC AT THE MOMENT, but you can read its journal entry for more info!");
+                                                                window.location.href = `/journal#${p.journalId}`;
+                                                            }
+                                                        }}
                                                         className="w-7 h-7 rounded-md bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white flex items-center justify-center transition-colors text-xs"
                                                         title={p.repoLabel ? p.repoLabel[lang] : "Source Code"}
                                                     >
@@ -3206,7 +3220,7 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
         iframeSrc = 'https://www.netquake.io/quake';
         gameTitle = 'Quake 1 (NetQuake)';
     } else if (activeGame === 'zombies') {
-        iframeSrc = '/easter eggs/GSC VM/gsc.html';
+        iframeSrc = '/easter eggs/GSC VM/gsc_classic.html';
         gameTitle = 'COD Zombies Errius / GSC VM';
     }
 

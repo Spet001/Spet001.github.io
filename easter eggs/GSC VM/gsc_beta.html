@@ -1,0 +1,3437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Call of Duty: Zombies - Errius (Remastered Bunker Outpost 115)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Teko:wght@500;700&display=swap');
+
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            box-sizing: border-box;
+            touch-action: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #020305;
+            font-family: 'Share Tech Mono', monospace;
+            color: #fff;
+        }
+
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+        }
+
+        .hud-vignette {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.88) 100%);
+        }
+
+        .damage-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 6;
+            opacity: 0;
+            transition: opacity 0.1s ease-out;
+            background: 
+                radial-gradient(circle at center, transparent 30%, rgba(180, 0, 0, 0.4) 70%, rgba(120, 0, 0, 0.95) 100%),
+                radial-gradient(ellipse at top left, rgba(200, 0, 0, 0.5) 0%, transparent 45%),
+                radial-gradient(ellipse at bottom right, rgba(200, 0, 0, 0.5) 0%, transparent 45%);
+            box-shadow: inset 0 0 130px rgba(220, 0, 0, 0.85);
+        }
+
+        .nuke-flash {
+            position: absolute;
+            inset: 0;
+            background-color: #ffffff;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 8;
+            transition: opacity 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .chalk-font {
+            font-family: 'Teko', sans-serif;
+            text-shadow: 2px 2px 4px #000, 0 0 12px rgba(239, 68, 68, 0.7);
+            color: #ef4444;
+        }
+
+        .points-font {
+            font-family: 'Teko', sans-serif;
+            text-shadow: 2px 2px 3px #000, 0 0 10px rgba(234, 179, 8, 0.6);
+            color: #eab308;
+            letter-spacing: 1px;
+        }
+
+        .hitmarker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            pointer-events: none;
+            display: none;
+            z-index: 22;
+        }
+        .hitmarker::before, .hitmarker::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 2px;
+            background-color: #fff;
+        }
+        .hitmarker::before { transform: translate(-50%, -50%) rotate(45deg); }
+        .hitmarker::after { transform: translate(-50%, -50%) rotate(-45deg); }
+        .hitmarker.crit::before, .hitmarker.crit::after {
+            background-color: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
+        }
+
+        .crosshair-line {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 2px #000;
+        }
+
+        #gsc-console-container {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            width: 380px;
+            height: 150px;
+            background: rgba(3, 7, 18, 0.88);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 11px;
+            overflow-y: hidden;
+            z-index: 15;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+        .gsc-tag { color: #60a5fa; font-weight: bold; }
+        .gsc-str { color: #34d399; }
+        .gsc-var { color: #f59e0b; }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 7;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 6px 100%;
+            opacity: 0.45;
+        }
+
+        #interact-prompt {
+            position: absolute;
+            top: 58%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(3, 5, 9, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 4px;
+            padding: 7px 22px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+            display: none;
+            z-index: 24;
+            pointer-events: none;
+            box-shadow: 0 0 14px rgba(0,0,0,0.85);
+        }
+
+        .perk-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 12px rgba(0,0,0,0.9), 0 0 8px rgba(255, 255, 255, 0.35);
+            background-size: cover;
+            background-position: center;
+            background-color: #111;
+            animation: perkPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes perkPop {
+            0% { transform: scale(0.2) rotate(-90deg); opacity: 0; }
+            80% { transform: scale(1.18) rotate(8deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .floating-points {
+            position: absolute;
+            pointer-events: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fde047;
+            text-shadow: 0 0 8px rgba(253, 224, 71, 0.8), 2px 2px 0px #000;
+            animation: floatUp 0.75s ease-out forwards;
+            z-index: 25;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -40px); }
+        }
+    </style>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://kino-der-toten.pages.dev/vendor/three.module.js",
+            "three/addons/": "https://kino-der-toten.pages.dev/vendor/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <canvas id="game-canvas"></canvas>
+    <div class="hud-vignette"></div>
+    <div class="scanlines"></div>
+    <div class="damage-overlay" id="damage-overlay"></div>
+    <div class="nuke-flash" id="nuke-flash"></div>
+
+    <!-- Crosshair -->
+    <div id="crosshair-container" class="absolute inset-0 pointer-events-none z-20 flex items-center justify-center">
+        <div id="crosshair-left" class="crosshair-line" style="width: 10px; height: 2px; transform: translate(-14px, 0);"></div>
+        <div id="crosshair-right" class="crosshair-line" style="width: 10px; height: 2px; transform: translate(14px, 0);"></div>
+        <div id="crosshair-top" class="crosshair-line" style="width: 2px; height: 10px; transform: translate(0, -14px);"></div>
+        <div id="crosshair-bottom" class="crosshair-line" style="width: 2px; height: 10px; transform: translate(0, 14px);"></div>
+        <div id="crosshair-dot" class="w-1 h-1 bg-white/70 rounded-full shadow"></div>
+    </div>
+
+    <!-- Hitmarker -->
+    <div id="hitmarker" class="hitmarker"></div>
+
+    <!-- Interact Tooltip -->
+    <div id="interact-prompt"></div>
+
+    <!-- GSC Virtual Machine Script Console -->
+    <div id="gsc-console-container">
+        <div class="flex items-center justify-between border-b border-blue-500/30 pb-1 mb-1">
+            <span class="text-[10px] text-blue-400 uppercase tracking-widest font-bold">GSC VM Script Engine v4.3.5</span>
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+        <div id="gsc-console-logs" class="flex flex-col gap-0.5 font-mono">
+            <div><span class="gsc-tag">[GSC:init]</span> main() <span class="gsc-str">started thread outpost_bunker()</span></div>
+            <div><span class="gsc-tag">[GSC:vm]</span> compiling <span class="gsc-var">_zombiemode_perks.gsc</span></div>
+            <div><span class="gsc-tag">[GSC:level]</span> thread <span class="gsc-var">generator_power_trigger()</span></div>
+        </div>
+    </div>
+
+    <!-- In-Game HUD -->
+    <div id="hud-root" class="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-6">
+        <!-- Top Stats: Round Chalk & Objective -->
+        <div class="flex justify-between items-start">
+            <div class="flex items-center gap-3">
+                <div class="text-6xl font-bold chalk-font" id="hud-round-display">I</div>
+                <div class="text-xs uppercase text-zinc-400 tracking-wider flex flex-col">
+                    <span id="hud-map-zone" class="font-bold text-zinc-300">BUNKER - LAB 115</span>
+                    <span class="text-emerald-400 font-semibold" id="hud-power-status">AUX POWER: ACTIVE</span>
+                </div>
+            </div>
+
+            <!-- Active Song Banner -->
+            <div id="hud-song-banner" class="opacity-0 transition-opacity duration-500 bg-black/85 border border-red-900/60 px-5 py-2 rounded text-sm text-red-400 font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(255,0,0,0.4)]">
+                🎵 Secret Track: Kevin Sherwood & Elena Siegman - 115
+            </div>
+
+            <!-- Active PowerUps & Perks Display -->
+            <div class="flex flex-col items-end gap-2">
+                <div id="hud-powerup-bar" class="flex items-center gap-2"></div>
+                <div class="flex items-center gap-2" id="hud-perks-container"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Stats: Health, Points, Weapons -->
+        <div class="flex justify-between items-end">
+            <!-- Health Bar & Points -->
+            <div class="flex flex-col gap-2 relative">
+                <div id="points-anchor" class="relative">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-sm text-zinc-400">PTS:</span>
+                        <span class="text-5xl font-bold points-font" id="hud-points-display">500</span>
+                    </div>
+                </div>
+                <div class="w-48 h-2 bg-zinc-900/80 rounded-full overflow-hidden border border-zinc-700/60">
+                    <div id="hud-health-bar" class="h-full bg-red-600 transition-all duration-150 ease-out" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Weapon & Ammo Display -->
+            <div class="flex flex-col items-end">
+                <div class="text-xs uppercase tracking-widest text-zinc-400 mb-0.5" id="hud-weapon-secondary">SLOT 2: EMPTY</div>
+                <div class="text-2xl font-bold tracking-wider uppercase text-zinc-200" id="hud-weapon-name">M1911</div>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-6xl font-bold tracking-tighter points-font" id="hud-ammo-clip">8</span>
+                    <span class="text-2xl text-zinc-500 font-bold">/</span>
+                    <span class="text-2xl text-zinc-400 font-semibold" id="hud-ammo-stock">32</span>
+                </div>
+                <div class="text-[11px] text-zinc-400 uppercase tracking-widest mt-1 flex gap-2">
+                    <span id="hud-grenade-count" class="text-yellow-400 font-bold">4 [G]</span>
+                    <span>&bull;</span>
+                    <span>[V] MELEE</span>
+                    <span>&bull;</span>
+                    <span>[R] RELOAD</span>
+                    <span>&bull;</span>
+                    <span>[Q / 1-3] SWAP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu Overlay -->
+    <div id="menu-overlay" class="absolute inset-0 bg-black/92 backdrop-blur-md z-30 flex items-center justify-center p-6">
+        <div class="max-w-xl w-full bg-zinc-950 border border-zinc-800 rounded-lg p-8 shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col items-center text-center">
+            <h1 class="text-5xl font-bold chalk-font tracking-wider mb-1">ERRIUS: OUTPOST 115</h1>
+            <p class="text-xs uppercase text-zinc-400 tracking-[0.25em] mb-6">GSC VM in JS!</p>
+
+            <div class="flex flex-col w-full gap-3">
+                <button id="btn-start-game" class="w-full py-3.5 bg-red-700 hover:bg-red-600 text-white font-bold text-sm uppercase tracking-widest rounded transition-all shadow-[0_0_20px_rgba(185,28,28,0.5)]">
+                    Enter the Bunker
+                </button>
+                <div class="flex gap-2">
+                    <button id="btn-open-options" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs uppercase tracking-wider rounded transition">
+                        Settings
+                    </button>
+                    <button id="btn-open-credits" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-cyan-400 font-bold text-xs uppercase tracking-wider rounded transition">
+                        Credits
+                    </button>
+                    <a href="gsc_classic.html" class="flex-1 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 font-bold text-xs uppercase tracking-wider rounded transition flex items-center justify-center">
+                        Classic Mode
+                    </a>
+                </div>
+            </div>
+
+            <div id="load-status" class="mt-4 text-[11px] text-zinc-500 font-mono">Ready to chamber rounds...</div>
+        </div>
+    </div>
+
+    <!-- Pause Menu Modal -->
+    <div id="modal-pause" class="absolute inset-0 bg-black/85 backdrop-blur-sm z-40 hidden flex items-center justify-center p-6">
+        <div class="max-w-sm w-full bg-zinc-950 border border-zinc-800 rounded p-6 shadow-2xl text-center">
+            <h2 class="text-3xl font-bold chalk-font tracking-wider mb-6">GAME PAUSED</h2>
+            <div class="space-y-3">
+                <button id="btn-pause-resume" class="w-full py-2.5 bg-red-700 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider rounded transition">Resume Mission</button>
+                <button id="btn-pause-options" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs uppercase tracking-wider rounded transition">Settings</button>
+                <button id="btn-pause-restart" class="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs uppercase tracking-wider rounded transition">Restart Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div id="modal-credits" class="absolute inset-0 bg-black/85 backdrop-blur-md z-45 hidden flex items-center justify-center p-6">
+        <div class="max-w-md w-full bg-zinc-950 border border-cyan-800/60 rounded p-6 shadow-[0_0_40px_rgba(6,182,212,0.25)] text-left font-mono">
+            <h2 class="text-2xl font-bold text-cyan-400 tracking-wider mb-3 border-b border-zinc-800 pb-2 flex items-center justify-between">
+                <span>CREDITS & ASSETS</span>
+                <span class="text-xs text-zinc-500">KINO ENGINE</span>
+            </h2>
+            <div class="text-xs text-zinc-300 space-y-3 mb-6 leading-relaxed">
+                <p>
+                    Special thanks and huge appreciation to <span class="text-white font-bold">luckeyfaraday</span> for creating the browser-based Three.js Call of Duty Zombies project:
+                </p>
+                <div class="bg-zinc-900 p-2.5 rounded border border-zinc-800">
+                    <a href="https://github.com/luckeyfaraday/kino-der-toten" target="_blank" class="text-cyan-400 hover:underline font-bold block break-all">
+                        https://github.com/luckeyfaraday/kino-der-toten
+                    </a>
+                </div>
+                <p>
+                    This project imports and leverages the authentic 3D weapon models, character rigs, skeletal XAnim JSON tracks, sound manifests, and perk machines from the Kino der Toten WebGL port.
+                </p>
+                <p class="text-[11px] text-zinc-400">
+                    Call of Duty: Black Ops Zombies, original sound effects, voices, animations, and designs are intellectual property of <span class="text-zinc-200">Treyarch & Activision</span>. Secret song "115" composed by <span class="text-zinc-200">Kevin Sherwood & Elena Siegman</span>.
+                </p>
+            </div>
+            <button id="btn-close-credits" class="w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs uppercase tracking-wider rounded transition">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Developer GSC Mod Menu Modal [P] -->
+    <div id="modal-gsc-menu" class="absolute top-6 right-6 w-80 bg-zinc-950/95 border border-red-700/80 rounded p-4 text-xs font-mono shadow-2xl z-40 hidden backdrop-blur-md">
+        <div class="flex justify-between items-center border-b border-red-900/60 pb-2 mb-3">
+            <span class="font-bold text-red-500 uppercase tracking-wider">[GSC:vm] Cheats Console</span>
+            <span class="text-[10px] text-zinc-500">[P] or [~] to close</span>
+        </div>
+        <div class="space-y-1.5">
+            <button id="mod-godmode" class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-emerald-400 border border-zinc-800 rounded text-left px-3">Toggle Godmode (OFF)</button>
+            <button id="mod-give-points" class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded text-left px-3">+10,000 Points</button>
+            <button id="mod-max-ammo" class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-yellow-400 border border-zinc-800 rounded text-left px-3">Max Ammo (All Weapons)</button>
+            <button id="mod-all-perks" class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-cyan-400 border border-zinc-800 rounded text-left px-3">Give All 7 Perks</button>
+            <button id="mod-open-doors" class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-blue-300 border border-zinc-800 rounded text-left px-3">Unlock All Security Doors</button>
+            <button id="mod-kill-zombies" class="w-full py-1.5 bg-zinc-900 hover:bg-zinc-800 text-red-400 border border-zinc-800 rounded text-left px-3">Trigger Nuke (Eliminate Undead)</button>
+        </div>
+    </div>
+
+    <!-- Options Modal -->
+    <div id="modal-options" class="absolute inset-0 bg-black/85 backdrop-blur-sm z-40 hidden flex items-center justify-center p-6">
+        <div class="max-w-md w-full bg-zinc-950 border border-zinc-800 rounded p-6 shadow-2xl text-left">
+            <h2 class="text-xl font-bold uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2">Settings</h2>
+            <div class="space-y-4 text-xs font-mono">
+                <div>
+                    <label class="block text-xs uppercase text-zinc-400 mb-1">Mouse Sensitivity</label>
+                    <input type="range" id="opt-sensitivity" min="0.5" max="3.0" step="0.1" value="1.0" class="w-full accent-red-600">
+                    <div class="flex justify-between text-[10px] text-zinc-500"><span>Low</span><span>Default</span><span>Fast</span></div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-zinc-400 mb-1">Master Audio Volume</label>
+                    <input type="range" id="opt-volume" min="0" max="1" step="0.05" value="0.8" class="w-full accent-red-600">
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-zinc-300">Show GSC Script Console Log</span>
+                    <input type="checkbox" id="opt-console" checked class="accent-red-600 w-4 h-4">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-zinc-400 mb-1">Field of View (FOV)</label>
+                    <input type="range" id="opt-fov" min="65" max="95" step="1" value="75" class="w-full accent-red-600">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="btn-close-options" class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs uppercase tracking-wider rounded transition">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div id="game-over-overlay" class="absolute inset-0 bg-black/90 backdrop-blur-md z-30 hidden flex flex-col items-center justify-center p-6 text-center">
+        <h1 class="text-7xl font-bold chalk-font text-red-600 tracking-wider mb-2 animate-pulse">YOU SURVIVED</h1>
+        <div id="game-over-rounds" class="text-3xl font-bold text-zinc-300 mb-6 font-mono tracking-widest">ROUND 1</div>
+        <div class="flex gap-8 mb-6 font-mono text-sm">
+            <div>KILLS: <span id="stat-kills" class="text-red-400 font-bold">0</span></div>
+            <div>SCORE: <span id="stat-score" class="text-yellow-400 font-bold">500</span></div>
+        </div>
+        <p class="text-sm text-zinc-400 mb-8 max-w-sm text-center">The bunker was overrun. Element 115 containment failed.</p>
+        <button onclick="location.reload()" class="px-8 py-3 bg-red-700 hover:bg-red-600 text-white font-bold text-sm uppercase tracking-widest rounded transition">
+            Play Again
+        </button>
+    </div>
+
+    <!-- ES Module Game Code -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { clone } from 'three/addons/utils/SkeletonUtils.js';
+
+        const CDN_BASE = 'https://kino-der-toten.pages.dev';
+
+        // -------------------------------------------------------------
+        // Audio Engine
+        // -------------------------------------------------------------
+        class GameAudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.master = null;
+                this.buffers = new Map();
+                this.activeSong = null;
+            }
+
+            init() {
+                if (this.ctx) return;
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContext();
+                this.master = this.ctx.createGain();
+                this.master.gain.value = 0.8;
+                this.master.connect(this.ctx.destination);
+            }
+
+            async loadBuffer(name, url) {
+                if (this.buffers.has(name)) return this.buffers.get(name);
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) return null;
+                    const arrayBuf = await res.arrayBuffer();
+                    const audioBuf = await this.ctx.decodeAudioData(arrayBuf);
+                    this.buffers.set(name, audioBuf);
+                    return audioBuf;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            play(key, vol = 1.0, loop = false, detune = 0) {
+                if (!this.ctx || !this.buffers.has(key)) return null;
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+
+                const src = this.ctx.createBufferSource();
+                src.buffer = this.buffers.get(key);
+                src.loop = loop;
+                if (detune !== 0 && src.detune) src.detune.value = detune;
+
+                const gain = this.ctx.createGain();
+                gain.gain.value = vol;
+
+                src.connect(gain);
+                gain.connect(this.master);
+                src.start(0);
+                return src;
+            }
+
+            playHitmarker() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(700, this.ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(this.master);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.08);
+            }
+
+            playSong(key) {
+                if (this.activeSong) {
+                    try { this.activeSong.stop(); } catch (e) {}
+                    this.activeSong = null;
+                }
+                this.activeSong = this.play(key, 0.7, false);
+            }
+        }
+
+        const Audio = new GameAudioEngine();
+
+        // -------------------------------------------------------------
+        // Animation Parser & Mechanical Weapon Offset Fix
+        // -------------------------------------------------------------
+        function makeClip(root, data, locomotion = false) {
+            const tracks = [];
+            const nodes = new Map();
+            root.traverse(n => {
+                if (!nodes.has(n.name)) nodes.set(n.name, []);
+                nodes.get(n.name).push(n);
+            });
+            for (const b of data.bones) {
+                if (b.name === 'tag_origin' || b.name === 'tag_sync') continue;
+                for (const node of (nodes.get(b.name) || [])) {
+                    if (node.userData.animationAnchor) continue;
+                    if (b.rot) {
+                        tracks.push(new THREE.QuaternionKeyframeTrack(
+                            node.uuid + '.quaternion',
+                            b.rot.frames.map(f => f / data.fps),
+                            b.rot.values
+                        ));
+                    }
+                    if (b.pos) {
+                        const values = b.pos.values.slice();
+                        // Mechanical gun bones (j_bolt, j_press_rear, etc.) store relative delta offsets from bind pose.
+                        // Adding node.position keeps the slide firmly attached to the weapon frame!
+                        if (['j_bolt', 'j_press_rear', 'j_reload', 'j_barrel'].includes(b.name)) {
+                            for (let i = 0; i < values.length; i += 3) {
+                                values[i] += node.position.x;
+                                values[i + 1] += node.position.y;
+                                values[i + 2] += node.position.z;
+                            }
+                        } else if (locomotion && b.name === 'j_mainroot') {
+                            for (let i = 0; i < values.length; i += 3) {
+                                values[i] = node.position.x;
+                                values[i + 1] = node.position.y;
+                                values[i + 2] += node.position.z;
+                            }
+                        }
+                        tracks.push(new THREE.VectorKeyframeTrack(
+                            node.uuid + '.position',
+                            b.pos.frames.map(f => f / data.fps),
+                            values
+                        ));
+                    }
+                }
+            }
+            return new THREE.AnimationClip(data.name, Math.max(1 / data.fps, data.duration), tracks);
+        }
+
+        class Rig {
+            constructor(root) {
+                this.root = root;
+                this.mixer = new THREE.AnimationMixer(root);
+                this.actions = {};
+                this.data = {};
+                this.current = null;
+            }
+
+            add(key, animData, locomotion = false) {
+                this.data[key] = animData;
+                const clip = makeClip(this.root, animData, locomotion);
+                this.actions[key] = this.mixer.clipAction(clip);
+            }
+
+            play(key, loop = true, speed = 1.0, fade = 0.15) {
+                const a = this.actions[key];
+                if (!a) return false;
+                if (this.current === key && loop) return true;
+
+                const old = this.actions[this.current];
+                if (old && old !== a) {
+                    if (fade > 0) old.fadeOut(fade);
+                    else old.stop();
+                }
+
+                a.stop().reset().setEffectiveWeight(1).setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1);
+                a.clampWhenFinished = !loop;
+                a.timeScale = speed;
+                if (fade > 0) a.fadeIn(fade);
+                a.play();
+                this.current = key;
+                return true;
+            }
+
+            update(dt) {
+                this.mixer.update(dt);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Full Black Ops Arsenal with Consistent Weapon Keys
+        // -------------------------------------------------------------
+        const WEAPONS = {
+            m1911: {
+                key: 'm1911',
+                name: 'M1911',
+                upgradedName: 'Mustang & Sally',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_1911_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_colt1911_sw_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_colt1911_sw_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_colt1911_sw_reload.json`,
+                shotSoundKey: 'shot_m1911',
+                damage: 25,
+                fireRate: 0.12,
+                clipSize: 8,
+                maxStock: 80,
+                papClip: 16,
+                papStock: 160,
+                cost: 0,
+                type: 'pistol',
+                automatic: false
+            },
+            m14: {
+                key: 'm14',
+                name: 'M14',
+                upgradedName: 'Mnesia',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_m14_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_m14_idle_loop.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_m14_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_m14_reload.json`,
+                shotSoundKey: 'shot_m14',
+                damage: 55,
+                fireRate: 0.22,
+                clipSize: 8,
+                maxStock: 96,
+                papClip: 16,
+                papStock: 192,
+                cost: 500,
+                type: 'rifle',
+                automatic: false
+            },
+            mp40: {
+                key: 'mp40',
+                name: 'MP40',
+                upgradedName: 'The Afterburner',
+                modelUrl: `${CDN_BASE}/models/viewmodel_mp_mp40.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_mp40_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_mp40_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_mp40_reload.json`,
+                shotSoundKey: 'shot_mp40',
+                damage: 40,
+                fireRate: 0.11,
+                clipSize: 32,
+                maxStock: 192,
+                papClip: 64,
+                papStock: 384,
+                cost: 1000,
+                type: 'smg',
+                automatic: true
+            },
+            ak74u: {
+                key: 'ak74u',
+                name: 'AK-74u',
+                upgradedName: 'AK-74noob',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_ak74u_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_ak74u_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_ak74u_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_ak74u_reload.json`,
+                shotSoundKey: 'shot_ak74u',
+                damage: 48,
+                fireRate: 0.095,
+                clipSize: 20,
+                maxStock: 160,
+                papClip: 40,
+                papStock: 320,
+                cost: 1200,
+                type: 'smg',
+                automatic: true
+            },
+            commando: {
+                key: 'commando',
+                name: 'Commando',
+                upgradedName: 'Predator',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_commando_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_commando_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_commando_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_commando_reload.json`,
+                shotSoundKey: 'shot_commando',
+                damage: 55,
+                fireRate: 0.082,
+                clipSize: 30,
+                maxStock: 270,
+                papClip: 40,
+                papStock: 360,
+                cost: 1400,
+                type: 'rifle',
+                automatic: true
+            },
+            galil: {
+                key: 'galil',
+                name: 'Galil',
+                upgradedName: 'Lamentation',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_galil_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_galil_idle_loop.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_galil_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_galil_reload.json`,
+                shotSoundKey: 'shot_galil',
+                damage: 68,
+                fireRate: 0.10,
+                clipSize: 35,
+                maxStock: 315,
+                papClip: 50,
+                papStock: 490,
+                cost: 1600,
+                type: 'rifle',
+                automatic: true
+            },
+            python: {
+                key: 'python',
+                name: 'Python',
+                upgradedName: 'Cobra',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_coltpython_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_python_sw_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_python_sw_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_python_manual_reload_loop.json`,
+                shotSoundKey: 'shot_python',
+                damage: 180,
+                fireRate: 0.32,
+                clipSize: 6,
+                maxStock: 84,
+                papClip: 12,
+                papStock: 120,
+                cost: 1300,
+                type: 'pistol',
+                automatic: false
+            },
+            spas12: {
+                key: 'spas12',
+                name: 'SPAS-12',
+                upgradedName: 'SPAZ-24',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_spas_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_spas12_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_spas12_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_spas12_reload_loop.json`,
+                shotSoundKey: 'shot_spas',
+                damage: 160,
+                fireRate: 0.35,
+                clipSize: 8,
+                maxStock: 64,
+                papClip: 24,
+                papStock: 72,
+                cost: 1500,
+                type: 'shotgun',
+                automatic: false,
+                segmentedReload: true
+            },
+            raygun: {
+                key: 'raygun',
+                name: 'Ray Gun',
+                upgradedName: "Porter's X2 Ray Gun",
+                modelUrl: `${CDN_BASE}/models/viewmodel_usa_ray_gun.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_ray_gun_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_ray_gun_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_ray_gun_reload.json`,
+                shotSoundKey: 'shot_raygun',
+                damage: 300,
+                fireRate: 0.28,
+                clipSize: 20,
+                maxStock: 160,
+                papClip: 40,
+                papStock: 320,
+                cost: 950,
+                type: 'raygun',
+                automatic: false
+            },
+            thundergun: {
+                key: 'thundergun',
+                name: 'Thundergun',
+                upgradedName: 'Zeus Cannon',
+                modelUrl: `${CDN_BASE}/models/t5_weapon_thundergun_viewmodel.glb`,
+                idleAnimUrl: `${CDN_BASE}/animations/viewmodel_thundergun_idle.json`,
+                fireAnimUrl: `${CDN_BASE}/animations/viewmodel_thundergun_fire.json`,
+                reloadAnimUrl: `${CDN_BASE}/animations/viewmodel_thundergun_reload_empty.json`,
+                shotSoundKey: 'shot_thundergun',
+                damage: 1500,
+                fireRate: 0.85,
+                clipSize: 2,
+                maxStock: 12,
+                papClip: 4,
+                papStock: 24,
+                cost: 950,
+                type: 'wonderweapon',
+                automatic: false
+            }
+        };
+
+        // -------------------------------------------------------------
+        // ViewWeapon System with Knife Melee & Bottle Drink
+        // -------------------------------------------------------------
+        const COD_BASIS = new THREE.Matrix4().makeBasis(
+            new THREE.Vector3(0, 0, -1),
+            new THREE.Vector3(-1, 0, 0),
+            new THREE.Vector3(0, 1, 0)
+        );
+
+        class ViewWeaponSystem {
+            constructor(viewScene, gltfLoader) {
+                this.viewScene = viewScene;
+                this.loader = gltfLoader;
+                this.pivot = new THREE.Group();
+                this.viewScene.add(this.pivot);
+
+                this.armsTemplate = null;
+                this.knifeTemplate = null;
+                this.knifeAnimData = null;
+                this.drinkAnimData = null;
+                this.perkBottles = {};
+                this.gunCache = new Map();
+                this.animCache = new Map();
+
+                this.currentDef = null;
+                this.isUpgraded = false;
+                this.rig = null;
+                this.ready = false;
+                this.isKnifing = false;
+                this.isDrinking = false;
+                this.recoil = 0;
+
+                // Muzzle light
+                this.muzzleLight = new THREE.PointLight(0xffdf80, 0, 8, 1.5);
+                this.muzzleLight.position.set(0.15, -0.1, -0.6);
+                this.pivot.add(this.muzzleLight);
+
+                // Tactical flashlight
+                this.flashlight = new THREE.SpotLight(0xfff8e8, 1.8, 30, Math.PI / 4, 0.4, 1.2);
+                this.flashlight.position.set(0.18, -0.15, -0.1);
+                this.pivot.add(this.flashlight);
+                this.flashlight.target.position.set(0.18, -0.15, -10);
+                this.pivot.add(this.flashlight.target);
+            }
+
+            async preloadBase() {
+                try {
+                    const [armsGltf, knifeGltf, knifeAnim, drinkAnim, bRevive, bSleight, bJugg, bDouble] = await Promise.all([
+                        this.loader.loadAsync(`${CDN_BASE}/models/viewmodel_usa_pow_arms.glb`).catch(() => null),
+                        this.loader.loadAsync(`${CDN_BASE}/models/viewmodel_knife.glb`).catch(() => null),
+                        fetch(`${CDN_BASE}/animations/viewmodel_M4m203_knife_melee_1.json`).then(r => r.json()).catch(() => null),
+                        fetch(`${CDN_BASE}/animations/viewmodel_zombie_perksacola_drink.json`).then(r => r.json()).catch(() => null),
+                        this.loader.loadAsync(`${CDN_BASE}/models/zombie_perk_bottle_revive.glb`).catch(() => null),
+                        this.loader.loadAsync(`${CDN_BASE}/models/zombie_perk_bottle_sleight.glb`).catch(() => null),
+                        this.loader.loadAsync(`${CDN_BASE}/models/zombie_perk_bottle_jugg.glb`).catch(() => null),
+                        this.loader.loadAsync(`${CDN_BASE}/models/zombie_perk_bottle_doubletap.glb`).catch(() => null)
+                    ]);
+                    if (armsGltf) this.armsTemplate = armsGltf.scene;
+                    if (knifeGltf) this.knifeTemplate = knifeGltf.scene;
+                    this.knifeAnimData = knifeAnim;
+                    this.drinkAnimData = drinkAnim;
+                    this.perkBottles = {
+                        quickrevive: bRevive?.scene,
+                        speedcola: bSleight?.scene,
+                        juggernog: bJugg?.scene,
+                        doubletap: bDouble?.scene,
+                        staminup: bSleight?.scene,
+                        deadshot: bDouble?.scene,
+                        mulekick: bRevive?.scene
+                    };
+                } catch (e) {
+                    console.warn('Fallback base viewmodels:', e);
+                }
+            }
+
+            async getAnim(url) {
+                if (!url) return null;
+                if (this.animCache.has(url)) return this.animCache.get(url);
+                try {
+                    const r = await fetch(url);
+                    if (!r.ok) return null;
+                    const json = await r.json();
+                    this.animCache.set(url, json);
+                    return json;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            async getGunModel(url) {
+                if (this.gunCache.has(url)) return clone(this.gunCache.get(url));
+                try {
+                    const gltf = await this.loader.loadAsync(url);
+                    this.gunCache.set(url, gltf.scene);
+                    return clone(gltf.scene);
+                } catch (e) {
+                    const fallback = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.12, 0.22, 0.8),
+                        new THREE.MeshStandardMaterial({ color: 0x334155 })
+                    );
+                    return fallback;
+                }
+            }
+
+            async equip(weapDef, upgraded = false) {
+                this.ready = false;
+                this.currentDef = weapDef;
+                this.isUpgraded = upgraded;
+
+                // Safely clean up previous weapon models
+                const toRemove = this.pivot.children.filter(c => 
+                    c !== this.muzzleLight && c !== this.flashlight && c !== this.flashlight.target
+                );
+                toRemove.forEach(c => this.pivot.remove(c));
+
+                const [hands, gun] = await Promise.all([
+                    this.armsTemplate ? clone(this.armsTemplate) : null,
+                    this.getGunModel(weapDef.modelUrl)
+                ]);
+
+                this.hands = hands;
+                this.gun = gun;
+
+                if (hands) {
+                    const root = new THREE.Group();
+                    root.add(hands);
+
+                    const viewBone = hands.getObjectByName('tag_view');
+                    const tagWeapon = hands.getObjectByName('tag_weapon');
+                    const tagKnife = hands.getObjectByName('tag_knife_attach');
+
+                    if (viewBone && tagWeapon) {
+                        viewBone.userData.animationAnchor = true;
+                        root.updateMatrixWorld(true);
+
+                        const cameraBasis = new THREE.Matrix4().multiplyMatrices(COD_BASIS, viewBone.matrixWorld.clone().invert());
+                        
+                        gun.updateMatrixWorld(true);
+                        let gunBone = gun.getObjectByName('j_gun');
+                        if (!gunBone) gun.traverse(n => { if (!gunBone && n.isBone) gunBone = n; });
+
+                        if (gunBone) {
+                            gunBone.userData.animationAnchor = true;
+                            gun.matrixAutoUpdate = false;
+                            gun.matrix.copy(gunBone.matrixWorld).invert();
+                            tagWeapon.add(gun);
+                        } else {
+                            tagWeapon.add(gun);
+                        }
+
+                        // Attach Knife to tag_knife_attach
+                        if (tagKnife && this.knifeTemplate) {
+                            const knife = clone(this.knifeTemplate);
+                            knife.updateMatrixWorld(true);
+                            let knifeBone = knife.getObjectByName('tag_knife');
+                            if (knifeBone) {
+                                knifeBone.userData.animationAnchor = true;
+                                knife.matrixAutoUpdate = false;
+                                knife.matrix.copy(knifeBone.matrixWorld).invert();
+                            }
+                            tagKnife.add(knife);
+                            knife.visible = false;
+                            this.knife = knife;
+                        }
+
+                        if (upgraded) {
+                            gun.traverse(n => {
+                                if (n.isMesh) {
+                                    n.material = n.material.clone();
+                                    n.material.emissive = new THREE.Color(0x0088cc);
+                                    n.material.emissiveIntensity = 0.55;
+                                }
+                            });
+                        }
+
+                        root.matrixAutoUpdate = false;
+                        root.matrix.copy(cameraBasis);
+                        this.pivot.add(root);
+
+                        this.rig = new Rig(root);
+
+                        const [idleData, fireData, reloadData] = await Promise.all([
+                            this.getAnim(weapDef.idleAnimUrl),
+                            this.getAnim(weapDef.fireAnimUrl),
+                            this.getAnim(weapDef.reloadAnimUrl)
+                        ]);
+
+                        if (idleData) this.rig.add('idle', idleData, false);
+                        if (fireData) this.rig.add('fire', fireData, false);
+                        if (reloadData) this.rig.add('reload', reloadData, false);
+
+                        if (this.knifeAnimData) this.rig.add('melee', this.knifeAnimData, false);
+                        if (this.drinkAnimData) this.rig.add('drink', this.drinkAnimData, false);
+
+                        this.rig.play('idle', true, 1.0, 0);
+                    }
+                } else {
+                    gun.position.set(0.18, -0.22, -0.45);
+                    this.pivot.add(gun);
+                }
+
+                this.ready = true;
+            }
+
+            shoot() {
+                if (!this.ready || this.isKnifing || this.isDrinking) return;
+                this.recoil = 1.0;
+                if (this.rig && this.rig.actions['fire']) {
+                    this.rig.play('fire', false, 1.0, 0);
+                }
+                this.muzzleLight.intensity = 3.6;
+                setTimeout(() => { this.muzzleLight.intensity = 0; }, 45);
+            }
+
+            reload() {
+                if (!this.ready || this.isKnifing || this.isDrinking) return;
+                if (this.rig && this.rig.actions['reload']) {
+                    const speedMult = playerState.perks.has('speedcola') ? 1.5 : 1.0;
+                    this.rig.play('reload', false, speedMult, 0.05);
+                }
+            }
+
+            slashKnife() {
+                if (!this.ready || this.isKnifing || this.isDrinking) return;
+                this.isKnifing = true;
+                if (this.knife) this.knife.visible = true;
+                Audio.play('knife_whoosh', 0.9);
+
+                if (this.rig && this.rig.actions['melee']) {
+                    this.rig.play('melee', false, 1.4, 0.02);
+                }
+
+                // Generous forward cone melee check against zombie chest (y=1.1m)
+                setTimeout(() => {
+                    let hitZombie = null;
+                    let closestDist = 2.7;
+
+                    const camPos = camera.position;
+                    const camDir = new THREE.Vector3();
+                    camera.getWorldDirection(camDir);
+
+                    for (const z of zombies) {
+                        if (!z.isAlive) continue;
+                        const chestPos = new THREE.Vector3(z.root.position.x, z.root.position.y + 1.1, z.root.position.z);
+                        const dist = camPos.distanceTo(chestPos);
+                        if (dist < closestDist) {
+                            const toZ = new THREE.Vector3().subVectors(chestPos, camPos).normalize();
+                            if (toZ.dot(camDir) > 0.45) {
+                                closestDist = dist;
+                                hitZombie = z;
+                            }
+                        }
+                    }
+
+                    if (hitZombie) {
+                        Audio.play('knife_stab', 0.95);
+                        hitZombie.takeDamage(150, false, true);
+                        showHitmarker();
+                        logGSC('[GSC:melee] zombie slashed with combat knife');
+                    }
+                }, 140);
+
+                setTimeout(() => {
+                    this.isKnifing = false;
+                    if (this.knife) this.knife.visible = false;
+                    if (this.rig) this.rig.play('idle', true, 1.0, 0.1);
+                }, 550);
+            }
+
+            drinkPerkBottle(perkKey) {
+                if (!this.ready || this.isKnifing || this.isDrinking) return;
+                const bottleTpl = this.perkBottles?.[perkKey] || this.perkBottles?.['juggernog'] || this.perkBottles?.['quickrevive'];
+                if (!bottleTpl || !this.hands) return;
+
+                this.isDrinking = true;
+                if (this.gun) this.gun.visible = false;
+
+                const bottle = clone(bottleTpl);
+                bottle.updateMatrixWorld(true);
+
+                const tagWeapon = this.hands.getObjectByName('tag_weapon');
+                if (tagWeapon) {
+                    tagWeapon.add(bottle);
+                    const bGun = bottle.getObjectByName('j_gun');
+                    if (bGun) bGun.userData.animationAnchor = false;
+                }
+                this.currentBottle = bottle;
+
+                if (this.rig && this.rig.actions['drink']) {
+                    this.rig.play('drink', false, 1.05, 0.05);
+                }
+
+                // Call of Duty synchronized notetrack sounds
+                setTimeout(() => Audio.play('bottle_open', 0.95), 450);
+                setTimeout(() => Audio.play('bottle_swallow', 0.95), 1250);
+                setTimeout(() => Audio.play('belch', 0.95), 2100);
+
+                setTimeout(() => {
+                    if (tagWeapon && bottle) tagWeapon.remove(bottle);
+                    this.currentBottle = null;
+                    if (this.gun) this.gun.visible = true;
+                    this.isDrinking = false;
+                    if (this.rig) this.rig.play('idle', true, 1.0, 0.15);
+                }, 2700);
+            }
+
+            update(dt, isAiming, isMoving, time) {
+                if (!this.ready) return;
+                if (this.rig) {
+                    this.rig.update(dt);
+                    if (!this.isKnifing && !this.isDrinking && this.rig.current !== 'idle' && !this.rig.actions[this.rig.current]?.isRunning()) {
+                        this.rig.play('idle', true, 1.0, 0.1);
+                    }
+                }
+
+                this.recoil = Math.max(0, this.recoil - dt * 6.5);
+                const bob = isMoving && !this.isKnifing ? 0.035 : 0.008;
+                const targetZ = (isAiming ? 0.05 : 0) + this.recoil * 0.045;
+                const targetY = Math.cos(time * (isAiming ? 4 : 8)) * bob;
+                const targetX = Math.sin(time * (isAiming ? 2 : 4)) * bob;
+
+                this.pivot.position.set(targetX, targetY, targetZ);
+                this.pivot.rotation.x = this.recoil * 0.04;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Setup Three.js Renderers & Scenes
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('game-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 2.0;
+        renderer.autoClear = false;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x06080b);
+        scene.fog = new THREE.FogExp2(0x090c10, 0.012);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 1000);
+        camera.rotation.order = 'YXZ';
+
+        const viewScene = new THREE.Scene();
+        const viewCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
+        viewScene.add(new THREE.AmbientLight(0xffffff, 2.6));
+        const viewLight = new THREE.DirectionalLight(0xfff3d6, 2.0);
+        viewLight.position.set(0, 4, 2);
+        viewScene.add(viewLight);
+
+        // Ambient Lights
+        const ambientLight = new THREE.AmbientLight(0x94a3b8, 1.2);
+        scene.add(ambientLight);
+        const hemiLight = new THREE.HemisphereLight(0xe2e8f0, 0x334155, 1.4);
+        scene.add(hemiLight);
+
+        const gltfLoader = new GLTFLoader();
+
+        // -------------------------------------------------------------
+        // High-Quality Custom Procedural Bunker Textures
+        // -------------------------------------------------------------
+        function createProceduralTexture(type) {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+
+            if (type === 'concrete') {
+                // Room 1: Weathered bunker concrete
+                ctx.fillStyle = '#272d36';
+                ctx.fillRect(0, 0, 512, 512);
+                for (let i = 0; i < 30000; i++) {
+                    const v = (Math.random() * 40 - 20) | 0;
+                    ctx.fillStyle = `rgba(${50 + v}, ${55 + v}, ${60 + v}, 0.12)`;
+                    ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+                }
+                ctx.strokeStyle = '#181b20';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(0, 0, 512, 512);
+                ctx.beginPath();
+                ctx.moveTo(256, 0); ctx.lineTo(256, 512);
+                ctx.moveTo(0, 256); ctx.lineTo(512, 256);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(234, 179, 8, 0.45)';
+                ctx.font = 'bold 22px monospace';
+                ctx.fillText('OUTPOST 115', 30, 240);
+                ctx.fillText('CONTAINMENT LAB', 30, 270);
+            } else if (type === 'armory') {
+                // Room 2: Bolted dark steel plates with yellow warning hazard stripes
+                ctx.fillStyle = '#1c222b';
+                ctx.fillRect(0, 0, 512, 512);
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 6;
+                ctx.strokeRect(10, 10, 492, 492);
+                ctx.fillStyle = '#64748b';
+                const rivets = [25, 128, 256, 384, 487];
+                for (const x of rivets) {
+                    for (const y of [25, 487]) {
+                        ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+                    }
+                    for (const y of rivets) {
+                        ctx.beginPath(); ctx.arc(25, y, 4, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(487, y, 4, 0, Math.PI * 2); ctx.fill();
+                    }
+                }
+                // Diagonal yellow hazard stripes along bottom
+                for (let i = -100; i < 600; i += 40) {
+                    ctx.fillStyle = '#eab308';
+                    ctx.beginPath();
+                    ctx.moveTo(i, 465); ctx.lineTo(i + 20, 465);
+                    ctx.lineTo(i - 10, 512); ctx.lineTo(i - 30, 512);
+                    ctx.fill();
+                }
+            } else if (type === 'tile') {
+                // Laboratory dark floor tile with grout
+                ctx.fillStyle = '#0f1318';
+                ctx.fillRect(0, 0, 512, 512);
+                const ts = 64;
+                ctx.strokeStyle = '#07090c';
+                ctx.lineWidth = 3;
+                for (let x = 0; x < 512; x += ts) {
+                    for (let y = 0; y < 512; y += ts) {
+                        const shade = 18 + ((Math.random() * 8) | 0);
+                        ctx.fillStyle = `rgb(${shade}, ${shade + 2}, ${shade + 5})`;
+                        ctx.fillRect(x + 2, y + 2, ts - 4, ts - 4);
+                        ctx.strokeRect(x, y, ts, ts);
+                    }
+                }
+            } else if (type === 'metal_floor') {
+                // Room 2: Diamond tread metal floor
+                ctx.fillStyle = '#14181f';
+                ctx.fillRect(0, 0, 512, 512);
+                ctx.strokeStyle = '#27313f';
+                ctx.lineWidth = 2;
+                for (let x = -512; x < 1024; x += 24) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 512, 512); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(x, 512); ctx.lineTo(x + 512, 0); ctx.stroke();
+                }
+            } else if (type === 'flagstone') {
+                // Room 3: Courtyard weathered pavers
+                ctx.fillStyle = '#181b20';
+                ctx.fillRect(0, 0, 512, 512);
+                ctx.strokeStyle = '#0d0f12';
+                ctx.lineWidth = 3;
+                const rows = 8; const cols = 6;
+                const rw = 512 / cols; const rh = 512 / rows;
+                for (let r = 0; r < rows; r++) {
+                    const offset = (r % 2) * (rw / 2);
+                    for (let c = -1; c <= cols; c++) {
+                        const shade = 22 + ((Math.random() * 10) | 0);
+                        ctx.fillStyle = `rgb(${shade}, ${shade + 2}, ${shade + 1})`;
+                        ctx.fillRect(c * rw + offset + 2, r * rh + 2, rw - 4, rh - 4);
+                        ctx.strokeRect(c * rw + offset, r * rh, rw, rh);
+                    }
+                }
+            } else if (type === 'door') {
+                // Heavy blast security door with chevrons and lock
+                ctx.fillStyle = '#202731';
+                ctx.fillRect(0, 0, 512, 512);
+                ctx.strokeStyle = '#0d1116';
+                ctx.lineWidth = 8;
+                ctx.strokeRect(10, 10, 492, 492);
+                ctx.fillStyle = '#10141a';
+                ctx.beginPath(); ctx.arc(256, 256, 75, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                for (let y = 30; y < 480; y += 70) {
+                    ctx.fillStyle = '#eab308';
+                    ctx.fillRect(30, y, 35, 30);
+                    ctx.fillRect(447, y, 35, 30);
+                }
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 24px monospace';
+                ctx.fillText('RESTRICTED', 180, 150);
+                ctx.fillText('SECTOR GATE', 170, 370);
+            }
+
+            const tex = new THREE.CanvasTexture(c);
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            return tex;
+        }
+
+        const concreteTex = createProceduralTexture('concrete');
+        concreteTex.repeat.set(4, 2);
+        const armoryTex = createProceduralTexture('armory');
+        armoryTex.repeat.set(3, 2);
+        const tileTex = createProceduralTexture('tile');
+        tileTex.repeat.set(8, 8);
+        const metalFloorTex = createProceduralTexture('metal_floor');
+        metalFloorTex.repeat.set(8, 8);
+        const flagstoneTex = createProceduralTexture('flagstone');
+        flagstoneTex.repeat.set(6, 6);
+        const doorTex = createProceduralTexture('door');
+
+        const wallMat = new THREE.MeshStandardMaterial({
+            map: concreteTex,
+            roughness: 0.7,
+            metalness: 0.2
+        });
+
+        const wallMatArmory = new THREE.MeshStandardMaterial({
+            map: armoryTex,
+            roughness: 0.6,
+            metalness: 0.6
+        });
+
+        const wallMatCourtyard = new THREE.MeshStandardMaterial({
+            map: flagstoneTex,
+            roughness: 0.8,
+            metalness: 0.1
+        });
+
+        const floorMat = new THREE.MeshStandardMaterial({
+            map: tileTex,
+            roughness: 0.45,
+            metalness: 0.25
+        });
+
+        const floorMatArmory = new THREE.MeshStandardMaterial({
+            map: metalFloorTex,
+            roughness: 0.5,
+            metalness: 0.7
+        });
+
+        const floorMatCourtyard = new THREE.MeshStandardMaterial({
+            map: flagstoneTex,
+            roughness: 0.85,
+            metalness: 0.15
+        });
+
+        const ceilingMat = new THREE.MeshStandardMaterial({
+            color: 0x14181f,
+            roughness: 0.85,
+            metalness: 0.2
+        });
+
+        const darkAlcoveMat = new THREE.MeshBasicMaterial({ color: 0x010203 });
+
+        // -------------------------------------------------------------
+        // Multi-Room Bunker Outpost 115 Geometry & Window Cutouts
+        // -------------------------------------------------------------
+        function addIndustrialLamp(x, y, z, color = 0xffdf80, intensity = 2.4) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            const light = new THREE.PointLight(color, intensity, 12, 1.4);
+            group.add(light);
+
+            const glow = new THREE.Mesh(
+                new THREE.SphereGeometry(0.12, 8, 8),
+                new THREE.MeshBasicMaterial({ color: color })
+            );
+            group.add(glow);
+            scene.add(group);
+            return { light, glow, baseIntensity: intensity, baseColor: color };
+        }
+
+        const mapColliders = [];
+        function addWall(x, y, z, w, h, d, mat = wallMat) {
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+            mesh.position.set(x, y, z);
+            scene.add(mesh);
+            const box = new THREE.Box3().setFromObject(mesh);
+            mapColliders.push(box);
+            return mesh;
+        }
+
+        function createBreachAlcove(x, y, z, w, h, d) {
+            const alcove = new THREE.Mesh(
+                new THREE.BoxGeometry(w, h, d),
+                darkAlcoveMat
+            );
+            alcove.position.set(x, y, z);
+            scene.add(alcove);
+        }
+
+        // Buyable Security Blast Doors
+        class BuyableDoor {
+            constructor(id, name, cost, position, size, zoneName) {
+                this.id = id;
+                this.name = name;
+                this.cost = cost;
+                this.position = position.clone();
+                this.zoneName = zoneName;
+                this.isOpened = false;
+
+                this.mesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(size.x, size.y, size.z),
+                    new THREE.MeshStandardMaterial({ map: doorTex, roughness: 0.4, metalness: 0.6 })
+                );
+                this.mesh.position.copy(position);
+                scene.add(this.mesh);
+
+                this.collider = new THREE.Box3().setFromObject(this.mesh);
+                mapColliders.push(this.collider);
+            }
+
+            open() {
+                if (this.isOpened) return;
+                this.isOpened = true;
+                Audio.play('board', 0.95);
+                logGSC(`[GSC:door] clear_debris("${this.name}") -> unlocked ${this.zoneName}`);
+
+                const targetY = this.position.y + 4.5;
+                const interval = setInterval(() => {
+                    this.mesh.position.y += 0.2;
+                    if (this.mesh.position.y >= targetY) {
+                        clearInterval(interval);
+                        this.mesh.visible = false;
+                        const idx = mapColliders.indexOf(this.collider);
+                        if (idx !== -1) mapColliders.splice(idx, 1);
+                    }
+                }, 25);
+            }
+        }
+
+        const bunkerDoors = [];
+
+        function buildRemasteredBunker() {
+            // ==========================================
+            // ROOM 1: LAB 115 (Spawn Sector)
+            // Bounds: X [-11, 11], Z [-10, 10]
+            // ==========================================
+            const f1 = new THREE.Mesh(new THREE.PlaneGeometry(22, 20), floorMat);
+            f1.rotation.x = -Math.PI / 2;
+            f1.position.set(0, 0, 0);
+            scene.add(f1);
+
+            const c1 = new THREE.Mesh(new THREE.PlaneGeometry(22, 20), ceilingMat);
+            c1.rotation.x = Math.PI / 2;
+            c1.position.set(0, 4.8, 0);
+            scene.add(c1);
+
+            // North Wall: Solid with detail
+            addWall(0, 2.4, -10.5, 22, 4.8, 1);
+
+            // West Wall: Window 1 cutout
+            addWall(-11.5, 2.4, -6.5, 1, 4.8, 7);
+            addWall(-11.5, 0.45, 0, 1, 0.9, 6);
+            addWall(-11.5, 3.8, 0, 1, 2.0, 6);
+            createBreachAlcove(-14.5, 2.4, 0, 5, 5, 8);
+            addWall(-11.5, 2.4, 6.5, 1, 4.8, 7);
+
+            // South Wall: Window 2 cutout
+            addWall(-6.5, 2.4, 10.5, 7, 4.8, 1);
+            addWall(0, 0.45, 10.5, 6, 0.9, 1);
+            addWall(0, 3.8, 10.5, 6, 2.0, 1);
+            createBreachAlcove(0, 2.4, 13.5, 8, 5, 5);
+            addWall(6.5, 2.4, 10.5, 7, 4.8, 1);
+
+            // East Wall: Portal to Room 2 with Door 1
+            addWall(11.5, 2.4, -6.5, 1, 4.8, 7);
+            addWall(11.5, 4.0, 0, 1, 1.6, 6);
+            addWall(11.5, 2.4, 6.5, 1, 4.8, 7);
+            bunkerDoors.push(new BuyableDoor('door_armory', 'Armory Security Gate', 750, new THREE.Vector3(11.5, 1.6, 0), new THREE.Vector3(0.6, 3.2, 5.8), 'ARMORY SECTOR'));
+
+            addIndustrialLamp(0, 4.2, 0, 0xffd27d, 2.4);
+            addIndustrialLamp(-8, 4.2, -6, 0x38bdf8, 1.8);
+
+            // ==========================================
+            // ROOM 2: ARMORY & RESEARCH (Middle Sector)
+            // Bounds: X [12, 36], Z [-10, 10]
+            // ==========================================
+            const f2 = new THREE.Mesh(new THREE.PlaneGeometry(24, 20), floorMatArmory);
+            f2.rotation.x = -Math.PI / 2;
+            f2.position.set(24, 0, 0);
+            scene.add(f2);
+
+            const c2 = new THREE.Mesh(new THREE.PlaneGeometry(24, 20), ceilingMat);
+            c2.rotation.x = Math.PI / 2;
+            c2.position.set(24, 4.8, 0);
+            scene.add(c2);
+
+            // South Wall: Solid Armory reinforcement
+            addWall(24, 2.4, 10.5, 24, 4.8, 1, wallMatArmory);
+
+            // East Wall: Window 3 cutout
+            addWall(36.5, 2.4, -6.5, 1, 4.8, 7, wallMatArmory);
+            addWall(36.5, 0.45, 0, 1, 0.9, 6, wallMatArmory);
+            addWall(36.5, 3.8, 0, 1, 2.0, 6, wallMatArmory);
+            createBreachAlcove(39.5, 2.4, 0, 5, 5, 8);
+            addWall(36.5, 2.4, 6.5, 1, 4.8, 7, wallMatArmory);
+
+            // North Wall: Portal to Room 3 with Door 2
+            addWall(17.5, 2.4, -10.5, 11, 4.8, 1, wallMatArmory);
+            addWall(24, 4.0, -10.5, 6, 1.6, 1, wallMatArmory);
+            addWall(30.5, 2.4, -10.5, 11, 4.8, 1, wallMatArmory);
+            bunkerDoors.push(new BuyableDoor('door_power', 'Power Sector Blast Door', 1250, new THREE.Vector3(24, 1.6, -10.5), new THREE.Vector3(5.8, 3.2, 0.6), 'POWER COURTYARD'));
+
+            addIndustrialLamp(24, 4.2, 0, 0xff7700, 2.2);
+            addIndustrialLamp(32, 4.2, 6, 0xef4444, 2.0);
+
+            // ==========================================
+            // ROOM 3: POWER COURTYARD & PACK-A-PUNCH
+            // Bounds: X [12, 36], Z [-38, -11]
+            // ==========================================
+            const f3 = new THREE.Mesh(new THREE.PlaneGeometry(24, 27), floorMatCourtyard);
+            f3.rotation.x = -Math.PI / 2;
+            f3.position.set(24, 0, -24.5);
+            scene.add(f3);
+
+            addWall(11.5, 3.0, -24.5, 1, 6.0, 27, wallMatCourtyard);
+            addWall(36.5, 3.0, -24.5, 1, 6.0, 27, wallMatCourtyard);
+
+            // North Wall: Window 4 cutout
+            addWall(17.5, 3.0, -38.5, 11, 6.0, 1, wallMatCourtyard);
+            addWall(24, 0.45, -38.5, 6, 0.9, 1, wallMatCourtyard);
+            addWall(24, 4.2, -38.5, 6, 3.6, 1, wallMatCourtyard);
+            createBreachAlcove(24, 3.0, -41.5, 8, 6, 5);
+            addWall(30.5, 3.0, -38.5, 11, 6.0, 1, wallMatCourtyard);
+
+            addIndustrialLamp(24, 5.0, -24, 0x38bdf8, 3.2);
+            addIndustrialLamp(16, 5.0, -32, 0xa855f7, 2.5);
+        }
+
+        // -------------------------------------------------------------
+        // Window Barricades with Repairable Planks
+        // -------------------------------------------------------------
+        class WindowBarricade {
+            constructor(id, x, y, z, rotY, zone) {
+                this.id = id;
+                this.position = new THREE.Vector3(x, y, z);
+                this.rotY = rotY;
+                this.zone = zone;
+                this.boards = 6;
+                this.group = new THREE.Group();
+                this.group.position.set(x, y, z);
+                this.group.rotation.y = rotY;
+
+                const outward = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY);
+                const inward = outward.clone().negate();
+
+                this.spawnPos = this.position.clone().addScaledVector(outward, 3.5);
+                this.approachPos = this.position.clone().addScaledVector(outward, 1.1);
+                this.insidePos = this.position.clone().addScaledVector(inward, 1.4);
+
+                this.plankMeshes = [];
+                const plankGeo = new THREE.BoxGeometry(2.3, 0.18, 0.08);
+                const plankMat = new THREE.MeshStandardMaterial({
+                    color: 0x854d0e,
+                    roughness: 0.9,
+                    metalness: 0.05
+                });
+
+                const heights = [0.85, 1.12, 1.38, 1.64, 1.90, 2.16];
+                for (let i = 0; i < 6; i++) {
+                    const plank = new THREE.Mesh(plankGeo, plankMat);
+                    plank.position.set(0, heights[i], (i % 2 === 0 ? 0.05 : -0.05));
+                    plank.rotation.z = (Math.random() - 0.5) * 0.08;
+                    this.group.add(plank);
+                    this.plankMeshes.push(plank);
+                }
+
+                scene.add(this.group);
+            }
+
+            tearBoard() {
+                if (this.boards <= 0) return false;
+                this.boards--;
+                this.plankMeshes[this.boards].visible = false;
+                Audio.play('board', 0.95);
+                logGSC(`[GSC:barricade] window_${this.id} plank torn -> ${this.boards}/6 remaining`);
+                return true;
+            }
+
+            repairBoard() {
+                if (this.boards >= 6) return false;
+                this.plankMeshes[this.boards].visible = true;
+                this.boards++;
+                Audio.play('board', 0.9);
+                logGSC(`[GSC:barricade] window_${this.id} plank repaired -> ${this.boards}/6`);
+                return true;
+            }
+        }
+
+        const barricades = [
+            new WindowBarricade(1, -11.5, 0, 0, Math.PI / 2, 'spawn'),
+            new WindowBarricade(2, 0, 0, 10.5, 0, 'spawn'),
+            new WindowBarricade(3, 36.5, 0, 0, -Math.PI / 2, 'armory'),
+            new WindowBarricade(4, 24, 0, -38.5, Math.PI, 'courtyard')
+        ];
+
+        // -------------------------------------------------------------
+        // Wallbuys with Chalk Outlines & 3D Weapon Worldmodels
+        // -------------------------------------------------------------
+        class WallBuy {
+            constructor(weaponKey, chalkUrl, modelUrl, x, y, z, rotY) {
+                this.weaponKey = weaponKey;
+                this.weapon = WEAPONS[weaponKey];
+                this.position = new THREE.Vector3(x, y, z);
+
+                const tex = new THREE.TextureLoader().load(chalkUrl);
+                const chalkMat = new THREE.MeshBasicMaterial({
+                    map: tex,
+                    transparent: true,
+                    opacity: 0.9,
+                    depthWrite: false
+                });
+
+                const chalkMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.7), chalkMat);
+                chalkMesh.position.set(x, y, z);
+                chalkMesh.rotation.y = rotY;
+                scene.add(chalkMesh);
+
+                if (modelUrl) {
+                    gltfLoader.load(modelUrl, gltf => {
+                        const m = gltf.scene;
+                        m.scale.setScalar(0.026);
+                        const normal = new THREE.Vector3(0, 0, 0.1).applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY);
+                        m.position.set(x + normal.x, y - 0.05, z + normal.z);
+                        m.rotation.y = rotY;
+                        scene.add(m);
+                    });
+                }
+            }
+        }
+
+        const wallbuys = [
+            new WallBuy('m14', `${CDN_BASE}/textures/chalk_weapon_m14_c.png`, `${CDN_BASE}/models/t5_weapon_m14_world.glb`, -10.65, 1.8, 0, Math.PI / 2),
+            new WallBuy('mp40', `${CDN_BASE}/textures/chalk_weapon_mp40_c.png`, `${CDN_BASE}/models/weapon_ger_mp40_smg.glb`, 32.65, 1.8, 0, -Math.PI / 2),
+            new WallBuy('ak74u', `${CDN_BASE}/textures/chalk_weapon_ak74u_c.png`, `${CDN_BASE}/models/t5_weapon_ak74u_world.glb`, 24, 1.8, -37.65, 0),
+            new WallBuy('spas12', `${CDN_BASE}/textures/chalk_weapon_ithaca_c.png`, `${CDN_BASE}/models/t5_weapon_ithaca_world.glb`, 36.65, 1.8, -25, -Math.PI / 2),
+            new WallBuy('commando', `${CDN_BASE}/textures/chalk_weapon_m16_c.png`, `${CDN_BASE}/models/t5_weapon_commando_world.glb`, 12.35, 1.8, -25, Math.PI / 2)
+        ];
+
+        // -------------------------------------------------------------
+        // Lag-Free 3D Animated Mystery Box with Weapon Filter
+        // -------------------------------------------------------------
+        const boxModelTemplates = new Map();
+
+        class AnimatedMysteryBox {
+            constructor(x, y, z, rotY) {
+                this.position = new THREE.Vector3(x, y, z);
+                this.group = new THREE.Group();
+                this.group.position.set(x, y, z);
+                this.group.rotation.y = rotY;
+
+                this.lid = null;
+                this.previewGroup = new THREE.Group();
+                this.previewGroup.position.set(0, 1.15, 0);
+                this.group.add(this.previewGroup);
+
+                this.isRolling = false;
+                this.availableWeapon = null;
+                this.availableWeaponKey = null;
+                this.closeTimeout = null;
+
+                gltfLoader.load(`${CDN_BASE}/models/zombie_treasure_box.glb`, gltf => {
+                    const base = gltf.scene;
+                    base.scale.setScalar(0.04);
+                    this.group.add(base);
+                });
+
+                gltfLoader.load(`${CDN_BASE}/models/zombie_treasure_box_lid.glb`, gltf => {
+                    this.lid = gltf.scene;
+                    this.lid.scale.setScalar(0.04);
+                    this.lid.position.set(0, 0.72, -0.42);
+                    this.group.add(this.lid);
+                });
+
+                const beamGeo = new THREE.CylinderGeometry(0.35, 1.2, 8, 16);
+                const beamMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 });
+                this.beam = new THREE.Mesh(beamGeo, beamMat);
+                this.beam.position.y = 4.0;
+                this.group.add(this.beam);
+
+                scene.add(this.group);
+                mapColliders.push(new THREE.Box3(
+                    new THREE.Vector3(x - 1.2, 0, z - 0.7),
+                    new THREE.Vector3(x + 1.2, 1.2, z + 0.7)
+                ));
+            }
+
+            spin() {
+                if (this.isRolling || this.availableWeapon) return;
+                this.isRolling = true;
+                logGSC('[GSC:mystery_box] notify("box_opened")');
+
+                Audio.play('box_open', 0.95);
+                Audio.play('box_music', 0.9);
+
+                // Clean lid rotation
+                let lidAngle = 0;
+                const targetLidAngle = -Math.PI / 2.2;
+                const openLidAnim = setInterval(() => {
+                    lidAngle = THREE.MathUtils.lerp(lidAngle, targetLidAngle, 0.15);
+                    if (this.lid) this.lid.rotation.x = lidAngle;
+                    if (Math.abs(lidAngle - targetLidAngle) < 0.05) {
+                        clearInterval(openLidAnim);
+                        if (this.lid) this.lid.rotation.x = targetLidAngle;
+                    }
+                }, 30);
+
+                // Filter out currently owned weapons
+                const ownedKeys = playerState.inventory.map(i => i.id);
+                const rollPool = Object.keys(WEAPONS).filter(k => !ownedKeys.includes(k) && k !== 'm1911');
+                if (rollPool.length === 0) rollPool.push('raygun', 'thundergun');
+
+                let cycleIdx = 0;
+                const interval = setInterval(() => {
+                    const key = rollPool[cycleIdx % rollPool.length];
+                    cycleIdx++;
+                    this.previewGroup.clear();
+
+                    if (boxModelTemplates.has(key)) {
+                        const m = clone(boxModelTemplates.get(key));
+                        m.scale.setScalar(0.035);
+                        m.rotation.y = cycleIdx * 0.4;
+                        this.previewGroup.add(m);
+                    }
+                }, 130);
+
+                setTimeout(() => {
+                    clearInterval(interval);
+                    const chosen = rollPool[Math.floor(Math.random() * rollPool.length)];
+                    this.availableWeaponKey = chosen;
+                    this.availableWeapon = WEAPONS[chosen];
+                    this.isRolling = false;
+                    logGSC(`[GSC:mystery_box] weapon ready: ${this.availableWeapon.name}`);
+
+                    this.previewGroup.clear();
+                    if (boxModelTemplates.has(chosen)) {
+                        const finalM = clone(boxModelTemplates.get(chosen));
+                        finalM.scale.setScalar(0.038);
+                        finalM.position.y = 0.1;
+                        this.previewGroup.add(finalM);
+                    }
+
+                    this.closeTimeout = setTimeout(() => {
+                        if (this.availableWeapon) this.close();
+                    }, 8500);
+                }, 4000);
+            }
+
+            close() {
+                if (this.closeTimeout) clearTimeout(this.closeTimeout);
+                this.availableWeapon = null;
+                this.availableWeaponKey = null;
+                this.isRolling = false;
+                this.previewGroup.clear();
+                
+                let lidAngle = this.lid ? this.lid.rotation.x : -Math.PI / 2.2;
+                const closeLidAnim = setInterval(() => {
+                    lidAngle = THREE.MathUtils.lerp(lidAngle, 0, 0.2);
+                    if (this.lid) this.lid.rotation.x = lidAngle;
+                    if (Math.abs(lidAngle) < 0.05) {
+                        clearInterval(closeLidAnim);
+                        if (this.lid) this.lid.rotation.x = 0;
+                    }
+                }, 30);
+
+                Audio.play('box_close', 0.95);
+            }
+
+            update(dt) {
+                if (this.beam) {
+                    this.beam.rotation.y += dt * 0.5;
+                }
+                if (this.availableWeapon && this.previewGroup.children.length > 0) {
+                    this.previewGroup.children[0].rotation.y += dt * 1.5;
+                }
+            }
+        }
+
+        const mysteryBox = new AnimatedMysteryBox(24, 0, 8.5, Math.PI);
+
+        // -------------------------------------------------------------
+        // Perk-a-Cola Machines & Der Wunderfizz
+        // -------------------------------------------------------------
+        class PerkMachine {
+            constructor(type, name, cost, modelUrl, soundKey, iconUrl, bottleKey, x, y, z, rotY, lightColor) {
+                this.type = type;
+                this.name = name;
+                this.cost = cost;
+                this.soundKey = soundKey;
+                this.iconUrl = iconUrl;
+                this.bottleKey = bottleKey;
+                this.position = new THREE.Vector3(x, y, z);
+
+                gltfLoader.load(modelUrl, gltf => {
+                    const m = gltf.scene;
+                    m.scale.setScalar(0.027);
+                    m.position.set(x, y, z);
+                    m.rotation.y = rotY;
+                    scene.add(m);
+
+                    const light = new THREE.PointLight(lightColor, 2.2, 8);
+                    light.position.set(x, y + 1.8, z);
+                    scene.add(light);
+                }, undefined, () => {
+                    const mesh = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.9, 0.8), new THREE.MeshStandardMaterial({ color: lightColor }));
+                    mesh.position.set(x, 0.95, z);
+                    mesh.rotation.y = rotY;
+                    scene.add(mesh);
+                });
+
+                mapColliders.push(new THREE.Box3(
+                    new THREE.Vector3(x - 0.7, 0, z - 0.7),
+                    new THREE.Vector3(x + 0.7, 2.0, z + 0.7)
+                ));
+            }
+
+            buy(player) {
+                if (player.perks.has(this.type)) return false;
+                player.perks.add(this.type);
+                Audio.play(this.soundKey, 0.95);
+                updatePerksHUD(player.perks);
+
+                if (this.type === 'juggernog') {
+                    gameState.maxHealth = 250;
+                    gameState.health = 250;
+                }
+
+                // 1st person Perk-a-Cola bottle drinking sequence
+                viewWeapon.drinkPerkBottle(this.bottleKey);
+
+                logGSC(`[GSC:perk] player acquired ${this.name.toUpperCase()}`);
+                return true;
+            }
+        }
+
+        const perkMachines = [
+            new PerkMachine('quickrevive', 'Quick Revive', 500, `${CDN_BASE}/models/zombie_vending_revive.glb`, 'quickrevive', 'https://static.wikia.nocookie.net/callofduty/images/c/c5/Quick_Revive_Icon_BOII.png', 'quickrevive', -10, 0, -8.5, 0, 0x38bdf8),
+            new PerkMachine('speedcola', 'Speed Cola', 3000, `${CDN_BASE}/models/zombie_vending_sleight.glb`, 'speedcola', 'https://static.wikia.nocookie.net/callofduty/images/6/6c/Speed_Cola_Icon_BOII.png', 'speedcola', 34, 0, -8.5, 0, 0x22c55e),
+            new PerkMachine('juggernog', 'Juggernog', 2500, `${CDN_BASE}/models/zombie_vending_jugg.glb`, 'juggernog', 'https://static.wikia.nocookie.net/callofduty/images/e/e4/Juggernog_Icon_BOII.png', 'juggernog', 13.5, 0, -36, Math.PI / 2, 0xef4444),
+            new PerkMachine('doubletap', 'Double Tap Root Beer', 2000, `${CDN_BASE}/models/zombie_vending_doubletap.glb`, 'doubletap', 'https://static.wikia.nocookie.net/callofduty/images/e/e2/Double_Tap_Icon_BOII.png', 'doubletap', 34, 0, -36, -Math.PI / 2, 0xeab308)
+        ];
+
+        // Der Wunderfizz Machine (Dispenses random unowned perks for 1500 points)
+        class DerWunderfizzMachine {
+            constructor(x, y, z, rotY) {
+                this.position = new THREE.Vector3(x, y, z);
+                this.cost = 1500;
+                this.isBusy = false;
+
+                this.group = new THREE.Group();
+                this.group.position.set(x, y, z);
+                this.group.rotation.y = rotY;
+
+                // Vintage apparatus cabinet
+                const cabGeo = new THREE.BoxGeometry(1.1, 2.1, 0.9);
+                const cabMat = new THREE.MeshStandardMaterial({ color: 0x221a14, roughness: 0.5, metalness: 0.7 });
+                const cabinet = new THREE.Mesh(cabGeo, cabMat);
+                cabinet.position.y = 1.05;
+                this.group.add(cabinet);
+
+                // Brass Tesla coils
+                const pipeGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.8, 8);
+                const brassMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, metalness: 0.85, roughness: 0.25 });
+                [-0.45, 0.45].forEach(ox => {
+                    [-0.35, 0.35].forEach(oz => {
+                        const p = new THREE.Mesh(pipeGeo, brassMat);
+                        p.position.set(ox, 1.05, oz);
+                        this.group.add(p);
+                    });
+                });
+
+                // Element 115 Plasma Orb at top
+                const orbGeo = new THREE.SphereGeometry(0.32, 16, 16);
+                this.orbMat = new THREE.MeshStandardMaterial({
+                    color: 0x06b6d4,
+                    emissive: 0x06b6d4,
+                    emissiveIntensity: 1.8,
+                    roughness: 0.2
+                });
+                this.orb = new THREE.Mesh(orbGeo, this.orbMat);
+                this.orb.position.y = 2.4;
+                this.group.add(this.orb);
+
+                this.light = new THREE.PointLight(0x06b6d4, 2.5, 8);
+                this.light.position.set(0, 2.4, 0);
+                this.group.add(this.light);
+
+                scene.add(this.group);
+                mapColliders.push(new THREE.Box3(
+                    new THREE.Vector3(x - 0.6, 0, z - 0.5),
+                    new THREE.Vector3(x + 0.6, 2.4, z + 0.5)
+                ));
+            }
+
+            update(time) {
+                if (this.orb) {
+                    this.orb.rotation.y = time * 2.5;
+                    this.orbMat.emissiveIntensity = 1.4 + Math.sin(time * 6) * 0.6;
+                }
+            }
+
+            spin(player) {
+                if (this.isBusy) return false;
+                const allPerks = ['juggernog', 'speedcola', 'quickrevive', 'doubletap', 'staminup', 'deadshot', 'mulekick'];
+                const unowned = allPerks.filter(p => !player.perks.has(p));
+                if (unowned.length === 0) return 'ALL_OWNED';
+
+                this.isBusy = true;
+                Audio.play('dispense', 1.0);
+                logGSC('[GSC:wunderfizz] Der Wunderfizz energized');
+
+                let count = 0;
+                const colors = [0x06b6d4, 0xa855f7, 0xef4444, 0x22c55e, 0xeab308];
+                const cycle = setInterval(() => {
+                    const c = colors[count % colors.length];
+                    this.orbMat.color.setHex(c);
+                    this.orbMat.emissive.setHex(c);
+                    this.light.color.setHex(c);
+                    count++;
+                }, 100);
+
+                setTimeout(() => {
+                    clearInterval(cycle);
+                    const chosen = unowned[Math.floor(Math.random() * unowned.length)];
+                    player.perks.add(chosen);
+                    updatePerksHUD(player.perks);
+
+                    if (chosen === 'juggernog') {
+                        gameState.maxHealth = 250;
+                        gameState.health = 250;
+                    } else if (chosen === 'mulekick') {
+                        playerState.maxSlots = 3;
+                    }
+
+                    const bottleKey = chosen === 'juggernog' ? 'juggernog' : chosen === 'speedcola' ? 'speedcola' : chosen === 'quickrevive' ? 'quickrevive' : 'doubletap';
+                    viewWeapon.drinkPerkBottle(bottleKey);
+
+                    logGSC(`[GSC:wunderfizz] operator awarded ${chosen.toUpperCase()}`);
+                    this.isBusy = false;
+                }, 2800);
+
+                return true;
+            }
+        }
+
+        const wunderfizz = new DerWunderfizzMachine(13.5, 0, 8.5, Math.PI / 2);
+
+        // Pack-a-Punch Machine
+        class PackAPunchMachine {
+            constructor(x, y, z, rotY) {
+                this.position = new THREE.Vector3(x, y, z);
+                this.isBusy = false;
+
+                gltfLoader.load(`${CDN_BASE}/models/zombie_vending_packapunch.glb`, gltf => {
+                    const m = gltf.scene;
+                    m.scale.setScalar(0.027);
+                    m.position.set(x, y, z);
+                    m.rotation.y = rotY;
+                    scene.add(m);
+
+                    const light = new THREE.PointLight(0xa855f7, 3.2, 8);
+                    light.position.set(x, y + 1.8, z);
+                    scene.add(light);
+                }, undefined, () => {
+                    const mesh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.2, 1.2), new THREE.MeshStandardMaterial({ color: 0x9333ea, metalness: 0.8 }));
+                    mesh.position.set(x, 1.1, z);
+                    mesh.rotation.y = rotY;
+                    scene.add(mesh);
+                });
+
+                mapColliders.push(new THREE.Box3(
+                    new THREE.Vector3(x - 0.9, 0, z - 0.7),
+                    new THREE.Vector3(x + 0.9, 2.2, z + 0.7)
+                ));
+            }
+
+            upgrade(player) {
+                const currentItem = player.inventory[player.currentSlot];
+                if (!currentItem || currentItem.isUpgraded || this.isBusy) return false;
+
+                this.isBusy = true;
+                Audio.play('packapunch', 1.0);
+                logGSC(`[GSC:pap] pack_a_punch(${currentItem.weapon.name}) -> upgrading`);
+
+                setTimeout(() => {
+                    currentItem.isUpgraded = true;
+                    currentItem.clip = currentItem.weapon.papClip;
+                    currentItem.stock = currentItem.weapon.papStock;
+                    viewWeapon.equip(currentItem.weapon, true);
+                    updateWeaponHUD();
+                    this.isBusy = false;
+                    logGSC(`[GSC:pap] weapon ready: ${currentItem.weapon.upgradedName}`);
+                }, 4000);
+
+                return true;
+            }
+        }
+
+        const packAPunch = new PackAPunchMachine(24, 0, -36, 0);
+
+        // Secret Element 115 Meteorites
+        const meteorites = [
+            { pos: new THREE.Vector3(-10, 0.4, -9.5), active: false },
+            { pos: new THREE.Vector3(31, 0.4, -9.5), active: false },
+            { pos: new THREE.Vector3(24, 0.4, -34), active: false }
+        ];
+
+        meteorites.forEach(m => {
+            const mesh = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.25),
+                new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0x00ff88, emissiveIntensity: 0.6 })
+            );
+            mesh.position.copy(m.pos);
+            scene.add(mesh);
+            m.mesh = mesh;
+        });
+
+        function checkMeteoriteInteract(playerPos) {
+            meteorites.forEach((m, idx) => {
+                if (!m.active && m.pos.distanceTo(playerPos) < 2.0) {
+                    m.active = true;
+                    m.mesh.material.emissiveIntensity = 2.5;
+                    logGSC(`[GSC:meteor] activated element_115 shard ${idx + 1}/3`);
+                    if (meteorites.every(item => item.active)) {
+                        Audio.playSong('115');
+                        const banner = document.getElementById('hud-song-banner');
+                        banner.classList.remove('opacity-0');
+                        setTimeout(() => banner.classList.add('opacity-0'), 6000);
+                        logGSC('[GSC:music] triggering "115" by Kevin Sherwood & Elena Siegman');
+                    }
+                }
+            });
+        }
+
+        // -------------------------------------------------------------
+        // Undead AI & Authentic Skeletal Hierarchy
+        // -------------------------------------------------------------
+        let zombieBodies = [];
+        let zombieHeads = [];
+        let zombieAnims = {};
+
+        async function preloadZombieAssets() {
+            try {
+                const [b1, h1, h2, h3, h4, w1, w2, run, a1, d1] = await Promise.all([
+                    gltfLoader.loadAsync(`${CDN_BASE}/models/c_ger_honorguard_body1.glb`),
+                    gltfLoader.loadAsync(`${CDN_BASE}/models/c_ger_zombie_head1.glb`),
+                    gltfLoader.loadAsync(`${CDN_BASE}/models/c_ger_zombie_head2.glb`),
+                    gltfLoader.loadAsync(`${CDN_BASE}/models/c_ger_zombie_head3.glb`),
+                    gltfLoader.loadAsync(`${CDN_BASE}/models/c_ger_zombie_head4.glb`),
+                    fetch(`${CDN_BASE}/animations/ai_zombie_walk_v1.json`).then(r => r.json()),
+                    fetch(`${CDN_BASE}/animations/ai_zombie_walk_v2.json`).then(r => r.json()),
+                    fetch(`${CDN_BASE}/animations/ai_zombie_run_v1.json`).then(r => r.json()),
+                    fetch(`${CDN_BASE}/animations/ai_zombie_attack_v1.json`).then(r => r.json()),
+                    fetch(`${CDN_BASE}/animations/ai_zombie_death_v1.json`).then(r => r.json())
+                ]);
+
+                zombieBodies = [b1.scene];
+                zombieHeads = [h1.scene, h2.scene, h3.scene, h4.scene];
+                zombieAnims = {
+                    walk1: w1,
+                    walk2: w2,
+                    run: run,
+                    attack: a1,
+                    death: d1
+                };
+            } catch (e) {
+                console.error('Failed to load zombie assets:', e);
+            }
+        }
+
+        // Zone classification for waypoint graph navigation
+        function getZone(pos) {
+            if (pos.z <= -10.5) return 'courtyard';
+            if (pos.x >= 11.5) return 'armory';
+            return 'spawn';
+        }
+
+        const DOOR_WAYPOINTS = {
+            door1: new THREE.Vector3(11.5, 0, 0),
+            door2: new THREE.Vector3(24, 0, -10.5)
+        };
+
+        function getNextNavTarget(zombiePos, playerPos) {
+            const zZone = getZone(zombiePos);
+            const pZone = getZone(playerPos);
+
+            if (zZone === pZone) return playerPos;
+
+            if (zZone === 'spawn') {
+                return DOOR_WAYPOINTS.door1;
+            } else if (zZone === 'armory') {
+                if (pZone === 'spawn') return DOOR_WAYPOINTS.door1;
+                return DOOR_WAYPOINTS.door2;
+            } else {
+                return DOOR_WAYPOINTS.door2;
+            }
+        }
+
+        class Zombie {
+            constructor(id, position, barrier) {
+                this.id = id;
+                this.barrier = barrier;
+                this.health = 150 + (gameState.round - 1) * 100;
+                this.maxHealth = this.health;
+                this.isAlive = true;
+                this.isCrawler = false;
+                this.hasEntered = false;
+                this.attackCooldown = 0;
+                this.tearTimer = 0;
+                this.speed = 1.0 + Math.random() * 1.5;
+
+                this.root = new THREE.Group();
+                scene.add(this.root);
+
+                const bodyTpl = zombieBodies.length > 0 ? zombieBodies[0] : null;
+                const headTpl = zombieHeads.length > 0 ? zombieHeads[id % zombieHeads.length] : null;
+
+                if (bodyTpl) {
+                    const body = clone(bodyTpl);
+                    this.root.add(body);
+
+                    if (headTpl) {
+                        const head = clone(headTpl);
+                        this.root.add(head);
+                        this.root.updateMatrixWorld(true);
+
+                        const mount = body.getObjectByName('j_spine4');
+                        const anchor = head.getObjectByName('j_spine4');
+                        if (mount && anchor) {
+                            head.matrixAutoUpdate = false;
+                            head.matrix.copy(anchor.matrixWorld).invert();
+                            mount.add(head);
+                            anchor.userData.animationAnchor = true;
+                        }
+                        this.headMesh = head;
+                    }
+                }
+
+                // Scalled & positioned AFTER mounting
+                this.root.scale.setScalar(0.026);
+                this.root.position.copy(position);
+                this.root.traverse(o => { if (o.isMesh) o.frustumCulled = false; });
+
+                // Proportional hitboxes matching unscaled COD space
+                this.headBox = new THREE.Mesh(
+                    new THREE.SphereGeometry(10, 8, 8),
+                    new THREE.MeshBasicMaterial({ visible: false })
+                );
+                this.headBox.position.set(0, 62, 0);
+                this.headBox.userData = { zombie: this, isHead: true };
+                this.root.add(this.headBox);
+
+                this.bodyBox = new THREE.Mesh(
+                    new THREE.BoxGeometry(20, 48, 16),
+                    new THREE.MeshBasicMaterial({ visible: false })
+                );
+                this.bodyBox.position.set(0, 30, 0);
+                this.bodyBox.userData = { zombie: this, isHead: false };
+                this.root.add(this.bodyBox);
+
+                this.rig = new Rig(this.root);
+                const walkKey = this.speed > 2.2 ? 'run' : (id % 2 === 0 ? 'walk1' : 'walk2');
+                if (zombieAnims[walkKey]) this.rig.add('walk', zombieAnims[walkKey], true);
+                if (zombieAnims.attack) this.rig.add('attack', zombieAnims.attack, true);
+                if (zombieAnims.death) this.rig.add('death', zombieAnims.death, false);
+
+                this.rig.play('walk');
+            }
+
+            takeDamage(amount, isHeadshot = false, isMelee = false) {
+                if (!this.isAlive) return;
+
+                if (playerState.hasInstaKill) {
+                    amount = this.health;
+                } else if (isHeadshot) {
+                    const mult = playerState.perks.has('deadshot') ? 4.0 : 2.5;
+                    amount *= mult;
+                }
+
+                if (playerState.perks.has('doubletap')) {
+                    amount *= 1.5;
+                }
+
+                this.health -= amount;
+
+                if (this.health <= 0) {
+                    this.die(isHeadshot, isMelee);
+                } else {
+                    addScore(10);
+                }
+            }
+
+            die(isHeadshot = false, isMelee = false) {
+                this.isAlive = false;
+                gameState.kills++;
+                gameState.zombiesAlive--;
+
+                const pts = isMelee ? 130 : isHeadshot ? 100 : 60;
+                addScore(pts);
+
+                if (this.rig && this.rig.actions['death']) {
+                    this.rig.play('death', false, 1.1, 0.05);
+                }
+
+                // Random 3D Powerup drop chance
+                if (Math.random() < 0.08) {
+                    const puTypes = ['nuke', 'insta_kill', 'double_points', 'full_ammo', 'carpenter'];
+                    const puType = puTypes[Math.floor(Math.random() * puTypes.length)];
+                    spawnPowerUp(puType, this.root.position.clone());
+                }
+
+                setTimeout(() => {
+                    scene.remove(this.root);
+                    const idx = zombies.indexOf(this);
+                    if (idx !== -1) zombies.splice(idx, 1);
+                }, 3000);
+
+                checkRoundProgression();
+            }
+
+            update(dt, playerPos) {
+                if (!this.isAlive) return;
+                this.rig.update(dt);
+
+                const myPos = this.root.position;
+
+                // Stage 1 & 2: Approaching barricade and tearing planks
+                if (!this.hasEntered && this.barrier) {
+                    const distToApproach = myPos.distanceTo(this.barrier.approachPos);
+                    if (distToApproach > 0.4) {
+                        const dir = new THREE.Vector3().subVectors(this.barrier.approachPos, myPos).normalize();
+                        myPos.addScaledVector(dir, this.speed * dt);
+                        this.root.rotation.y = Math.atan2(-dir.z, dir.x);
+                        if (this.rig.current !== 'walk') this.rig.play('walk');
+                        return;
+                    }
+
+                    if (this.barrier.boards > 0) {
+                        this.tearTimer += dt;
+                        if (this.tearTimer >= 2.0) {
+                            this.tearTimer = 0;
+                            this.barrier.tearBoard();
+                            this.rig.play('attack');
+                        }
+                        return;
+                    }
+
+                    // Vaulting through window into room
+                    this.hasEntered = true;
+                    myPos.copy(this.barrier.insidePos);
+                    if (this.rig.current !== 'walk') this.rig.play('walk');
+                    logGSC(`[GSC:ai] zombie_${this.id} breached window_${this.barrier.id} into bunker`);
+                    return;
+                }
+
+                // Stage 3: Waypoint Navigation Graph & Wall Collision Sliding
+                const targetPos = getNextNavTarget(myPos, playerPos);
+                const dir = new THREE.Vector3().subVectors(targetPos, myPos);
+                dir.y = 0;
+
+                // Horizontal distance calculation eliminates Y=1.7m eye height bug!
+                const horizontalDist = Math.hypot(playerPos.x - myPos.x, playerPos.z - myPos.z);
+                this.root.rotation.y = Math.atan2(-dir.z, dir.x);
+
+                if (horizontalDist > 1.45) {
+                    dir.normalize();
+                    const step = dir.multiplyScalar(this.speed * dt);
+
+                    const nextX = myPos.x + step.x;
+                    const nextZ = myPos.z + step.z;
+                    const zRadius = 0.4;
+
+                    let hitX = false;
+                    let hitZ = false;
+
+                    const testBoxX = new THREE.Box3(
+                        new THREE.Vector3(nextX - zRadius, 0.2, myPos.z - zRadius),
+                        new THREE.Vector3(nextX + zRadius, 1.8, myPos.z + zRadius)
+                    );
+                    const testBoxZ = new THREE.Box3(
+                        new THREE.Vector3(myPos.x - zRadius, 0.2, nextZ - zRadius),
+                        new THREE.Vector3(myPos.x + zRadius, 1.8, nextZ + zRadius)
+                    );
+
+                    for (const col of mapColliders) {
+                        if (col.intersectsBox(testBoxX)) hitX = true;
+                        if (col.intersectsBox(testBoxZ)) hitZ = true;
+                    }
+
+                    if (!hitX) myPos.x = nextX;
+                    if (!hitZ) myPos.z = nextZ;
+
+                    if (this.rig.current !== 'walk') this.rig.play('walk');
+                } else {
+                    // Attack Operator!
+                    this.rig.play('attack');
+                    this.attackCooldown -= dt;
+                    if (this.attackCooldown <= 0) {
+                        this.attackCooldown = 1.15;
+                        damagePlayer(50);
+                        Audio.play('hit_body', 0.85);
+                    }
+                }
+            }
+        }
+
+        const zombies = [];
+
+        function getActiveBarricades() {
+            return barricades.filter(b => {
+                if (b.zone === 'spawn') return true;
+                if (b.zone === 'armory') return bunkerDoors[0] && bunkerDoors[0].isOpened;
+                if (b.zone === 'courtyard') return bunkerDoors[1] && bunkerDoors[1].isOpened;
+                return true;
+            });
+        }
+
+        function spawnZombie() {
+            const activeBarriers = getActiveBarricades();
+            const barrier = activeBarriers[Math.floor(Math.random() * activeBarriers.length)];
+            const z = new Zombie(gameState.zombiesSpawned++, barrier.spawnPos.clone(), barrier);
+            zombies.push(z);
+        }
+
+        // -------------------------------------------------------------
+        // Frag Grenade Physics & Blast Damage
+        // -------------------------------------------------------------
+        class FragGrenade {
+            constructor(pos, vel) {
+                this.position = pos.clone();
+                this.velocity = vel.clone();
+                this.fuse = 3.0;
+
+                const geo = new THREE.SphereGeometry(0.12, 8, 8);
+                const mat = new THREE.MeshStandardMaterial({ color: 0x27272a, metalness: 0.8, roughness: 0.3 });
+                this.mesh = new THREE.Mesh(geo, mat);
+                this.mesh.position.copy(pos);
+                scene.add(this.mesh);
+
+                grenades.push(this);
+            }
+
+            update(dt) {
+                this.fuse -= dt;
+                this.velocity.y -= 9.8 * dt;
+
+                const nextPos = this.position.clone().addScaledVector(this.velocity, dt);
+
+                // Floor bounce
+                if (nextPos.y <= 0.12) {
+                    nextPos.y = 0.12;
+                    this.velocity.y = -this.velocity.y * 0.45;
+                    this.velocity.x *= 0.75;
+                    this.velocity.z *= 0.75;
+                }
+
+                this.position.copy(nextPos);
+                this.mesh.position.copy(this.position);
+
+                if (this.fuse <= 0) {
+                    this.explode();
+                }
+            }
+
+            explode() {
+                const idx = grenades.indexOf(this);
+                if (idx !== -1) grenades.splice(idx, 1);
+                scene.remove(this.mesh);
+
+                // Blast flash light
+                const blast = new THREE.PointLight(0xff7700, 6.0, 12);
+                blast.position.copy(this.position);
+                scene.add(blast);
+                setTimeout(() => scene.remove(blast), 120);
+
+                // Blast radial damage
+                for (const z of zombies) {
+                    if (!z.isAlive) continue;
+                    const d = z.root.position.distanceTo(this.position);
+                    if (d < 6.5) {
+                        const dmg = (1 - d / 6.5) * 550;
+                        z.takeDamage(dmg, false, false);
+                    }
+                }
+
+                logGSC('[GSC:weapon] frag_grenade detonated');
+            }
+        }
+
+        const grenades = [];
+
+        // -------------------------------------------------------------
+        // Authentic 3D Power-Ups & Demonic Announcer Voices
+        // -------------------------------------------------------------
+        const POWERUPS = {
+            nuke: { name: 'Nuke', modelUrl: `${CDN_BASE}/models/zombie_bomb.glb`, soundKey: 'nuke', color: 0xffaa00 },
+            insta_kill: { name: 'Insta-Kill', modelUrl: `${CDN_BASE}/models/zombie_skull.glb`, soundKey: 'insta_kill', color: 0xef4444 },
+            double_points: { name: 'Double Points', modelUrl: `${CDN_BASE}/models/zombie_x2_icon.glb`, soundKey: 'double_points', color: 0xeab308 },
+            full_ammo: { name: 'Max Ammo', modelUrl: `${CDN_BASE}/models/zombie_ammocan.glb`, soundKey: 'full_ammo', color: 0x22c55e },
+            carpenter: { name: 'Carpenter', modelUrl: `${CDN_BASE}/models/zombie_carpenter.glb`, soundKey: 'carpenter', color: 0x38bdf8 }
+        };
+
+        const powerUpModelCache = {};
+        const powerups = [];
+
+        async function preloadPowerUpModels() {
+            for (const [key, def] of Object.entries(POWERUPS)) {
+                try {
+                    const gltf = await gltfLoader.loadAsync(def.modelUrl);
+                    powerUpModelCache[key] = gltf.scene;
+                } catch (e) {
+                    console.warn('Fallback powerup model:', key);
+                }
+            }
+            // Preload box weapons into boxModelTemplates map
+            for (const [key, def] of Object.entries(WEAPONS)) {
+                try {
+                    const gltf = await gltfLoader.loadAsync(def.modelUrl);
+                    boxModelTemplates.set(key, gltf.scene);
+                } catch (e) {}
+            }
+        }
+
+        class PowerUp {
+            constructor(type, position) {
+                this.type = type;
+                this.def = POWERUPS[type];
+                this.position = position.clone();
+                this.position.y = 1.0;
+                this.lifespan = 28.0;
+
+                this.group = new THREE.Group();
+                this.group.position.copy(this.position);
+
+                if (powerUpModelCache[type]) {
+                    const m = clone(powerUpModelCache[type]);
+                    m.scale.setScalar(0.03);
+                    this.group.add(m);
+                } else {
+                    const mesh = new THREE.Mesh(
+                        new THREE.DodecahedronGeometry(0.35),
+                        new THREE.MeshStandardMaterial({ color: this.def.color, emissive: this.def.color, emissiveIntensity: 1.0 })
+                    );
+                    this.group.add(mesh);
+                }
+
+                this.light = new THREE.PointLight(this.def.color, 1.8, 4);
+                this.group.add(this.light);
+
+                scene.add(this.group);
+                powerups.push(this);
+            }
+
+            update(dt) {
+                this.lifespan -= dt;
+                this.group.rotation.y += dt * 2.0;
+                this.group.position.y = 1.0 + Math.sin(Date.now() * 0.003) * 0.15;
+
+                if (this.lifespan <= 0) {
+                    this.destroy();
+                }
+            }
+
+            collect() {
+                Audio.play(this.def.soundKey, 1.0);
+                logGSC(`[GSC:powerup] acquired ${this.def.name.toUpperCase()}`);
+
+                if (this.type === 'nuke') {
+                    const flash = document.getElementById('nuke-flash');
+                    flash.style.opacity = '0.9';
+                    setTimeout(() => { flash.style.opacity = '0'; }, 500);
+                    addScore(400);
+                    zombies.slice().forEach(z => {
+                        if (z.isAlive) z.die(false, false);
+                    });
+                } else if (this.type === 'full_ammo') {
+                    playerState.inventory.forEach(item => {
+                        item.clip = item.isUpgraded ? item.weapon.papClip : item.weapon.clipSize;
+                        item.stock = item.isUpgraded ? item.weapon.papStock : item.weapon.maxStock;
+                    });
+                    playerState.grenades = 4;
+                    updateWeaponHUD();
+                } else if (this.type === 'double_points') {
+                    playerState.doublePointsTimer = 30;
+                } else if (this.type === 'insta_kill') {
+                    playerState.instaKillTimer = 30;
+                } else if (this.type === 'carpenter') {
+                    barricades.forEach(b => {
+                        while (b.boards < 6) b.repairBoard();
+                    });
+                    addScore(200);
+                }
+
+                this.destroy();
+            }
+
+            destroy() {
+                const idx = powerups.indexOf(this);
+                if (idx !== -1) powerups.splice(idx, 1);
+                scene.remove(this.group);
+            }
+        }
+
+        function spawnPowerUp(type, pos) {
+            new PowerUp(type, pos);
+        }
+
+        // -------------------------------------------------------------
+        // Bullet Tracers & Impact FX
+        // -------------------------------------------------------------
+        class BulletTracerSystem {
+            constructor() {
+                this.tracers = [];
+                this.geo = new THREE.CylinderGeometry(0.015, 0.015, 1, 6);
+                this.geo.rotateX(Math.PI / 2);
+                this.mat = new THREE.MeshBasicMaterial({ color: 0xffe066 });
+            }
+
+            spawn(start, end) {
+                const dir = new THREE.Vector3().subVectors(end, start);
+                const len = dir.length();
+                const m = new THREE.Mesh(this.geo, this.mat);
+                m.scale.set(1, 1, Math.min(len, 2.5));
+                m.position.copy(start);
+                m.lookAt(end);
+                scene.add(m);
+
+                this.tracers.push({
+                    mesh: m,
+                    start: start.clone(),
+                    end: end.clone(),
+                    dir: dir.normalize(),
+                    len: len,
+                    traveled: 0,
+                    speed: 120.0
+                });
+            }
+
+            update(dt) {
+                for (let i = this.tracers.length - 1; i >= 0; i--) {
+                    const t = this.tracers[i];
+                    t.traveled += t.speed * dt;
+                    t.mesh.position.addScaledVector(t.dir, t.speed * dt);
+                    if (t.traveled >= t.len) {
+                        scene.remove(t.mesh);
+                        this.tracers.splice(i, 1);
+                    }
+                }
+            }
+        }
+
+        const Tracers = new BulletTracerSystem();
+
+        // -------------------------------------------------------------
+        // Game State & Inventory Management
+        // -------------------------------------------------------------
+        const gameState = {
+            round: 1,
+            score: 500,
+            health: 100,
+            maxHealth: 100,
+            kills: 0,
+            isGameOver: false,
+            isPaused: false,
+            zombiesToSpawn: 6,
+            zombiesSpawned: 0,
+            zombiesAlive: 0,
+            intermission: false,
+            godmode: false
+        };
+
+        const playerState = {
+            inventory: [],
+            currentSlot: 0,
+            maxSlots: 2,
+            grenades: 4,
+            perks: new Set(),
+            doublePointsTimer: 0,
+            instaKillTimer: 0,
+            get isDoublePoints() { return this.doublePointsTimer > 0; },
+            get hasInstaKill() { return this.instaKillTimer > 0; }
+        };
+
+        function addScore(basePts) {
+            const mult = playerState.isDoublePoints ? 2 : 1;
+            const pts = basePts * mult;
+            gameState.score += pts;
+            updatePointsHUD();
+
+            // Floating point indicator
+            const el = document.createElement('div');
+            el.className = 'floating-points';
+            el.textContent = `+${pts}`;
+            const anchor = document.getElementById('points-anchor');
+            el.style.left = `${Math.random() * 40}px`;
+            el.style.top = '0px';
+            anchor.appendChild(el);
+            setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 750);
+        }
+
+        function updatePointsHUD() {
+            document.getElementById('hud-points-display').textContent = gameState.score;
+        }
+
+        function updateWeaponHUD() {
+            const currentItem = playerState.inventory[playerState.currentSlot];
+            if (!currentItem) return;
+
+            const name = currentItem.isUpgraded ? currentItem.weapon.upgradedName : currentItem.weapon.name;
+            const nameEl = document.getElementById('hud-weapon-name');
+            nameEl.textContent = name;
+            nameEl.className = currentItem.isUpgraded 
+                ? 'text-2xl font-bold tracking-wider uppercase text-cyan-400 drop-shadow-[0_0_8px_#00e5ff]'
+                : 'text-2xl font-bold tracking-wider uppercase text-zinc-200';
+
+            document.getElementById('hud-ammo-clip').textContent = currentItem.clip;
+            document.getElementById('hud-ammo-stock').textContent = currentItem.stock;
+            document.getElementById('hud-grenade-count').textContent = `${playerState.grenades} [G]`;
+
+            const secEl = document.getElementById('hud-weapon-secondary');
+            if (secEl) {
+                if (playerState.inventory.length > 1) {
+                    const otherSlot = (playerState.currentSlot + 1) % playerState.inventory.length;
+                    const other = playerState.inventory[otherSlot];
+                    const otherName = other.isUpgraded ? other.weapon.upgradedName : other.weapon.name;
+                    secEl.textContent = `SLOT ${otherSlot + 1}: ${otherName} [Q]`;
+                } else {
+                    secEl.textContent = `SLOT 2: EMPTY`;
+                }
+            }
+        }
+
+        function switchWeaponSlot(slotIndex) {
+            if (slotIndex === playerState.currentSlot) return;
+            if (!playerState.inventory[slotIndex]) return;
+
+            playerState.currentSlot = slotIndex;
+            const item = playerState.inventory[slotIndex];
+            viewWeapon.equip(item.weapon, item.isUpgraded);
+            updateWeaponHUD();
+            logGSC(`[GSC:weapon] switched to slot ${slotIndex + 1}: ${item.weapon.name}`);
+        }
+
+        function acquireWeapon(weaponKey) {
+            const def = WEAPONS[weaponKey];
+            if (!def) return;
+
+            const existingIdx = playerState.inventory.findIndex(i => i.id === weaponKey);
+            if (existingIdx !== -1) {
+                const item = playerState.inventory[existingIdx];
+                item.stock = item.isUpgraded ? def.papStock : def.maxStock;
+                switchWeaponSlot(existingIdx);
+                updateWeaponHUD();
+                return;
+            }
+
+            const newItem = {
+                id: weaponKey,
+                weapon: def,
+                clip: def.clipSize,
+                stock: def.maxStock,
+                isUpgraded: false
+            };
+
+            const maxSlots = playerState.perks.has('mulekick') ? 3 : 2;
+            if (playerState.inventory.length < maxSlots) {
+                playerState.inventory.push(newItem);
+                playerState.currentSlot = playerState.inventory.length - 1;
+                viewWeapon.equip(newItem.weapon, false);
+                updateWeaponHUD();
+            } else {
+                playerState.inventory[playerState.currentSlot] = newItem;
+                viewWeapon.equip(newItem.weapon, false);
+                updateWeaponHUD();
+            }
+        }
+
+        function updatePerksHUD(perks) {
+            const container = document.getElementById('hud-perks-container');
+            container.innerHTML = '';
+            perks.forEach(p => {
+                const info = perkMachines.find(m => m.type === p);
+                if (info) {
+                    const badge = document.createElement('div');
+                    badge.className = 'perk-badge';
+                    badge.style.backgroundImage = `url('${info.iconUrl}')`;
+                    container.appendChild(badge);
+                } else {
+                    // Staminup / Deadshot / Mulekick procedural icons
+                    const badge = document.createElement('div');
+                    badge.className = 'perk-badge flex items-center justify-center font-bold text-xs bg-yellow-900 border-yellow-400';
+                    badge.textContent = p.slice(0, 3).toUpperCase();
+                    container.appendChild(badge);
+                }
+            });
+        }
+
+        function damagePlayer(dmg) {
+            if (gameState.isGameOver || gameState.godmode) return;
+            const mult = playerState.perks.has('juggernog') ? 0.45 : 1.0;
+            gameState.health -= dmg * mult;
+
+            const overlay = document.getElementById('damage-overlay');
+            overlay.style.opacity = '1';
+            setTimeout(() => { overlay.style.opacity = '0'; }, 320);
+
+            const hpBar = document.getElementById('hud-health-bar');
+            hpBar.style.width = `${Math.max(0, (gameState.health / gameState.maxHealth) * 100)}%`;
+
+            if (gameState.health <= 0) {
+                if (playerState.perks.has('quickrevive')) {
+                    playerState.perks.delete('quickrevive');
+                    updatePerksHUD(playerState.perks);
+                    gameState.health = gameState.maxHealth;
+                    hpBar.style.width = '100%';
+                    logGSC('[GSC:perk] quick_revive triggered -> operator revived');
+                    return;
+                }
+                gameOver();
+            }
+        }
+
+        function gameOver() {
+            gameState.isGameOver = true;
+            document.exitPointerLock();
+            document.getElementById('game-over-rounds').textContent = `ROUND ${gameState.round}`;
+            document.getElementById('stat-kills').textContent = gameState.kills;
+            document.getElementById('stat-score').textContent = gameState.score;
+            document.getElementById('game-over-overlay').classList.remove('hidden');
+            logGSC('[GSC:game] operator_down -> mission failed');
+        }
+
+        function showHitmarker(crit = false) {
+            const hm = document.getElementById('hitmarker');
+            hm.className = crit ? 'hitmarker crit' : 'hitmarker';
+            hm.style.display = 'block';
+            Audio.playHitmarker();
+            setTimeout(() => { hm.style.display = 'none'; }, 90);
+        }
+
+        function checkRoundProgression() {
+            if (gameState.zombiesSpawned >= gameState.zombiesToSpawn && gameState.zombiesAlive <= 0 && !gameState.intermission) {
+                gameState.intermission = true;
+                Audio.play('round_end', 0.85);
+                logGSC(`[GSC:round] completed round ${gameState.round} -> intermission`);
+
+                setTimeout(() => {
+                    gameState.round++;
+                    gameState.zombiesToSpawn = 6 + gameState.round * 4;
+                    gameState.zombiesSpawned = 0;
+                    gameState.zombiesAlive = gameState.zombiesToSpawn;
+                    gameState.intermission = false;
+
+                    const display = document.getElementById('hud-round-display');
+                    display.textContent = gameState.round;
+
+                    Audio.play('round', 0.85);
+                    logGSC(`[GSC:round] start_round(${gameState.round}) -> spawn count: ${gameState.zombiesToSpawn}`);
+                }, 6500);
+            }
+        }
+
+        function logGSC(msg) {
+            const logContainer = document.getElementById('gsc-console-logs');
+            const row = document.createElement('div');
+            row.innerHTML = msg
+                .replace(/\[(.*?)\]/g, '<span class="gsc-tag">[$1]</span>')
+                .replace(/\((.*?)\)/g, '(<span class="gsc-var">$1</span>)')
+                .replace(/"(.*?)"/g, '<span class="gsc-str">"$1"</span>');
+            logContainer.appendChild(row);
+            while (logContainer.children.length > 5) logContainer.removeChild(logContainer.firstChild);
+        }
+
+        // -------------------------------------------------------------
+        // Weapon Firing, Segmented Reload & Melee
+        // -------------------------------------------------------------
+        let lastShotTime = 0;
+        let isReloading = false;
+        let reloadTimeout = null;
+
+        function playerShoot() {
+            if (gameState.isGameOver || gameState.isPaused) return;
+            const cur = playerState.inventory[playerState.currentSlot];
+            if (!cur) return;
+
+            // Cancel shotgun reload if shooting
+            if (isReloading && cur.weapon.segmentedReload && cur.clip > 0) {
+                isReloading = false;
+                if (reloadTimeout) clearTimeout(reloadTimeout);
+            }
+
+            const now = performance.now() * 0.001;
+            const fireInterval = cur.weapon.fireRate * (playerState.perks.has('doubletap') ? 0.75 : 1.0);
+            if (now - lastShotTime < fireInterval) return;
+            if (cur.clip <= 0) {
+                reloadWeapon();
+                return;
+            }
+
+            lastShotTime = now;
+            cur.clip--;
+            updateWeaponHUD();
+
+            viewWeapon.shoot();
+            Audio.play(cur.weapon.shotSoundKey, 0.95);
+
+            // Special Wonder Weapon Thundergun blast
+            if (cur.weapon.type === 'wonderweapon') {
+                const forward = new THREE.Vector3(0, 0, -1).applyEuler(camera.rotation);
+                for (const z of zombies) {
+                    if (!z.isAlive) continue;
+                    const toZ = new THREE.Vector3().subVectors(z.root.position, camera.position);
+                    const dist = toZ.length();
+                    if (dist < 12.0 && toZ.normalize().dot(forward) > 0.6) {
+                        z.takeDamage(1200, false, false);
+                    }
+                }
+                return;
+            }
+
+            // Standard Raycast Hitscan
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+
+            const hitTargets = [];
+            zombies.forEach(z => {
+                if (z.isAlive) {
+                    hitTargets.push(z.headBox, z.bodyBox);
+                }
+            });
+
+            const intersects = raycaster.intersectObjects(hitTargets, false);
+            const muzzleWorld = camera.position.clone().add(new THREE.Vector3(0.18, -0.15, -0.4).applyEuler(camera.rotation));
+
+            if (intersects.length > 0) {
+                const hit = intersects[0];
+                const isCrit = hit.object.userData.isHead;
+                const zombie = hit.object.userData.zombie;
+
+                Tracers.spawn(muzzleWorld, hit.point);
+                showHitmarker(isCrit);
+
+                const dmg = cur.weapon.damage * (cur.isUpgraded ? 2.2 : 1.0);
+                zombie.takeDamage(dmg, isCrit, false);
+            } else {
+                const forward = new THREE.Vector3(0, 0, -1).applyEuler(camera.rotation);
+                const end = camera.position.clone().addScaledVector(forward, 40);
+                Tracers.spawn(muzzleWorld, end);
+            }
+        }
+
+        function reloadWeapon() {
+            const cur = playerState.inventory[playerState.currentSlot];
+            if (!cur || isReloading) return;
+
+            const maxClip = cur.isUpgraded ? cur.weapon.papClip : cur.weapon.clipSize;
+            if (cur.clip >= maxClip || cur.stock <= 0) return;
+
+            isReloading = true;
+            viewWeapon.reload();
+
+            if (cur.weapon.segmentedReload) {
+                // Shell-by-shell shotgun reload
+                const loadShell = () => {
+                    if (!isReloading) return;
+                    if (cur.clip < maxClip && cur.stock > 0) {
+                        cur.clip++;
+                        cur.stock--;
+                        updateWeaponHUD();
+                        Audio.play('shot_spas', 0.25, false, 800);
+                        if (cur.clip < maxClip && cur.stock > 0) {
+                            viewWeapon.reload();
+                            reloadTimeout = setTimeout(loadShell, playerState.perks.has('speedcola') ? 240 : 380);
+                        } else {
+                            isReloading = false;
+                        }
+                    } else {
+                        isReloading = false;
+                    }
+                };
+                reloadTimeout = setTimeout(loadShell, playerState.perks.has('speedcola') ? 240 : 380);
+            } else {
+                const duration = playerState.perks.has('speedcola') ? 850 : 1500;
+                reloadTimeout = setTimeout(() => {
+                    const needed = maxClip - cur.clip;
+                    const take = Math.min(needed, cur.stock);
+                    cur.stock -= take;
+                    cur.clip += take;
+                    updateWeaponHUD();
+                    isReloading = false;
+                }, duration);
+            }
+        }
+
+        function throwGrenade() {
+            if (playerState.grenades <= 0 || gameState.isGameOver) return;
+            playerState.grenades--;
+            updateWeaponHUD();
+
+            const forward = new THREE.Vector3(0, 0, -1).applyEuler(camera.rotation);
+            const vel = forward.clone().multiplyScalar(15.0);
+            vel.y += 3.5;
+            new FragGrenade(camera.position.clone().addScaledVector(forward, 0.4), vel);
+        }
+
+        // Live Contextual Interaction
+        let currentInteractHandler = null;
+
+        function updateInteractionPrompt() {
+            const prompt = document.getElementById('interact-prompt');
+            const pPos = camera.position;
+            let text = null;
+            currentInteractHandler = null;
+
+            // 1. Buyable Doors
+            for (const d of bunkerDoors) {
+                if (!d.isOpened && d.position.distanceTo(pPos) < 3.2) {
+                    text = `Press <span class="text-yellow-400 font-bold">[F]</span> to Clear Debris [Cost: ${d.cost}]`;
+                    currentInteractHandler = () => {
+                        if (gameState.score >= d.cost) {
+                            gameState.score -= d.cost;
+                            updatePointsHUD();
+                            d.open();
+                        }
+                    };
+                    break;
+                }
+            }
+
+            // 2. Window Barricades
+            if (!text) {
+                for (const b of barricades) {
+                    if (b.position.distanceTo(pPos) < 2.8) {
+                        if (b.boards < 6) {
+                            text = `Hold <span class="text-yellow-400 font-bold">[F]</span> to Rebuild Barrier [+10 PTS]`;
+                            currentInteractHandler = () => {
+                                if (b.repairBoard()) addScore(10);
+                            };
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // 3. Wallbuys
+            if (!text) {
+                for (const wb of wallbuys) {
+                    if (wb.position.distanceTo(pPos) < 2.6) {
+                        const cur = playerState.inventory[playerState.currentSlot];
+                        if (cur && cur.id === wb.weaponKey) {
+                            const ammoCost = Math.floor(wb.weapon.cost / 2) || 250;
+                            text = `Press <span class="text-yellow-400 font-bold">[F]</span> to Buy Ammo [Cost: ${ammoCost}]`;
+                            currentInteractHandler = () => {
+                                if (gameState.score >= ammoCost) {
+                                    gameState.score -= ammoCost;
+                                    cur.stock = cur.isUpgraded ? wb.weapon.papStock : wb.weapon.maxStock;
+                                    updatePointsHUD();
+                                    updateWeaponHUD();
+                                }
+                            };
+                        } else {
+                            text = `Press <span class="text-yellow-400 font-bold">[F]</span> to Buy ${wb.weapon.name} [Cost: ${wb.weapon.cost}]`;
+                            currentInteractHandler = () => {
+                                if (gameState.score >= wb.weapon.cost) {
+                                    gameState.score -= wb.weapon.cost;
+                                    updatePointsHUD();
+                                    acquireWeapon(wb.weaponKey);
+                                }
+                            };
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // 4. Perk Machines
+            if (!text) {
+                for (const pm of perkMachines) {
+                    if (pm.position.distanceTo(pPos) < 2.5) {
+                        if (playerState.perks.has(pm.type)) {
+                            text = `<span class="text-emerald-400 font-bold">${pm.name.toUpperCase()}</span> Already Owned`;
+                        } else {
+                            text = `Press <span class="text-yellow-400 font-bold">[F]</span> to Drink ${pm.name} [Cost: ${pm.cost}]`;
+                            currentInteractHandler = () => {
+                                if (gameState.score >= pm.cost && pm.buy(playerState)) {
+                                    gameState.score -= pm.cost;
+                                    updatePointsHUD();
+                                }
+                            };
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // 5. Der Wunderfizz Machine
+            if (!text && wunderfizz.position.distanceTo(pPos) < 2.6) {
+                if (wunderfizz.isBusy) {
+                    text = `Der Wunderfizz Energizing...`;
+                } else {
+                    text = `Press <span class="text-yellow-400 font-bold">[F]</span> for Der Wunderfizz [Cost: 1500]`;
+                    currentInteractHandler = () => {
+                        if (gameState.score >= 1500) {
+                            const res = wunderfizz.spin(playerState);
+                            if (res === true) {
+                                gameState.score -= 1500;
+                                updatePointsHUD();
+                            }
+                        }
+                    };
+                }
+            }
+
+            // 6. Mystery Box
+            if (!text && mysteryBox.position.distanceTo(pPos) < 2.8) {
+                if (mysteryBox.availableWeapon) {
+                    text = `Press <span class="text-yellow-400 font-bold">[F]</span> to Take ${mysteryBox.availableWeapon.name}`;
+                    currentInteractHandler = () => {
+                        acquireWeapon(mysteryBox.availableWeaponKey);
+                        mysteryBox.close();
+                    };
+                } else if (mysteryBox.isRolling) {
+                    text = `Mystery Box Rolling...`;
+                } else {
+                    text = `Press <span class="text-yellow-400 font-bold">[F]</span> for Mystery Box [Cost: 950]`;
+                    currentInteractHandler = () => {
+                        if (gameState.score >= 950) {
+                            gameState.score -= 950;
+                            updatePointsHUD();
+                            mysteryBox.spin();
+                        }
+                    };
+                }
+            }
+
+            // 7. Pack-a-Punch
+            if (!text && packAPunch.position.distanceTo(pPos) < 2.8) {
+                const cur = playerState.inventory[playerState.currentSlot];
+                if (cur && cur.isUpgraded) {
+                    text = `<span class="text-cyan-400 font-bold">${cur.weapon.upgradedName}</span> Already Pack-a-Punched`;
+                } else {
+                    text = `Press <span class="text-yellow-400 font-bold">[F]</span> to Pack-a-Punch Weapon [Cost: 5000]`;
+                    currentInteractHandler = () => {
+                        if (gameState.score >= 5000 && packAPunch.upgrade(playerState)) {
+                            gameState.score -= 5000;
+                            updatePointsHUD();
+                        }
+                    };
+                }
+            }
+
+            if (text) {
+                prompt.innerHTML = text;
+                prompt.style.display = 'block';
+            } else {
+                prompt.style.display = 'none';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Input Controller & Pause Handling
+        // -------------------------------------------------------------
+        const keys = {};
+        let isAiming = false;
+        let isShooting = false;
+        let mouseSensitivity = 1.0;
+
+        window.addEventListener('keydown', e => {
+            keys[e.code] = true;
+
+            if (e.code === 'KeyF' && currentInteractHandler) {
+                currentInteractHandler();
+            } else if (e.code === 'KeyR') {
+                reloadWeapon();
+            } else if (e.code === 'KeyV') {
+                viewWeapon.slashKnife();
+            } else if (e.code === 'KeyG') {
+                throwGrenade();
+            } else if (e.code === 'KeyQ') {
+                switchWeaponSlot((playerState.currentSlot + 1) % playerState.inventory.length);
+            } else if (e.code === 'Digit1') {
+                switchWeaponSlot(0);
+            } else if (e.code === 'Digit2') {
+                switchWeaponSlot(1);
+            } else if (e.code === 'Digit3') {
+                switchWeaponSlot(2);
+            } else if (e.code === 'KeyP' || e.code === 'Backquote') {
+                const menu = document.getElementById('modal-gsc-menu');
+                menu.classList.toggle('hidden');
+            }
+        });
+
+        window.addEventListener('keyup', e => {
+            keys[e.code] = false;
+        });
+
+        window.addEventListener('mousedown', e => {
+            if (document.pointerLockElement !== canvas) return;
+            if (e.button === 0) {
+                isShooting = true;
+                playerShoot();
+            } else if (e.button === 2) {
+                isAiming = true;
+            }
+        });
+
+        window.addEventListener('mouseup', e => {
+            if (e.button === 0) isShooting = false;
+            if (e.button === 2) isAiming = false;
+        });
+
+        window.addEventListener('wheel', e => {
+            if (document.pointerLockElement !== canvas) return;
+            const delta = Math.sign(e.deltaY);
+            const total = playerState.inventory.length;
+            if (total > 1) {
+                const next = (playerState.currentSlot + delta + total) % total;
+                switchWeaponSlot(next);
+            }
+        });
+
+        window.addEventListener('contextmenu', e => e.preventDefault());
+
+        document.addEventListener('mousemove', e => {
+            if (document.pointerLockElement !== canvas || gameState.isPaused) return;
+            const sens = 0.0022 * mouseSensitivity * (isAiming ? 0.65 : 1.0);
+            camera.rotation.y -= e.movementX * sens;
+            camera.rotation.x = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, camera.rotation.x - e.movementY * sens));
+        });
+
+        // Instant Pause Menu on ESC
+        function togglePause() {
+            if (gameState.isGameOver || !document.getElementById('menu-overlay').classList.contains('hidden')) return;
+            gameState.isPaused = !gameState.isPaused;
+            const pauseModal = document.getElementById('modal-pause');
+
+            if (gameState.isPaused) {
+                pauseModal.classList.remove('hidden');
+                document.exitPointerLock();
+                logGSC('[GSC:system] mission paused');
+            } else {
+                pauseModal.classList.add('hidden');
+                canvas.requestPointerLock();
+                logGSC('[GSC:system] mission resumed');
+            }
+        }
+
+        document.addEventListener('pointerlockchange', () => {
+            if (document.pointerLockElement !== canvas) {
+                if (!gameState.isGameOver && document.getElementById('menu-overlay').classList.contains('hidden') && !gameState.isPaused) {
+                    togglePause();
+                }
+            }
+        });
+
+        document.getElementById('btn-pause-resume').addEventListener('click', togglePause);
+        document.getElementById('btn-pause-restart').addEventListener('click', () => location.reload());
+
+        // Player Movement & Sliding AABB Collision
+        const pVelocity = new THREE.Vector3();
+        function updatePlayerMovement(dt) {
+            const moveDir = new THREE.Vector3();
+            if (keys['KeyW']) moveDir.z -= 1;
+            if (keys['KeyS']) moveDir.z += 1;
+            if (keys['KeyA']) moveDir.x -= 1;
+            if (keys['KeyD']) moveDir.x += 1;
+
+            const isMoving = moveDir.lengthSq() > 0;
+            if (isMoving) moveDir.normalize();
+
+            const staminupMult = playerState.perks.has('staminup') ? 1.3 : 1.0;
+            const sprintMult = keys['ShiftLeft'] ? 1.6 : 1.0;
+            const speed = 4.8 * sprintMult * staminupMult;
+
+            const camEuler = new THREE.Euler(0, camera.rotation.y, 0, 'YXZ');
+            const moveVec = moveDir.applyEuler(camEuler).multiplyScalar(speed * dt);
+
+            // Horizontal AABB sliding collision against bunker walls
+            const pRadius = 0.45;
+            const pPos = camera.position;
+            const nextX = pPos.x + moveVec.x;
+            const nextZ = pPos.z + moveVec.z;
+
+            const boxX = new THREE.Box3(
+                new THREE.Vector3(nextX - pRadius, 0.2, pPos.z - pRadius),
+                new THREE.Vector3(nextX + pRadius, 1.8, pPos.z + pRadius)
+            );
+            const boxZ = new THREE.Box3(
+                new THREE.Vector3(pPos.x - pRadius, 0.2, nextZ - pRadius),
+                new THREE.Vector3(pPos.x + pRadius, 1.8, nextZ + pRadius)
+            );
+
+            let hitX = false;
+            let hitZ = false;
+
+            for (const col of mapColliders) {
+                if (col.intersectsBox(boxX)) hitX = true;
+                if (col.intersectsBox(boxZ)) hitZ = true;
+            }
+
+            if (!hitX) pPos.x = nextX;
+            if (!hitZ) pPos.z = nextZ;
+
+            // Natural passive health regen
+            if (gameState.health < gameState.maxHealth && !gameState.isGameOver) {
+                gameState.health = Math.min(gameState.maxHealth, gameState.health + dt * 25);
+                document.getElementById('hud-health-bar').style.width = `${(gameState.health / gameState.maxHealth) * 100}%`;
+            }
+
+            return isMoving;
+        }
+
+        // -------------------------------------------------------------
+        // Main Animation Loop
+        // -------------------------------------------------------------
+        const clock = new THREE.Clock();
+        let zombieSpawnTimer = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const dt = Math.min(clock.getDelta(), 0.1);
+            const now = performance.now();
+
+            if (!gameState.isPaused && !gameState.isGameOver) {
+                // Automatic fire
+                const cur = playerState.inventory[playerState.currentSlot];
+                if (isShooting && cur && cur.weapon.automatic) {
+                    playerShoot();
+                }
+
+                // Powerup Timers
+                if (playerState.doublePointsTimer > 0) playerState.doublePointsTimer -= dt;
+                if (playerState.instaKillTimer > 0) playerState.instaKillTimer -= dt;
+
+                const isMoving = updatePlayerMovement(dt);
+                updateInteractionPrompt();
+                checkMeteoriteInteract(camera.position);
+
+                // Spawn zombies
+                if (gameState.zombiesSpawned < gameState.zombiesToSpawn && !gameState.intermission) {
+                    zombieSpawnTimer += dt;
+                    if (zombieSpawnTimer >= 2.0) {
+                        zombieSpawnTimer = 0;
+                        spawnZombie();
+                    }
+                }
+
+                // Update entities
+                zombies.forEach(z => z.update(dt, camera.position));
+                mysteryBox.update(dt);
+                wunderfizz.update(now * 0.001);
+                viewWeapon.update(dt, isAiming, isMoving, now * 0.001);
+                Tracers.update(dt);
+
+                for (let i = grenades.length - 1; i >= 0; i--) {
+                    grenades[i].update(dt);
+                }
+
+                for (let i = powerups.length - 1; i >= 0; i--) {
+                    const pu = powerups[i];
+                    pu.update(dt);
+                    if (pu.position.distanceTo(camera.position) < 1.6) {
+                        pu.collect();
+                    }
+                }
+            }
+
+            // Dual Scene Rendering for Viewmodels
+            viewCamera.position.copy(camera.position);
+            viewCamera.rotation.copy(camera.rotation);
+
+            renderer.clear();
+            renderer.render(scene, camera);
+
+            renderer.clearDepth();
+            renderer.render(viewScene, viewCamera);
+        }
+
+        // -------------------------------------------------------------
+        // Audio & Initialization
+        // -------------------------------------------------------------
+        async function initAudio() {
+            Audio.init();
+            const safeLoad = (key, path) => Audio.loadBuffer(key, `${CDN_BASE}/${path}`).catch(() => null);
+            await Promise.all([
+                safeLoad('shot_m1911', 'audio/resident-ea4bdc586103a812a1ad.ogg'),
+                safeLoad('shot_m14', 'audio/resident-9dbb4d9fbc4b9dd01ae2.ogg'),
+                safeLoad('shot_mp40', 'audio/resident-a7b66d869051142ff400.ogg'),
+                safeLoad('shot_ak74u', 'audio/resident-501494bf9406ec871b1d.ogg'),
+                safeLoad('shot_commando', 'audio/resident-1beca68e3bcdd760dd13.ogg'),
+                safeLoad('shot_galil', 'audio/resident-2ff2c01557001924f443.ogg'),
+                safeLoad('shot_python', 'audio/resident-4d1df06c0b364f052e78.ogg'),
+                safeLoad('shot_spas', 'audio/resident-6b1a5625bcdfa5628964.ogg'),
+                safeLoad('shot_raygun', 'audio/resident-7135346365ac7c6bd62f.ogg'),
+                safeLoad('shot_thundergun', 'audio/resident-cc655143fbb227301f3f.ogg'),
+                safeLoad('knife_whoosh', 'audio/resident-e3a73a3d918071a5bb8a.ogg'),
+                safeLoad('knife_stab', 'audio/resident-0d304ca3c3265fd69f68.ogg'),
+                safeLoad('hit_body', 'audio/resident-b24e1d6d8156519d3d46.ogg'),
+                safeLoad('box_open', 'audio/resident-5151abb7d1e5f5369569.ogg'),
+                safeLoad('box_music', 'audio/resident-9c1223c72c727f482403.ogg'),
+                safeLoad('box_close', 'audio/resident-fab875154f426bbe4e17.ogg'),
+                safeLoad('board', 'audio/board.ogg'),
+                safeLoad('juggernog', 'audio/specialty_armorvest.ogg'),
+                safeLoad('speedcola', 'audio/specialty_fastreload.ogg'),
+                safeLoad('quickrevive', 'audio/specialty_quickrevive.ogg'),
+                safeLoad('doubletap', 'audio/specialty_rof.ogg'),
+                safeLoad('packapunch', 'audio/packapunch.ogg'),
+                safeLoad('dispense', 'audio/resident-cf36414afe91093dfa15.ogg'),
+                safeLoad('bottle_open', 'audio/resident-e823a45f45677c3b6f56.ogg'),
+                safeLoad('bottle_swallow', 'audio/resident-550ef41d0d9978b1cc1c.ogg'),
+                safeLoad('belch', 'audio/resident-e4cf9eae847ca3ff71d5.ogg'),
+                safeLoad('nuke', 'audio/nuke.ogg'),
+                safeLoad('insta_kill', 'audio/insta_kill.ogg'),
+                safeLoad('double_points', 'audio/double_points.ogg'),
+                safeLoad('full_ammo', 'audio/full_ammo.ogg'),
+                safeLoad('carpenter', 'audio/carpenter.ogg'),
+                safeLoad('round', 'audio/round.ogg'),
+                safeLoad('round_end', 'audio/round_end.ogg'),
+                safeLoad('115', 'audio/115.ogg')
+            ]);
+        }
+
+        // Initialize Systems
+        const viewWeapon = new ViewWeaponSystem(viewScene, gltfLoader);
+        buildRemasteredBunker();
+
+        camera.position.set(0, 1.7, 0);
+
+        // Main Menu Start Button
+        const startBtn = document.getElementById('btn-start-game');
+        const loadStatusEl = document.getElementById('load-status');
+
+        startBtn.addEventListener('click', async () => {
+            startBtn.disabled = true;
+            try {
+                loadStatusEl.textContent = 'Initializing Treyarch Audio Engine...';
+                await new Promise(r => requestAnimationFrame(r));
+                initAudio();
+
+                loadStatusEl.textContent = 'Streaming 3D Undead & Viewmodels...';
+                await new Promise(r => requestAnimationFrame(r));
+                await Promise.all([
+                    preloadZombieAssets(),
+                    preloadPowerUpModels(),
+                    viewWeapon.preloadBase()
+                ]);
+
+                loadStatusEl.textContent = 'Chambering Starting Weaponry...';
+                await new Promise(r => requestAnimationFrame(r));
+                acquireWeapon('m1911');
+
+                loadStatusEl.textContent = 'Securing Bunker Perimeter...';
+                await new Promise(r => setTimeout(r, 60));
+
+                document.getElementById('menu-overlay').classList.add('hidden');
+                canvas.requestPointerLock();
+                Audio.play('round', 0.85);
+                requestAnimationFrame(animate);
+            } catch (err) {
+                console.error('Initialization error:', err);
+                loadStatusEl.innerHTML = `<span class="text-red-400 font-bold">Error loading assets: ${err.message || err}</span>`;
+                startBtn.disabled = false;
+            }
+        });
+
+        // Mod Menu Buttons
+        document.getElementById('mod-godmode').addEventListener('click', () => {
+            gameState.godmode = !gameState.godmode;
+            const btn = document.getElementById('mod-godmode');
+            btn.textContent = `Toggle Godmode (${gameState.godmode ? 'ON' : 'OFF'})`;
+            logGSC(`[GSC:cheat] godmode = ${gameState.godmode}`);
+        });
+
+        document.getElementById('mod-give-points').addEventListener('click', () => {
+            addScore(10000);
+            logGSC('[GSC:cheat] score += 10000');
+        });
+
+        document.getElementById('mod-max-ammo').addEventListener('click', () => {
+            playerState.inventory.forEach(item => {
+                item.clip = item.isUpgraded ? item.weapon.papClip : item.weapon.clipSize;
+                item.stock = item.isUpgraded ? item.weapon.papStock : item.weapon.maxStock;
+            });
+            playerState.grenades = 4;
+            updateWeaponHUD();
+            logGSC('[GSC:cheat] max_ammo triggered');
+        });
+
+        document.getElementById('mod-all-perks').addEventListener('click', () => {
+            ['juggernog', 'speedcola', 'quickrevive', 'doubletap', 'staminup', 'deadshot', 'mulekick'].forEach(p => {
+                playerState.perks.add(p);
+            });
+            gameState.maxHealth = 250;
+            gameState.health = 250;
+            playerState.maxSlots = 3;
+            updatePerksHUD(playerState.perks);
+            logGSC('[GSC:cheat] all 7 perks awarded');
+        });
+
+        document.getElementById('mod-open-doors').addEventListener('click', () => {
+            bunkerDoors.forEach(d => d.open());
+            logGSC('[GSC:cheat] all security blast doors opened');
+        });
+
+        document.getElementById('mod-kill-zombies').addEventListener('click', () => {
+            zombies.slice().forEach(z => {
+                if (z.isAlive) z.die(false, false);
+            });
+            logGSC('[GSC:cheat] undead wave eliminated');
+        });
+
+        // UI Modals (Settings & Credits)
+        const optModal = document.getElementById('modal-options');
+        document.getElementById('btn-open-options').addEventListener('click', () => optModal.classList.remove('hidden'));
+        document.getElementById('btn-pause-options').addEventListener('click', () => optModal.classList.remove('hidden'));
+        document.getElementById('btn-close-options').addEventListener('click', () => optModal.classList.add('hidden'));
+
+        const credModal = document.getElementById('modal-credits');
+        document.getElementById('btn-open-credits').addEventListener('click', () => credModal.classList.remove('hidden'));
+        document.getElementById('btn-close-credits').addEventListener('click', () => credModal.classList.add('hidden'));
+
+        document.getElementById('opt-sensitivity').addEventListener('input', e => {
+            mouseSensitivity = parseFloat(e.target.value);
+        });
+
+        document.getElementById('opt-volume').addEventListener('input', e => {
+            if (Audio.master) Audio.master.gain.value = parseFloat(e.target.value);
+        });
+
+        document.getElementById('opt-fov').addEventListener('input', e => {
+            camera.fov = parseFloat(e.target.value);
+            camera.updateProjectionMatrix();
+        });
+
+        document.getElementById('opt-console').addEventListener('change', e => {
+            document.getElementById('gsc-console-container').style.display = e.target.checked ? 'block' : 'none';
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            viewCamera.aspect = window.innerWidth / window.innerHeight;
+            viewCamera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
