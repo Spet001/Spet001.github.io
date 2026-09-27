@@ -263,19 +263,28 @@
             const contentEl = document.getElementById('content');
             contentEl.innerHTML = '<div class="flex justify-center mt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i></div>';
             
-            // PATREON AUTH INTERCEPT
-            if (postId === 'Crossplay-PS5-XBOX-PC') {
+            const entry = g_entries.find(e => e.id === postId || e.file === postId || decodeURIComponent(e.file) === postId);
+            const isRelay = (entry && entry.file === 'Crossplay-PS5-XBOX-PC.md') || postId === 'Crossplay-PS5-XBOX-PC' || postId === 'entry_0003';
+            
+            if (isRelay) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const code = urlParams.get('code');
+                const cachedMd = localStorage.getItem('relay_md');
                 
                 if (!code) {
+                    if (cachedMd) {
+                        contentEl.innerHTML = marked.parse(cachedMd);
+                        contentEl.querySelectorAll('pre code').forEach((block) => hljs.highlightElement(block));
+                        return;
+                    }
+
                     contentEl.innerHTML = `
                         <div class="flex flex-col items-center justify-center mt-20 text-center">
                             <i class="fas fa-lock text-5xl text-primary mb-6 drop-shadow-[0_0_15px_rgba(255,80,0,0.5)]"></i>
                             <h2 class="text-2xl font-bold text-white mb-4">Classified Project</h2>
                             <p class="text-slate-400 font-medium max-w-lg mb-8">This technical journal entry is confidential. You must have an active Patreon subscription to read the architecture breakdown and source code details.</p>
                             <button id="patreon-login-btn" class="px-6 py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-lg transition-colors flex items-center gap-2 shadow-lg">
-                                <i class="fab fa-patreon"></i> Log in with Patreon
+                                <i class="fab fa-patreon"></i> Subscribe to Patreon to Unlock this Entry!
                             </button>
                         </div>
                     `;
@@ -289,9 +298,8 @@
                             alert("Auth backend is offline!");
                         }
                     };
-                    return; // Stop local fetch
+                    return; 
                 } else {
-                    // Verify code
                     contentEl.innerHTML = `
                         <div class="flex flex-col items-center justify-center mt-20 text-center">
                             <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-6"></i>
@@ -307,16 +315,14 @@
                         });
                         const d = await r.json();
                         
-                        // Clear the ?code= query from URL bar without reloading
-                        window.history.replaceState({}, document.title, window.location.pathname + "#" + postId);
+                        window.history.replaceState({}, document.title, window.location.pathname + "#Crossplay-PS5-XBOX-PC");
 
                         if (d.success) {
+                            localStorage.setItem('relay_md', d.markdown);
                             const rawHtml = marked.parse(d.markdown);
                             contentEl.innerHTML = rawHtml;
-                            contentEl.querySelectorAll('pre code').forEach((block) => {
-                                hljs.highlightElement(block);
-                            });
-                            return; // Success! Done loading.
+                            contentEl.querySelectorAll('pre code').forEach((block) => hljs.highlightElement(block));
+                            return; 
                         } else {
                             contentEl.innerHTML = `
                                 <div class="flex flex-col items-center justify-center mt-20 text-center">
@@ -334,9 +340,8 @@
                     }
                 }
             }
-            
+
             try {
-                const entry = g_entries.find(e => e.id === postId || e.file === postId || decodeURIComponent(e.file) === postId);
                 if (!entry) throw new Error('Post not found in index.');
 
                 const filename = entry.file;
@@ -346,11 +351,8 @@
                 
                 let mdText = await res.text();
                 
-                // Se começar com <external>, puxa o conteúdo direto de outro site!
                 if (mdText.trim().startsWith('<external>')) {
                     let externalUrl = mdText.replace('<external>', '').trim();
-                    
-                    // Mostra aviso de carregamento de plataforma externa
                     contentEl.innerHTML = `
                         <div class="flex flex-col items-center justify-center mt-20 text-center">
                             <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-6"></i>
@@ -359,14 +361,11 @@
                         </div>
                     `;
 
-                    // Auto-converte links amigáveis do GitHub/GitLab para raw (texto puro) pra não dar erro!
                     if (externalUrl.includes('github.com') && externalUrl.includes('/blob/')) {
                         externalUrl = externalUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
                     } else if (externalUrl.includes('gitlab.com') && externalUrl.includes('/-/blob/')) {
                         externalUrl = externalUrl.replace('/-/blob/', '/-/raw/');
                     }
-                    
-                    // Usar corsproxy caso o site não permita cross-origin requests
                     if (!externalUrl.includes('githubusercontent.com')) {
                         externalUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(externalUrl);
                     }
@@ -382,7 +381,6 @@
                 contentEl.innerHTML = safeHtml;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
-                // Update active state in sidebar
                 document.querySelectorAll('#entries-list a').forEach(a => {
                     const currentId = entry.id || entry.file;
                     if (decodeURIComponent(a.getAttribute('href').replace('#','')) === currentId) {

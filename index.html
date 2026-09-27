@@ -797,7 +797,7 @@ const PORTFOLIO_DATA = {
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa / Net", en: "Reverse Engineering / Net" },
             image: "assets/relay.gif",
-            title: "Unlock this Entry on Patreon!",
+            title: { pt: "Desbloqueie no Patreon!", en: "Unlock this Entry on Patreon!" },
             isLocked: true,
             featured: true,
             tags: ["Python", "C++", "Npcap", "Packet Sniffing", "Networking"],
@@ -2128,8 +2128,8 @@ const ProjectModal = ({ project, onClose, lang }) => {
 
                 {/* Media banner using authentic assets */}
                 <div className="rounded-xl overflow-hidden bg-slate-950 border border-white/[0.08] mb-6 h-52 sm:h-64 relative flex items-center justify-center">
-                    <img src={project.images ? project.images[0] : project.image} alt={project.title} className={`w-full h-full object-cover object-center rounded-lg ${project.isLocked ? "blur-xl scale-125 opacity-40 grayscale" : ""}`} />
-                      {project.isLocked && (
+                    <img src={project.images ? project.images[0] : project.image} alt={typeof project.title === "object" ? project.title.en : project.title} className={`w-full h-full object-cover object-center rounded-lg ${(project.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`} />
+                      {(project.isLocked && !localStorage.getItem("relay_md")) && (
                           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                               <i className="fas fa-lock text-white/80 text-6xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i>
                           </div>
@@ -2236,11 +2236,11 @@ const ProjectImage = ({ p, t }) => {
         <>
           <img
               src={src}
-              alt={p.title}
-              className={`w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105 ${p.isLocked ? "blur-xl scale-125 opacity-40 grayscale" : ""}`}
+              alt={typeof p.title === "object" ? p.title.en : p.title}
+              className={`w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105 ${(p.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`}
               loading="lazy"
           />
-          {p.isLocked && (
+          {(p.isLocked && !localStorage.getItem("relay_md")) && (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white/80 pointer-events-none z-10">
                   <i className="fas fa-lock text-4xl mb-2 drop-shadow-lg"></i>
                   <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md">Classified</span>
