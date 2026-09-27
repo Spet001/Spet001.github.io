@@ -263,6 +263,78 @@
             const contentEl = document.getElementById('content');
             contentEl.innerHTML = '<div class="flex justify-center mt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i></div>';
             
+            // PATREON AUTH INTERCEPT
+            if (postId === 'Crossplay-PS5-XBOX-PC') {
+                const urlParams = new URLSearchParams(window.location.search);
+                const code = urlParams.get('code');
+                
+                if (!code) {
+                    contentEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center mt-20 text-center">
+                            <i class="fas fa-lock text-5xl text-primary mb-6 drop-shadow-[0_0_15px_rgba(255,80,0,0.5)]"></i>
+                            <h2 class="text-2xl font-bold text-white mb-4">Classified Project</h2>
+                            <p class="text-slate-400 font-medium max-w-lg mb-8">This technical journal entry is confidential. You must have an active Patreon subscription to read the architecture breakdown and source code details.</p>
+                            <button id="patreon-login-btn" class="px-6 py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-lg transition-colors flex items-center gap-2 shadow-lg">
+                                <i class="fab fa-patreon"></i> Log in with Patreon
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('patreon-login-btn').onclick = async () => {
+                        document.getElementById('patreon-login-btn').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
+                        try {
+                            const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/auth-url');
+                            const d = await r.json();
+                            window.location.href = d.url;
+                        } catch(e) {
+                            alert("Auth backend is offline!");
+                        }
+                    };
+                    return; // Stop local fetch
+                } else {
+                    // Verify code
+                    contentEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center mt-20 text-center">
+                            <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-6"></i>
+                            <h2 class="text-xl font-bold text-white mb-2">Verifying Patreon Subscription...</h2>
+                            <p class="text-slate-400 font-medium">Please wait while we check your pledge status.</p>
+                        </div>
+                    `;
+                    try {
+                        const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/verify', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({code})
+                        });
+                        const d = await r.json();
+                        
+                        // Clear the ?code= query from URL bar without reloading
+                        window.history.replaceState({}, document.title, window.location.pathname + "#" + postId);
+
+                        if (d.success) {
+                            const rawHtml = marked.parse(d.markdown);
+                            contentEl.innerHTML = rawHtml;
+                            contentEl.querySelectorAll('pre code').forEach((block) => {
+                                hljs.highlightElement(block);
+                            });
+                            return; // Success! Done loading.
+                        } else {
+                            contentEl.innerHTML = `
+                                <div class="flex flex-col items-center justify-center mt-20 text-center">
+                                    <i class="fas fa-times-circle text-5xl text-red-500 mb-6"></i>
+                                    <h2 class="text-2xl font-bold text-white mb-4">Access Denied</h2>
+                                    <p class="text-slate-400 font-medium max-w-lg mb-8">${d.error || 'Failed to authenticate.'}</p>
+                                    <a href="#" onclick="window.location.href='/journal/#Crossplay-PS5-XBOX-PC'; window.location.reload();" class="px-6 py-2 border border-white/[0.1] hover:bg-white/[0.05] rounded-lg text-white transition-colors">Try again</a>
+                                </div>
+                            `;
+                            return;
+                        }
+                    } catch(e) {
+                        contentEl.innerHTML = '<div class="text-center text-red-500 mt-10">Error connecting to auth server.</div>';
+                        return;
+                    }
+                }
+            }
+            
             try {
                 const entry = g_entries.find(e => e.id === postId || e.file === postId || decodeURIComponent(e.file) === postId);
                 if (!entry) throw new Error('Post not found in index.');
