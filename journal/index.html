@@ -264,12 +264,13 @@
             contentEl.innerHTML = '<div class="flex justify-center mt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i></div>';
             
             const entry = g_entries.find(e => e.id === postId || e.file === postId || decodeURIComponent(e.file) === postId);
-            const isRelay = (entry && entry.file === 'Crossplay-PS5-XBOX-PC.md') || postId === 'Crossplay-PS5-XBOX-PC' || postId === 'entry_0003';
+            const isLockedEntry = (entry && (entry.file === 'Crossplay-PS5-XBOX-PC.md' || entry.file === 'T9-Mod-Manager-RE.md')) || postId === 'Crossplay-PS5-XBOX-PC' || postId === 'entry_0003' || postId === 'T9-Mod-Manager-RE' || postId === 'entry_0007';
             
-            if (isRelay) {
+            if (isLockedEntry) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const code = urlParams.get('code');
-                const cachedMd = localStorage.getItem('relay_md');
+                const targetKey = (postId === 'T9-Mod-Manager-RE' || postId === 'entry_0007' || (entry && entry.file === 'T9-Mod-Manager-RE.md')) ? 't9_md' : 'relay_md';
+                const cachedMd = localStorage.getItem(targetKey);
                 
                 if (!code) {
                     if (cachedMd) {
@@ -318,8 +319,12 @@
                         window.history.replaceState({}, document.title, window.location.pathname + "#Crossplay-PS5-XBOX-PC");
 
                         if (d.success) {
-                            localStorage.setItem('relay_md', d.markdown);
-                            const rawHtml = marked.parse(d.markdown);
+                            // Backend was updated to return multiple markdowns
+                            localStorage.setItem('relay_md', d.markdowns.relay);
+                            localStorage.setItem('t9_md', d.markdowns.t9);
+                            
+                            const targetKey = (postId === 'T9-Mod-Manager-RE' || postId === 'entry_0007' || (entry && entry.file === 'T9-Mod-Manager-RE.md')) ? 't9_md' : 'relay_md';
+                            const rawHtml = marked.parse(d.markdowns[targetKey === 't9_md' ? 't9' : 'relay']);
                             contentEl.innerHTML = rawHtml;
                             contentEl.querySelectorAll('pre code').forEach((block) => hljs.highlightElement(block));
                             return; 
