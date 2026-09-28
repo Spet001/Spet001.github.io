@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /journal/md/Crossplay-PS5-XBOX-PC.md
-Disallow: /journal/md/Crossplay-PS5-XBOX-PC.enc
-
-Sitemap: https://spet01.dev/sitemap.xml

@@ -1,5 +1,11 @@
 [
     {
+        "id": "entry_0009",
+        "title": "Quick Entry: Having a Backend on a Static Website with Cloudflare workers!",
+        "date": "Sep 28, 2026",
+        "file": "Cloudflare-Workers-Backend.md"
+    },
+    {
         "id": "entry_0008",
         "title": "Providing Open Source T6 Custom Game Modes GSC!",
         "date": "Sep 27, 2026",

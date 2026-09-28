@@ -1758,9 +1758,16 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon })
 
 // --- HERO SECTION: Clean, balanced, NO debugger box, no location ---
 const Hero = ({ onOpenCV, onToggleTerminal }) => {
-    const { t } = useContext(LanguageContext);
+    const { t, lang } = useContext(LanguageContext);
 
-    return (
+    const [visitCount, setVisitCount] = useState('...');
+      useEffect(() => {
+          fetch('https://journal.gelain15mj.workers.dev/api/visit')
+              .then(res => res.json())
+              .then(data => setVisitCount(data.visits))
+              .catch(() => setVisitCount('Offline'));
+      }, []);
+      return (
         <section id="top" className="min-h-[85vh] pt-32 pb-16 flex items-center relative">
             <div className="max-w-4xl mx-auto px-6 w-full text-center sm:text-left">
                 
@@ -1830,7 +1837,12 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                     <a href="mailto:gelain15mj@gmail.com" className="hover:text-primary transition-colors" title="Email Direct">
                         <i className="fas fa-envelope"></i>
                     </a>
-                </div>
+                
+                      <div className="ml-auto sm:ml-6 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] text-slate-400 text-xs font-mono group hover:bg-white/[0.05] hover:border-primary/30 transition-all cursor-default" title={lang === 'pt' ? 'Visitantes Únicos (Imune a Adblocks via Cloudflare Edge)' : 'Unique Visitors (Adblock-immune via Cloudflare Edge)'}>
+                          <i className="fas fa-eye text-primary/60 group-hover:text-primary transition-colors"></i>
+                          <span>{lang === 'pt' ? 'Visitantes deste Portfólio:' : 'Portfolio Visitors:'} {visitCount}</span>
+                      </div>
+                  </div>
 
                 {/* Proof Metrics Strip */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-10 mt-10 border-t border-white/[0.08]">
@@ -2581,7 +2593,7 @@ const ProjectsSection = () => {
 
 // --- COMPACT 3D ICONS TECH STACK & CAPABILITIES ---
 const SkillsSection = () => {
-    const { t } = useContext(LanguageContext);
+    const { t, lang } = useContext(LanguageContext);
     const techCategories = PORTFOLIO_DATA.techCategories;
 
     return (
@@ -2649,7 +2661,7 @@ const SkillsSection = () => {
 
 // --- TECHNICAL JOURNAL PREVIEW ---
 const JournalSection = () => {
-    const { t } = useContext(LanguageContext);
+    const { t, lang } = useContext(LanguageContext);
     const entries = PORTFOLIO_DATA.journalEntries;
 
     return (
@@ -2892,7 +2904,7 @@ const ContactSection = () => {
 
 // --- FOOTER: Preserves Exact Original Quote & Journal Newsletter ---
 const Footer = ({ onOpenEasterMenu }) => {
-    const { t } = useContext(LanguageContext);
+    const { t, lang } = useContext(LanguageContext);
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
     const [statusMsg, setStatusMsg] = useState('');
@@ -3190,7 +3202,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
 // --- EASTER EGG VAULT (Quake 1, GTA Vice City, COD Zombies) ---
 // Replaced broken Doom with Quake (https://www.netquake.io/quake)
 const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
-    const { t } = useContext(LanguageContext);
+    const { t, lang } = useContext(LanguageContext);
 
     if (!activeGame) return null;
 
@@ -3585,23 +3597,34 @@ const App = () => {
                             <i className="fas fa-times"></i>
                         </button>
                         <i className="fab fa-patreon text-[#FF424D] text-6xl mb-6 drop-shadow-[0_0_15px_rgba(255,66,77,0.4)]"></i>
-                        <h2 className="text-2xl font-bold text-white mb-4">Unlock Exclusive Content</h2>
-                        <p className="text-slate-300 font-medium mb-8">
-                            Get exclusive benefits like early Journal previews, deep technical breakdowns, and access to closed-source project repositories!
-                        </p>
-                        <button onClick={async (e) => {
-                            e.currentTarget.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
-                            try {
-                                const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/auth-url');
-                                const d = await r.json();
-                                window.location.href = d.url;
-                            } catch(err) {
-                                alert("Auth backend is offline!");
-                                e.currentTarget.innerHTML = '<i class="fab fa-patreon"></i> Log in with Patreon';
-                            }
-                        }} className="w-full py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
-                            <i className="fab fa-patreon"></i> Log in with Patreon
-                        </button>
+                        <h2 className="text-2xl font-bold text-white mb-4">
+                              {lang === 'pt' ? 'Desbloquear Conteúdo Exclusivo' : 'Unlock Exclusive Content'}
+                          </h2>
+                          <p className="text-slate-300 font-medium mb-6">
+                              {lang === 'pt' 
+                                  ? 'Ganhe benefícios exclusivos como acesso antecipado ao Journal, análises técnicas profundas e acesso a repositórios de projetos confidenciais!' 
+                                  : 'Get exclusive benefits like early Journal previews, deep technical breakdowns, and access to closed-source project repositories!'}
+                          </p>
+                          
+                          <div className="flex flex-col gap-3 w-full">
+                              <a href="https://www.patreon.com/15458299/join" target="_blank" rel="noreferrer" className="w-full py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.1] hover:border-[#FF424D]/50 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm text-center px-4 leading-tight">
+                                  <i className="fas fa-lock-open text-[#FF424D]"></i> {lang === 'pt' ? 'Assinar para Insights de Projetos Secretos & Journals!' : 'Subscribe for exclusive Journal Entries & Secret Projects Insights!'}
+                              </a>
+
+                              <button onClick={async (e) => {
+                                  e.currentTarget.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
+                                  try {
+                                      const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/auth-url');
+                                      const d = await r.json();
+                                      window.location.href = d.url;
+                                  } catch(err) {
+                                      alert(lang === 'pt' ? "Backend de autenticação está offline!" : "Auth backend is offline!");
+                                      e.currentTarget.innerHTML = '<i class="fab fa-patreon"></i> ' + (lang === 'pt' ? 'Entrar com Patreon' : 'Log in with Patreon');
+                                  }
+                              }} className="w-full py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
+                                  <i className="fab fa-patreon"></i> {lang === 'pt' ? 'Já sou membro (Log in)' : 'Log in with Patreon'}
+                              </button>
+                          </div>
                     </div>
                 </div>
             )}
