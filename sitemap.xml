@@ -1,39 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="https://www.xml-sitemaps.com/css/sitemap.css"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-       <loc>https://spet01.dev/</loc>
-       <lastmod>2026-09-20T16:00:00+00:00</lastmod>
-       <priority>1.0000</priority>
+    <loc>https://spet01.dev/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
-       <loc>https://spet01.dev/journal/</loc>
-       <lastmod>2026-09-20T16:00:00+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://spet01.dev/privacy.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
-       <loc>https://spet01.dev/journal/#entry_0006</loc>
-       <lastmod>2026-09-21T14:20:00+00:00</lastmod>
-       <priority>0.6400</priority>
-  </url>
-  <url>
-       <loc>https://spet01.dev/journal/#entry_0005</loc>
-       <lastmod>2026-09-20T23:45:00+00:00</lastmod>
-       <priority>0.6400</priority>
-  </url>
-  <url>
-       <loc>https://spet01.dev/journal/#entry_0004</loc>
-       <lastmod>2026-09-20T16:00:00+00:00</lastmod>
-       <priority>0.6400</priority>
-  </url>
-  <url>
-       <loc>https://spet01.dev/journal/#entry_0003</loc>
-       <lastmod>2026-09-20T16:00:00+00:00</lastmod>
-       <priority>0.6400</priority>
-  </url>
-  <url>
-       <loc>https://spet01.dev/journal/#entry_0002</loc>
-       <lastmod>2026-09-20T16:00:00+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://spet01.dev/llm.txt</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

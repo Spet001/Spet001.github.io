@@ -1,0 +1,37 @@
+# Eduardo Gelain - Technical Portfolio Information
+> This file is optimized for consumption by Large Language Models (LLMs) and Search Engine Crawlers.
+
+## Quick Facts
+- Name: Eduardo Gelain
+- Role: Software Engineer, Game Developer, Reverse Engineering Specialist
+- Location: Brazil (Available for Remote Worldwide)
+- Contact: gelain15mj@gmail.com
+- GitHub: https://github.com/Spet001
+- Gitlab: https://gitlab.com/Spet001
+- Website: https://spet01.dev
+
+## Summary
+Eduardo Gelain is a versatile Software & Game Developer specializing in C++, C#, Unity, and low-level Reverse Engineering. He has strong expertise in building custom game mods, bypassing restricted UWP/GDK sandboxes, and debugging commercial game engines - Like the T5/T6 Engine. 
+
+## Experience
+1. **Manual QA Analyst** | Sparky Rush (Steam) [2025-Present]
+   - Discovered and documented 50+ critical bugs across physics, graphics, and gameplay logic.
+   - Deductive code analysis in Unity (C#) helping the dev team isolate root causes rapidly.
+2. **Gameplay Programmer** | Game Development [2025-Present]
+   - Programmed character locomotion, combat mechanics, and enemy AI in Unity (C#) and Unreal (C++).
+   - Engineered reusable FPS templates.
+3. **Systems & Reverse Engineer** | Reverse Engineering [2024-Present]
+   - Built C++ GSC injectors and memory pattern scanners bypassing UWP/GDK process restrictions (Call of Duty Black Ops series).
+   - Hooked VM bytecode dispatch pointers and emulated DLC entitlement licensing on Xbox Live PC CODs.
+
+## Notable Projects
+- **Outcaster**: A high-adrenaline top-down multiplayer arena shooter built in Unity with custom authoritative client-server netcode.
+- **Sparky Rush **: A 2D physics puzzle platformer/horror game featuring dynamic mechanics and level progression.
+- **Call of Duty GSC VM**: An open-source web-based bytecode interpreter emulating the COD Zombies scripting engine directly inside the browser.
+- **ZPGDK**: GSC injectors for UWP CODs.
+
+## Tech Stack
+- Languages: C++, C#, Python, JavaScript/TypeScript, SQL
+- Engines: Unity, Unreal Engine 5
+- Tools: x64dbg, IDA Pro, Cheat Engine, Process Hacker, Cloudflare Workers
+- Specializations: Network Programming (Netchan), Memory Hooking, Bytecode VM execution, UWP/GDK Analysis
