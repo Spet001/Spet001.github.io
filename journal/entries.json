@@ -1,5 +1,11 @@
 [
     {
+        "id": "entry_0010",
+        "title": "What is GSC? (Game Scripting C) Guide",
+        "date": "Sep 30, 2026",
+        "file": "What-Is-GSC.md"
+    },
+    {
         "id": "entry_0009",
         "title": "Quick Entry: Having a Backend on a Static Website with Cloudflare workers!",
         "date": "Sep 28, 2026",

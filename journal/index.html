@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
+    </script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -27,12 +42,57 @@
                 }
             }
         }
+    
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
     </script>
     
     <!-- Marked.js for parsing Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
+    </script>
     <!-- DOMPurify for sanitizing HTML -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js">
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
+    </script>
 
     <style>
         body {
@@ -67,27 +127,141 @@
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #334155; }
-    </style>
+    
+        /* Custom Cursor */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, background-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+        #custom-cursor.hovering {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        body { cursor: none !important; }
+        a, button, .clickable { cursor: none !important; }
+
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+</style>
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
+    <div id="llm-geo-context" style="display: none;">
+<h2>Journal Entries Index</h2>
+<article>
+<h3><a href="#entry_0010">What is GSC? (Game Scripting C) Guide</a></h3>
+<time>Sep 30, 2026</time>
+<p>Game Scripting C, commonly known as **GSC**, is the proprietary, server-side scripting language used across almost all major *Call of Duty* titles powered by the IW engine and Treyarch's derivatives. Its syntax is heavily inspired by C and C++, but it behaves like a dynamically-typed scripting la...</p>
+</article>
+<article>
+<h3><a href="#entry_0009">Quick Entry: Having a Backend on a Static Website with Cloudflare workers!</a></h3>
+<time>Sep 28, 2026</time>
+<p>Usually, when you host a portfolio on GitHub Pages, it's 100% static. That means no database, no private API keys, and definitely no dynamic server-side logic.</p>
+</article>
+<article>
+<h3><a href="#entry_0008">Providing Open Source T6 Custom Game Modes GSC!</a></h3>
+<time>Sep 27, 2026</time>
+<p>For a long time, the *Call of Duty: Black Ops 2* (T6) modding community has seen incredible custom game modes created using GSC (Game Script Code). However, many of these amazing mods were kept closed-source, heavily obfuscated, or simply lost to time when their creators moved on.</p>
+</article>
+<article>
+<h3><a href="#entry_0007">Unlock This Entry With Patreon!</a></h3>
+<time>Sep 27, 2026</time>
+<p>Exclusive Patreon entry about reverse engineering and network analysis.</p>
+</article>
+<article>
+<h3><a href="#entry_0006">Bypassing MS Store License Checks for Call of Duty DLCs</a></h3>
+<time>Sep 21, 2026</time>
+<p>When the *Call of Duty* titles started appearing on the Microsoft Store (such as *Advanced Warfare* and *WWII*), the community quickly noticed a major shift in how DLCs were handled. In the Steam era, buying a DLC meant downloading gigabytes of new maps and assets. On the UWP / Microsoft Store ec...</p>
+</article>
+<article>
+<h3><a href="#entry_0005">Open Source GSC Injector for Black Ops 2 (MS Store)</a></h3>
+<time>Sep 20, 2026</time>
+<p>Writing a custom GSC (Game Script Code) injector for *Call of Duty: Black Ops II* (T6) on PC is a notoriously difficult challenge. For years, the community has relied on closed-source tools like *GSC Studio*, which makes learning and porting mods to new environments—like the modern UWP / Microsof...</p>
+</article>
+<article>
+<h3><a href="#entry_0004">GSC Injection on Black Ops 1 (MS Store)</a></h3>
+<time>Sep 19, 2026</time>
+<p>Continuing our reverse engineering adventures on legacy titles, today I'll talk about building a GSC (Game Script Code) Injector for **Call of Duty: Black Ops 1 (T5) - MS Store/Xbox App Edition**.</p>
+</article>
+<article>
+<h3><a href="#entry_0003">Unlock This Entry With Patreon!</a></h3>
+<time>Sep 19, 2026</time>
+<p>Exclusive Patreon entry about reverse engineering and network analysis.</p>
+</article>
+<article>
+<h3><a href="#entry_0002">CW GSC Injection Findings</a></h3>
+<time>Sep 18, 2026</time>
+<p>A deep-dive into the architectural differences between Steam/BNet and Microsoft Store builds of *Call of Duty: Black Ops Cold War*, and how to implement a lightweight, zero-dependency C++ injector using dynamic heuristic memory scanning for GSC (Game Script Code) injection.</p>
+</article>
+</div>
+
     
     <!-- Canvas Background -->
+    <div id="custom-cursor"></div>
     <canvas id="space-canvas" class="fixed inset-0 -z-10 opacity-70"></canvas>
 
     <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
-        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
-                <i class="fas fa-terminal text-primary"></i>
+    
+    
+    
+    <nav class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 text-lg sm:text-2xl font-bold tracking-tighter text-white hover:opacity-80 transition-opacity">
+                <i class="fas fa-terminal text-primary text-xl sm:text-2xl"></i>
+                
                 <span>Spet<span class="text-primary">Dev</span></span>
             </a>
-            <div class="flex items-center gap-6 text-sm font-medium text-slate-300">
-                <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <div id="galo-easter-egg" class="galo-astronauta" style="display: none;" onclick="alert('Found anything interesting in the code?')" title="Bock bock! Houston, we have a chicken.">
+                🐓🧑‍🚀
+            </div>
+
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <a href="/#about" class="hover:text-primary transition-colors">About</a>
+                <a href="/#experience" class="hover:text-primary transition-colors">Experience</a>
+                <a href="/#projects" class="hover:text-primary transition-colors">Projects</a>
+                <a href="/#skills" class="hover:text-primary transition-colors">Tech Stack</a>
                 <a href="/journal" class="font-bold text-primary">Journal</a>
+                <a href="/#contact" class="hover:text-primary transition-colors">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://www.patreon.com/15458299/join" target="_blank" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-[#FF424D] bg-[#FF424D]/10 hover:bg-[#FF424D]/20 border border-[#FF424D]/20 rounded-lg transition-colors">
+                    <i class="fab fa-patreon"></i> Patreon
+                </a>
+                <a href="/" class="flex items-center gap-2 px-4 py-1.5 text-sm font-bold text-white bg-primary hover:bg-primaryHover rounded-lg transition-colors">
+                    <i class="fas fa-undo"></i> Back to Home
+                </a>
             </div>
         </div>
     </nav>
+
+
+
 
     <!-- Main Content -->
     <main class="flex-grow pt-24 pb-12 px-6">
@@ -113,8 +287,42 @@
         </div>
     </main>
 
+    <!-- Footer -->
+    
+    
+    <footer class="mt-12 py-12 border-t border-slate-800/50 bg-[#030303] relative z-10 text-center text-sm text-slate-500">
+        <div class="max-w-md mx-auto mb-8 bg-slate-900/80 p-6 rounded-2xl border border-white/[0.05] shadow-lg">
+            <h3 class="text-white font-bold mb-2 flex items-center justify-center gap-2">
+                <i class="fas fa-envelope-open-text text-primary"></i> Technical Journal Newsletter
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Receive email updates whenever a new reverse engineering breakdown, sandbox bypass, or game tooling post is published.</p>
+            <form onsubmit="event.preventDefault(); alert('Newsletter subscribed successfully!');" class="flex gap-2">
+                <input type="email" placeholder="your.email@example.com" required class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary text-sm">
+                <button type="submit" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm flex items-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Subscribe
+                </button>
+            </form>
+            <p class="text-[10px] text-slate-500 mt-3"><i class="fas fa-shield-alt"></i> No spam. Purely deep-dive technical research and engineering posts.</p>
+        </div>
+
+        <div class="flex items-center justify-center gap-6 mb-6">
+            <a href="https://github.com/Spet001" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-github"></i></a>
+            <a href="https://gitlab.com/Spet001" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-gitlab"></i></a>
+            <a href="https://spet01.itch.io" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-itch-io"></i></a>
+            <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <p class="font-medium text-slate-300">Eduardo Gelain &middot; SpetDev. All rights reserved.</p>
+        <div class="text-xs text-slate-600 mt-2">
+            By browsing this site, you agree to our <a href="/privacy.html" class="text-primary hover:underline">Privacy Policy</a> (anonymous metrics collection).
+        </div>
+    </footer>
+
+
+
+
     <script>
         // Space Canvas Logic
+        
         function initSpaceCanvas() {
             const canvas = document.getElementById('space-canvas');
             if (!canvas) return;
@@ -123,6 +331,39 @@
             let w, h;
             let stars = [];
             let astro = { x: 0, y: 0, vx: 0.8, vy: 0.3, angle: 0, rotVel: 0.015 };
+            
+            // Rocket tracking mouse
+            let rocket = { x: -100, y: -100, angle: -Math.PI / 2 };
+            let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            let particles = [];
+            let hasMouseMoved = false;
+
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+                hasMouseMoved = true;
+                
+                // Cursor Logic
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor) {
+                    cursor.style.left = mouse.x + 'px';
+                    cursor.style.top = mouse.y + 'px';
+                }
+            });
+
+            // Hover effects
+            document.addEventListener('mouseover', (e) => {
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor && (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable'))) {
+                    cursor.classList.add('hovering');
+                }
+            });
+            document.addEventListener('mouseout', (e) => {
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor && (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable'))) {
+                    cursor.classList.remove('hovering');
+                }
+            });
 
             function resize() {
                 w = canvas.width = window.innerWidth;
@@ -143,20 +384,23 @@
                 ctx.fillStyle = '#050505';
                 ctx.fillRect(0, 0, w, h);
 
-                // Moon
-                const moonX = w * 0.8;
-                const moonY = h * 0.3;
-                const gradient = ctx.createRadialGradient(moonX, moonY, 10, moonX, moonY, 60);
-                gradient.addColorStop(0, 'rgba(0, 170, 255, 0.15)');
+                // Ambient Moon (Right side like main)
+                const moonX = w * 0.82;
+                const moonY = h * 0.2;
+                const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
+                gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
                 gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
                 ctx.fillStyle = gradient;
                 ctx.beginPath(); ctx.arc(moonX, moonY, 80, 0, Math.PI * 2); ctx.fill();
+                
                 ctx.fillStyle = '#e2e8f0';
-                ctx.beginPath(); ctx.arc(moonX, moonY, 30, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.2)';
-                ctx.beginPath(); ctx.arc(moonX - 10, moonY - 10, 6, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.arc(moonX + 12, moonY + 5, 8, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.arc(moonX - 5, moonY + 15, 4, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX, moonY, 28, 0, Math.PI * 2); ctx.fill();
+                
+                // Moon Craters
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+                ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
 
                 // Stars
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
@@ -203,10 +447,63 @@
                 ctx.fillRect(1, 12, 4, 8); 
                 ctx.restore();
 
+                // Rocket & Particles (Only if mouse moved)
+                if (hasMouseMoved) {
+                    rocket.x += (mouse.x - rocket.x) * 0.1;
+                    rocket.y += (mouse.y - rocket.y) * 0.1;
+                    const diff = Math.atan2(mouse.y - rocket.y, mouse.x - rocket.x) - rocket.angle;
+                    rocket.angle += diff * 0.22;
+
+                    // Spawn particles
+                    if (Math.random() < 0.5) {
+                        particles.push({
+                            type: 'fire',
+                            x: rocket.x - Math.cos(rocket.angle) * 14,
+                            y: rocket.y - Math.sin(rocket.angle) * 14,
+                            vx: -Math.cos(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
+                            vy: -Math.sin(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
+                            life: 1.0,
+                            size: Math.random() * 2 + 1
+                        });
+                    }
+
+                    // Render Particles
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        let p = particles[i];
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.life -= p.type === 'fire' ? 0.035 : 0.02;
+                        if (p.life <= 0) {
+                            particles.splice(i, 1);
+                        } else {
+                            ctx.fillStyle = p.type === 'fire' ? `rgba(255, 80, 0, ${p.life * 0.8})` : `rgba(226, 232, 240, ${p.life * 0.6})`;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // Render Rocket
+                    ctx.save();
+                    ctx.translate(rocket.x, rocket.y);
+                    ctx.rotate(rocket.angle);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath();
+                    ctx.moveTo(10, 0);
+                    ctx.lineTo(-5, 5);
+                    ctx.lineTo(-5, -5);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#00aaff';
+                    ctx.fillRect(-8, -3, 4, 6);
+                    ctx.restore();
+                }
+
                 requestAnimationFrame(render);
             }
             render();
         }
+
         initSpaceCanvas();
 
         let g_entries = [];
@@ -412,6 +709,21 @@
         }
 
         init();
+    
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
     </script>
 </body>
 </html>

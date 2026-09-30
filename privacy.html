@@ -1,38 +1,401 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - Eduardo Gelain</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #030712; color: #cbd5e1; line-height: 1.6; padding: 2rem; max-width: 800px; margin: 0 auto; }
-        h1, h2 { color: #f8fafc; }
-        a { color: #38bdf8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .container { background: #0f172a; padding: 2rem; border-radius: 12px; border: 1px solid #1e293b; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Privacy Policy & Cookie Statement</h1>
-        <p>Last updated: September 2026</p>
-        
-        <h2>1. Data Collection & Analytics</h2>
-        <p>This portfolio is hosted as a static website on GitHub Pages and leverages Cloudflare Workers at the edge for backend functionality.</p>
-        <p>In order to display the "Portfolio Visitors" counter, this site sends an anonymous ping to a Cloudflare Worker upon loading. This function reads non-identifying metadata (such as generic ASN/Country data and User-Agent) solely for the purpose of aggregated analytics and mitigating bot abuse.</p>
-        
-        <h2>2. No Persistent Tracking Cookies</h2>
-        <p>This website does not use tracking cookies (e.g., Google Analytics, Meta Pixel) and does not store personally identifiable information (PII) on your device without your explicit consent.</p>
-        <p>If you interact with the AI Chatbot (SpetBot), your chat preferences may be stored locally on your device via <code>localStorage</code> purely to remember UI states (e.g., whether you dismissed the welcome message).</p>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com">
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
 
-        <h2>3. Third-Party Integrations</h2>
-        <p>If you use the "Log in with Patreon" feature to unlock exclusive Journal entries, you will be subject to Patreon's Privacy Policy. The authentication process is handled securely via OAuth 2.0, and your Patreon identity is not persistently stored in our database; it is only used momentarily to verify your subscription status.</p>
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#00aaff',
+                        primaryHover: '#0077b6',
+                        dark: '#050505',
+                        darkPanel: 'rgba(15, 23, 42, 0.7)',
+                    }
+                }
+            }
+        }
+    
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
+    </script>
+    
+    <style>
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            cursor: none !important;
+        }
+        a, button, .clickable { cursor: none !important; }
         
-        <h2>4. Contact</h2>
-        <p>If you have any questions regarding how data is handled on this site, feel free to contact me at <a href="mailto:gelain15mj@gmail.com">gelain15mj@gmail.com</a>.</p>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
         
-        <br>
-        <a href="/">&larr; Return to Portfolio</a>
-    </div>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, background-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+        #custom-cursor.hovering {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        .privacy-content h1 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        .privacy-content h2 { font-size: 1.25rem; font-weight: 600; color: #fff; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
+        .privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #cbd5e1; }
+        .privacy-content a { color: #38bdf8; text-decoration: none; }
+        .privacy-content a:hover { text-decoration: underline; }
+        .privacy-content code { background: rgba(15, 23, 42, 0.85); padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #38bdf8; font-family: monospace; font-size: 0.9em; }
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+</style>
+</head>
+<body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
+    
+    <div id="custom-cursor"></div>
+    <canvas id="space-canvas" class="fixed inset-0 -z-10 opacity-70"></canvas>
+
+
+    <nav class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 text-lg sm:text-2xl font-bold tracking-tighter text-white hover:opacity-80 transition-opacity">
+                <i class="fas fa-terminal text-primary text-xl sm:text-2xl"></i>
+                
+                <span>Spet<span class="text-primary">Dev</span></span>
+            </a>
+            <div id="galo-easter-egg" class="galo-astronauta" style="display: none;" onclick="alert('Found anything interesting in the code?')" title="Bock bock! Houston, we have a chicken.">
+                🐓🧑‍🚀
+            </div>
+
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <a href="/#about" class="hover:text-primary transition-colors">About</a>
+                <a href="/#experience" class="hover:text-primary transition-colors">Experience</a>
+                <a href="/#projects" class="hover:text-primary transition-colors">Projects</a>
+                <a href="/#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                <a href="/journal" class="font-bold text-primary">Journal</a>
+                <a href="/#contact" class="hover:text-primary transition-colors">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://www.patreon.com/15458299/join" target="_blank" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-[#FF424D] bg-[#FF424D]/10 hover:bg-[#FF424D]/20 border border-[#FF424D]/20 rounded-lg transition-colors">
+                    <i class="fab fa-patreon"></i> Patreon
+                </a>
+                <a href="/" class="flex items-center gap-2 px-4 py-1.5 text-sm font-bold text-white bg-primary hover:bg-primaryHover rounded-lg transition-colors">
+                    <i class="fas fa-undo"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+
+    <main class="flex-grow pt-28 pb-12 px-6">
+        <div class="max-w-4xl mx-auto glass-panel rounded-2xl p-8 md:p-12 privacy-content shadow-2xl">
+            <h1>Privacy Policy & Cookie Statement</h1>
+            <p class="text-sm text-slate-500 italic mb-8">Last updated: September 2026</p>
+            
+            <h2>1. Data Collection & Analytics</h2>
+            <p>This portfolio is hosted as a static website on GitHub Pages and leverages Cloudflare Workers at the edge for backend functionality.</p>
+            <p>In order to display the "Portfolio Visitors" counter, this site sends an anonymous ping to a Cloudflare Worker upon loading. This function reads non-identifying metadata (such as generic ASN/Country data and User-Agent) solely for the purpose of aggregated analytics and mitigating bot abuse.</p>
+            
+            <h2>2. No Persistent Tracking Cookies</h2>
+            <p>This website does not use tracking cookies (e.g., Google Analytics, Meta Pixel) and does not store personally identifiable information (PII) on your device without your explicit consent.</p>
+            <p>If you interact with the AI Chatbot (SpetBot), your chat preferences may be stored locally on your device via <code>localStorage</code> purely to remember UI states (e.g., whether you dismissed the welcome message).</p>
+
+            <h2>3. Third-Party Integrations</h2>
+            <p>If you use the "Log in with Patreon" feature to unlock exclusive Journal entries, you will be subject to Patreon's Privacy Policy. The authentication process is handled securely via OAuth 2.0, and your Patreon identity is not persistently stored in our database; it is only used momentarily to verify your subscription status.</p>
+            
+            <h2>4. Contact</h2>
+            <p>If you have any questions regarding how data is handled on this site, feel free to contact me at <a href="mailto:gelain15mj@gmail.com">gelain15mj@gmail.com</a>.</p>
+        </div>
+    </main>
+
+
+    <footer class="mt-12 py-12 border-t border-slate-800/50 bg-[#030303] relative z-10 text-center text-sm text-slate-500">
+        <div class="max-w-md mx-auto mb-8 bg-slate-900/80 p-6 rounded-2xl border border-white/[0.05] shadow-lg">
+            <h3 class="text-white font-bold mb-2 flex items-center justify-center gap-2">
+                <i class="fas fa-envelope-open-text text-primary"></i> Technical Journal Newsletter
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Receive email updates whenever a new reverse engineering breakdown, sandbox bypass, or game tooling post is published.</p>
+            <form onsubmit="event.preventDefault(); alert('Newsletter subscribed successfully!');" class="flex gap-2">
+                <input type="email" placeholder="your.email@example.com" required class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary text-sm">
+                <button type="submit" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm flex items-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Subscribe
+                </button>
+            </form>
+            <p class="text-[10px] text-slate-500 mt-3"><i class="fas fa-shield-alt"></i> No spam. Purely deep-dive technical research and engineering posts.</p>
+        </div>
+
+        <div class="flex items-center justify-center gap-6 mb-6">
+            <a href="https://github.com/Spet001" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-github"></i></a>
+            <a href="https://gitlab.com/Spet001" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-gitlab"></i></a>
+            <a href="https://spet01.itch.io" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-itch-io"></i></a>
+            <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" class="hover:text-primary transition-colors text-xl"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <p class="font-medium text-slate-300">Eduardo Gelain &middot; SpetDev. All rights reserved.</p>
+        <div class="text-xs text-slate-600 mt-2">
+            By browsing this site, you agree to our <a href="/privacy.html" class="text-primary hover:underline">Privacy Policy</a> (anonymous metrics collection).
+        </div>
+    </footer>
+
+
+    <script>
+        function initSpaceCanvas() {
+            const canvas = document.getElementById('space-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let w, h;
+            let stars = [];
+            let astro = { x: 0, y: 0, vx: 0.8, vy: 0.3, angle: 0, rotVel: 0.015 };
+            
+            let rocket = { x: -100, y: -100, angle: -Math.PI / 2 };
+            let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            let particles = [];
+            let hasMouseMoved = false;
+
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+                hasMouseMoved = true;
+                
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor) {
+                    cursor.style.left = mouse.x + 'px';
+                    cursor.style.top = mouse.y + 'px';
+                }
+            });
+
+            document.addEventListener('mouseover', (e) => {
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor && (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable'))) {
+                    cursor.classList.add('hovering');
+                }
+            });
+            document.addEventListener('mouseout', (e) => {
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor && (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable'))) {
+                    cursor.classList.remove('hovering');
+                }
+            });
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                stars = Array.from({ length: 400 }).map(() => ({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    z: Math.random() * w,
+                    size: Math.random() * 1.5 + 0.5
+                }));
+                astro.x = w / 4;
+                astro.y = h / 4;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function render() {
+                ctx.fillStyle = '#050505';
+                ctx.fillRect(0, 0, w, h);
+
+                const moonX = w * 0.82;
+                const moonY = h * 0.2;
+                const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
+                gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
+                gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath(); ctx.arc(moonX, moonY, 80, 0, Math.PI * 2); ctx.fill();
+                
+                ctx.fillStyle = '#e2e8f0';
+                ctx.beginPath(); ctx.arc(moonX, moonY, 28, 0, Math.PI * 2); ctx.fill();
+                
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+                ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                stars.forEach(star => {
+                    star.z -= 0.2;
+                    if (star.z <= 0) {
+                        star.z = w;
+                        star.x = Math.random() * w;
+                        star.y = Math.random() * h;
+                    }
+                    const perspective = w / star.z;
+                    const px = (star.x - w / 2) * perspective + w / 2;
+                    const py = (star.y - h / 2) * perspective + h / 2;
+                    const pSize = star.size * perspective * 0.5;
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                astro.x += astro.vx;
+                astro.y += astro.vy;
+                astro.angle += astro.rotVel;
+
+                if (astro.x > w + 50) astro.x = -50;
+                if (astro.x < -50) astro.x = w + 50;
+                if (astro.y > h + 50) astro.y = -50;
+                if (astro.y < -50) astro.y = h + 50;
+
+                ctx.save();
+                ctx.translate(astro.x, astro.y);
+                ctx.rotate(astro.angle); 
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-6, -2, 12, 14); 
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath(); ctx.arc(0, -6, 8, 0, Math.PI * 2); ctx.fill(); 
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath(); ctx.arc(2, -6, 4, 0, Math.PI * 2); ctx.fill(); 
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(-9, 0, 4, 10); 
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-5, 12, 4, 8); 
+                ctx.fillRect(1, 12, 4, 8); 
+                ctx.restore();
+
+                if (hasMouseMoved) {
+                    rocket.x += (mouse.x - rocket.x) * 0.1;
+                    rocket.y += (mouse.y - rocket.y) * 0.1;
+                    const diff = Math.atan2(mouse.y - rocket.y, mouse.x - rocket.x) - rocket.angle;
+                    rocket.angle += diff * 0.22;
+
+                    if (Math.random() < 0.5) {
+                        particles.push({
+                            type: 'fire',
+                            x: rocket.x - Math.cos(rocket.angle) * 14,
+                            y: rocket.y - Math.sin(rocket.angle) * 14,
+                            vx: -Math.cos(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
+                            vy: -Math.sin(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
+                            life: 1.0,
+                            size: Math.random() * 2 + 1
+                        });
+                    }
+
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        let p = particles[i];
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.life -= p.type === 'fire' ? 0.035 : 0.02;
+                        if (p.life <= 0) {
+                            particles.splice(i, 1);
+                        } else {
+                            ctx.fillStyle = p.type === 'fire' ? `rgba(255, 80, 0, ${p.life * 0.8})` : `rgba(226, 232, 240, ${p.life * 0.6})`;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    ctx.save();
+                    ctx.translate(rocket.x, rocket.y);
+                    ctx.rotate(rocket.angle);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath();
+                    ctx.moveTo(10, 0);
+                    ctx.lineTo(-5, 5);
+                    ctx.lineTo(-5, -5);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#00aaff';
+                    ctx.fillRect(-8, -3, 4, 6);
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(render);
+            }
+            render();
+        }
+        initSpaceCanvas();
+    
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
+
+    </script>
 </body>
 </html>

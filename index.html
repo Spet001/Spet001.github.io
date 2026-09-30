@@ -402,7 +402,23 @@
         .mascot-chat-content pre code { background: transparent; padding: 0; color: #e2e8f0; border: none; }
         .mascot-chat-content a { color: #38bdf8; text-decoration: underline; }
         .mascot-chat-content strong { color: #fff; font-weight: 600; }
-    </style>
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+</style>
 
     <!-- React & Babel -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -1850,9 +1866,27 @@ const SpaceCanvas = () => {
 // --- TOPBAR: SpetDev Brand + Easter Egg Image Button + Navigation ---
 const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon }) => {
     const { lang, setLang, t } = useContext(LanguageContext);
+
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
 
+    useEffect(() => {
+        const threshold = 160;
+        const checkDevTools = () => {
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            setIsDevToolsOpen(widthDiff || heightDiff);
+        };
+        window.addEventListener('resize', checkDevTools);
+        const interval = setInterval(checkDevTools, 1000);
+        return () => {
+            window.removeEventListener('resize', checkDevTools);
+            clearInterval(interval);
+        };
+    }, []);
+
+    
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
@@ -1867,10 +1901,21 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon })
                 <div className="flex items-center gap-3">
                     <a href="#top" className="flex items-center gap-2 group focus:outline-none">
                         <i className="fas fa-terminal text-primary text-base"></i>
+                        
                         <span className="text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors">
                             Spet<span className="text-primary">Dev</span>
                         </span>
                     </a>
+                    {isDevToolsOpen && (
+                        <div 
+                            className="galo-astronauta"
+                            onClick={() => alert("Found anything interesting in the code?")}
+                            title="Bock bock! Houston, we have a chicken."
+                        >
+                            🐓🧑‍🚀
+                        </div>
+                    )}
+
 
                     {/* Gant Bridge Easter Egg Sign Image */}
                     <button
