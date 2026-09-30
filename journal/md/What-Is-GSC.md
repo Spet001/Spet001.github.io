@@ -1,6 +1,6 @@
-# What is GSC? (Game Scripting C)
+# What is GSC? 
 
-Game Scripting C, commonly known as **GSC**, is the proprietary, server-side scripting language used across almost all major *Call of Duty* titles powered by the IW engine and Treyarch's derivatives. Its syntax is heavily inspired by C and C++, but it behaves like a dynamically-typed scripting language with built-in multithreading, event-driven execution, and game-specific data structures.
+Game Script Code/Game Scripting C, commonly known as **GSC**, is the proprietary, server-side scripting language used across almost all major *Call of Duty* titles powered by the IW engine and Treyarch's derivatives. Its syntax is heavily inspired by C and C++, but it behaves like a dynamically-typed scripting language with built-in multithreading, event-driven execution, and game-specific data structures.
 
 Developed initially by Infinity Ward, GSC is the invisible backbone that dictates the flow of single-player campaigns, orchestrates multiplayer game logic, and drives the intricate state machines of the iconic Zombies mode.
 
