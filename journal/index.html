@@ -11,22 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com">
-        // DevTools detection for Galo Astronauta
-        function checkDevTools() {
-            const threshold = 160;
-            const widthDiff = window.outerWidth - window.innerWidth > threshold;
-            const heightDiff = window.outerHeight - window.innerHeight > threshold;
-            const galo = document.getElementById('galo-easter-egg');
-            if (galo) {
-                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
-            }
-        }
-        window.addEventListener('resize', checkDevTools);
-        setInterval(checkDevTools, 1000);
-        checkDevTools();
-
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -43,56 +28,12 @@
             }
         }
     
-        // DevTools detection for Galo Astronauta
-        function checkDevTools() {
-            const threshold = 160;
-            const widthDiff = window.outerWidth - window.innerWidth > threshold;
-            const heightDiff = window.outerHeight - window.innerHeight > threshold;
-            const galo = document.getElementById('galo-easter-egg');
-            if (galo) {
-                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
-            }
-        }
-        window.addEventListener('resize', checkDevTools);
-        setInterval(checkDevTools, 1000);
-        checkDevTools();
-
     </script>
     
     <!-- Marked.js for parsing Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
-        // DevTools detection for Galo Astronauta
-        function checkDevTools() {
-            const threshold = 160;
-            const widthDiff = window.outerWidth - window.innerWidth > threshold;
-            const heightDiff = window.outerHeight - window.innerHeight > threshold;
-            const galo = document.getElementById('galo-easter-egg');
-            if (galo) {
-                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
-            }
-        }
-        window.addEventListener('resize', checkDevTools);
-        setInterval(checkDevTools, 1000);
-        checkDevTools();
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- DOMPurify for sanitizing HTML -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js">
-        // DevTools detection for Galo Astronauta
-        function checkDevTools() {
-            const threshold = 160;
-            const widthDiff = window.outerWidth - window.innerWidth > threshold;
-            const heightDiff = window.outerHeight - window.innerHeight > threshold;
-            const galo = document.getElementById('galo-easter-egg');
-            if (galo) {
-                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
-            }
-        }
-        window.addEventListener('resize', checkDevTools);
-        setInterval(checkDevTools, 1000);
-        checkDevTools();
-
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <style>
         body {
@@ -951,6 +892,210 @@ window.addEventListener('resize', handleResize);
         
 }
 document.addEventListener('DOMContentLoaded', initSpaceCanvas);
+
+let g_entries = [];
+
+        async function init() {
+            try {
+                const response = await fetch('entries.json');
+                if (!response.ok) throw new Error('Could not load entries.json');
+                const entries = await response.json();
+                g_entries = entries;
+                
+                const listEl = document.getElementById('entries-list');
+                listEl.innerHTML = '';
+                
+                if (entries.length === 0) {
+                    listEl.innerHTML = '<li class="text-slate-500 text-sm">No posts found.</li>';
+                    return;
+                }
+
+                entries.forEach((entry, idx) => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    const linkId = entry.id || entry.file;
+                    a.href = `#${linkId}`;
+                    a.className = 'block text-slate-400 hover:text-primary transition-colors cursor-pointer p-2 rounded-lg hover:bg-slate-800/50';
+                    a.innerHTML = `<div class="font-medium text-white">${entry.title}</div><div class="text-xs text-slate-500 mt-1">${entry.date}</div>`;
+                    
+                    a.onclick = (e) => {
+                        e.preventDefault();
+                        window.location.hash = linkId;
+                        loadPost(linkId);
+                    };
+
+                    li.appendChild(a);
+                    listEl.appendChild(li);
+                });
+
+                const hash = window.location.hash ? decodeURIComponent(window.location.hash.replace('#', '')) : '';
+                if (hash) {
+                    loadPost(hash);
+                } else {
+                    const firstId = entries[0].id || entries[0].file;
+                    loadPost(firstId);
+                    window.location.hash = firstId;
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('entries-list').innerHTML = '<li class="text-red-400 text-sm">Error loading posts.</li>';
+            }
+        }
+
+        async function loadPost(postId) {
+            const contentEl = document.getElementById('content');
+            contentEl.innerHTML = '<div class="flex justify-center mt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i></div>';
+            
+            const entry = g_entries.find(e => e.id === postId || e.file === postId || decodeURIComponent(e.file) === postId);
+            const isLockedEntry = (entry && (entry.file === 'Crossplay-PS5-XBOX-PC.md' || entry.file === 'T9-Mod-Manager-RE.md')) || postId === 'Crossplay-PS5-XBOX-PC' || postId === 'entry_0003' || postId === 'T9-Mod-Manager-RE' || postId === 'entry_0007';
+            
+            if (isLockedEntry) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const code = urlParams.get('code');
+                const targetKey = (postId === 'T9-Mod-Manager-RE' || postId === 'entry_0007' || (entry && entry.file === 'T9-Mod-Manager-RE.md')) ? 't9_md' : 'relay_md';
+                const cachedMd = localStorage.getItem(targetKey);
+                
+                if (!code) {
+                    if (cachedMd) {
+                        contentEl.innerHTML = marked.parse(cachedMd);
+                        contentEl.querySelectorAll('pre code').forEach((block) => hljs.highlightElement(block));
+                        return;
+                    }
+
+                    contentEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center mt-20 text-center">
+                            <i class="fas fa-lock text-5xl text-primary mb-6 drop-shadow-[0_0_15px_rgba(255,80,0,0.5)]"></i>
+                            <h2 class="text-2xl font-bold text-white mb-4">Classified Project</h2>
+                            <p class="text-slate-400 font-medium max-w-lg mb-8">This technical journal entry is confidential. You must have an active Patreon subscription to read the architecture breakdown and source code details.</p>
+                            <button id="patreon-login-btn" class="px-6 py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-lg transition-colors flex items-center gap-2 shadow-lg">
+                                <i class="fab fa-patreon"></i> Subscribe to Patreon to Unlock this Entry!
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('patreon-login-btn').onclick = async () => {
+                        document.getElementById('patreon-login-btn').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
+                        try {
+                            const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/auth-url');
+                            const d = await r.json();
+                            window.location.href = d.url;
+                        } catch(e) {
+                            alert("Auth backend is offline!");
+                        }
+                    };
+                    return; 
+                } else {
+                    contentEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center mt-20 text-center">
+                            <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-6"></i>
+                            <h2 class="text-xl font-bold text-white mb-2">Verifying Patreon Subscription...</h2>
+                            <p class="text-slate-400 font-medium">Please wait while we check your pledge status.</p>
+                        </div>
+                    `;
+                    try {
+                        const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/verify', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({code})
+                        });
+                        const d = await r.json();
+                        
+                        window.history.replaceState({}, document.title, window.location.pathname + "#Crossplay-PS5-XBOX-PC");
+
+                        if (d.success) {
+                            // Backend was updated to return multiple markdowns
+                            localStorage.setItem('relay_md', d.markdowns.relay);
+                            localStorage.setItem('t9_md', d.markdowns.t9);
+                            
+                            const targetKey = (postId === 'T9-Mod-Manager-RE' || postId === 'entry_0007' || (entry && entry.file === 'T9-Mod-Manager-RE.md')) ? 't9_md' : 'relay_md';
+                            const rawHtml = marked.parse(d.markdowns[targetKey === 't9_md' ? 't9' : 'relay']);
+                            contentEl.innerHTML = rawHtml;
+                            contentEl.querySelectorAll('pre code').forEach((block) => hljs.highlightElement(block));
+                            return; 
+                        } else {
+                            contentEl.innerHTML = `
+                                <div class="flex flex-col items-center justify-center mt-20 text-center">
+                                    <i class="fas fa-times-circle text-5xl text-red-500 mb-6"></i>
+                                    <h2 class="text-2xl font-bold text-white mb-4">Access Denied</h2>
+                                    <p class="text-slate-400 font-medium max-w-lg mb-8">${d.error || 'Failed to authenticate.'}</p>
+                                    <a href="#" onclick="window.location.href='/journal/#Crossplay-PS5-XBOX-PC'; window.location.reload();" class="px-6 py-2 border border-white/[0.1] hover:bg-white/[0.05] rounded-lg text-white transition-colors">Try again</a>
+                                </div>
+                            `;
+                            return;
+                        }
+                    } catch(e) {
+                        contentEl.innerHTML = '<div class="text-center text-red-500 mt-10">Error connecting to auth server.</div>';
+                        return;
+                    }
+                }
+            }
+
+            try {
+                if (!entry) throw new Error('Post not found in index.');
+
+                const filename = entry.file;
+                const safeFilename = decodeURIComponent(filename);
+                const res = await fetch(`md/${safeFilename}`);
+                if (!res.ok) throw new Error('Local post not found (' + res.status + ')');
+                
+                let mdText = await res.text();
+                
+                if (mdText.trim().startsWith('<external>')) {
+                    let externalUrl = mdText.replace('<external>', '').trim();
+                    contentEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center mt-20 text-center">
+                            <i class="fas fa-circle-notch fa-spin text-4xl text-primary mb-6"></i>
+                            <h2 class="text-xl font-bold text-white mb-2">Fetching External Entry...</h2>
+                            <p class="text-slate-400 font-medium">This journal entry is from an external platform, it might take some seconds to load!</p>
+                        </div>
+                    `;
+
+                    if (externalUrl.includes('github.com') && externalUrl.includes('/blob/')) {
+                        externalUrl = externalUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+                    } else if (externalUrl.includes('gitlab.com') && externalUrl.includes('/-/blob/')) {
+                        externalUrl = externalUrl.replace('/-/blob/', '/-/raw/');
+                    }
+                    if (!externalUrl.includes('githubusercontent.com')) {
+                        externalUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(externalUrl);
+                    }
+                    
+                    const extRes = await fetch(externalUrl);
+                    if (!extRes.ok) throw new Error('External post failed (' + extRes.status + ')');
+                    mdText = await extRes.text();
+                }
+                
+                const rawHtml = marked.parse(mdText);
+                const safeHtml = DOMPurify.sanitize(rawHtml);
+                
+                contentEl.innerHTML = safeHtml;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                document.querySelectorAll('#entries-list a').forEach(a => {
+                    const currentId = entry.id || entry.file;
+                    if (decodeURIComponent(a.getAttribute('href').replace('#','')) === currentId) {
+                        a.classList.add('border-l-2', 'border-primary', 'bg-slate-800/50');
+                        a.querySelector('.font-medium').classList.add('text-primary');
+                        a.querySelector('.font-medium').classList.remove('text-white');
+                    } else {
+                        a.classList.remove('border-l-2', 'border-primary', 'bg-slate-800/50');
+                        a.querySelector('.font-medium').classList.remove('text-primary');
+                        a.querySelector('.font-medium').classList.add('text-white');
+                    }
+                });
+
+            } catch (err) {
+                console.error(err);
+                contentEl.innerHTML = `
+                    <div class="text-center mt-10">
+                        <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                        <h2 class="text-xl font-bold text-white">Error loading post</h2>
+                        <p class="text-slate-400 mt-2">${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        init();
 
     </script>
 </body>
