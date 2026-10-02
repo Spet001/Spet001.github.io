@@ -66,131 +66,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        primary: '#00aaff',
-                        primaryHover: '#0077b6',
-                        dark: '#050505',
-                        darkPanel: 'rgba(15, 23, 42, 0.7)',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Custom CSS for base tweaks -->
-    <style>
-        body {
-            background-color: #050505;
-            color: #e2e8f0;
-            cursor: none !important;
-            overflow-x: hidden;
-        }
-
-        a,
-        button,
-        .clickable { cursor: none !important; }
-
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .glass-panel:hover {
-            border-color: rgba(0, 170, 255, 0.3);
-            box-shadow: 0 10px 30px -10px rgba(0, 170, 255, 0.15);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #050505;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
-
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            will-change: opacity, visibility;
-        }
-
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: none;
-        }
-
-        /* Subtle Project Card Fade-In on Filter & Search */
-        @keyframes cardFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px) scale(0.985);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .project-card-animate {
-            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
-            will-change: opacity, transform;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .project-card-animate {
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
-
-        /* Custom Cursor */
-        #custom-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #00aaff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out, background-color 0.2s ease, width 0.2s ease, height 0.2s ease;
-            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
-        }
-
-        #custom-cursor.hovering {
-            width: 30px;
-            height: 30px;
-            background-color: rgba(0, 170, 255, 0.2);
-            border-color: #fff;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-        }
     <!-- Markdown & Sanitizer for Mascot Chat -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
@@ -538,14 +413,42 @@ const PORTFOLIO_DATA = {
             easter: {
                 title: "Easter Egg Vault",
                 quake: "Jogar Quake 1 (NetQuake)",
-                
                 zombies: "COD Zombies Errius: Imitando a GSC Engine dentro de um HTML!",
+                music: "Tocar Final Fantasy Classic OSTs (YouTube)",
                 exit: "Sair do Jogo",
                 openNew: "Abrir em nova aba"
             },
             resumeModal: {
                 title: "Currículo Profissional",
                 download: "Imprimir / Salvar PDF",
+                close: "Fechar"
+            },
+            settings: {
+                title: "Configurações",
+                desc: "Preferências locais da interface salvas no navegador.",
+                sectionGeneral: "Interface & Mascote",
+                sectionVisual: "Aparência & Simulação",
+                sectionAudio: "Áudio & Easter Eggs",
+                companionBot: "Mascote Astro",
+                companionBotDesc: "Assistente interativo e guia técnico no canto inferior",
+                disableWelcome: "Desativar mensagem de boas-vindas",
+                disableWelcomeDesc: "Oculta a saudação automática do Astro ao carregar o portfólio",
+                musicPlayer: "Tocador de OST (Final Fantasy)",
+                musicPlayerDesc: "Stream de temas clássicos de batalha via YouTube Jukebox",
+                musicAutoPlay: "Reprodução automática ao iniciar",
+                musicAutoPlayDesc: "Inicia o tocador minimizado na barra inferior ao carregar o portfólio",
+                defaultLang: "Idioma da interface",
+                defaultLangDesc: "Define o idioma padrão do portfólio",
+                theme: "Tema de fundo",
+                themeDesc: "Simulação interativa do canvas",
+                themeSpace: "Espaço",
+                themeSpaceSub: "Foguete & Astronauta",
+                themeSky: "Céu Terrestre",
+                themeSkySub: "Caças & Paraquedista",
+                easterSign: "Placa secreta do Gant Bridge",
+                easterSignDesc: "Exibe a placa clássica do GTA na barra de navegação superior",
+                reset: "Restaurar padrões",
+                savedLocally: "Salvo localmente",
                 close: "Fechar"
             }
         },
@@ -653,12 +556,41 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Play Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Emulating the GSC Engine inside HTML!",
+                music: "Play Classic Final Fantasy OSTs (YouTube)",
                 exit: "Exit Game",
                 openNew: "Open in new tab"
             },
             resumeModal: {
                 title: "Curriculum Vitae",
                 download: "Print / Save PDF",
+                close: "Close"
+            },
+            settings: {
+                title: "Settings",
+                desc: "Local client preferences stored in browser storage.",
+                sectionGeneral: "Interface & Mascot",
+                sectionVisual: "Appearance & Simulation",
+                sectionAudio: "Audio & Easter Eggs",
+                companionBot: "Astro Companion Bot",
+                companionBotDesc: "Interactive technical assistant and guide in bottom corner",
+                disableWelcome: "Disable Welcome Message",
+                disableWelcomeDesc: "Suppresses Astro's automatic greeting teaser on page load",
+                musicPlayer: "Final Fantasy OST Player",
+                musicPlayerDesc: "Stream classic battle tracks via background YouTube client",
+                musicAutoPlay: "Toggle Auto-Play",
+                musicAutoPlayDesc: "Begin playback in minimized dock player upon page load",
+                defaultLang: "Interface Language",
+                defaultLangDesc: "Sets the initial language of the portfolio",
+                theme: "Canvas Theme",
+                themeDesc: "Interactive background simulation",
+                themeSpace: "Cosmic Space",
+                themeSpaceSub: "Rocket & Astronaut",
+                themeSky: "Earth Sky",
+                themeSkySub: "Fighter Jets & Parachuter",
+                easterSign: "Gant Bridge Secret Sign",
+                easterSignDesc: "Display legacy Easter Egg sign in the top navigation bar",
+                reset: "Reset to defaults",
+                savedLocally: "Saved locally",
                 close: "Close"
             }
         }
@@ -1578,16 +1510,43 @@ const playSoftClick = () => {
     } catch (e) {}
 };
 
-// --- SPACE CANVAS WITH ASTRO, ROCKET & TETHER ---
-const SpaceCanvas = () => {
+// --- SPACE & SKY CANVAS (COSMIC SPACE & EARTH SKY THEMES) ---
+const SpaceCanvas = ({ theme = 'space' }) => {
     const canvasRef = useRef(null);
-    const moonPosRef = useRef({ x: window.innerWidth * 0.8, y: window.innerHeight * 0.22 });
-    const rocketRef = useRef({ x: -100, y: -100, angle: -Math.PI / 2 });
-    const astroRef = useRef({ x: -100, y: -100, vx: 0, vy: 0, angle: 0 });
-    const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2, lastX: window.innerWidth / 2, lastY: window.innerHeight / 2 });
+    const themeRef = useRef(theme);
+    const moonPosRef = useRef({ x: typeof window !== 'undefined' ? window.innerWidth * 0.8 : 800, y: typeof window !== 'undefined' ? window.innerHeight * 0.22 : 200 });
+    const rocketRef = useRef({ x: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 400, y: typeof window !== 'undefined' ? window.innerHeight * 0.35 : 250, angle: -Math.PI / 4 });
+    const jet2Ref = useRef({ x: typeof window !== 'undefined' ? window.innerWidth * 0.5 - 60 : 340, y: typeof window !== 'undefined' ? window.innerHeight * 0.35 - 30 : 220, vx: 0, vy: 0, angle: -Math.PI / 4 });
+    const astroRef = useRef({ x: typeof window !== 'undefined' ? window.innerWidth * 0.5 + 50 : 450, y: typeof window !== 'undefined' ? window.innerHeight * 0.35 + 50 : 300, vx: 0, vy: 0, angle: 0 });
+    const mouseRef = useRef({ x: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 400, y: typeof window !== 'undefined' ? window.innerHeight * 0.35 : 250, lastX: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 400, lastY: typeof window !== 'undefined' ? window.innerHeight * 0.35 : 250 });
     const particlesRef = useRef([]);
+    const cloudsRef = useRef([]);
     const keysRef = useRef({});
     const hasMouseMovedRef = useRef(false);
+
+    useEffect(() => {
+        themeRef.current = theme;
+        if (theme === 'sky' && cloudsRef.current.length === 0) {
+            initClouds();
+        }
+    }, [theme]);
+
+    const initClouds = () => {
+        cloudsRef.current = Array.from({ length: 9 }).map((_, i) => ({
+            x: (i / 9) * window.innerWidth + (Math.random() * 80 - 40),
+            y: Math.random() * (window.innerHeight * 0.72) + 25,
+            speed: Math.random() * 0.35 + 0.15,
+            scale: Math.random() * 0.6 + 0.65,
+            opacity: Math.random() * 0.25 + 0.55,
+            blobs: [
+                { ox: 0, oy: 0, r: 26 },
+                { ox: 22, oy: -10, r: 34 },
+                { ox: 50, oy: -6, r: 36 },
+                { ox: 76, oy: 0, r: 26 },
+                { ox: 38, oy: 12, r: 30 }
+            ]
+        }));
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -1610,6 +1569,7 @@ const SpaceCanvas = () => {
             canvas.height = window.innerHeight;
             moonPosRef.current = { x: window.innerWidth * 0.82, y: window.innerHeight * 0.2 };
             initStars();
+            initClouds();
         };
 
         handleResize();
@@ -1635,6 +1595,8 @@ const SpaceCanvas = () => {
                 mouseRef.current = { x: clientX, y: clientY, lastX: clientX, lastY: clientY };
                 rocketRef.current.x = clientX;
                 rocketRef.current.y = clientY;
+                jet2Ref.current.x = clientX - 60;
+                jet2Ref.current.y = clientY - 30;
                 astroRef.current.x = clientX + 40;
                 astroRef.current.y = clientY + 40;
                 hasMouseMovedRef.current = true;
@@ -1655,50 +1617,321 @@ const SpaceCanvas = () => {
             if (e.touches.length > 0) handleMouseMove({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
         }, { passive: true });
 
-        const render = () => {
-            ctx.fillStyle = '#050505';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Helper to draw a modern supersonic fighter jet
+        const drawFighterJet = (ctx, x, y, angle, isLead = true) => {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
 
-            // Stars
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-            stars.forEach(star => {
-                star.z -= 0.35;
-                if (star.z <= 0) {
-                    star.z = canvas.width;
-                    star.x = Math.random() * canvas.width;
-                    star.y = Math.random() * canvas.height;
-                }
-                const perspective = canvas.width / star.z;
-                const px = (star.x - canvas.width / 2) * perspective + canvas.width / 2;
-                const py = (star.y - canvas.height / 2) * perspective + canvas.height / 2;
-                const pSize = star.size * perspective * 0.45;
-
-                ctx.beginPath();
-                ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            // Ambient Moon
-            const moonX = moonPosRef.current.x;
-            const moonY = moonPosRef.current.y;
-            const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
-            gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
-            gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
-            ctx.fillStyle = gradient;
+            // Fuselage & Delta Wings
+            ctx.fillStyle = isLead ? '#cbd5e1' : '#94a3b8';
             ctx.beginPath();
-            ctx.arc(moonX, moonY, 80, 0, Math.PI * 2);
+            ctx.moveTo(22, 0); // Pointed nose
+            ctx.lineTo(8, 3.5);
+            ctx.lineTo(-4, 18); // Starboard wingtip
+            ctx.lineTo(-8, 18);
+            ctx.lineTo(-6, 4);
+            ctx.lineTo(-18, 12); // Starboard stabilizer
+            ctx.lineTo(-20, 12);
+            ctx.lineTo(-17, 3);
+            ctx.lineTo(-19, 0); // Center exhaust
+            ctx.lineTo(-17, -3);
+            ctx.lineTo(-20, -12); // Port stabilizer
+            ctx.lineTo(-18, -12);
+            ctx.lineTo(-6, -4);
+            ctx.lineTo(-8, -18); // Port wingtip
+            ctx.lineTo(-4, -18);
+            ctx.lineTo(8, -3.5);
+            ctx.closePath();
             ctx.fill();
 
+            // Wing panel accent lines
+            ctx.strokeStyle = isLead ? '#94a3b8' : '#64748b';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(6, 3);
+            ctx.lineTo(-4, 15);
+            ctx.moveTo(6, -3);
+            ctx.lineTo(-4, -15);
+            ctx.stroke();
+
+            // Twin angled tailfins
+            ctx.fillStyle = isLead ? '#94a3b8' : '#64748b';
+            ctx.beginPath();
+            ctx.moveTo(-10, 4);
+            ctx.lineTo(-16, 7);
+            ctx.lineTo(-18, 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(-10, -4);
+            ctx.lineTo(-16, -7);
+            ctx.lineTo(-18, -4);
+            ctx.closePath();
+            ctx.fill();
+
+            // Glass canopy with sky reflection
+            const canopyGrad = ctx.createLinearGradient(0, -2, 10, 2);
+            canopyGrad.addColorStop(0, '#38bdf8');
+            canopyGrad.addColorStop(1, '#0284c7');
+            ctx.fillStyle = canopyGrad;
+            ctx.beginPath();
+            ctx.ellipse(3, 0, 7, 2.8, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Twin afterburner flames
+            ctx.fillStyle = 'rgba(255, 130, 0, 0.9)';
+            ctx.beginPath();
+            ctx.moveTo(-17, -3);
+            ctx.lineTo(-26, 0);
+            ctx.lineTo(-17, 3);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = '#fef08a';
+            ctx.beginPath();
+            ctx.moveTo(-17, -1.5);
+            ctx.lineTo(-22, 0);
+            ctx.lineTo(-17, 1.5);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        };
+
+        // Helper to draw Astro as a Parachuter (Para)
+        const drawParachuter = (ctx, x, y, angle, vx, vy) => {
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Aerodynamic sway angle based on glide velocity
+            const sway = Math.max(-0.35, Math.min(0.35, vx * 0.08));
+            ctx.rotate(sway);
+
+            // 1. Suspension lines (shroud cords from canopy down to harness)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(-25, -36);
+            ctx.lineTo(0, -3);
+            ctx.moveTo(-9, -40);
+            ctx.lineTo(0, -3);
+            ctx.moveTo(9, -40);
+            ctx.lineTo(0, -3);
+            ctx.moveTo(25, -36);
+            ctx.lineTo(0, -3);
+            ctx.stroke();
+
+            // 2. Parachute Canopy (curved ram-air aerodynamic canopy above)
+            ctx.fillStyle = '#0284c7';
+            ctx.beginPath();
+            ctx.moveTo(-26, -35);
+            ctx.bezierCurveTo(-20, -54, 20, -54, 26, -35);
+            ctx.bezierCurveTo(16, -40, -16, -40, -26, -35);
+            ctx.closePath();
+            ctx.fill();
+
+            // Cell 1: Cyan
+            ctx.fillStyle = '#00aaff';
+            ctx.beginPath();
+            ctx.moveTo(-26, -35);
+            ctx.bezierCurveTo(-22, -50, -14, -52, -13, -38);
+            ctx.bezierCurveTo(-18, -40, -22, -38, -26, -35);
+            ctx.closePath();
+            ctx.fill();
+
+            // Cell 2: White
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(-13, -38);
+            ctx.bezierCurveTo(-14, -52, 0, -54, 0, -40);
+            ctx.bezierCurveTo(-5, -40, -10, -39, -13, -38);
+            ctx.closePath();
+            ctx.fill();
+
+            // Cell 3: Orange
+            ctx.fillStyle = '#f97316';
+            ctx.beginPath();
+            ctx.moveTo(0, -40);
+            ctx.bezierCurveTo(0, -54, 14, -52, 13, -38);
+            ctx.bezierCurveTo(9, -39, 4, -40, 0, -40);
+            ctx.closePath();
+            ctx.fill();
+
+            // Cell 4: Cyan
+            ctx.fillStyle = '#00aaff';
+            ctx.beginPath();
+            ctx.moveTo(13, -38);
+            ctx.bezierCurveTo(14, -52, 22, -50, 26, -35);
+            ctx.bezierCurveTo(22, -38, 18, -40, 13, -38);
+            ctx.closePath();
+            ctx.fill();
+
+            // 3. Astro Para Body
+            // Parachute harness container
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(-4, -4, 8, 9);
+
+            // Flight suit
             ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(-5, 0, 10, 11);
+
+            // Helmet
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.arc(moonX, moonY, 28, 0, Math.PI * 2);
+            ctx.arc(0, -6, 6, 0, Math.PI * 2);
             ctx.fill();
 
-            // Moon Craters
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
-            ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
+            // Visor
+            ctx.fillStyle = '#00aaff';
+            ctx.beginPath();
+            ctx.arc(1.5, -6, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Arms holding risers
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(-5, 0); ctx.lineTo(-8, -4); ctx.lineTo(-7, 2); ctx.closePath(); ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(5, 0); ctx.lineTo(8, -4); ctx.lineTo(7, 2); ctx.closePath(); ctx.fill();
+
+            // Legs swaying gently
+            const legSwing = Math.sin(Date.now() * 0.006) * 1.5;
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(-4, 11, 3, 7 + legSwing);
+            ctx.fillRect(1, 11, 3, 7 - legSwing);
+
+            // Boots
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-4.5, 18 + legSwing, 4, 3);
+            ctx.fillRect(0.5, 18 - legSwing, 4, 3);
+
+            ctx.restore();
+        };
+
+        const render = () => {
+            const isSky = themeRef.current === 'sky';
+
+            if (isSky) {
+                // --- EARTH SKY THEME ---
+                // Atmospheric Blue Sky Gradient
+                const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                skyGrad.addColorStop(0, '#091c36');
+                skyGrad.addColorStop(0.3, '#103965');
+                skyGrad.addColorStop(0.65, '#17528e');
+                skyGrad.addColorStop(1, '#236ca8');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Radiant Sun instead of the Moon
+                const sunX = moonPosRef.current.x;
+                const sunY = moonPosRef.current.y;
+
+                const sunGlow = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 130);
+                sunGlow.addColorStop(0, 'rgba(255, 245, 180, 0.45)');
+                sunGlow.addColorStop(0.35, 'rgba(253, 224, 71, 0.18)');
+                sunGlow.addColorStop(0.7, 'rgba(245, 158, 11, 0.06)');
+                sunGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                ctx.fillStyle = sunGlow;
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, 130, 0, Math.PI * 2);
+                ctx.fill();
+
+                const sunCore = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, 30);
+                sunCore.addColorStop(0, '#ffffff');
+                sunCore.addColorStop(0.4, '#fef08a');
+                sunCore.addColorStop(0.85, '#facc15');
+                sunCore.addColorStop(1, '#eab308');
+                ctx.fillStyle = sunCore;
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, 30, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Shimmering Solar Rays
+                ctx.save();
+                ctx.translate(sunX, sunY);
+                ctx.strokeStyle = 'rgba(254, 240, 138, 0.22)';
+                ctx.lineWidth = 2;
+                const rayTime = Date.now() * 0.0004;
+                for (let r = 0; r < 8; r++) {
+                    const rayAngle = (r * Math.PI / 4) + rayTime;
+                    ctx.beginPath();
+                    ctx.moveTo(Math.cos(rayAngle) * 34, Math.sin(rayAngle) * 34);
+                    ctx.lineTo(Math.cos(rayAngle) * 70, Math.sin(rayAngle) * 70);
+                    ctx.stroke();
+                }
+                ctx.restore();
+
+                // Drifting Earth Clouds
+                cloudsRef.current.forEach(cloud => {
+                    cloud.x += cloud.speed;
+                    if (cloud.x > canvas.width + 120) {
+                        cloud.x = -130;
+                        cloud.y = Math.random() * (canvas.height * 0.72) + 25;
+                    }
+                    ctx.save();
+                    ctx.translate(cloud.x, cloud.y);
+                    ctx.scale(cloud.scale, cloud.scale);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${cloud.opacity * 0.85})`;
+                    cloud.blobs.forEach(b => {
+                        ctx.beginPath();
+                        ctx.arc(b.ox, b.oy, b.r, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    // Soft under-cloud depth shading
+                    ctx.fillStyle = `rgba(200, 220, 240, ${cloud.opacity * 0.35})`;
+                    ctx.beginPath();
+                    ctx.ellipse(38, 12, 46, 14, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+            } else {
+                // --- COSMIC SPACE THEME ---
+                ctx.fillStyle = '#050505';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Stars
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+                stars.forEach(star => {
+                    star.z -= 0.35;
+                    if (star.z <= 0) {
+                        star.z = canvas.width;
+                        star.x = Math.random() * canvas.width;
+                        star.y = Math.random() * canvas.height;
+                    }
+                    const perspective = canvas.width / star.z;
+                    const px = (star.x - canvas.width / 2) * perspective + canvas.width / 2;
+                    const py = (star.y - canvas.height / 2) * perspective + canvas.height / 2;
+                    const pSize = star.size * perspective * 0.45;
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Ambient Moon
+                const moonX = moonPosRef.current.x;
+                const moonY = moonPosRef.current.y;
+                const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
+                gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
+                gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(moonX, moonY, 80, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#e2e8f0';
+                ctx.beginPath();
+                ctx.arc(moonX, moonY, 28, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Moon Craters
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+                ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
+            }
 
             if (!hasMouseMovedRef.current) {
                 animationFrameId = requestAnimationFrame(render);
@@ -1706,11 +1939,12 @@ const SpaceCanvas = () => {
             }
 
             const rocket = rocketRef.current;
+            const jet2 = jet2Ref.current;
             const astro = astroRef.current;
             const mouse = mouseRef.current;
 
-            const friction = 0.93;
-            const astroThrust = 0.75;
+            const friction = isSky ? 0.94 : 0.93;
+            const astroThrust = isSky ? 0.7 : 0.75;
             let isThrusting = false;
 
             if (keysRef.current['ArrowLeft']) { astro.vx -= astroThrust; isThrusting = true; }
@@ -1720,11 +1954,11 @@ const SpaceCanvas = () => {
 
             if (isThrusting && Math.random() < 0.5) {
                 particlesRef.current.push({
-                    type: 'oxy',
+                    type: isSky ? 'contrail' : 'oxy',
                     x: astro.x - Math.cos(astro.angle) * 10,
                     y: astro.y - Math.sin(astro.angle) * 10,
-                    vx: -Math.cos(astro.angle) * 2 + (Math.random() - 0.5),
-                    vy: -Math.sin(astro.angle) * 2 + (Math.random() - 0.5),
+                    vx: -Math.cos(astro.angle) * 1.5 + (Math.random() - 0.5),
+                    vy: -Math.sin(astro.angle) * 1.5 + (Math.random() - 0.5),
                     life: 1.0,
                     size: Math.random() * 2.5 + 1
                 });
@@ -1752,7 +1986,7 @@ const SpaceCanvas = () => {
 
                 if (Math.random() < 0.5) {
                     particlesRef.current.push({
-                        type: 'fire',
+                        type: isSky ? 'contrail' : 'fire',
                         x: rocket.x - Math.cos(rocket.angle) * 14,
                         y: rocket.y - Math.sin(rocket.angle) * 14,
                         vx: -Math.cos(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
@@ -1765,18 +1999,52 @@ const SpaceCanvas = () => {
             mouse.lastX = mouse.x;
             mouse.lastY = mouse.y;
 
-            // Tether between rocket and astronaut
+            // Wingman Jet 2 follows Lead Jet 1 in formation flight (Earth Sky)
+            if (isSky) {
+                const wingmanTargetX = rocket.x - Math.cos(rocket.angle) * 65 + Math.sin(rocket.angle) * 28;
+                const wingmanTargetY = rocket.y - Math.sin(rocket.angle) * 65 - Math.cos(rocket.angle) * 28;
+                jet2.vx = (wingmanTargetX - jet2.x) * 0.09;
+                jet2.vy = (wingmanTargetY - jet2.y) * 0.09;
+                jet2.x += jet2.vx;
+                jet2.y += jet2.vy;
+                const distJet2 = Math.hypot(jet2.vx, jet2.vy);
+                if (distJet2 > 0.4) {
+                    const targetAngle2 = Math.atan2(rocket.y - jet2.y, rocket.x - jet2.x);
+                    let diff2 = targetAngle2 - jet2.angle;
+                    while (diff2 < -Math.PI) diff2 += Math.PI * 2;
+                    while (diff2 > Math.PI) diff2 -= Math.PI * 2;
+                    jet2.angle += diff2 * 0.16;
+                }
+                if (Math.random() < 0.4) {
+                    particlesRef.current.push({
+                        type: 'contrail',
+                        x: jet2.x - Math.cos(jet2.angle) * 15,
+                        y: jet2.y - Math.sin(jet2.angle) * 15,
+                        vx: -Math.cos(jet2.angle) * 1.5 + (Math.random() - 0.5),
+                        vy: -Math.sin(jet2.angle) * 1.5 + (Math.random() - 0.5),
+                        life: 1.0,
+                        size: Math.random() * 2.5 + 1.2
+                    });
+                }
+            }
+
+            // Tether / Wind drag between lead aircraft and astronaut/para
             const dxTether = astro.x - rocket.x;
             const dyTether = astro.y - rocket.y;
             const distance = Math.hypot(dxTether, dyTether);
-            const tetherLength = 140;
+            const tetherLength = isSky ? 160 : 140;
 
             if (distance > tetherLength) {
                 const stretch = distance - tetherLength;
-                const force = stretch * 0.08;
+                const force = stretch * (isSky ? 0.06 : 0.08);
                 const angle = Math.atan2(dyTether, dxTether);
                 astro.vx -= Math.cos(angle) * force;
                 astro.vy -= Math.sin(angle) * force;
+            }
+
+            // Downward gravity drift for parachuter
+            if (isSky) {
+                astro.vy += 0.08; // gentle descent
             }
 
             astro.vx *= friction;
@@ -1784,8 +2052,15 @@ const SpaceCanvas = () => {
             astro.x += astro.vx;
             astro.y += astro.vy;
 
+            // Screen boundary clamping
+            if (astro.x < 10) { astro.x = 10; astro.vx = Math.abs(astro.vx) * 0.5; }
+            if (astro.x > canvas.width - 10) { astro.x = canvas.width - 10; astro.vx = -Math.abs(astro.vx) * 0.5; }
+            if (astro.y < 10) { astro.y = 10; astro.vy = Math.abs(astro.vy) * 0.5; }
+            if (astro.y > canvas.height - 10) { astro.y = canvas.height - 10; astro.vy = -Math.abs(astro.vy) * 0.5; }
+
+            // Line / Streamer between lead and actor
             if (distance < canvas.width / 2) {
-                ctx.strokeStyle = 'rgba(0, 170, 255, 0.25)';
+                ctx.strokeStyle = isSky ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 170, 255, 0.25)';
                 ctx.lineWidth = 1;
                 ctx.setLineDash([3, 4]);
                 ctx.beginPath();
@@ -1804,45 +2079,64 @@ const SpaceCanvas = () => {
                 if (p.life <= 0) {
                     particlesRef.current.splice(i, 1);
                 } else {
-                    ctx.fillStyle = p.type === 'fire' ? `rgba(255, 80, 0, ${p.life * 0.8})` : `rgba(226, 232, 240, ${p.life * 0.6})`;
+                    if (p.type === 'fire') {
+                        ctx.fillStyle = `rgba(255, 80, 0, ${p.life * 0.8})`;
+                    } else if (p.type === 'contrail') {
+                        ctx.fillStyle = `rgba(255, 255, 255, ${p.life * 0.7})`;
+                    } else {
+                        ctx.fillStyle = `rgba(226, 232, 240, ${p.life * 0.6})`;
+                    }
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
 
-            // Astronaut
-            ctx.save();
-            ctx.translate(astro.x, astro.y);
-            ctx.rotate(astro.angle + Math.PI / 2);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillRect(-6, -2, 12, 14);
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath(); ctx.arc(0, -6, 7, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#00aaff';
-            ctx.beginPath(); ctx.arc(2, -6, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillRect(-8, 0, 3.5, 9);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillRect(-5, 12, 3.5, 7);
-            ctx.fillRect(1, 12, 3.5, 7);
-            ctx.restore();
+            if (isSky) {
+                // --- SKY THEME ACTORS ---
+                // Parachuter (Astro as Para)
+                drawParachuter(ctx, astro.x, astro.y, astro.angle, astro.vx, astro.vy);
 
-            // Rocket
-            ctx.save();
-            ctx.translate(rocket.x, rocket.y);
-            ctx.rotate(rocket.angle);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.beginPath();
-            ctx.moveTo(18, 0);
-            ctx.lineTo(-12, 10);
-            ctx.lineTo(-6, 0);
-            ctx.lineTo(-12, -10);
-            ctx.closePath();
-            ctx.fill();
-            ctx.fillStyle = '#00aaff';
-            ctx.beginPath(); ctx.arc(4, 0, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
+                // Wingman Fighter Jet (Following Lead Jet)
+                drawFighterJet(ctx, jet2.x, jet2.y, jet2.angle, false);
+
+                // Lead Fighter Jet (Following Mouse)
+                drawFighterJet(ctx, rocket.x, rocket.y, rocket.angle, true);
+            } else {
+                // --- SPACE THEME ACTORS ---
+                // Astronaut
+                ctx.save();
+                ctx.translate(astro.x, astro.y);
+                ctx.rotate(astro.angle + Math.PI / 2);
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-6, -2, 12, 14);
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath(); ctx.arc(0, -6, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath(); ctx.arc(2, -6, 3.5, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(-8, 0, 3.5, 9);
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-5, 12, 3.5, 7);
+                ctx.fillRect(1, 12, 3.5, 7);
+                ctx.restore();
+
+                // Rocket
+                ctx.save();
+                ctx.translate(rocket.x, rocket.y);
+                ctx.rotate(rocket.angle);
+                ctx.fillStyle = '#e2e8f0';
+                ctx.beginPath();
+                ctx.moveTo(18, 0);
+                ctx.lineTo(-12, 10);
+                ctx.lineTo(-6, 0);
+                ctx.lineTo(-12, -10);
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath(); ctx.arc(4, 0, 3.5, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            }
 
             animationFrameId = requestAnimationFrame(render);
         };
@@ -1860,11 +2154,11 @@ const SpaceCanvas = () => {
         };
     }, []);
 
-    return <canvas ref={canvasRef} className="fixed inset-0 -z-10 pointer-events-none opacity-80" />;
+    return <canvas ref={canvasRef} className={`fixed inset-0 -z-10 pointer-events-none transition-opacity duration-700 ${theme === 'sky' ? 'opacity-95' : 'opacity-85'}`} />;
 };
 
 // --- TOPBAR: SpetDev Brand + Easter Egg Image Button + Navigation ---
-const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon }) => {
+const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, onOpenSettings, settings }) => {
     const { lang, setLang, t } = useContext(LanguageContext);
 
     const [scrolled, setScrolled] = useState(false);
@@ -1917,23 +2211,25 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon })
                     )}
 
 
-                    {/* Gant Bridge Easter Egg Sign Image */}
-                    <button
-                        onClick={onOpenEasterMenu}
-                        className="hidden sm:block hover:scale-110 transition-transform p-0.5 ml-2 focus:outline-none"
-                        title="There are no easter eggs up here. Go away."
-                    >
-                        <img
-                            src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png"
-                            alt="No Easter Eggs Here"
-                            className="h-6 sm:h-7 w-auto rounded border border-white/[0.15] hover:border-primary/60 shadow-sm"
-                            onError={(e) => {
-                                // Fallback icon if static wikia image is temporarily throttled
-                                e.target.style.display = 'none';
-                                e.target.parentNode.innerHTML = '<span class="text-xs px-2 py-0.5 rounded bg-white/[0.08] text-primary border border-white/[0.1]"><i class="fas fa-ghost"></i></span>';
-                            }}
-                        />
-                    </button>
+                    {/* Gant Bridge Easter Egg Sign Image - Controlled by Settings (Default Off) */}
+                    {settings?.easterEggSign && (
+                        <button
+                            onClick={onOpenEasterMenu}
+                            className="hidden sm:block hover:scale-110 transition-transform p-0.5 ml-2 focus:outline-none"
+                            title="There are no easter eggs up here. Go away."
+                        >
+                            <img
+                                src="https://static.wikia.nocookie.net/gta-myths/images/b/b4/Gant_Bridge_Easter_Egg_Sign.png"
+                                alt="No Easter Eggs Here"
+                                className="h-6 sm:h-7 w-auto rounded border border-white/[0.15] hover:border-primary/60 shadow-sm"
+                                onError={(e) => {
+                                    // Fallback icon if static wikia image is temporarily throttled
+                                    e.target.style.display = 'none';
+                                    e.target.parentNode.innerHTML = '<span class="text-xs px-2 py-0.5 rounded bg-white/[0.08] text-primary border border-white/[0.1]"><i class="fas fa-ghost"></i></span>';
+                                }}
+                            />
+                        </button>
+                    )}
                 </div>
 
                 {/* Nav Links */}
@@ -1946,16 +2242,26 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon })
                     <a href="#contact" className="hover:text-white transition-colors">{t('nav.contact')}</a>
                 </nav>
 
-                {/* Actions: CLI, CV, Lang, Mobile Toggle */}
-                <div className="flex items-center gap-2 sm:gap-3">
+                {/* Actions: CLI, Settings, CV, Lang, Mobile Toggle */}
+                <div className="flex items-center gap-2 sm:gap-2.5">
                     <button onClick={onOpenPatreon} className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md bg-[#FF424D]/10 border border-[#FF424D]/20 text-[#FF424D] hover:bg-[#FF424D]/20 transition-colors whitespace-nowrap" title="Login with Patreon"><i className="fab fa-patreon text-[11px]"></i><span>Patreon</span></button>
-                      <button
+                    <button
                         onClick={onToggleTerminal}
                         className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
                         title="Open SpetTerm CLI (Ctrl+K)"
                     >
                         <i className="fas fa-terminal text-[11px] text-primary"></i>
                         <span>CLI</span>
+                    </button>
+
+                    {/* SETTINGS BUTTON */}
+                    <button
+                        onClick={onOpenSettings}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
+                        title={lang === 'pt' ? 'Configurações' : 'Settings'}
+                    >
+                        <i className="fas fa-sliders text-[11px] text-primary"></i>
+                        <span className="hidden sm:inline">{lang === 'pt' ? 'Config' : 'Settings'}</span>
                     </button>
 
                     <button
@@ -2000,8 +2306,11 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon })
                     <a onClick={() => setMobileMenuOpen(false)} href="/journal" className="block text-sm text-primary font-semibold">{t('nav.journal')}</a>
                     <a onClick={() => setMobileMenuOpen(false)} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenPatreon(); }} className="w-full text-left text-sm text-[#FF424D] hover:text-[#e03640] flex items-center gap-2 font-bold mb-3"><i className="fab fa-patreon"></i> Login with Patreon</button>
-                      <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
+                    <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
                         <i className="fas fa-terminal text-primary"></i> Terminal CLI
+                    </button>
+                    <button onClick={() => { setMobileMenuOpen(false); onOpenSettings(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
+                        <i className="fas fa-sliders text-primary"></i> {lang === 'pt' ? 'Configurações' : 'Settings'}
                     </button>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenEasterMenu(); }} className="w-full text-left text-sm text-slate-400 hover:text-white flex items-center gap-2">
                         <i className="fas fa-ghost text-amber-400"></i> Easter Egg Vault
@@ -3542,6 +3851,17 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                             </span>
                             <i className="fas fa-play text-[10px] text-slate-400"></i>
                         </button>
+
+                        <button
+                            onClick={() => onSelectGame('music')}
+                            className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-cyan-500/50 hover:bg-cyan-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <i className="fas fa-music text-cyan-400"></i>
+                                <span>{t('easter.music')}</span>
+                            </span>
+                            <i className="fas fa-play text-[10px] text-slate-400"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3603,8 +3923,283 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
     );
 };
 
+// --- PREFERENCES & SETTINGS MODAL ---
+const SettingsModal = ({
+    isOpen,
+    onClose,
+    settings,
+    onUpdateSetting,
+    onResetDefaults,
+    lang,
+    setLang
+}) => {
+    if (!isOpen) return null;
+
+    const t = (key) => {
+        const parts = key.split('.');
+        let curr = PORTFOLIO_DATA.translations[lang];
+        for (let p of parts) {
+            if (!curr || curr[p] === undefined) return key;
+            curr = curr[p];
+        }
+        return curr;
+    };
+
+    const Toggle = ({ checked, onChange, ariaLabel }) => (
+        <button
+            type="button"
+            role="switch"
+            aria-checked={checked}
+            aria-label={ariaLabel}
+            onClick={onChange}
+            className={`w-9 h-5 flex items-center rounded-full p-0.5 transition-colors shrink-0 focus:outline-none focus:ring-1 focus:ring-primary ${
+                checked ? 'bg-primary' : 'bg-slate-700'
+            }`}
+        >
+            <span
+                className={`bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ${
+                    checked ? 'translate-x-4' : 'translate-x-0'
+                }`}
+            />
+        </button>
+    );
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div className="bg-[#0b101b] border border-slate-800 rounded-xl max-w-lg w-full shadow-2xl overflow-hidden font-sans text-slate-200 my-auto max-h-[92vh] flex flex-col">
+                
+                {/* Header */}
+                <div className="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-[#0e1424] shrink-0">
+                    <div className="flex items-center gap-2.5">
+                        <i className="fas fa-sliders text-primary text-xs"></i>
+                        <h3 className="text-sm font-semibold text-white tracking-tight">
+                            {t('settings.title')}
+                        </h3>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="w-7 h-7 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors"
+                        aria-label="Close"
+                    >
+                        <i className="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+
+                {/* Settings Body */}
+                <div className="p-5 space-y-6 overflow-y-auto flex-1 text-xs">
+                    
+                    {/* SECTION 1: INTERFACE & MASCOT */}
+                    <div className="space-y-3">
+                        <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                            {t('settings.sectionGeneral')}
+                        </div>
+
+                        {/* Language Selection */}
+                        <div className="flex items-center justify-between py-2 border-b border-slate-800/80">
+                            <div>
+                                <div className="font-medium text-slate-200">{t('settings.defaultLang')}</div>
+                                <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.defaultLangDesc')}</div>
+                            </div>
+                            <div className="flex items-center bg-slate-900 border border-slate-700/80 rounded-md p-0.5 shrink-0">
+                                <button
+                                    type="button"
+                                    onClick={() => { onUpdateSetting('defaultLang', 'pt'); setLang('pt'); }}
+                                    className={`px-3 py-1 rounded text-xs font-mono font-medium transition-colors ${
+                                        (settings.defaultLang === 'pt' || settings.defaultLanguage === 'pt')
+                                            ? 'bg-primary text-white shadow-sm'
+                                            : 'text-slate-400 hover:text-white'
+                                    }`}
+                                >
+                                    PT
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { onUpdateSetting('defaultLang', 'en'); setLang('en'); }}
+                                    className={`px-3 py-1 rounded text-xs font-mono font-medium transition-colors ${
+                                        (settings.defaultLang === 'en' || settings.defaultLanguage === 'en')
+                                            ? 'bg-primary text-white shadow-sm'
+                                            : 'text-slate-400 hover:text-white'
+                                    }`}
+                                >
+                                    EN
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Companion Bot */}
+                        <div className="py-2 border-b border-slate-800/80">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="font-medium text-slate-200">{t('settings.companionBot')}</div>
+                                    <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.companionBotDesc')}</div>
+                                </div>
+                                <Toggle
+                                    checked={settings.companionBot}
+                                    onChange={() => onUpdateSetting('companionBot', !settings.companionBot)}
+                                    ariaLabel={t('settings.companionBot')}
+                                />
+                            </div>
+
+                            {/* Subsetting on Astro: Disable Welcome Message */}
+                            {settings.companionBot && (
+                                <div className="mt-3 ml-3 pl-3 border-l-2 border-slate-800 flex items-center justify-between py-1.5 transition-all">
+                                    <div className="pr-4">
+                                        <div className="text-xs font-medium text-slate-300">
+                                            {t('settings.disableWelcome')}
+                                        </div>
+                                        <div className="text-[11px] text-slate-400 mt-0.5">
+                                            {t('settings.disableWelcomeDesc')}
+                                        </div>
+                                    </div>
+                                    <Toggle
+                                        checked={Boolean(settings.disableWelcomeMessage)}
+                                        onChange={() => onUpdateSetting('disableWelcomeMessage', !settings.disableWelcomeMessage)}
+                                        ariaLabel={t('settings.disableWelcome')}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* SECTION 2: APPEARANCE & SIMULATION */}
+                    <div className="space-y-3">
+                        <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                            {t('settings.sectionVisual')}
+                        </div>
+
+                        {/* Visual Theme */}
+                        <div className="py-2 border-b border-slate-800/80 space-y-2">
+                            <div>
+                                <div className="font-medium text-slate-200">{t('settings.theme')}</div>
+                                <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.themeDesc')}</div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 pt-1">
+                                <button
+                                    type="button"
+                                    onClick={() => onUpdateSetting('theme', 'space')}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        settings.theme === 'space'
+                                            ? 'bg-slate-900 border-primary text-white shadow-sm'
+                                            : 'bg-slate-900/40 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span>{t('settings.themeSpace')}</span>
+                                        {settings.theme === 'space' && <i className="fas fa-check text-[10px] text-primary"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {t('settings.themeSpaceSub')}
+                                    </div>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => onUpdateSetting('theme', 'sky')}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        settings.theme === 'sky'
+                                            ? 'bg-slate-900 border-sky-400 text-white shadow-sm'
+                                            : 'bg-slate-900/40 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span>{t('settings.themeSky')}</span>
+                                        {settings.theme === 'sky' && <i className="fas fa-check text-[10px] text-sky-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {t('settings.themeSkySub')}
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECTION 3: AUDIO & EASTER EGGS */}
+                    <div className="space-y-3">
+                        <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                            {t('settings.sectionAudio')}
+                        </div>
+
+                        {/* Music Player */}
+                        <div className="py-2 border-b border-slate-800/80">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="font-medium text-slate-200">{t('settings.musicPlayer')}</div>
+                                    <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.musicPlayerDesc')}</div>
+                                </div>
+                                <Toggle
+                                    checked={settings.musicPlayer}
+                                    onChange={() => onUpdateSetting('musicPlayer', !settings.musicPlayer)}
+                                    ariaLabel={t('settings.musicPlayer')}
+                                />
+                            </div>
+
+                            {/* Subsetting on Music Player: Toggle Auto-Play */}
+                            {settings.musicPlayer && (
+                                <div className="mt-3 ml-3 pl-3 border-l-2 border-slate-800 flex items-center justify-between py-1.5 transition-all">
+                                    <div className="pr-4">
+                                        <div className="text-xs font-medium text-slate-300">
+                                            {t('settings.musicAutoPlay')}
+                                        </div>
+                                        <div className="text-[11px] text-slate-400 mt-0.5">
+                                            {t('settings.musicAutoPlayDesc')}
+                                        </div>
+                                    </div>
+                                    <Toggle
+                                        checked={Boolean(settings.musicAutoPlay)}
+                                        onChange={() => onUpdateSetting('musicAutoPlay', !settings.musicAutoPlay)}
+                                        ariaLabel={t('settings.musicAutoPlay')}
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Easter Egg Sign */}
+                        <div className="flex items-center justify-between py-2 border-b border-slate-800/80">
+                            <div>
+                                <div className="font-medium text-slate-200">{t('settings.easterSign')}</div>
+                                <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.easterSignDesc')}</div>
+                            </div>
+                            <Toggle
+                                checked={settings.easterEggSign}
+                                onChange={() => onUpdateSetting('easterEggSign', !settings.easterEggSign)}
+                                ariaLabel={t('settings.easterSign')}
+                            />
+                        </div>
+                    </div>
+
+                </div>
+
+                {/* Footer */}
+                <div className="px-5 py-3 bg-[#0e1424] border-t border-slate-800 flex items-center justify-between shrink-0">
+                    <button
+                        type="button"
+                        onClick={onResetDefaults}
+                        className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors p-1"
+                    >
+                        <i className="fas fa-rotate-left text-[10px]"></i>
+                        <span>{t('settings.reset')}</span>
+                    </button>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span>{t('settings.savedLocally')}</span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-3.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium transition-colors"
+                        >
+                            {t('settings.close')}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
 // --- INTERACTIVE TERMINAL CLI (SpetTerm) ---
-const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster }) => {
+const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings }) => {
     const [history, setHistory] = useState([
         { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
         { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
@@ -3620,12 +4215,79 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster }) => {
 
     const handleCommand = (e) => {
         if (e.key !== 'Enter') return;
-        const cmd = inputVal.trim().toLowerCase();
-        if (!cmd) return;
+        const rawCmd = inputVal.trim();
+        if (!rawCmd) return;
+        const cmd = rawCmd.toLowerCase();
+        const cleanCmd = cmd.replace(/['"]/g, '').trim();
 
         const newHistory = [...history, { type: 'user', text: `> ${inputVal}` }];
 
-        switch (cmd) {
+        // Check for music easter egg command
+        if (cleanCmd === 'music' || cleanCmd.startsWith('music ') || cleanCmd === 'ost' || cleanCmd === 'ff') {
+            const parts = cleanCmd.split(' ');
+            const sub = parts[1] || 'play';
+
+            if (sub === 'list') {
+                newHistory.push({
+                    type: 'output',
+                    text: `♫ Classic Final Fantasy OST Tracklist (Nobuo Uematsu & Junya Nakano) ♫
+[1] Those Who Fight Further (Fight On!) - Final Fantasy VII (1997)
+    Nobuo Uematsu · https://youtu.be/ZwcvoY4ehOI
+[2] The Decisive Battle (決戦) - Final Fantasy VI (1994)
+    Nobuo Uematsu · https://youtu.be/WmBPTpvYyIY
+[3] Boss Battle Theme - Final Fantasy IV DS (2007)
+    Nobuo Uematsu · https://youtu.be/GEYCGJYwvhM
+[4] Mysterious Girl Battle Theme - Final Fantasy IV: The After Years (2008)
+    Junya Nakano · https://youtu.be/f3ZRtaQzc04
+[5] Worlds Collide (衝突する世界) - Final Fantasy XIII-2 (2011)
+    Naoshi Mizuta · https://youtu.be/FfFM03rYghU
+[6] Battle Theme B - Final Fantasy II Pixel Remaster (2021)
+    Nobuo Uematsu · https://youtu.be/3AwwPKrSlfU
+
+Commands: 'music', 'music next', 'music prev', 'music stop'`
+                });
+            } else if (sub === 'stop' || sub === 'pause') {
+                if (onMusicCommand) onMusicCommand('stop');
+                newHistory.push({
+                    type: 'output',
+                    text: `[♫] Final Fantasy OST playback stopped.`
+                });
+            } else if (sub === 'next') {
+                const nextTrack = onMusicCommand ? onMusicCommand('next') : null;
+                newHistory.push({
+                    type: 'output',
+                    text: nextTrack
+                        ? `[♫] Next Track [${nextTrack.index + 1}/6]: "${nextTrack.title}" (${nextTrack.game} - ${nextTrack.composer})`
+                        : `[♫] Switched to next track.`
+                });
+            } else if (sub === 'prev') {
+                const prevTrack = onMusicCommand ? onMusicCommand('prev') : null;
+                newHistory.push({
+                    type: 'output',
+                    text: prevTrack
+                        ? `[♫] Previous Track [${prevTrack.index + 1}/6]: "${prevTrack.title}" (${prevTrack.game} - ${prevTrack.composer})`
+                        : `[♫] Switched to previous track.`
+                });
+            } else {
+                // start playing music immediately in minimized dock state
+                const track = onMusicCommand ? onMusicCommand('playMinimized', 0) : null;
+                newHistory.push({
+                    type: 'output',
+                    text: `[⚔ FINAL FANTASY OST JUKEBOX ACTIVATED ⚔]
+▶ Playing: "${track ? track.title : 'Those Who Fight Further (Fight On!)'}"
+Game: ${track ? track.game : 'Final Fantasy VII'}
+Composer: ${track ? track.composer : 'Nobuo Uematsu'}
+YouTube Jukebox initiated (dock player active in background).
+CLI Controls: 'music next', 'music prev', 'music stop', 'music list'`
+                });
+            }
+
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
+        switch (cleanCmd) {
             case 'help':
                 newHistory.push({
                     type: 'output',
@@ -3634,6 +4296,8 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster }) => {
   about      - Display brief engineer profile
   projects   - Output featured engineering repositories
   skills     - List low-level tech stack
+  music      - Play Classic Final Fantasy OSTs (YouTube)
+  settings   - Open preferences & configuration panel
   quake      - Launch Quake 1 in browser
   cv         - Open curriculum vitae (resume)
   clear      - Clear terminal screen
@@ -3668,6 +4332,12 @@ Engines: Unity (C#), Unreal Engine 5 (C++)
 Scripting: Python, PowerShell, Electron, Git`
                 });
                 break;
+            case 'settings':
+            case 'config':
+            case 'preferences':
+                if (onOpenSettings) onOpenSettings();
+                onClose();
+                return;
             case 'quake':
                 onOpenEaster('quake');
                 onClose();
@@ -3708,9 +4378,17 @@ Scripting: Python, PowerShell, Electron, Git`
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
                         <span className="ml-2 text-[11px] text-slate-300">spet_console.exe</span>
                     </div>
-                    <button onClick={onClose} className="hover:text-white">
-                        <i className="fas fa-times text-xs"></i>
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {activeMusicTrack && (
+                            <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-[10px]">
+                                <i className="fas fa-music text-[9px] animate-pulse"></i>
+                                <span className="truncate max-w-[150px]">{activeMusicTrack.title}</span>
+                            </div>
+                        )}
+                        <button onClick={onClose} className="hover:text-white">
+                            <i className="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
                 </div>
 
                 {/* History */}
@@ -3743,9 +4421,10 @@ Scripting: Python, PowerShell, Electron, Git`
 };
 
 // --- COMPANION MASCOT CHATBOT (ASTRO) ---
-const MascotCompanion = ({ isOpen, setIsOpen, lang }) => {
+const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onToggleWelcome }) => {
     // Welcome message toggle setting persisted in localStorage
     const [welcomeEnabled, setWelcomeEnabled] = useState(() => {
+        if (disableWelcome) return false;
         try {
             const saved = localStorage.getItem('astro_welcome_enabled');
             return saved !== null ? saved === 'true' : true;
@@ -3754,6 +4433,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang }) => {
         }
     });
     const [showTeaser, setShowTeaser] = useState(() => {
+        if (disableWelcome) return false;
         try {
             const saved = localStorage.getItem('astro_welcome_enabled');
             return saved !== null ? saved === 'true' : true;
@@ -3768,6 +4448,14 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang }) => {
     const [loading, setLoading] = useState(false);
     const [hasUnread, setHasUnread] = useState(false);
     const chatEndRef = useRef(null);
+
+    useEffect(() => {
+        const isEnabled = !disableWelcome;
+        setWelcomeEnabled(isEnabled);
+        if (!isEnabled) {
+            setShowTeaser(false);
+        }
+    }, [disableWelcome]);
 
     const getInitialGreeting = (l, isEnabled = true) => {
         if (!isEnabled) {
@@ -3826,6 +4514,10 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang }) => {
         try {
             localStorage.setItem('astro_welcome_enabled', newVal ? 'true' : 'false');
         } catch (e) {}
+
+        if (onToggleWelcome) {
+            onToggleWelcome(!newVal);
+        }
 
         if (!newVal) {
             setShowTeaser(false);
@@ -4405,6 +5097,295 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang }) => {
 };
 
 
+// --- EASTER EGG: FINAL FANTASY CLASSIC OST JUKEBOX (CLI "music" COMMAND) ---
+const FF_CLASSIC_TRACKS = [
+    {
+        id: "ZwcvoY4ehOI",
+        title: "Those Who Fight Further (Fight On!)",
+        originalTitle: "更に闘う者達",
+        game: "Final Fantasy VII",
+        composer: "Nobuo Uematsu",
+        year: "1997",
+        duration: "3:33",
+        youtubeUrl: "https://youtu.be/ZwcvoY4ehOI?si=UWCRY-K--zG1uvLD"
+    },
+    {
+        id: "WmBPTpvYyIY",
+        title: "The Decisive Battle",
+        originalTitle: "決戦",
+        game: "Final Fantasy VI",
+        composer: "Nobuo Uematsu",
+        year: "1994",
+        duration: "2:44",
+        youtubeUrl: "https://youtu.be/WmBPTpvYyIY?si=Q4gM9gw1r-hOpse1"
+    },
+    {
+        id: "GEYCGJYwvhM",
+        title: "Boss Battle Theme",
+        originalTitle: "バトル2",
+        game: "Final Fantasy IV (DS)",
+        composer: "Nobuo Uematsu",
+        year: "2007",
+        duration: "3:12",
+        youtubeUrl: "https://youtu.be/GEYCGJYwvhM?si=Qr4GUPK0MuAUZ49P"
+    },
+    {
+        id: "f3ZRtaQzc04",
+        title: "Mysterious Girl Battle Theme",
+        originalTitle: "謎の少女戦",
+        game: "Final Fantasy IV: The After Years",
+        composer: "Junya Nakano",
+        year: "2008",
+        duration: "2:50",
+        youtubeUrl: "https://youtu.be/f3ZRtaQzc04?si=VBvVvNmRLm4EBwFs"
+    },
+    {
+        id: "FfFM03rYghU",
+        title: "Worlds Collide",
+        originalTitle: "衝突する世界 (Worlds Collide)",
+        game: "Final Fantasy XIII-2",
+        composer: "Naoshi Mizuta",
+        year: "2011",
+        duration: "2:55",
+        youtubeUrl: "https://youtu.be/FfFM03rYghU?si=m3jE4MSnrTHMLaB1"
+    },
+    {
+        id: "3AwwPKrSlfU",
+        title: "Battle Theme B",
+        originalTitle: "戦闘シーンB",
+        game: "Final Fantasy II (Pixel Remaster)",
+        composer: "Nobuo Uematsu",
+        year: "2021",
+        duration: "3:05",
+        youtubeUrl: "https://youtu.be/3AwwPKrSlfU?si=mSh6GHkNO1TL_Ys-"
+    }
+];
+
+const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onPrev, onSelectTrack }) => {
+    if (!state.isActive) return null;
+
+    const currentTrack = FF_CLASSIC_TRACKS[state.trackIndex] || FF_CLASSIC_TRACKS[0];
+    const playlistParam = FF_CLASSIC_TRACKS.map(t => t.id).join(',');
+
+    // Minimized floating dock player
+    if (state.isMinimized) {
+        return (
+            <div className="fixed bottom-6 left-6 z-50 bg-[#060a14]/95 border border-cyan-500/40 rounded-xl p-3 shadow-2xl backdrop-blur-md flex items-center gap-3 text-xs max-w-sm border-l-4 border-l-cyan-400">
+                <div className="w-10 h-10 rounded-lg bg-cyan-950/70 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
+                    <i className="fas fa-compact-disc fa-spin text-base" style={{ animationDuration: '4s' }}></i>
+                </div>
+                <div className="overflow-hidden min-w-0 flex-1">
+                    <div className="font-bold text-white truncate flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span className="truncate">{currentTrack.title}</span>
+                    </div>
+                    <div className="text-[11px] text-cyan-300 truncate">
+                        {currentTrack.game} · {currentTrack.composer}
+                    </div>
+                </div>
+                <div className="flex items-center gap-1 text-slate-300">
+                    <button onClick={onPrev} title="Previous track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors">
+                        <i className="fas fa-backward-step text-xs"></i>
+                    </button>
+                    <button onClick={onNext} title="Next track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors">
+                        <i className="fas fa-forward-step text-xs"></i>
+                    </button>
+                    <button onClick={onExpand} title="Expand player" className="p-1.5 hover:text-cyan-400 hover:bg-white/10 rounded transition-colors">
+                        <i className="fas fa-up-right-and-down-left-from-center text-xs"></i>
+                    </button>
+                    <button onClick={onClose} title="Stop music" className="p-1.5 hover:text-rose-400 hover:bg-white/10 rounded transition-colors">
+                        <i className="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+                {/* Embedded YouTube player kept active in background */}
+                <div className="hidden">
+                    <iframe
+                        key={currentTrack.id}
+                        src={`https://www.youtube.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0&playlist=${playlistParam}`}
+                        title={currentTrack.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // Full modal Jukebox
+    if (!state.isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div className="bg-[#070b16] border border-cyan-500/30 rounded-2xl max-w-2xl w-full shadow-[0_0_50px_rgba(0,170,255,0.25)] overflow-hidden flex flex-col my-auto max-h-[92vh]">
+                
+                {/* Header */}
+                <div className="bg-[#0b1224] border-b border-cyan-500/20 px-4 py-3 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-sm">
+                            <i className="fas fa-gem text-sm"></i>
+                        </div>
+                        <div>
+                            <div className="text-sm font-bold text-white flex items-center gap-2 font-mono">
+                                <span>Final Fantasy Classic OST Jukebox</span>
+                                <div className="flex items-end gap-0.5 h-3">
+                                    <span className="w-0.5 bg-cyan-400 animate-pulse h-2"></span>
+                                    <span className="w-0.5 bg-sky-300 animate-pulse h-3"></span>
+                                    <span className="w-0.5 bg-blue-400 animate-pulse h-1.5"></span>
+                                </div>
+                            </div>
+                            <div className="text-[11px] text-cyan-300/80 font-mono">
+                                Square Enix / Nobuo Uematsu & Junya Nakano · YouTube Audio Stream
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={onMinimize}
+                            title="Minimize to background player"
+                            className="p-1.5 text-slate-400 hover:text-cyan-400 hover:bg-white/[0.05] rounded transition-colors"
+                        >
+                            <i className="fas fa-window-minimize text-xs"></i>
+                        </button>
+                        <button
+                            onClick={onClose}
+                            title="Close jukebox"
+                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/[0.05] rounded transition-colors"
+                        >
+                            <i className="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Main Content Area */}
+                <div className="overflow-y-auto flex-1 p-4 space-y-4">
+                    {/* YouTube Video Player */}
+                    <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+                        <iframe
+                            key={currentTrack.id}
+                            src={`https://www.youtube.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0&playlist=${playlistParam}`}
+                            title={currentTrack.title}
+                            className="w-full h-full border-none"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        />
+                    </div>
+
+                    {/* Active Track Banner & Controls */}
+                    <div className="bg-[#0b1224]/80 border border-white/[0.08] rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                                    TRACK {state.trackIndex + 1}/{FF_CLASSIC_TRACKS.length}
+                                </span>
+                                <span className="text-xs font-semibold text-slate-400">
+                                    {currentTrack.game} ({currentTrack.year})
+                                </span>
+                            </div>
+                            <h4 className="text-sm sm:text-base font-bold text-white truncate">
+                                {currentTrack.title}
+                            </h4>
+                            <p className="text-xs text-slate-400 truncate">
+                                {currentTrack.originalTitle} · Composed by {currentTrack.composer}
+                            </p>
+                        </div>
+
+                        {/* Control buttons */}
+                        <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                            <button
+                                onClick={onPrev}
+                                className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-white/[0.1] text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                                title="Previous track"
+                            >
+                                <i className="fas fa-backward-step"></i>
+                                <span className="hidden sm:inline">Prev</span>
+                            </button>
+                            <button
+                                onClick={onNext}
+                                className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-cyan-900/50"
+                                title="Next track"
+                            >
+                                <span className="hidden sm:inline">Next</span>
+                                <i className="fas fa-forward-step"></i>
+                            </button>
+                            <a
+                                href={currentTrack.youtubeUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="p-2 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 text-xs transition-colors"
+                                title="Open video on YouTube"
+                            >
+                                <i className="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Tracklist selection */}
+                    <div>
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between font-mono">
+                            <span>Playlist Selection ({FF_CLASSIC_TRACKS.length} Tracks)</span>
+                            <span className="text-cyan-400 text-[11px] lowercase">click to play</span>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {FF_CLASSIC_TRACKS.map((track, idx) => {
+                                const isCurrent = idx === state.trackIndex;
+                                return (
+                                    <button
+                                        key={track.id}
+                                        onClick={() => onSelectTrack(idx)}
+                                        className={`p-2.5 rounded-lg text-left transition-all border flex items-center justify-between gap-2.5 ${
+                                            isCurrent
+                                                ? 'bg-cyan-950/40 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40'
+                                                : 'bg-white/[0.03] border-white/[0.08] hover:border-white/[0.2] hover:bg-white/[0.06]'
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-2.5 min-w-0">
+                                            <div className={`w-7 h-7 rounded-md flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                                                isCurrent ? 'bg-cyan-500 text-black' : 'bg-white/[0.08] text-slate-400'
+                                            }`}>
+                                                {isCurrent ? <i className="fas fa-volume-high text-[10px]"></i> : idx + 1}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className={`text-xs font-semibold truncate ${isCurrent ? 'text-cyan-300 font-bold' : 'text-slate-200'}`}>
+                                                    {track.title}
+                                                </div>
+                                                <div className="text-[10px] text-slate-400 truncate">
+                                                    {track.game} · {track.duration}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="text-slate-400 shrink-0">
+                                            {isCurrent ? (
+                                                <span className="text-[10px] font-mono text-cyan-400 uppercase font-bold tracking-wider">Playing</span>
+                                            ) : (
+                                                <i className="fas fa-play text-[10px] opacity-60"></i>
+                                            )}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Footer Tip */}
+                    <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[11px] text-slate-400 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                            <i className="fas fa-terminal text-cyan-400 text-xs"></i>
+                            <span>CLI Commands: <code className="text-cyan-300">music next</code>, <code className="text-cyan-300">music prev</code>, <code className="text-cyan-300">music stop</code>, <code className="text-cyan-300">music list</code></span>
+                        </div>
+                        <button
+                            onClick={onMinimize}
+                            className="text-cyan-400 hover:underline text-[11px] flex items-center gap-1 ml-2 shrink-0 font-medium"
+                        >
+                            <span>Listen in background</span>
+                            <i className="fas fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- EASTER EGG: ALSO SPRACH ZARATHUSTRA (KONAMI CODE FANFARE) ---
 const ZarathustraEasterEgg = ({ isOpen, onClose, isMinimized, setIsMinimized }) => {
     const audioRef = useRef(null);
@@ -4774,16 +5755,199 @@ const ZarathustraEasterEgg = ({ isOpen, onClose, isMinimized, setIsMinimized }) 
 
 // --- ROOT APPLICATION COMPONENT ---
 const App = () => {
-    const [lang, setLang] = useState('pt');
+    const STORAGE_KEY = 'spet_portfolio_settings';
+    const DEFAULT_SETTINGS = {
+        companionBot: true,
+        disableWelcomeMessage: false,
+        musicPlayer: false,
+        musicAutoPlay: false,
+        defaultLang: 'pt',
+        theme: 'space',
+        easterEggSign: false
+    };
+
+    const [settings, setSettings] = useState(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            const astroWelcomeSaved = localStorage.getItem('astro_welcome_enabled');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                const disableWelcome = parsed.disableWelcomeMessage !== undefined 
+                    ? parsed.disableWelcomeMessage 
+                    : (astroWelcomeSaved !== null ? astroWelcomeSaved === 'false' : false);
+                return {
+                    companionBot: parsed.companionBot !== undefined ? parsed.companionBot : DEFAULT_SETTINGS.companionBot,
+                    disableWelcomeMessage: disableWelcome,
+                    musicPlayer: parsed.musicPlayer !== undefined ? parsed.musicPlayer : DEFAULT_SETTINGS.musicPlayer,
+                    musicAutoPlay: parsed.musicAutoPlay !== undefined ? parsed.musicAutoPlay : DEFAULT_SETTINGS.musicAutoPlay,
+                    defaultLang: parsed.defaultLang || parsed.defaultLanguage || DEFAULT_SETTINGS.defaultLang,
+                    theme: parsed.theme || DEFAULT_SETTINGS.theme,
+                    easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign
+                };
+            } else if (astroWelcomeSaved !== null) {
+                return {
+                    ...DEFAULT_SETTINGS,
+                    disableWelcomeMessage: astroWelcomeSaved === 'false'
+                };
+            }
+        } catch (e) {}
+        return DEFAULT_SETTINGS;
+    });
+
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [lang, setLang] = useState(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.defaultLang || parsed.defaultLanguage) return parsed.defaultLang || parsed.defaultLanguage;
+            }
+        } catch (e) {}
+        return 'pt';
+    });
     const [isCVOpen, setIsCVOpen] = useState(false);
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-      const [showPatreonModal, setShowPatreonModal] = useState(false);
+    const [showPatreonModal, setShowPatreonModal] = useState(false);
     const [easterGame, setEasterGame] = useState(null); // 'menu' | 'quake' | 'gta' | 'zombies' | null
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [isMascotOpen, setIsMascotOpen] = useState(false);
     const [isZarathustraOpen, setIsZarathustraOpen] = useState(false);
     const [isZarathustraMinimized, setIsZarathustraMinimized] = useState(false);
+    const [ffMusicState, setFfMusicState] = useState(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.musicPlayer && parsed.musicAutoPlay) {
+                    return {
+                        isActive: true,
+                        isOpen: false,
+                        isMinimized: true,
+                        trackIndex: 0
+                    };
+                }
+            }
+        } catch (e) {}
+        return {
+            isActive: false,
+            isOpen: false,
+            isMinimized: false,
+            trackIndex: 0
+        };
+    });
     const konamiIndexRef = useRef(0);
+
+    useEffect(() => {
+        if (settings.musicPlayer && settings.musicAutoPlay && !ffMusicState.isActive) {
+            setFfMusicState({
+                isActive: true,
+                isOpen: false,
+                isMinimized: true,
+                trackIndex: 0
+            });
+        }
+    }, [settings.musicPlayer, settings.musicAutoPlay]);
+
+    const handleMusicCommand = (action, payload) => {
+        if (action === 'play' || action === 'playMinimized') {
+            const isMin = action === 'playMinimized' || (typeof payload === 'object' && payload?.minimized);
+            const targetIdx = typeof payload === 'number' 
+                ? payload 
+                : (typeof payload === 'object' && typeof payload?.index === 'number' ? payload.index : ffMusicState.trackIndex);
+            const nextIdx = targetIdx >= 0 && targetIdx < FF_CLASSIC_TRACKS.length ? targetIdx : 0;
+            setFfMusicState({
+                isActive: true,
+                isOpen: !isMin,
+                isMinimized: isMin,
+                trackIndex: nextIdx
+            });
+            setSettings(prev => {
+                if (!prev.musicPlayer) {
+                    const next = { ...prev, musicPlayer: true };
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch (e) {}
+                    return next;
+                }
+                return prev;
+            });
+            return { ...FF_CLASSIC_TRACKS[nextIdx], index: nextIdx };
+        } else if (action === 'next') {
+            const nextIdx = (ffMusicState.trackIndex + 1) % FF_CLASSIC_TRACKS.length;
+            setFfMusicState(prev => ({
+                ...prev,
+                isActive: true,
+                trackIndex: nextIdx
+            }));
+            return { ...FF_CLASSIC_TRACKS[nextIdx], index: nextIdx };
+        } else if (action === 'prev') {
+            const prevIdx = (ffMusicState.trackIndex - 1 + FF_CLASSIC_TRACKS.length) % FF_CLASSIC_TRACKS.length;
+            setFfMusicState(prev => ({
+                ...prev,
+                isActive: true,
+                trackIndex: prevIdx
+            }));
+            return { ...FF_CLASSIC_TRACKS[prevIdx], index: prevIdx };
+        } else if (action === 'stop' || action === 'pause') {
+            setFfMusicState(prev => ({
+                ...prev,
+                isActive: false,
+                isOpen: false,
+                isMinimized: false
+            }));
+            setSettings(prev => {
+                if (prev.musicPlayer) {
+                    const next = { ...prev, musicPlayer: false };
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch (e) {}
+                    return next;
+                }
+                return prev;
+            });
+            return null;
+        } else if (action === 'open') {
+            setFfMusicState(prev => ({
+                ...prev,
+                isActive: true,
+                isOpen: true,
+                isMinimized: false
+            }));
+            return { ...FF_CLASSIC_TRACKS[ffMusicState.trackIndex], index: ffMusicState.trackIndex };
+        }
+        return null;
+    };
+
+    const handleUpdateSetting = (key, value) => {
+        const normalizedKey = key === 'defaultLanguage' ? 'defaultLang' : key;
+        setSettings(prev => {
+            const next = { ...prev, [normalizedKey]: value };
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+                if (normalizedKey === 'disableWelcomeMessage') {
+                    localStorage.setItem('astro_welcome_enabled', value ? 'false' : 'true');
+                }
+            } catch (e) {}
+            return next;
+        });
+
+        if (normalizedKey === 'defaultLang') {
+            setLang(value);
+        }
+        if (normalizedKey === 'musicPlayer') {
+            if (value) {
+                handleMusicCommand('playMinimized', 0);
+            } else {
+                handleMusicCommand('stop');
+            }
+        }
+    };
+
+    const handleResetDefaults = () => {
+        setSettings(DEFAULT_SETTINGS);
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SETTINGS));
+            localStorage.setItem('astro_welcome_enabled', 'true');
+        } catch (e) {}
+        setLang(DEFAULT_SETTINGS.defaultLang);
+        handleMusicCommand('stop');
+    };
 
 
     const t = (path) => {
@@ -4844,13 +6008,15 @@ const App = () => {
 
     return (
         <LanguageContext.Provider value={{ lang, setLang, t }}>
-            <SpaceCanvas />
+            <SpaceCanvas theme={settings.theme} />
 
             <TopBar
                 onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
                 onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(prev => !prev); }}
                 onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
                 onOpenPatreon={() => { playSoftClick(); setShowPatreonModal(true); }}
+                onOpenSettings={() => { playSoftClick(); setIsSettingsOpen(true); }}
+                settings={settings}
             />
 
             <main>
@@ -4898,19 +6064,56 @@ const App = () => {
                     onClose={() => setIsTerminalOpen(false)}
                     onOpenCV={() => setIsCVOpen(true)}
                     onOpenEaster={(game) => setEasterGame(game)}
+                    onMusicCommand={handleMusicCommand}
+                    activeMusicTrack={ffMusicState.isActive ? FF_CLASSIC_TRACKS[ffMusicState.trackIndex] : null}
+                    onOpenSettings={() => setIsSettingsOpen(true)}
                 />
             )}
+
+            <SettingsModal
+                isOpen={isSettingsOpen}
+                onClose={() => setIsSettingsOpen(false)}
+                settings={settings}
+                onUpdateSetting={handleUpdateSetting}
+                onResetDefaults={handleResetDefaults}
+                lang={lang}
+                setLang={(l) => { setLang(l); handleUpdateSetting('defaultLang', l); }}
+            />
 
             {easterGame && (
                 <EasterEggModal
                     activeGame={easterGame}
                     onClose={() => setEasterGame(null)}
-                    onSelectGame={(game) => setEasterGame(game)}
+                    onSelectGame={(game) => {
+                        if (game === 'music') {
+                            setEasterGame(null);
+                            handleMusicCommand('play', 0);
+                        } else {
+                            setEasterGame(game);
+                        }
+                    }}
                 />
             )}
+
+            <FinalFantasyJukebox
+                state={ffMusicState}
+                onClose={() => setFfMusicState(prev => ({ ...prev, isActive: false, isOpen: false, isMinimized: false }))}
+                onMinimize={() => setFfMusicState(prev => ({ ...prev, isMinimized: true, isOpen: false }))}
+                onExpand={() => setFfMusicState(prev => ({ ...prev, isMinimized: false, isOpen: true }))}
+                onNext={() => handleMusicCommand('next')}
+                onPrev={() => handleMusicCommand('prev')}
+                onSelectTrack={(idx) => handleMusicCommand('play', idx)}
+            />
         
-            
-            <MascotCompanion isOpen={isMascotOpen} setIsOpen={setIsMascotOpen} lang={lang} />
+            {settings.companionBot && (
+                <MascotCompanion
+                    isOpen={isMascotOpen}
+                    setIsOpen={setIsMascotOpen}
+                    lang={lang}
+                    disableWelcome={Boolean(settings.disableWelcomeMessage)}
+                    onToggleWelcome={(disabled) => handleUpdateSetting('disableWelcomeMessage', disabled)}
+                />
+            )}
             <ZarathustraEasterEgg isOpen={isZarathustraOpen} onClose={() => setIsZarathustraOpen(false)} isMinimized={isZarathustraMinimized} setIsMinimized={setIsZarathustraMinimized} />
 
             {showPatreonModal && (
