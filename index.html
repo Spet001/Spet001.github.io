@@ -299,6 +299,7 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white">
@@ -2189,7 +2190,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
 
     return (
         <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08] py-3' : 'bg-transparent py-5'}`}>
-            <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+            <div className="max-w-6xl mx-auto px-6 flex items-center justify-between gap-4 lg:gap-8">
                 
                 {/* Brand: SpetDev with Terminal Icon */}
                 <div className="flex items-center gap-3">
@@ -2233,7 +2234,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                 </div>
 
                 {/* Nav Links */}
-                <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-sm font-medium text-slate-300">
                     <a href="#about" className="hover:text-white transition-colors">{t('nav.about')}</a>
                     <a href="#experience" className="hover:text-white transition-colors">{t('nav.experience')}</a>
                     <a href="#projects" className="hover:text-white transition-colors">{t('nav.projects')}</a>
@@ -5200,7 +5201,7 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                 {/* Embedded YouTube player kept active in background */}
                 <div className="hidden">
                     <iframe
-                        key={currentTrack.id}
+                        
                         src={`https://www.youtube.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0&playlist=${playlistParam}`}
                         title={currentTrack.title}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -5260,7 +5261,7 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                     {/* YouTube Video Player */}
                     <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10 shadow-2xl">
                         <iframe
-                            key={currentTrack.id}
+                            
                             src={`https://www.youtube.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0&playlist=${playlistParam}`}
                             title={currentTrack.title}
                             className="w-full h-full border-none"
