@@ -8,9 +8,14 @@
     <title>Eduardo Gelain | Software & Game Developer</title>
     <meta name="description"
         content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Quake WebAssembly, Outcaster, Sparky Rush, Brazil, Remote Developer">
+    <meta name="author" content="Eduardo Gelain">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
-    <!-- Canonical URL -->
+    <!-- Canonical URL & Alternate Discovery -->
     <link rel="canonical" href="https://spet01.dev/">
+    <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -41,23 +46,95 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfilePage",
-      "mainEntity": {
-        "@type": "Person",
-        "name": "Eduardo Gelain",
-        "alternateName": "SpetDev",
-        "url": "https://spet01.dev",
-        "jobTitle": "Software & Game Developer",
-        "image": "https://spet01.dev/assets/portweb.png",
-        "description": "Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.",
-        "sameAs": [
-          "https://github.com/Spet001",
-          "https://gitlab.com/Spet001",
-          "https://spet01.itch.io",
-          "https://www.nexusmods.com/profile/Spet001/mods",
-          "https://www.linkedin.com/in/eduardo-gelain/"
-        ]
-      }
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://spet01.dev/#website",
+          "url": "https://spet01.dev/",
+          "name": "Eduardo Gelain | Software & Game Developer",
+          "description": "Portfólio e Journal Técnico de Eduardo Gelain (SpetDev) - Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa.",
+          "inLanguage": ["pt-BR", "en-US"],
+          "publisher": { "@id": "https://spet01.dev/#person" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://spet01.dev/#person",
+          "name": "Eduardo Gelain",
+          "alternateName": "SpetDev",
+          "url": "https://spet01.dev",
+          "jobTitle": "Software & Game Developer",
+          "email": "mailto:gelain15mj@gmail.com",
+          "image": "https://spet01.dev/assets/portweb.png",
+          "description": "Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa de engines e sandboxes.",
+          "knowsAbout": [
+            "C++",
+            "C#",
+            "Unity",
+            "Unreal Engine 5",
+            "Reverse Engineering",
+            "Game Scripting C (GSC)",
+            "Memory Pattern Scanning",
+            "WebAssembly",
+            "Cloudflare Workers",
+            "x86/x64 Assembly",
+            "Game Development"
+          ],
+          "sameAs": [
+            "https://github.com/Spet001",
+            "https://gitlab.com/Spet001",
+            "https://spet01.itch.io",
+            "https://www.nexusmods.com/profile/Spet001/mods",
+            "https://www.linkedin.com/in/eduardo-gelain/"
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://spet01.dev/#projects",
+          "name": "Featured Software & Game Projects",
+          "itemListElement": [
+            {
+              "@type": "SoftwareApplication",
+              "position": 1,
+              "name": "Outcaster",
+              "applicationCategory": "GameApplication",
+              "operatingSystem": "Windows",
+              "description": "Doom-like Unity FPS Template."
+            },
+            {
+              "@type": "SoftwareApplication",
+              "position": 2,
+              "name": "Sparky Rush",
+              "applicationCategory": "GameApplication",
+              "operatingSystem": "Windows",
+              "description": "2D physics puzzle platformer and horror game available on Steam."
+            },
+            {
+              "@type": "SoftwareApplication",
+              "position": 3,
+              "name": "Call of Duty Zombies GSC VM in HTML5",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "Web",
+              "description": "Web-based bytecode virtual machine emulating the Treyarch Call of Duty GSC scripting engine inside the browser - avaible as a easter egg on spet01.dev."
+            },
+            {
+              "@type": "SoftwareApplication",
+              "position": 4,
+              "name": "Resurge Client",
+              "applicationCategory": "GameApplication",
+              "operatingSystem": "Windows",
+              "description": "Client for Black Ops 3 on MS Store."
+            }
+          ]
+        },
+        {
+          "@type": "Blog",
+          "@id": "https://spet01.dev/journal/#blog",
+          "name": "Eduardo Gelain Technical Journal",
+          "url": "https://spet01.dev/journal/",
+          "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
+          "author": { "@id": "https://spet01.dev/#person" }
+        }
+      ]
     }
     </script>
 
@@ -83,7 +160,7 @@
                         primary: '#00aaff',
                         primaryHover: '#0077b6',
                         dark: '#050505',
-                        darkPanel: 'rgba(15, 23, 42, 0.7)',
+                        darkPanel: 'rgba(5, 5, 5, 0.85)',
                     },
                     animation: {
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -107,15 +184,16 @@
         .clickable { cursor: none !important; }
 
         .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(5, 5, 5, 0.70);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
         }
 
         .glass-panel:hover {
-            border-color: rgba(0, 170, 255, 0.3);
-            box-shadow: 0 10px 30px -10px rgba(0, 170, 255, 0.15);
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
         }
 
         /* Custom Scrollbar */
@@ -134,6 +212,32 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: #334155;
+        }
+
+        /* Custom Scrollbar for Journal Entries */
+        .journal-entries-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.7);
+        }
+        .journal-entries-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+            margin: 4px 0;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
         }
 
         .fade-in-section {
@@ -297,6 +401,8 @@
 </style>
 
     <!-- React & Babel -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -305,7 +411,355 @@
 
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="custom-cursor"></div>
-    <div id="root"></div>
+    <div id="root">
+        <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
+        <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
+        <header class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
+                    <i class="fas fa-terminal text-primary"></i>
+                    <span>Spet<span class="text-primary">Dev</span></span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-book-open"></i> Technical Journal
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto">
+            <!-- Hero Section -->
+            <section id="hero" class="py-16 md:py-24 border-b border-white/[0.08]">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-primary/10 text-primary border border-primary/30 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        Available for Remote Software & Game Development Worldwide
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight mb-6">
+                        Eduardo Gelain
+                    </h1>
+                    <p class="text-xl sm:text-2xl text-slate-300 font-medium leading-relaxed mb-6">
+                        Software & Game Developer specializing in low-level systems, C++, C#, Unity, and Reverse Engineering.
+                    </p>
+                    <p class="text-slate-400 text-base leading-relaxed mb-8">
+                        Building high-performance game mechanics, custom authoritative netcode, runtime memory pattern scanners, and bytecode virtual machines. Author of the SpetDev Technical Research Journal.
+                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm font-semibold">
+                        <a href="#projects" class="px-6 py-3 rounded-xl bg-primary hover:bg-primaryHover text-white transition-all shadow-lg shadow-primary/20">
+                            Explore Featured Projects
+                        </a>
+                        <a href="/journal/" class="px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 transition-all">
+                            Read Technical Journal
+                        </a>
+                        <a href="#contact" class="px-6 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 border border-white/10 transition-all">
+                            Contact Eduardo
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="py-16 border-b border-white/[0.08]">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                    <div class="md:col-span-1">
+                        <h2 class="text-2xl font-bold text-white mb-2">About Eduardo Gelain</h2>
+                        <span class="text-xs font-mono text-primary uppercase tracking-wider block mb-4">Software & Game Engineer</span>
+                        <p class="text-sm text-slate-400">Handle: SpetDev / Spet001</p>
+                        <p class="text-sm text-slate-400">Location: Brazil (Remote Worldwide)</p>
+                    </div>
+                    <div class="md:col-span-2 space-y-4 text-slate-300 text-base leading-relaxed">
+                        <p>
+                            I am a versatile software and game engineer with a strong passion for low-level mechanics, memory manipulation, and commercial game engine architectures. My journey bridges the gap between high-level gameplay engineering in Unity and C#, and low-level binary analysis in C++ and x86/x64 assembly.
+                        </p>
+                        <p>
+                            Beyond building standalone games like <strong>Outcaster</strong> and contributing QA deductive code analysis to <strong>Sparky Rush</strong> on Steam, I conduct active research in reverse engineering proprietary game systems. This includes breaking through UWP and GDK sandbox restrictions, analyzing virtual machine bytecode dispatchers (such as Call of Duty's GSC engine), and building zero-dependency runtime memory injectors.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section id="experience" class="py-16 border-b border-white/[0.08]">
+                <h2 class="text-2xl font-bold text-white mb-8">Professional Experience</h2>
+                <div class="space-y-6">
+                    <article class="p-6 rounded-2xl glass-panel">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                            <h3 class="text-lg font-bold text-white">Manual QA Analyst · Sparky Rush (Steam)</h3>
+                            <span class="text-xs font-mono text-primary">2025 - Present</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-2">
+                            Executed comprehensive gameplay and physics regression testing on the Steam release of Sparky Rush. Documented 50+ critical bugs and conducted deductive Unity C# code inspection to help the core development team isolate root causes rapidly.
+                        </p>
+                    </article>
+                    <article class="p-6 rounded-2xl glass-panel">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                            <h3 class="text-lg font-bold text-white">Gameplay & Engine Programmer · Game Development</h3>
+                            <span class="text-xs font-mono text-primary">2025 - Present</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-2">
+                            Programmed player locomotion, combat mechanics, enemy artificial intelligence, and reusable gameplay templates in Unity (C#) and Unreal Engine 5 (C++). Built responsive character physics and netcode serialization layers.
+                        </p>
+                    </article>
+                    <article class="p-6 rounded-2xl glass-panel">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                            <h3 class="text-lg font-bold text-white">Systems & Reverse Engineer · Research & Tooling</h3>
+                            <span class="text-xs font-mono text-primary">2024 - Present</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-2">
+                            Authored open-source C++ injectors, dynamic sigscanners, and memory detour hooks for Windows UWP and GDK games. Transpiled legacy 32-bit calling conventions to 64-bit binaries and emulated DLC entitlement licensing.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Featured Projects Section -->
+            <section id="projects" class="py-16 border-b border-white/[0.08]">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold text-white">Featured Projects</h2>
+                    <span class="text-xs font-mono text-slate-400">Games, Tools & R&D</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Project 1 -->
+                    <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 mb-3 inline-block">Unity · C# · Multiplayer</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Outcaster</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            High-adrenaline top-down multiplayer arena shooter built in Unity with custom authoritative client-server netcode, dynamic projectile simulation, and low-latency packet serialization.
+                        </p>
+                        <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1.5">
+                            View on GitHub <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </article>
+
+                    <!-- Project 2 -->
+                    <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-3 inline-block">Unity · Steam · QA & Dev</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Sparky Rush</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            2D physics puzzle platformer and horror game available on Steam. Features dynamic mechanics, custom level progression, responsive controls, and in-depth bug analysis.
+                        </p>
+                        <a href="https://store.steampowered.com" target="_blank" rel="noreferrer" class="text-xs font-bold text-emerald-400 hover:underline inline-flex items-center gap-1.5">
+                            Available on Steam <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </article>
+
+                    <!-- Project 3 -->
+                    <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30 mb-3 inline-block">JavaScript · Bytecode VM · Web</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Call of Duty Zombies GSC VM in HTML5</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            Web-based bytecode virtual machine interpreter emulating Treyarch's proprietary Call of Duty Game Scripting C (GSC) engine inside modern browsers, executing multithreaded script logic natively.
+                        </p>
+                        <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="text-xs font-bold text-purple-400 hover:underline inline-flex items-center gap-1.5">
+                            View Bytecode Interpreter <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </article>
+
+                    <!-- Project 4 -->
+                    <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-3 inline-block">WebAssembly · C · WebGL</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Quake 1 (NetQuake WebAssembly)</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            Classic id Tech 2 Quake engine compiled to WebAssembly running directly inside modern browsers with WebGL acceleration, canvas input capture, and authentic sound synthesis.
+                        </p>
+                        <a href="#quake" class="text-xs font-bold text-amber-400 hover:underline inline-flex items-center gap-1.5">
+                            Play Quake 1 in Browser <i class="fas fa-gamepad text-[10px]"></i>
+                        </a>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Technical Skills & Stack Section -->
+            <section id="skills" class="py-16 border-b border-white/[0.08]">
+                <h2 class="text-2xl font-bold text-white mb-8">Technical Stack & Engineering Disciplines</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="p-5 rounded-xl glass-panel">
+                        <h3 class="font-bold text-white text-base mb-3 flex items-center gap-2">
+                            <i class="fas fa-code text-primary"></i> Languages
+                        </h3>
+                        <ul class="text-sm text-slate-300 space-y-1.5">
+                            <li>C++ (17/20)</li>
+                            <li>C# (.NET / Unity)</li>
+                            <li>Python</li>
+                            <li>TypeScript / JavaScript</li>
+                            <li>x86 / x64 Assembly</li>
+                            <li>SQL</li>
+                        </ul>
+                    </div>
+                    <div class="p-5 rounded-xl glass-panel">
+                        <h3 class="font-bold text-white text-base mb-3 flex items-center gap-2">
+                            <i class="fas fa-gamepad text-primary"></i> Game Engines
+                        </h3>
+                        <ul class="text-sm text-slate-300 space-y-1.5">
+                            <li>Unity Engine</li>
+                            <li>Unreal Engine 5</li>
+                            <li>IW Engine / Treyarch T5-T6</li>
+                            <li>WebGL & Canvas 2D</li>
+                            <li>DirectX & OpenGL</li>
+                        </ul>
+                    </div>
+                    <div class="p-5 rounded-xl glass-panel">
+                        <h3 class="font-bold text-white text-base mb-3 flex items-center gap-2">
+                            <i class="fas fa-microchip text-primary"></i> Reverse Engineering
+                        </h3>
+                        <ul class="text-sm text-slate-300 space-y-1.5">
+                            <li>IDA Pro & Ghidra</li>
+                            <li>x64dbg & Process Hacker</li>
+                            <li>Dynamic Pattern Scanning (Sigscan)</li>
+                            <li>Inline Hooking & Detours</li>
+                            <li>UWP / GDK Sandbox Security</li>
+                        </ul>
+                    </div>
+                    <div class="p-5 rounded-xl glass-panel">
+                        <h3 class="font-bold text-white text-base mb-3 flex items-center gap-2">
+                            <i class="fas fa-cloud text-primary"></i> Web & Tooling
+                        </h3>
+                        <ul class="text-sm text-slate-300 space-y-1.5">
+                            <li>Cloudflare Workers (Edge Serverless)</li>
+                            <li>WebAssembly (WASM)</li>
+                            <li>Node.js</li>
+                            <li>Tailwind CSS & Responsive UI</li>
+                            <li>Git & GitHub CI/CD</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Journal Preview Section -->
+            <section id="journal" class="py-16 border-b border-white/[0.08]">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Technical Research Journal</h2>
+                        <p class="text-sm text-slate-400 mt-1">In-depth papers, architecture writeups, and reverse engineering breakthroughs.</p>
+                    </div>
+                    <a href="/journal/" class="text-sm font-bold text-primary hover:underline flex items-center gap-1.5">
+                        View All Entries <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 30, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/#What-Is-GSC" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Comprehensive architectural guide to Call of Duty's server-side bytecode scripting virtual machine and event notifies.
+                        </p>
+                        <a href="/journal/#What-Is-GSC" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 28, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/#Cloudflare-Workers-Backend" class="hover:text-primary transition-colors">Static Site Backend with Cloudflare Workers</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Implementing zero-cost serverless microservices, telemetry, and secure OAuth on static GitHub Pages websites.
+                        </p>
+                        <a href="/journal/#Cloudflare-Workers-Backend" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/#UWPCOD-GDK-DLC-Unlocker" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for DLCs</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Analyzing UWP/GDK sandbox pre-installed DLC assets and cryptographic entitlement verification routines.
+                        </p>
+                        <a href="/journal/#UWPCOD-GDK-DLC-Unlocker" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 20, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/#T6-GSC-Injector-MS-Store" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Building a C++ injector with inline execution detours and calling convention translation for Microsoft Store binaries.
+                        </p>
+                        <a href="/journal/#T6-GSC-Injector-MS-Store" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/#T5-GSC-Injector-MS-Store" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            IDA Pro cross-referencing and offset discovery for legacy engine memory hooks inside modern Windows containers.
+                        </p>
+                        <a href="/journal/#T5-GSC-Injector-MS-Store" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 18, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/#CW-GSC-Injection-MS-Store" class="hover:text-primary transition-colors">Dynamic Sigscan Pattern Matching in Cold War</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Eliminating hardcoded offset breakages across patches with dynamic runtime memory pattern scanning in C++.
+                        </p>
+                        <a href="/journal/#CW-GSC-Injection-MS-Store" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Contact & Social Section -->
+            <section id="contact" class="py-16">
+                <div class="max-w-2xl mx-auto text-center">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Let's Build Something Exceptional</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        Interested in hiring me for software development, Unity/Unreal game programming, or reverse engineering consulting? Reach out directly via email or connect through developer networks.
+                    </p>
+                    <div class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary/10 border border-primary/30 text-primary font-mono text-sm mb-8 font-bold">
+                        <i class="fas fa-envelope"></i> gelain15mj@gmail.com
+                    </div>
+                    <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-bold">
+                        <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 transition-colors flex items-center gap-2">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" class="px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 transition-colors flex items-center gap-2">
+                            <i class="fab fa-gitlab"></i> GitLab
+                        </a>
+                        <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" class="px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 transition-colors flex items-center gap-2">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <a href="https://spet01.itch.io" target="_blank" rel="noreferrer" class="px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 transition-colors flex items-center gap-2">
+                            <i class="fab fa-itch-io"></i> Itch.io
+                        </a>
+                        <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" class="px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 transition-colors flex items-center gap-2">
+                            <i class="fas fa-cube"></i> NexusMods
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">
+            <p>Eduardo Gelain · SpetDev. All rights reserved.</p>
+            <p class="mt-1">
+                <a href="/sitemap.xml" class="hover:underline text-slate-400">Sitemap</a> · 
+                <a href="/llm.txt" class="hover:underline text-slate-400">LLM Context</a> · 
+                <a href="/privacy.html" class="hover:underline text-slate-400">Privacy Policy</a>
+            </p>
+        </footer>
+
+        <noscript>
+            <div class="p-6 bg-[#050505]/95 backdrop-blur-md border-t border-primary/40 text-center text-slate-300 text-sm">
+                <p><strong>Note:</strong> JavaScript is optional. All portfolio projects, technical skills, and research journal articles above are fully accessible without scripts.</p>
+            </div>
+        </noscript>
+    </div>
 
     <script type="text/babel">
 
@@ -335,7 +789,7 @@ const PORTFOLIO_DATA = {
                     { value: "50+", label: "Bugs Críticos Identificados", sub: "Lançamento Comercial na Steam" },
                     { value: "15+", label: "Projetos & Ferramentas", sub: "Engenharia Reversa & Jogos" },
                     { value: "10k+", label: "Downloads de Mods & Ferramentas", sub: "NexusMods & GitLab" },
-                    { value: "100%", label: "Eficiência Nativa", sub: "C/C++, C# & Python" }
+                    { value: "3+", label: "Anos de Experiência", sub: "C++, C#, Unity & Python" }
                 ]
             },
             experience: {
@@ -416,7 +870,7 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Jogar Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Imitando a GSC Engine dentro de um HTML!",
-                music: "Tocar Final Fantasy Classic OSTs (YouTube)",
+                music: "Tocador de OST",
                 exit: "Sair do Jogo",
                 openNew: "Abrir em nova aba"
             },
@@ -435,8 +889,8 @@ const PORTFOLIO_DATA = {
                 companionBotDesc: "Assistente interativo e guia técnico no canto inferior",
                 disableWelcome: "Desativar mensagem de boas-vindas",
                 disableWelcomeDesc: "Oculta a saudação automática do Astro ao carregar o portfólio",
-                musicPlayer: "Tocador de OST (Final Fantasy)",
-                musicPlayerDesc: "Stream de temas clássicos de batalha via YouTube Jukebox",
+                musicPlayer: "Tocador de OST",
+                musicPlayerDesc: "Stream de temas de batalha e menus (FF Battle & COD Menu) via Jukebox",
                 musicAutoPlay: "Reprodução automática ao iniciar",
                 musicAutoPlayDesc: "Inicia o tocador minimizado na barra inferior ao carregar o portfólio",
                 defaultLang: "Idioma da interface",
@@ -444,7 +898,9 @@ const PORTFOLIO_DATA = {
                 theme: "Tema de fundo",
                 themeDesc: "Simulação interativa do canvas",
                 themeSpace: "Espaço",
+                themeSpace2: "Espaço 2.0 (Beta)",
                 themeSpaceSub: "Foguete & Astronauta",
+                themeSpace2Sub: "Modelos 3D Interativos",
                 themeSky: "Céu Terrestre",
                 themeSkySub: "Caças & Paraquedista",
                 easterSign: "Placa secreta do Gant Bridge",
@@ -477,7 +933,7 @@ const PORTFOLIO_DATA = {
                     { value: "50+", label: "Critical Bugs Identified", sub: "Commercial Steam Release" },
                     { value: "15+", label: "Projects & Toolkits", sub: "Reverse Engineering & Games" },
                     { value: "10k+", label: "Mod & Tool Downloads", sub: "NexusMods & GitLab" },
-                    { value: "100%", label: "Native Efficiency", sub: "C/C++, C# & Python" }
+                    { value: "3+", label: "Years of Experience", sub: "C++, C#, Unity & Python" }
                 ]
             },
             experience: {
@@ -558,7 +1014,7 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Play Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Emulating the GSC Engine inside HTML!",
-                music: "Play Classic Final Fantasy OSTs (YouTube)",
+                music: "OST Player",
                 exit: "Exit Game",
                 openNew: "Open in new tab"
             },
@@ -577,8 +1033,8 @@ const PORTFOLIO_DATA = {
                 companionBotDesc: "Interactive technical assistant and guide in bottom corner",
                 disableWelcome: "Disable Welcome Message",
                 disableWelcomeDesc: "Suppresses Astro's automatic greeting teaser on page load",
-                musicPlayer: "Final Fantasy OST Player",
-                musicPlayerDesc: "Stream classic battle tracks via background YouTube client",
+                musicPlayer: "OST Player",
+                musicPlayerDesc: "Stream battle and menu themes (FF Battle & COD Menu) via background Jukebox",
                 musicAutoPlay: "Toggle Auto-Play",
                 musicAutoPlayDesc: "Begin playback in minimized dock player upon page load",
                 defaultLang: "Interface Language",
@@ -586,7 +1042,9 @@ const PORTFOLIO_DATA = {
                 theme: "Canvas Theme",
                 themeDesc: "Interactive background simulation",
                 themeSpace: "Cosmic Space",
+                themeSpace2: "Space 2.0 (Beta)",
                 themeSpaceSub: "Rocket & Astronaut",
+                themeSpace2Sub: "Interactive 3D Models",
                 themeSky: "Earth Sky",
                 themeSkySub: "Fighter Jets & Parachuter",
                 easterSign: "Gant Bridge Secret Sign",
@@ -1026,7 +1484,7 @@ const PORTFOLIO_DATA = {
                 pt: "🔒 Este projeto é confidencial/privado! Desbloqueie o Estudo de Caso completo e a entrada técnica do Journal assinando o Patreon!",
                 en: "🔒 This project is in preview/private! Unlock the full Case Study and technical Journal entry by subscribing to Patreon!"
             },
-            journalId: "Crossplay-PS5-XBOX-PC",
+            journalId: "entry_0003",
             caseStudy: {
                 challenge: {
                     pt: "[CONTEÚDO BLOQUEADO] Requer autenticação do Patreon.",
@@ -1157,6 +1615,30 @@ const PORTFOLIO_DATA = {
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
         {
+            id: "What-Is-GSC",
+            title: "What is GSC? (Game Scripting C) Guide",
+            date: "Sep 30, 2026",
+            file: "What-Is-GSC.md",
+            category: "GSC Engine Internals",
+            excerpt: "Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles."
+        },
+        {
+            id: "Cloudflare-Workers-Backend",
+            title: "Having a Backend on a Static Website with Cloudflare Workers!",
+            date: "Sep 28, 2026",
+            file: "Cloudflare-Workers-Backend.md",
+            category: "Serverless & Edge",
+            excerpt: "Architecting zero-cost serverless backend APIs, telemetry collection, rate limiters, and OAuth handlers for static GitHub Pages sites."
+        },
+        {
+            id: "T6-Open-Source-GSC-Mods",
+            title: "Providing Open Source T6 Custom Game Modes GSC!",
+            date: "Sep 27, 2026",
+            file: "T6-Open-Source-GSC-Mods.md",
+            category: "Open Source Modding",
+            excerpt: "Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications."
+        },
+        {
             id: "UWPCOD-GDK-DLC-Unlocker",
             title: "Bypassing MS Store License Checks for Call of Duty DLCs",
             date: "Sep 21, 2026",
@@ -1181,12 +1663,12 @@ const PORTFOLIO_DATA = {
             excerpt: "Documenting memory signatures and thread redirection techniques in older Treyarch engines adapted for the Microsoft Store."
         },
         {
-            id: "Crossplay-PS5-XBOX-PC",
-            title: "Crossplay Relay POC (PS5 x PC)",
+            id: "entry_0003",
+            title: "Unlock This Entry With Patreon!",
             date: "Sep 19, 2026",
             file: "Crossplay-PS5-XBOX-PC.md",
-            category: "Networking",
-            excerpt: "Proof-of-concept architecture intercepting UDP packet streams and translating matchmaking session handshakes across platforms."
+            category: "Patreon Exclusive",
+            excerpt: "Confidential technical journal entry. Unlock the architecture breakdown and source code details with a Patreon subscription."
         },
         {
             id: "CW-GSC-Injection-MS-Store",
@@ -1511,6 +1993,365 @@ const playSoftClick = () => {
         osc.stop(audioCtx.currentTime + 0.04);
     } catch (e) {}
 };
+
+
+
+
+// --- SPACE 2.0 CANVAS (THREE.JS GLB MODELS) ---
+const SpaceCanvasV2 = () => {
+    const containerRef = useRef(null);
+    const keysRef = useRef({});
+
+    useEffect(() => {
+        if (!containerRef.current || !window.THREE) return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.z = 50;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        containerRef.current.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        dirLight.position.set(100, 100, 50);
+        scene.add(dirLight);
+
+        const loader = new THREE.GLTFLoader();
+        
+        let nebula, moon, rocket, astronaut, rope;
+        const asteroids = [];
+        
+        const normalizeModel = (gltfScene, targetSize, isSkybox = false) => {
+            const box = new THREE.Box3().setFromObject(gltfScene);
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            if (maxDim > 0) {
+                const scale = targetSize / maxDim;
+                gltfScene.scale.setScalar(scale);
+            }
+            if (!isSkybox) {
+                gltfScene.traverse(child => {
+                    if (child.isMesh) child.geometry.computeBoundingBox();
+                });
+            }
+            return gltfScene;
+        };
+
+        // 1. Skybox (nebula0.glb)
+        loader.load('./3d/nebula0.glb', (gltf) => {
+            nebula = gltf.scene;
+            normalizeModel(nebula, 800, true);
+            nebula.traverse((child) => {
+                if (child.isMesh) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => { m.side = THREE.BackSide; m.depthWrite = false; });
+                    } else if (child.material) {
+                        child.material.side = THREE.BackSide;
+                        child.material.depthWrite = false;
+                    }
+                }
+            });
+            scene.add(nebula);
+        });
+
+        // 2. Moon (moon.glb)
+        loader.load('./3d/moon.glb', (gltf) => {
+            moon = gltf.scene;
+            normalizeModel(moon, 20); 
+            moon.position.set(25, 15, -30); 
+            scene.add(moon);
+            
+            const moonLight = new THREE.PointLight(0xaaccff, 1.5, 300);
+            moonLight.position.copy(moon.position);
+            scene.add(moonLight);
+        });
+
+        // 3. Rocket (rocket.glb)
+        loader.load('./3d/rocket.glb', (gltf) => {
+            rocket = gltf.scene;
+            normalizeModel(rocket, 4); 
+            
+            const rocketGroup = new THREE.Group();
+            rocketGroup.position.set(0, 0, 10);
+            
+            rocket.rotation.z = 0; 
+            rocket.position.set(0,0,0);
+            
+            rocketGroup.add(rocket);
+            scene.add(rocketGroup);
+            
+            rocket = rocketGroup; 
+        });
+
+        // 4. Astronaut (Astronaut.glb)
+        loader.load('./3d/Astronaut.glb', (gltf) => {
+            astronaut = gltf.scene;
+            normalizeModel(astronaut, 1.5); 
+            astronaut.position.set(5, -5, 10);
+            scene.add(astronaut);
+        });
+
+        // Rope
+        const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+        const ropeMat = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.5 });
+        rope = new THREE.Line(ropeGeo, ropeMat);
+        scene.add(rope);
+
+        // Fire Particles
+        const particleCount = 60;
+        const particles = [];
+        const partGeo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+        for(let i=0; i<particleCount; i++) {
+            const mat = new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.8 });
+            const p = new THREE.Mesh(partGeo, mat);
+            p.visible = false;
+            scene.add(p);
+            particles.push({ mesh: p, life: 0, maxLife: 0, velocity: new THREE.Vector3() });
+        }
+        let pIndex = 0;
+
+        // Oxygen Particles (Thruster)
+        const oxCount = 50;
+        const oxParticles = [];
+        const oxGeo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
+        for(let i=0; i<oxCount; i++) {
+            const mat = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, transparent: true, opacity: 0.6 });
+            const p = new THREE.Mesh(oxGeo, mat);
+            p.visible = false;
+            scene.add(p);
+            oxParticles.push({ mesh: p, life: 0, maxLife: 0, velocity: new THREE.Vector3() });
+        }
+        let oxIndex = 0;
+
+        // 5. Asteroids
+        let ast1, ast2;
+        let spawned = false;
+        const checkSpawn = () => {
+            if (ast1 && ast2 && !spawned) {
+                spawned = true;
+                for (let i = 0; i < 40; i++) {
+                    const isAst1 = Math.random() > 0.5;
+                    const mesh = (isAst1 ? ast1 : ast2).clone();
+                    
+                    mesh.position.set(
+                        (Math.random() - 0.5) * 150,
+                        (Math.random() - 0.5) * 100,
+                        Math.random() * -300 - 50
+                    );
+                    
+                    mesh.scale.multiplyScalar(Math.random() * 0.5 + 0.5); 
+                    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                    
+                    mesh.userData = {
+                        speed: Math.random() * 0.8 + 0.2, 
+                        rotSpeedX: (Math.random() - 0.5) * 0.04,
+                        rotSpeedY: (Math.random() - 0.5) * 0.04,
+                        rotSpeedZ: (Math.random() - 0.5) * 0.04
+                    };
+                    
+                    scene.add(mesh);
+                    asteroids.push(mesh);
+                }
+            }
+        };
+
+        loader.load('./3d/asteroid1.glb', (gltf) => { ast1 = gltf.scene; normalizeModel(ast1, 3); checkSpawn(); });
+        loader.load('./3d/asteroid2.glb', (gltf) => { ast2 = gltf.scene; normalizeModel(ast2, 3); checkSpawn(); });
+
+        // Interactivity
+        const mouse = new THREE.Vector2(0, 0);
+        const astroVelocity = new THREE.Vector3();
+
+        const handleMouseMove = (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        };
+        const handleKeyDown = (e) => { keysRef.current[e.key] = true; };
+        const handleKeyUp = (e) => { keysRef.current[e.key] = false; };
+        
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        const handleResize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+        window.addEventListener('resize', handleResize);
+
+        let animationId;
+        let time = 0;
+        const animate = () => {
+            animationId = requestAnimationFrame(animate);
+            time += 0.01;
+
+            if (nebula) {
+                nebula.rotation.y = time * 0.02; 
+                nebula.rotation.x = Math.sin(time * 0.01) * 0.1;
+            }
+            if (moon) {
+                moon.rotation.y = time * 0.1; 
+            }
+            
+            const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+            vector.unproject(camera);
+            const dir = vector.sub(camera.position).normalize();
+            const distance = (10 - camera.position.z) / dir.z; 
+            const finalTarget = camera.position.clone().add(dir.multiplyScalar(distance));
+
+            let tailPos = new THREE.Vector3();
+
+            if (rocket) {
+                rocket.position.lerp(finalTarget, 0.08);
+                
+                const moveDelta = finalTarget.clone().sub(rocket.position);
+                if (moveDelta.lengthSq() > 0.1) {
+                    const angle = Math.atan2(moveDelta.y, moveDelta.x);
+                    let targetRot = angle - Math.PI / 2;
+                    let diff = targetRot - rocket.rotation.z;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    rocket.rotation.z += diff * 0.1;
+                }
+                
+                rocket.children[0].position.y = Math.sin(time * 5) * 0.2;
+                
+                const tailOffset = new THREE.Vector3(0, -2.2, 0).applyEuler(rocket.rotation);
+                tailPos.copy(rocket.position).add(tailOffset);
+                tailPos.y += rocket.children[0].position.y; 
+
+                const p = particles[pIndex];
+                p.life = Math.random() * 15 + 10;
+                p.maxLife = p.life;
+                p.mesh.position.copy(tailPos);
+                p.mesh.position.x += (Math.random()-0.5)*0.3;
+                p.mesh.position.y += (Math.random()-0.5)*0.3;
+                p.mesh.visible = true;
+                p.mesh.material.color.setHex(Math.random() > 0.5 ? 0xff4400 : 0xffaa00);
+                
+                const tailDir = new THREE.Vector3(0, -1, 0).applyEuler(rocket.rotation).normalize();
+                p.velocity.copy(tailDir).multiplyScalar(0.2).add(new THREE.Vector3((Math.random()-0.5)*0.05, (Math.random()-0.5)*0.05, 0));
+                pIndex = (pIndex + 1) % particleCount;
+            }
+
+            particles.forEach(p => {
+                if (p.life > 0) {
+                    p.life--;
+                    p.mesh.position.add(p.velocity);
+                    const scale = p.life / p.maxLife * 1.5;
+                    p.mesh.scale.setScalar(scale);
+                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.8;
+                    if (p.life <= 0) p.mesh.visible = false;
+                }
+            });
+
+            oxParticles.forEach(p => {
+                if (p.life > 0) {
+                    p.life--;
+                    p.mesh.position.add(p.velocity);
+                    const scale = p.life / p.maxLife * 1.2;
+                    p.mesh.scale.setScalar(scale);
+                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.5;
+                    if (p.life <= 0) p.mesh.visible = false;
+                }
+            });
+
+            if (astronaut && rocket) {
+                // Space Physics (Zero-G floaty feeling)
+                const diff = tailPos.clone().sub(astronaut.position);
+                const dist = diff.length();
+                const restingLength = 6.0; 
+                
+                if (dist > 0) {
+                    // Soft spring constant for zero-G feel
+                    const force = (dist - restingLength) * 0.002; 
+                    const springForce = diff.normalize().multiplyScalar(force);
+                    astroVelocity.add(springForce);
+                }
+
+                // Keyboard Thruster Physics
+                const speed = 0.015;
+                let isThrusting = false;
+                if (keysRef.current['ArrowUp'] || keysRef.current['w'] || keysRef.current['W']) { astroVelocity.y += speed; isThrusting = true; }
+                if (keysRef.current['ArrowDown'] || keysRef.current['s'] || keysRef.current['S']) { astroVelocity.y -= speed; isThrusting = true; }
+                if (keysRef.current['ArrowLeft'] || keysRef.current['a'] || keysRef.current['A']) { astroVelocity.x -= speed; isThrusting = true; }
+                if (keysRef.current['ArrowRight'] || keysRef.current['d'] || keysRef.current['D']) { astroVelocity.x += speed; isThrusting = true; }
+
+                if (isThrusting) {
+                    // Spawn Oxygen/Gas Particle
+                    const p = oxParticles[oxIndex];
+                    p.life = Math.random() * 20 + 10;
+                    p.maxLife = p.life;
+                    p.mesh.position.copy(astronaut.position);
+                    p.mesh.position.y -= 0.3; // back/jetpack
+                    p.mesh.visible = true;
+                    p.mesh.scale.setScalar(1);
+                    p.velocity.set((Math.random()-0.5)*0.04, -0.04 - Math.random()*0.04, (Math.random()-0.5)*0.04);
+                    oxIndex = (oxIndex + 1) % oxCount;
+                }
+
+                astroVelocity.multiplyScalar(0.98); // Very low damping (glides in space)
+                astronaut.position.add(astroVelocity);
+                
+                // Hard constraint for rope max length
+                if (dist > 12) {
+                    const pullBack = diff.clone().normalize().multiplyScalar((dist - 12) * 0.1);
+                    astronaut.position.add(pullBack);
+                }
+                
+                // Astronaut spins based on velocity
+                astronaut.rotation.y = time * 0.5;
+                astronaut.rotation.z = -astroVelocity.x * 2;
+                
+                if (rope) {
+                    const positions = rope.geometry.attributes.position.array;
+                    positions[0] = tailPos.x; positions[1] = tailPos.y; positions[2] = tailPos.z;
+                    positions[3] = astronaut.position.x; positions[4] = astronaut.position.y + 0.5; positions[5] = astronaut.position.z;
+                    rope.geometry.attributes.position.needsUpdate = true;
+                }
+            }
+
+            asteroids.forEach(ast => {
+                ast.position.z += ast.userData.speed;
+                ast.rotation.x += ast.userData.rotSpeedX;
+                ast.rotation.y += ast.userData.rotSpeedY;
+                ast.rotation.z += ast.userData.rotSpeedZ;
+
+                if (ast.position.z > 60) {
+                    ast.position.z = Math.random() * -200 - 150; 
+                    ast.position.x = (Math.random() - 0.5) * 250;
+                    ast.position.y = (Math.random() - 0.5) * 150;
+                }
+            });
+
+            renderer.render(scene, camera);
+        };
+        animate();
+
+        return () => {
+            cancelAnimationFrame(animationId);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('resize', handleResize);
+            if (containerRef.current) {
+                containerRef.current.removeChild(renderer.domElement);
+            }
+            renderer.dispose();
+        };
+    }, []);
+
+    return <div ref={containerRef} className="fixed inset-0 z-0 bg-black pointer-events-none" />;
+};
+
+
+
 
 // --- SPACE & SKY CANVAS (COSMIC SPACE & EARTH SKY THEMES) ---
 const SpaceCanvas = ({ theme = 'space' }) => {
@@ -2190,7 +3031,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
     }, []);
 
     return (
-        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08] py-3' : 'bg-transparent py-5'}`}>
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050505]/77 backdrop-blur-md border-b border-white/[0.08] py-3' : 'bg-transparent py-5'}`}>
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between gap-4 lg:gap-8">
                 
                 {/* Brand: SpetDev with Terminal Icon */}
@@ -2296,7 +3137,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="lg:hidden bg-[#0c1220] border-b border-white/[0.08] px-6 py-4 space-y-3">
+                <div className="lg:hidden bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.08] px-6 py-4 space-y-3">
                     <a onClick={() => setMobileMenuOpen(false)} href="#about" className="block text-sm text-slate-300 hover:text-primary">{t('nav.about')}</a>
                     <a onClick={() => setMobileMenuOpen(false)} href="#experience" className="block text-sm text-slate-300 hover:text-primary">{t('nav.experience')}</a>
                     <a onClick={() => setMobileMenuOpen(false)} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
@@ -2335,8 +3176,8 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
             <div className="max-w-4xl mx-auto px-6 w-full text-center sm:text-left">
                 
                 {/* Status Indicator (NO location) */}
-                <div className="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full mb-6">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div className="inline-flex items-center gap-2 text-xs font-mono text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-6 shadow-sm shadow-primary/10">
+                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-sm shadow-primary/50"></span>
                     <span>{t('hero.status')}</span>
                 </div>
 
@@ -2425,8 +3266,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                 </div>
 
                 {/* Subtle astronaut controls hint */}
-                <div className="hidden sm:flex mt-8 text-xs text-slate-500 font-mono text-center sm:text-left items-center justify-center sm:justify-start gap-2">
-                    <i className="fas fa-rocket text-primary text-[10px]"></i>
+                <div className="hidden sm:flex mt-8 text-xs text-slate-500 font-mono text-center sm:text-left items-center justify-center sm:justify-start">
                     <span>{t('hero.hint')}</span>
                 </div>
 
@@ -2513,9 +3353,6 @@ const AboutSection = () => {
                     {/* Compact Header */}
                     <div className="flex items-center justify-between gap-3 mb-3.5">
                         <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center text-primary text-sm shadow-sm">
-                                <i className="fas fa-user-astronaut"></i>
-                            </div>
                             <div>
                                 <h2 className="text-xl font-bold text-white tracking-tight leading-tight">
                                     {lang === 'pt' ? 'Sobre Mim' : 'About Me'}
@@ -2743,8 +3580,8 @@ const ProjectModal = ({ project, onClose, lang }) => {
     const { t } = useContext(LanguageContext);
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            <div className="bg-[#0c1220] border border-white/[0.12] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative">
                 
                 <button
                     onClick={onClose}
@@ -2762,7 +3599,7 @@ const ProjectModal = ({ project, onClose, lang }) => {
                 </h3>
 
                 {/* Media banner using authentic assets */}
-                <div className="rounded-xl overflow-hidden bg-slate-950 border border-white/[0.08] mb-6 h-52 sm:h-64 relative flex items-center justify-center">
+                <div className="rounded-xl overflow-hidden bg-black/80 border border-white/[0.08] mb-6 h-52 sm:h-64 relative flex items-center justify-center">
                     <img src={project.images ? project.images[0] : project.image} alt={typeof project.title === "object" ? project.title.en : project.title} className={`w-full h-full object-cover object-center rounded-lg ${(project.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`} />
                       {(project.isLocked && !localStorage.getItem("relay_md")) && (
                           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -2922,7 +3759,7 @@ const ProjectTags = ({ tags, lang }) => {
 
             {/* Hover Tooltip / Expanded Tag View showing full unclipped tag names */}
             <div 
-                className={`absolute bottom-full left-0 mb-2 w-max max-w-[280px] sm:max-w-xs p-3 rounded-xl bg-[#090f1d]/95 border border-white/[0.15] shadow-2xl backdrop-blur-md z-30 transition-all duration-200 pointer-events-none ${
+                className={`absolute bottom-full left-0 mb-2 w-max max-w-[280px] sm:max-w-xs p-3 rounded-xl bg-[#050505]/95 border border-white/[0.12] shadow-2xl backdrop-blur-xl z-30 transition-all duration-200 pointer-events-none ${
                     showTooltip ? 'opacity-100 translate-y-0 visible scale-100' : 'opacity-0 translate-y-1 invisible scale-95'
                 }`}
             >
@@ -3052,10 +3889,10 @@ const ProjectsSection = () => {
                                 {/* Authentic Project Image - Cleanly cropped border-to-border */}
                                 <div 
                                     onClick={() => { playSoftClick(); setActiveModalProject(p); }}
-                                    className="h-48 sm:h-52 w-full bg-slate-950 overflow-hidden relative cursor-pointer border-b border-white/[0.08] select-none clickable"
+                                    className="h-48 sm:h-52 w-full bg-[#050505] overflow-hidden relative cursor-pointer border-b border-white/[0.08] select-none clickable"
                                 >
                                     <ProjectImage p={p} t={t} />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 pointer-events-none" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent opacity-60 pointer-events-none" />
                                     <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-20">
                                         <span className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-black/85 text-white border border-primary/50 backdrop-blur-md shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-transform">
                                             {t('projects.viewDetails')}
@@ -3247,16 +4084,16 @@ const JournalSection = () => {
                     </a>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {entries.slice(0, 3).map((entry) => (
+                <div className="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x journal-entries-scroll" style={{ scrollbarGutter: 'stable' }}>
+                    {entries.map((entry) => (
                         <a
                             key={entry.id}
                             href={`/journal#${entry.id}`}
-                            className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group"
+                            className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start"
                         >
                             <div>
                                 <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2">
-                                    <span className="text-primary">{entry.category}</span>
+                                    <span className="text-primary font-semibold">{entry.category}</span>
                                     <span>{entry.date}</span>
                                 </div>
 
@@ -3534,8 +4371,7 @@ const Footer = ({ onOpenEasterMenu }) => {
 
                 {/* EXACT RESTORED USER QUOTE */}
                 <div className="pt-4 border-t border-white/[0.06] space-y-1.5">
-                    <p className="text-slate-400 font-semibold text-xs flex items-center justify-center gap-2">
-                        <i className="fas fa-ghost text-primary text-xs"></i>
+                    <p className="text-slate-400 font-semibold text-xs flex items-center justify-center">
                         <span>{t('footer.hint')}</span>
                     </p>
                     <p className="text-slate-500 italic max-w-lg mx-auto text-[11px] leading-relaxed">
@@ -3545,7 +4381,7 @@ const Footer = ({ onOpenEasterMenu }) => {
 
                 {/* NEWSLETTER SUBSCRIPTION FORM (Bottom of Footer) */}
                 <div className="pt-6 border-t border-white/[0.06]">
-                    <div className="max-w-md mx-auto p-5 rounded-xl bg-slate-900/60 border border-white/[0.08] backdrop-blur-sm text-center space-y-3 shadow-lg shadow-black/40">
+                    <div className="max-w-md mx-auto p-5 rounded-xl glass-panel text-center space-y-3 shadow-2xl">
                         <div className="flex items-center justify-center gap-2 text-white font-semibold text-xs sm:text-sm">
                             <i className="fas fa-newspaper text-primary"></i>
                             <span>{t('footer.newsletter.title')}</span>
@@ -3640,8 +4476,8 @@ const ResumeModal = ({ isOpen, onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            <div className="bg-[#0c1220] border border-white/[0.12] rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-10 relative text-slate-200">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-10 relative text-slate-200">
                 
                 {/* Header Actions */}
                 <div className="flex items-center justify-between pb-4 border-b border-white/[0.1] mb-6">
@@ -3802,8 +4638,8 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
 
     if (activeGame === 'menu') {
         return (
-            <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="bg-[#0c1220] border border-white/[0.15] rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center">
+            <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+                <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center">
                     <button
                         onClick={onClose}
                         className="absolute top-4 right-4 text-slate-400 hover:text-white text-sm"
@@ -3878,7 +4714,7 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
     return (
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col">
             {/* Top Bar for Game */}
-            <div className="h-12 bg-[#0a0e1a] border-b border-white/[0.1] px-4 flex items-center justify-between shrink-0">
+            <div className="h-12 bg-[#050505]/95 backdrop-blur-md border-b border-white/[0.1] px-4 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2 text-sm font-bold text-white font-mono">
                     <i className="fas fa-gamepad text-primary"></i>
                     <span>{gameTitle}</span>
@@ -3960,11 +4796,11 @@ const SettingsModal = ({
     );
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-            <div className="bg-[#0b101b] border border-slate-800 rounded-xl max-w-lg w-full shadow-2xl overflow-hidden font-sans text-slate-200 my-auto max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-xl max-w-lg w-full shadow-2xl overflow-hidden font-sans text-slate-200 my-auto max-h-[92vh] flex flex-col">
                 
                 {/* Header */}
-                <div className="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-[#0e1424] shrink-0">
+                <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-black/60 shrink-0">
                     <div className="flex items-center gap-2.5">
                         <i className="fas fa-sliders text-primary text-xs"></i>
                         <h3 className="text-sm font-semibold text-white tracking-tight">
@@ -3973,7 +4809,7 @@ const SettingsModal = ({
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-7 h-7 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors"
+                        className="w-7 h-7 rounded text-slate-400 hover:text-white hover:bg-white/[0.08] flex items-center justify-center transition-colors"
                         aria-label="Close"
                     >
                         <i className="fas fa-times text-xs"></i>
@@ -3990,12 +4826,12 @@ const SettingsModal = ({
                         </div>
 
                         {/* Language Selection */}
-                        <div className="flex items-center justify-between py-2 border-b border-slate-800/80">
+                        <div className="flex items-center justify-between py-2 border-b border-white/[0.06]">
                             <div>
                                 <div className="font-medium text-slate-200">{t('settings.defaultLang')}</div>
                                 <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.defaultLangDesc')}</div>
                             </div>
-                            <div className="flex items-center bg-slate-900 border border-slate-700/80 rounded-md p-0.5 shrink-0">
+                            <div className="flex items-center bg-black/60 border border-white/[0.1] rounded-md p-0.5 shrink-0">
                                 <button
                                     type="button"
                                     onClick={() => { onUpdateSetting('defaultLang', 'pt'); setLang('pt'); }}
@@ -4063,7 +4899,7 @@ const SettingsModal = ({
                         </div>
 
                         {/* Visual Theme */}
-                        <div className="py-2 border-b border-slate-800/80 space-y-2">
+                        <div className="py-2 border-b border-white/[0.06] space-y-2">
                             <div>
                                 <div className="font-medium text-slate-200">{t('settings.theme')}</div>
                                 <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.themeDesc')}</div>
@@ -4074,8 +4910,8 @@ const SettingsModal = ({
                                     onClick={() => onUpdateSetting('theme', 'space')}
                                     className={`p-2.5 rounded-lg text-left border transition-all ${
                                         settings.theme === 'space'
-                                            ? 'bg-slate-900 border-primary text-white shadow-sm'
-                                            : 'bg-slate-900/40 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                                            ? 'bg-[#050505]/90 border-primary text-white shadow-sm'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
                                     }`}
                                 >
                                     <div className="flex items-center justify-between font-medium text-xs">
@@ -4091,8 +4927,8 @@ const SettingsModal = ({
                                     onClick={() => onUpdateSetting('theme', 'sky')}
                                     className={`p-2.5 rounded-lg text-left border transition-all ${
                                         settings.theme === 'sky'
-                                            ? 'bg-slate-900 border-sky-400 text-white shadow-sm'
-                                            : 'bg-slate-900/40 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                                            ? 'bg-[#050505]/90 border-sky-400 text-white shadow-sm'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
                                     }`}
                                 >
                                     <div className="flex items-center justify-between font-medium text-xs">
@@ -4104,6 +4940,27 @@ const SettingsModal = ({
                                     </div>
                                 </button>
                             </div>
+<button
+                                    type="button"
+                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space2')}
+                                    disabled={window.IS_LOW_END}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
+                                        settings.theme === 'space2'
+                                            ? 'bg-[#050505]/90 border-violet-500 text-white shadow-sm'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                                    }`}
+                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span>{t('settings.themeSpace2')}</span>
+                                        {settings.theme === 'space2' && <i className="fas fa-check text-[10px] text-violet-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {window.IS_LOW_END ? (lang === 'pt' ? 'Desativado (Hardware Limitado)' : 'Disabled (Hardware Limit)') : t('settings.themeSpace2Sub')}
+                                    </div>
+                                </button>
+
                         </div>
                     </div>
 
@@ -4175,13 +5032,13 @@ const SettingsModal = ({
                     </button>
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
                             <span>{t('settings.savedLocally')}</span>
                         </div>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-3.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium transition-colors"
+                            className="px-3.5 py-1.5 rounded-md bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.1] text-white text-xs font-medium transition-colors"
                         >
                             {t('settings.close')}
                         </button>
@@ -4218,88 +5075,125 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand
         const newHistory = [...history, { type: 'user', text: `> ${inputVal}` }];
 
         // Check for music easter egg command
-        if (cleanCmd === 'music' || cleanCmd.startsWith('music ') || cleanCmd === 'ost' || cleanCmd === 'ff') {
+        if (cleanCmd === 'music' || cleanCmd.startsWith('music ') || cleanCmd === 'ost' || cleanCmd === 'ff' || cleanCmd === 'cod') {
             const parts = cleanCmd.split(' ');
-            const sub = parts[1] || 'play';
+            let sub = parts[1] || '';
+            if (cleanCmd === 'ff') sub = 'ff';
+            if (cleanCmd === 'cod') sub = 'cod';
+            if (!sub && (cleanCmd === 'music' || cleanCmd === 'ost')) sub = 'play';
 
-            if (sub === 'list') {
+            if (sub === 'ff') {
+                const track = onMusicCommand ? onMusicCommand('ff') : null;
                 newHistory.push({
                     type: 'output',
-                    text: `♫ Classic Final Fantasy OST Tracklist (Nobuo Uematsu, Naoshi Mizuta & Junya Nakano) ♫
-[1]  Those Who Fight Further (Fight On!) - Final Fantasy VII (1997)
-     Nobuo Uematsu · https://youtu.be/ZwcvoY4ehOI
-[2]  The Decisive Battle (決戦) - Final Fantasy VI (1994)
-     Nobuo Uematsu · https://youtu.be/WmBPTpvYyIY
-[3]  Boss Battle Theme - Final Fantasy IV DS (2007)
-     Nobuo Uematsu · https://youtu.be/GEYCGJYwvhM
-[4]  Mysterious Girl Battle Theme - Final Fantasy IV: The After Years (2008)
-     Junya Nakano · https://youtu.be/f3ZRtaQzc04
-[5]  Worlds Collide (衝突する世界) - Final Fantasy XIII-2 (2011)
-     Naoshi Mizuta · https://youtu.be/FfFM03rYghU
-[6]  Battle Theme B - Final Fantasy II Pixel Remaster (2021)
-     Nobuo Uematsu · https://youtu.be/3AwwPKrSlfU
-[7]  Paradigm Shift (パラダイムシフト) - Final Fantasy XIII-2 (2011)
-     Naoshi Mizuta · https://youtu.be/qHS9RW8hLaY
-[8]  Battle Theme (Normal Battle) - Final Fantasy X (2001)
-     Nobuo Uematsu · https://youtu.be/aZzQLHdMkQc
-[9]  Limit Break! (限界突破!) - Final Fantasy XIII-2 (2011)
-     Shootie HG · https://youtu.be/YUX3rocJOiQ
-[10] One-Winged Angel (片翼の天使) - Final Fantasy VII (1997)
-     Nobuo Uematsu · https://youtu.be/mYdf0yqK_Fc
-[11] Let the Battles Begin! (Those Who Fight) - Final Fantasy VII (1997)
-     Nobuo Uematsu · https://youtu.be/7HV3oyxr0Eg
-[12] Battle on the Big Bridge - Final Fantasy V Pixel Remaster (2021)
-     Nobuo Uematsu · https://youtu.be/czaNPWhil0c
-[13] Knight of the Goddess (女神の騎士) - Final Fantasy XIII-2 (2011)
-     Masashi Hamauzu · https://youtu.be/fePrVezMWaU
-[14] Otherworld - Final Fantasy X (2001)
-     Nobuo Uematsu & Bill Muir · https://youtu.be/KO6fvJrsTsE
-[15] Battle 2 (Boss Theme) - Final Fantasy V (1992)
-     Nobuo Uematsu · https://youtu.be/RlTISk3zyzg
+                    text: `[💎 FF BATTLE OST ACTIVATED 💎]
+▶ Playing: "${track ? track.title : 'Those Who Fight Further (Fight On!)'}"
+Game: ${track ? track.game : 'Final Fantasy VII'} (${track ? track.year : '1997'})
+Composer: ${track ? track.composer : 'Nobuo Uematsu'}
+Track [${(track?.index ?? 0) + 1}/15] · Playlist: Final Fantasy Battle OST
+CLI Controls: 'music next', 'music prev', 'music random', 'music cod', 'music list'`
+                });
+            } else if (sub === 'cod') {
+                const track = onMusicCommand ? onMusicCommand('cod') : null;
+                newHistory.push({
+                    type: 'output',
+                    text: `[🎯 COD MENU OST ACTIVATED 🎯]
+▶ Playing: "${track ? track.title : 'Multiplayer Theme'}"
+Game: ${track ? track.game : 'Call of Duty: Black Ops 4'} (${track ? track.year : '2018'})
+Composer: ${track ? track.composer : 'Jack Wall'}
+Track [${(track?.index ?? 0) + 1}/7] · Playlist: Call of Duty Menu OST
+CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music list'`
+                });
+            } else if (sub === 'toggle') {
+                const track = onMusicCommand ? onMusicCommand('togglePlaylist') : null;
+                const isCod = track?.playlist === 'cod';
+                newHistory.push({
+                    type: 'output',
+                    text: `[♫] Switched Playlist to: ${isCod ? '🎯 COD Menu OST' : '💎 FF Battle OST'}
+▶ Playing: "${track ? track.title : ''}" (${track ? track.game : ''} - ${track ? track.composer : ''})`
+                });
+            } else if (sub === 'list') {
+                newHistory.push({
+                    type: 'output',
+                    text: `♫ OST Jukebox Playlists (FF Battle OST & COD Menu OST) ♫
 
-Commands: 'music', 'music next', 'music prev', 'music random', 'music stop', 'music list'`
+=== [💎 FF BATTLE OST (15 Tracks)] ===
+[1]  Those Who Fight Further (Fight On!) - Final Fantasy VII (1997)
+[2]  The Decisive Battle (決戦) - Final Fantasy VI (1994)
+[3]  Boss Battle Theme - Final Fantasy IV DS (2007)
+[4]  Mysterious Girl Battle Theme - Final Fantasy IV: The After Years (2008)
+[5]  Worlds Collide - Final Fantasy XIII-2 (2011)
+[6]  Battle Theme B - Final Fantasy II Pixel Remaster (2021)
+[7]  Paradigm Shift - Final Fantasy XIII-2 (2011)
+[8]  Battle Theme (Normal Battle) - Final Fantasy X (2001)
+[9]  Limit Break! - Final Fantasy XIII-2 (2011)
+[10] One-Winged Angel (片翼の天使) - Final Fantasy VII (1997)
+[11] Let the Battles Begin! (Those Who Fight) - Final Fantasy VII (1997)
+[12] Battle on the Big Bridge - Final Fantasy V Pixel Remaster (2021)
+[13] Knight of the Goddess - Final Fantasy XIII-2 (2011)
+[14] Otherworld - Final Fantasy X (2001)
+[15] Battle 2 (Boss Theme) - Final Fantasy V (1992)
+
+=== [🎯 COD MENU OST (7 Tracks)] ===
+[1]  Multiplayer Theme - Call of Duty: Black Ops 4 (2018)
+[2]  Main Theme - Call of Duty: Black Ops II (2012)
+[3]  Adrenaline (Multiplayer Menu) - Call of Duty: Black Ops II (2012)
+[4]  Rising Tide (Multiplayer Remastered) - Call of Duty: Black Ops Cold War (2020)
+[5]  Menu Intro (Brave Soldat) - Call of Duty: World at War (2008)
+[6]  Cold War (Main Theme) - Call of Duty: Black Ops Cold War (2020)
+[7]  Infinite Warfare (Main Theme) - Call of Duty: Infinite Warfare (2016)
+
+Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', 'music random', 'music stop'`
                 });
             } else if (sub === 'stop' || sub === 'pause') {
                 if (onMusicCommand) onMusicCommand('stop');
                 newHistory.push({
                     type: 'output',
-                    text: `[♫] Final Fantasy OST playback stopped.`
+                    text: `[♫] OST playback stopped.`
                 });
             } else if (sub === 'next') {
                 const nextTrack = onMusicCommand ? onMusicCommand('next') : null;
+                const totalTracks = nextTrack?.playlist === 'cod' ? 7 : 15;
+                const badge = nextTrack?.playlist === 'cod' ? '🎯 COD' : '💎 FF';
                 newHistory.push({
                     type: 'output',
                     text: nextTrack
-                        ? `[♫] Next Track [${nextTrack.index + 1}/15]: "${nextTrack.title}" (${nextTrack.game} - ${nextTrack.composer})`
+                        ? `[♫] ${badge} Next Track [${nextTrack.index + 1}/${totalTracks}]: "${nextTrack.title}" (${nextTrack.game} - ${nextTrack.composer})`
                         : `[♫] Switched to next track.`
                 });
             } else if (sub === 'prev') {
                 const prevTrack = onMusicCommand ? onMusicCommand('prev') : null;
+                const totalTracks = prevTrack?.playlist === 'cod' ? 7 : 15;
+                const badge = prevTrack?.playlist === 'cod' ? '🎯 COD' : '💎 FF';
                 newHistory.push({
                     type: 'output',
                     text: prevTrack
-                        ? `[♫] Previous Track [${prevTrack.index + 1}/15]: "${prevTrack.title}" (${prevTrack.game} - ${prevTrack.composer})`
+                        ? `[♫] ${badge} Previous Track [${prevTrack.index + 1}/${totalTracks}]: "${prevTrack.title}" (${prevTrack.game} - ${prevTrack.composer})`
                         : `[♫] Switched to previous track.`
                 });
             } else if (sub === 'random' || sub === 'shuffle') {
                 const randTrack = onMusicCommand ? onMusicCommand('random') : null;
+                const totalTracks = randTrack?.playlist === 'cod' ? 7 : 15;
+                const badge = randTrack?.playlist === 'cod' ? '🎯 COD' : '💎 FF';
                 newHistory.push({
                     type: 'output',
                     text: randTrack
-                        ? `[🎲] Shuffled to Track [${randTrack.index + 1}/15]: "${randTrack.title}" (${randTrack.game} - ${randTrack.composer})`
+                        ? `[🎲] ${badge} Shuffled to Track [${randTrack.index + 1}/${totalTracks}]: "${randTrack.title}" (${randTrack.game} - ${randTrack.composer})`
                         : `[🎲] Shuffled to random track.`
                 });
             } else {
                 // start playing music immediately in minimized dock state
                 const track = onMusicCommand ? onMusicCommand('playMinimized', 0) : null;
+                const isCod = track?.playlist === 'cod';
                 newHistory.push({
                     type: 'output',
-                    text: `[⚔ FINAL FANTASY OST JUKEBOX ACTIVATED ⚔]
+                    text: `[${isCod ? '🎯 COD MENU' : '💎 FF BATTLE'} OST JUKEBOX ACTIVATED]
 ▶ Playing: "${track ? track.title : 'Those Who Fight Further (Fight On!)'}"
 Game: ${track ? track.game : 'Final Fantasy VII'}
 Composer: ${track ? track.composer : 'Nobuo Uematsu'}
 YouTube Jukebox initiated (dock player active in background).
-CLI Controls: 'music next', 'music prev', 'music stop', 'music list'`
+Toggle Playlists: 'music ff' or 'music cod'
+CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music list'`
                 });
             }
 
@@ -4317,7 +5211,7 @@ CLI Controls: 'music next', 'music prev', 'music stop', 'music list'`
   about      - Display brief engineer profile
   projects   - Output featured engineering repositories
   skills     - List low-level tech stack
-  music      - Play Classic Final Fantasy OSTs (YouTube)
+  music      - Play OST Jukebox ('music ff' or 'music cod')
   settings   - Open preferences & configuration panel
   quake      - Launch Quake 1 in browser
   cv         - Open curriculum vitae (resume)
@@ -4388,11 +5282,11 @@ Scripting: Python, PowerShell, Electron, Git`
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#050811] border border-white/[0.15] rounded-xl max-w-xl w-full h-[400px] shadow-2xl flex flex-col overflow-hidden font-mono text-xs">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-xl max-w-xl w-full h-[400px] shadow-2xl flex flex-col overflow-hidden font-mono text-xs">
                 
                 {/* Header */}
-                <div className="h-8 bg-[#0c1220] border-b border-white/[0.08] px-3 flex items-center justify-between text-slate-400">
+                <div className="h-8 bg-black/60 border-b border-white/[0.08] px-3 flex items-center justify-between text-slate-400">
                     <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
                         <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
@@ -4694,7 +5588,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
             {/* Mascot Floating Toggle Button & Welcome Teaser */}
             <div className="fixed bottom-6 right-6 z-50 flex items-end flex-col gap-2">
                 {!isOpen && welcomeEnabled && showTeaser && (
-                    <div className="relative max-w-xs p-3.5 bg-slate-900/95 border border-cyan-500/40 text-slate-200 text-xs rounded-2xl shadow-xl shadow-cyan-950/50 backdrop-blur-md animate-fade-in">
+                    <div className="relative max-w-xs p-3.5 bg-[#050505]/95 border border-cyan-500/40 text-slate-200 text-xs rounded-2xl shadow-xl shadow-cyan-950/50 backdrop-blur-xl animate-fade-in">
                         <button
                             onClick={(e) => { e.stopPropagation(); setShowTeaser(false); }}
                             className="absolute top-2 right-2 text-slate-400 hover:text-white transition-colors"
@@ -4748,7 +5642,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                     )}
                 >
                     <span className="absolute -inset-1 rounded-full bg-cyan-500/20 animate-ping opacity-60 pointer-events-none"></span>
-                    <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950 shadow-sm shadow-emerald-500/80"></span>
+                    <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-primary border-2 border-slate-950 shadow-sm shadow-primary/80"></span>
 
                     {hasUnread && !isOpen && (
                         <span className="absolute -top-1 -left-1 w-4 h-4 rounded-full bg-rose-500 text-[10px] font-bold flex items-center justify-center border border-white">
@@ -4775,13 +5669,13 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
 
             {/* Mascot Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-24 right-4 sm:right-6 w-[94vw] sm:w-[440px] max-h-[82vh] h-[640px] z-50 flex flex-col rounded-2xl bg-slate-950/95 border border-cyan-500/30 shadow-2xl shadow-cyan-950/80 backdrop-blur-xl overflow-hidden">
+                <div className="fixed bottom-24 right-4 sm:right-6 w-[94vw] sm:w-[440px] max-h-[82vh] h-[640px] z-50 flex flex-col rounded-2xl bg-[#050505]/95 border border-white/[0.12] shadow-2xl shadow-cyan-950/40 backdrop-blur-xl overflow-hidden">
                     {/* Header */}
-                    <div className="px-4 py-3.5 bg-gradient-to-r from-slate-900 via-slate-900/90 to-cyan-950/60 border-b border-white/[0.1] flex items-center justify-between">
+                    <div className="px-4 py-3.5 bg-black/60 border-b border-white/[0.1] flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="relative w-9 h-9 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-inner">
                                 <span className="text-lg">👨‍🚀</span>
-                                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-slate-950"></span>
+                                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary border border-slate-950"></span>
                             </div>
                             <div>
                                 <div className="flex items-center gap-1.5">
@@ -4829,7 +5723,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
 
                     {/* Settings Panel: User-facing toggle setting for initial welcome message */}
                     {showSettings && (
-                        <div className="p-3.5 bg-slate-900/95 border-b border-cyan-500/30 text-xs">
+                        <div className="p-3.5 bg-[#050505]/95 border-b border-white/[0.08] text-xs">
                             <div className="flex items-center justify-between mb-2.5">
                                 <span className="font-semibold text-white flex items-center gap-1.5 text-xs">
                                     <i className="fas fa-sliders-h text-cyan-400"></i>
@@ -4845,7 +5739,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                             </div>
 
                             {/* Welcome message toggle row */}
-                            <div className="p-2.5 rounded-xl bg-slate-950/70 border border-white/[0.08] flex items-center justify-between gap-3">
+                            <div className="p-2.5 rounded-xl bg-black/60 border border-white/[0.08] flex items-center justify-between gap-3">
                                 <div className="flex-1 pr-2">
                                     <div className="font-medium text-slate-200 text-xs flex items-center gap-1.5">
                                         <span>{lang === 'pt' ? 'Mensagem de Boas-vindas Inicial' : 'Initial Mascot Welcome Message'}</span>
@@ -4882,7 +5776,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                             {/* Status and persistence note */}
                             <div className="mt-2.5 flex items-center justify-between text-[11px] px-0.5 text-slate-400">
                                 <span className="flex items-center gap-1.5">
-                                    <span className={'w-2 h-2 rounded-full ' + (welcomeEnabled ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500')}></span>
+                                    <span className={'w-2 h-2 rounded-full ' + (welcomeEnabled ? 'bg-primary animate-pulse' : 'bg-slate-500')}></span>
                                     <span className="font-medium">
                                         {welcomeEnabled 
                                             ? (lang === 'pt' ? 'Boas-vindas: Ativadas' : 'Welcome Message: Enabled') 
@@ -4910,7 +5804,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                     )}
 
                     {/* Quick Suggestion Chips */}
-                    <div className="px-3 py-2 bg-slate-900/60 border-b border-white/[0.05] overflow-x-auto flex gap-1.5 scrollbar-none">
+                    <div className="px-3 py-2 bg-black/60 border-b border-white/[0.05] overflow-x-auto flex gap-1.5 scrollbar-none">
                         {quickQuestions.map((q, idx) => (
                             <button
                                 key={idx}
@@ -4953,7 +5847,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                                             ? 'bg-primary/20 text-white border border-primary/40 rounded-br-sm shadow-md'
                                             : m.isError
                                             ? 'bg-rose-950/40 text-rose-200 border border-rose-500/40 rounded-bl-sm shadow-md'
-                                            : 'bg-slate-900/80 text-slate-200 border border-white/[0.08] rounded-bl-sm shadow-md hover:border-cyan-500/30'
+                                            : 'bg-[#050505]/90 text-slate-200 border border-white/[0.08] rounded-bl-sm shadow-md hover:border-cyan-500/30'
                                     )}
                                 >
                                     {m.role === 'model' ? (
@@ -5059,7 +5953,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                                     <span>Astro</span>
                                     <span className="text-cyan-400 font-medium">{lang === 'pt' ? 'formulando resposta...' : 'formulating answer...'}</span>
                                 </span>
-                                <div className="p-3.5 rounded-2xl rounded-bl-sm bg-slate-900/90 border border-cyan-500/40 flex items-center gap-2.5 text-cyan-400 shadow-lg shadow-cyan-950/40">
+                                <div className="p-3.5 rounded-2xl rounded-bl-sm bg-[#050505]/95 backdrop-blur-xl border border-cyan-500/40 flex items-center gap-2.5 text-cyan-400 shadow-lg shadow-cyan-950/40">
                                     <div className="flex items-center gap-1.5 py-0.5">
                                         <span className="w-2 h-2 rounded-full bg-cyan-400 typing-dot-1"></span>
                                         <span className="w-2 h-2 rounded-full bg-cyan-400 typing-dot-2"></span>
@@ -5076,7 +5970,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                     </div>
 
                     {/* Input Bar */}
-                    <div className="p-3 bg-slate-900/90 border-t border-white/[0.08]">
+                    <div className="p-3 bg-black/70 backdrop-blur-xl border-t border-white/[0.08]">
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
@@ -5094,7 +5988,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                                         : 'Ask about projects, C++, Unity, or hiring Eduardo...'
                                 }
                                 disabled={loading}
-                                className="flex-1 bg-slate-950/80 text-white text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-white/[0.1] focus:border-cyan-400 focus:outline-none placeholder-slate-500 transition-colors"
+                                className="flex-1 bg-black/60 text-white text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-white/[0.12] focus:border-cyan-400 focus:outline-none placeholder-slate-500 transition-colors"
                             />
                             <button
                                 type="submit"
@@ -5272,7 +6166,128 @@ const FF_CLASSIC_TRACKS = [
     }
 ];
 
-const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onPrev, onRandom, onSelectTrack }) => {
+// --- COD MENU OST TRACKLIST ---
+const COD_MENU_TRACKS = [
+    {
+        id: "YmKKMsqhLDI",
+        title: "Multiplayer Theme",
+        originalTitle: "Multiplayer Lobby Theme",
+        game: "Call of Duty: Black Ops 4",
+        composer: "Jack Wall",
+        year: "2018",
+        duration: "3:24",
+        youtubeUrl: "https://youtu.be/YmKKMsqhLDI"
+    },
+    {
+        id: "M7GC_TaJxMI",
+        title: "Main Theme",
+        originalTitle: "Black Ops II Theme",
+        game: "Call of Duty: Black Ops II",
+        composer: "Trent Reznor",
+        year: "2012",
+        duration: "3:20",
+        youtubeUrl: "https://youtu.be/M7GC_TaJxMI"
+    },
+    {
+        id: "XGLYpYoXkWw",
+        title: "Adrenaline",
+        originalTitle: "Multiplayer Menu Theme",
+        game: "Call of Duty: Black Ops II",
+        composer: "Jack Wall",
+        year: "2012",
+        duration: "3:22",
+        youtubeUrl: "https://youtu.be/XGLYpYoXkWw"
+    },
+    {
+        id: "rA7o-Tq0V1A",
+        title: "Rising Tide",
+        originalTitle: "Multiplayer Theme Remastered",
+        game: "Call of Duty: Black Ops Cold War",
+        composer: "Jack Wall",
+        year: "2020",
+        duration: "3:04",
+        youtubeUrl: "https://youtu.be/rA7o-Tq0V1A"
+    },
+    {
+        id: "M4lB-PAj0l4",
+        title: "Menu Intro (Brave Soldat)",
+        originalTitle: "World at War Main Menu Theme",
+        game: "Call of Duty: World at War",
+        composer: "Sean Murray",
+        year: "2008",
+        duration: "2:45",
+        youtubeUrl: "https://youtu.be/M4lB-PAj0l4"
+    },
+    {
+        id: "9FvtJDPJCe8",
+        title: "Cold War (Main Theme)",
+        originalTitle: "Black Ops Cold War Main Theme",
+        game: "Call of Duty: Black Ops Cold War",
+        composer: "Jack Wall",
+        year: "2020",
+        duration: "3:18",
+        youtubeUrl: "https://youtu.be/9FvtJDPJCe8"
+    },
+    {
+        id: "osompIOly0Q",
+        title: "Infinite Warfare (Main Theme)",
+        originalTitle: "Main Menu Soundtrack",
+        game: "Call of Duty: Infinite Warfare",
+        composer: "Sarah Schachner",
+        year: "2016",
+        duration: "4:18",
+        youtubeUrl: "https://www.youtube.com/watch?v=osompIOly0Q"
+    }
+];
+
+const OST_PLAYLISTS = {
+    ff: {
+        id: 'ff',
+        name: 'FF Battle OST',
+        title: 'Final Fantasy Battle OST',
+        shortName: 'FF',
+        badge: 'FF BATTLE',
+        composerSubtitle: 'Square Enix · Nobuo Uematsu, Naoshi Mizuta, Junya Nakano & Shootie HG',
+        icon: 'fa-gem',
+        color: 'cyan',
+        borderClass: 'border-cyan-500/40',
+        activePill: 'bg-cyan-950/90 text-cyan-300 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.25)]',
+        inactivePill: 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border-transparent',
+        tagBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+        trackNumberBg: 'bg-cyan-500 text-black',
+        trackActiveBorder: 'bg-cyan-950/40 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40',
+        tracks: FF_CLASSIC_TRACKS
+    },
+    cod: {
+        id: 'cod',
+        name: 'COD Menu OST',
+        title: 'Call of Duty Menu OST',
+        shortName: 'COD',
+        badge: 'COD MENU',
+        composerSubtitle: 'Activision · Jack Wall, Trent Reznor, Sean Murray & Sarah Schachner',
+        icon: 'fa-crosshairs',
+        color: 'amber',
+        borderClass: 'border-amber-500/40',
+        activePill: 'bg-amber-950/90 text-amber-300 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.25)]',
+        inactivePill: 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border-transparent',
+        tagBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        trackNumberBg: 'bg-amber-500 text-black',
+        trackActiveBorder: 'bg-amber-950/40 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/40',
+        tracks: COD_MENU_TRACKS
+    }
+};
+
+const FinalFantasyJukebox = ({
+    state,
+    onClose,
+    onMinimize,
+    onExpand,
+    onNext,
+    onPrev,
+    onRandom,
+    onSelectTrack,
+    onSwitchPlaylist
+}) => {
     const iframeRef = React.useRef(null);
     const [volume, setVolume] = React.useState(() => {
         try {
@@ -5285,15 +6300,18 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
     const [isMuted, setIsMuted] = React.useState(false);
     const [isPlaying, setIsPlaying] = React.useState(true);
 
-    const currentTrack = FF_CLASSIC_TRACKS[state.trackIndex] || FF_CLASSIC_TRACKS[0];
+    const activePlaylistKey = state.playlist === 'cod' ? 'cod' : 'ff';
+    const activePlaylist = OST_PLAYLISTS[activePlaylistKey];
+    const trackList = activePlaylist.tracks;
+    const currentTrack = trackList[state.trackIndex] || trackList[0];
 
     const handleRandomTrack = () => {
         if (onRandom) {
             onRandom();
-        } else if (onSelectTrack && FF_CLASSIC_TRACKS.length > 0) {
-            let nextIdx = Math.floor(Math.random() * FF_CLASSIC_TRACKS.length);
-            if (FF_CLASSIC_TRACKS.length > 1 && nextIdx === state.trackIndex) {
-                nextIdx = (nextIdx + 1) % FF_CLASSIC_TRACKS.length;
+        } else if (onSelectTrack && trackList.length > 0) {
+            let nextIdx = Math.floor(Math.random() * trackList.length);
+            if (trackList.length > 1 && nextIdx === state.trackIndex) {
+                nextIdx = (nextIdx + 1) % trackList.length;
             }
             onSelectTrack(nextIdx);
         }
@@ -5391,12 +6409,18 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
 
     if (!state.isActive) return null;
 
+    const isCod = activePlaylistKey === 'cod';
+
     return (
         <>
             {/* Minimized floating dock player */}
             {state.isMinimized && (
-                <div className="fixed bottom-6 left-6 z-50 bg-[#060a14]/95 border border-cyan-500/40 rounded-xl p-3 shadow-2xl backdrop-blur-md flex items-center gap-3 text-xs max-w-lg border-l-4 border-l-cyan-400 select-none animate-fadeIn">
-                    <div className="w-10 h-10 rounded-lg bg-cyan-950/70 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner overflow-hidden relative">
+                <div className={`fixed bottom-6 left-6 z-50 bg-[#050505]/95 border rounded-xl p-3 shadow-2xl backdrop-blur-xl flex items-center gap-3 text-xs max-w-lg border-l-4 select-none animate-fadeIn ${
+                    isCod ? 'border-amber-500/40 border-l-amber-400' : 'border-white/[0.12] border-l-cyan-400'
+                }`}>
+                    <div className={`w-10 h-10 rounded-lg border flex items-center justify-center shrink-0 shadow-inner overflow-hidden relative ${
+                        isCod ? 'bg-amber-950/70 border-amber-500/30 text-amber-400' : 'bg-cyan-950/70 border-cyan-500/30 text-cyan-400'
+                    }`}>
                         <img src={`https://img.youtube.com/vi/${currentTrack.id}/default.jpg`} className="w-full h-full object-cover opacity-80" alt="thumbnail" />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <i className={`fas fa-compact-disc ${isPlaying ? 'fa-spin' : ''} text-white drop-shadow-md text-base`} style={{ animationDuration: '4s' }}></i>
@@ -5404,10 +6428,24 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                     </div>
                     <div className="overflow-hidden min-w-0 flex-1">
                         <div className="font-bold text-white truncate flex items-center gap-1.5">
-                            <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-cyan-400 animate-ping' : 'bg-slate-500'}`}></span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? (isCod ? 'bg-amber-400 animate-ping' : 'bg-cyan-400 animate-ping') : 'bg-slate-500'}`}></span>
                             <span className="truncate">{currentTrack.title}</span>
+                            <button
+                                type="button"
+                                onClick={() => onSwitchPlaylist && onSwitchPlaylist(isCod ? 'ff' : 'cod')}
+                                title={`Toggle Playlist: Currently playing ${activePlaylist.name}. Click to switch to ${isCod ? 'FF Battle OST' : 'COD Menu OST'}`}
+                                className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold border transition-all cursor-pointer shrink-0 flex items-center gap-1 shadow-sm ${
+                                    isCod
+                                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 hover:bg-amber-500/30'
+                                        : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 hover:bg-cyan-500/30'
+                                }`}
+                            >
+                                
+                                <span>{isCod ? 'COD Menu' : 'FF Battle'}</span>
+                                <i className="fas fa-arrows-rotate text-[7px] opacity-75"></i>
+                            </button>
                         </div>
-                        <div className="text-[11px] text-cyan-300 truncate">
+                        <div className={`text-[11px] truncate ${isCod ? 'text-amber-300/80' : 'text-cyan-300/80'}`}>
                             {currentTrack.game} • {currentTrack.composer}
                         </div>
                     </div>
@@ -5416,15 +6454,15 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                         <button
                             onClick={togglePlay}
                             title={isPlaying ? "Pause music" : "Play music"}
-                            className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors"
+                            className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
                         >
-                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} text-cyan-400 text-xs`}></i>
+                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} ${isCod ? 'text-amber-400' : 'text-cyan-400'} text-xs`}></i>
                         </button>
                         {/* Prev/Next */}
-                        <button onClick={onPrev} title="Previous track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors">
+                        <button onClick={onPrev} title="Previous track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer">
                             <i className="fas fa-backward-step text-xs"></i>
                         </button>
-                        <button onClick={onNext} title="Next track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors">
+                        <button onClick={onNext} title="Next track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer">
                             <i className="fas fa-forward-step text-xs"></i>
                         </button>
                         {/* Randomize Track */}
@@ -5432,7 +6470,7 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                             type="button"
                             onClick={handleRandomTrack}
                             title="Randomize track / Shuffle"
-                            className="p-1.5 hover:text-cyan-300 hover:bg-white/10 rounded transition-colors"
+                            className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
                         >
                             <i className="fas fa-shuffle text-xs"></i>
                         </button>
@@ -5442,9 +6480,9 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                             <button
                                 onClick={toggleMute}
                                 title={isMuted ? "Unmute" : "Mute"}
-                                className="text-slate-400 hover:text-cyan-400 transition-colors focus:outline-none"
+                                className={`text-slate-400 hover:${isCod ? 'text-amber-400' : 'text-cyan-400'} transition-colors focus:outline-none cursor-pointer`}
                             >
-                                <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? 'fa-volume-low text-cyan-400' : 'fa-volume-high text-cyan-400'} text-xs`}></i>
+                                <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? (isCod ? 'fa-volume-low text-amber-400' : 'fa-volume-low text-cyan-400') : (isCod ? 'fa-volume-high text-amber-400' : 'fa-volume-high text-cyan-400')} text-xs`}></i>
                             </button>
                             <input
                                 type="range"
@@ -5452,7 +6490,7 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                 max="100"
                                 value={isMuted ? 0 : volume}
                                 onChange={(e) => handleVolumeChange(e.target.value)}
-                                className="w-14 sm:w-18 h-1 bg-slate-700 rounded appearance-none cursor-pointer accent-cyan-400"
+                                className={`w-14 sm:w-18 h-1 bg-slate-700 rounded appearance-none cursor-pointer ${isCod ? 'accent-amber-400' : 'accent-cyan-400'}`}
                                 aria-label="Volume slider"
                                 title={`Volume: ${isMuted ? 0 : volume}%`}
                             />
@@ -5462,45 +6500,49 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                         </div>
 
                         {/* Expand player */}
-                        <button onClick={onExpand} title="Expand player" className="p-1.5 hover:text-cyan-400 hover:bg-white/10 rounded transition-colors">
+                        <button onClick={onExpand} title="Expand player" className={`p-1.5 hover:${isCod ? 'text-amber-400' : 'text-cyan-400'} hover:bg-white/10 rounded transition-colors cursor-pointer`}>
                             <i className="fas fa-up-right-and-down-left-from-center text-xs"></i>
                         </button>
                         {/* Stop music */}
-                        <button onClick={onClose} title="Stop music" className="p-1.5 hover:text-rose-400 hover:bg-white/10 rounded transition-colors">
+                        <button onClick={onClose} title="Stop music" className="p-1.5 hover:text-rose-400 hover:bg-white/10 rounded transition-colors cursor-pointer">
                             <i className="fas fa-times text-xs"></i>
                         </button>
                     </div>
                 </div>
             )}
 
-            {/* Persistent Player Modal Container:
-                When state.isOpen is true, display as centered modal on screen.
-                When state.isOpen is false, positioned offscreen with real dimensions so the audio continues playing smoothly without unmounting! */}
+            {/* Persistent Player Modal Container */}
             <div className={
                 state.isOpen
                     ? "fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
                     : "fixed -bottom-[9999px] left-0 w-[320px] h-[180px] opacity-[0.001] pointer-events-none -z-50 overflow-hidden"
             }>
-                <div className="bg-[#070b16] border border-cyan-500/30 rounded-2xl max-w-2xl w-full shadow-[0_0_50px_rgba(0,170,255,0.25)] overflow-hidden flex flex-col my-auto max-h-[92vh]">
+                <div className={`bg-[#050505]/95 backdrop-blur-xl border rounded-2xl max-w-2xl w-full overflow-hidden flex flex-col my-auto max-h-[92vh] ${
+                    isCod
+                        ? 'border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.25)]'
+                        : 'border-white/[0.12] shadow-2xl'
+                }`}>
                     
                     {/* Header */}
-                    <div className="bg-[#0b1224] border-b border-cyan-500/20 px-4 py-3 flex items-center justify-between shrink-0">
+                    <div className="bg-black/60 border-b border-white/[0.08] px-4 py-3 flex items-center justify-between shrink-0">
                         <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-sm relative overflow-hidden">
+                            <div className={`w-8 h-8 rounded-lg border flex items-center justify-center shadow-sm relative overflow-hidden ${
+                                isCod ? 'bg-amber-950/80 border-amber-500/40 text-amber-400' : 'bg-cyan-950/80 border-cyan-500/40 text-cyan-400'
+                            }`}>
                                 <img src={`https://img.youtube.com/vi/${currentTrack.id}/default.jpg`} className="absolute inset-0 w-full h-full object-cover opacity-30" alt="" />
-                                <i className="fas fa-gem text-sm relative z-10"></i>
+                                
                             </div>
                             <div>
                                 <div className="text-sm font-bold text-white flex items-center gap-2 font-mono">
-                                    <span>Final Fantasy Classic OST Jukebox</span>
+                                    <span>{activePlaylist.title} Jukebox</span>
                                     <div className="flex items-end gap-0.5 h-3">
-                                        <span className={`w-0.5 bg-cyan-400 ${isPlaying ? 'animate-pulse' : ''} h-2`}></span>
-                                        <span className={`w-0.5 bg-sky-300 ${isPlaying ? 'animate-pulse' : ''} h-3`}></span>
-                                        <span className={`w-0.5 bg-blue-400 ${isPlaying ? 'animate-pulse' : ''} h-1.5`}></span>
+                                        <span className={`w-0.5 ${isCod ? 'bg-amber-400' : 'bg-cyan-400'} ${isPlaying ? 'animate-pulse' : ''} h-2`}></span>
+                                        <span className={`w-0.5 ${isCod ? 'bg-orange-300' : 'bg-sky-300'} ${isPlaying ? 'animate-pulse' : ''} h-3`}></span>
+                                        <span className={`w-0.5 ${isCod ? 'bg-yellow-400' : 'bg-blue-400'} ${isPlaying ? 'animate-pulse' : ''} h-1.5`}></span>
                                     </div>
                                 </div>
-                                <div className="text-[11px] text-cyan-300/80 font-mono">
-                                    Square Enix / Nobuo Uematsu, Naoshi Mizuta & Junya Nakano • YouTube Audio Stream
+                                <div className={`text-[11px] font-mono truncate max-w-sm ${isCod ? 'text-amber-300/80' : 'text-cyan-300/80'}`}>
+                                    {activePlaylist.composerSubtitle} • YouTube Audio Stream
                                 </div>
                             </div>
                         </div>
@@ -5508,14 +6550,14 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                             <button
                                 onClick={onMinimize}
                                 title="Minimize to background player"
-                                className="p-1.5 text-slate-400 hover:text-cyan-400 hover:bg-white/[0.05] rounded transition-colors"
+                                className="p-1.5 text-slate-400 hover:text-white hover:bg-white/[0.05] rounded transition-colors cursor-pointer"
                             >
                                 <i className="fas fa-window-minimize text-xs"></i>
                             </button>
                             <button
                                 onClick={onClose}
                                 title="Close jukebox"
-                                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/[0.05] rounded transition-colors"
+                                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/[0.05] rounded transition-colors cursor-pointer"
                             >
                                 <i className="fas fa-times text-xs"></i>
                             </button>
@@ -5524,11 +6566,41 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
 
                     {/* Main Content Area */}
                     <div className="overflow-y-auto flex-1 p-4 space-y-4">
+                        {/* Playlist Toggle Pill Switch */}
+                        <div className="flex items-center p-1 bg-black/60 rounded-xl border border-white/10 gap-1.5 shrink-0">
+                            <button
+                                type="button"
+                                onClick={() => onSwitchPlaylist && onSwitchPlaylist('ff')}
+                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer border ${
+                                    activePlaylistKey === 'ff'
+                                        ? 'bg-cyan-950/80 text-cyan-300 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border-transparent'
+                                }`}
+                            >
+                                
+                                <span>FF Battle OST</span>
+                                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300 font-mono">15</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => onSwitchPlaylist && onSwitchPlaylist('cod')}
+                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer border ${
+                                    activePlaylistKey === 'cod'
+                                        ? 'bg-amber-950/80 text-amber-300 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.25)]'
+                                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border-transparent'
+                                }`}
+                            >
+                                
+                                <span>COD Menu OST</span>
+                                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-mono">7</span>
+                            </button>
+                        </div>
+
                         {/* YouTube Video Player (Single persistent instance, using youtube-nocookie to prevent Error 153 on custom domains) */}
                         <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10 shadow-2xl">
                             <iframe
                                 ref={iframeRef}
-                                key={currentTrack.id}
+                                key={`${activePlaylistKey}-${currentTrack.id}`}
                                 src={`https://www.youtube-nocookie.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`}
                                 title={currentTrack.title}
                                 className="w-full h-full border-none"
@@ -5544,8 +6616,8 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                             <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 pointer-events-none" style={{ background: `url(https://img.youtube.com/vi/${currentTrack.id}/mqdefault.jpg) center/cover no-repeat`, maskImage: 'linear-gradient(to right, transparent, black)' }}></div>
                             <div className="min-w-0 flex-1 relative z-10 pr-2">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                                        TRACK {state.trackIndex + 1}/{FF_CLASSIC_TRACKS.length}
+                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono ${activePlaylist.tagBg}`}>
+                                        TRACK {state.trackIndex + 1}/{trackList.length} • {activePlaylist.badge}
                                     </span>
                                     <span className="text-xs font-semibold text-slate-400">
                                         {currentTrack.game} ({currentTrack.year})
@@ -5564,17 +6636,17 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                 {/* Play / Pause */}
                                 <button
                                     onClick={togglePlay}
-                                    className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                                    className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                                     title={isPlaying ? "Pause music" : "Play music"}
                                 >
-                                    <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} text-cyan-400 text-xs`}></i>
+                                    <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} ${isCod ? 'text-amber-400' : 'text-cyan-400'} text-xs`}></i>
                                     <span className="hidden sm:inline">{isPlaying ? 'Pause' : 'Play'}</span>
                                 </button>
 
                                 {/* Prev / Next */}
                                 <button
                                     onClick={onPrev}
-                                    className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-white/[0.1] text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                                    className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.1] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                                     title="Previous track"
                                 >
                                     <i className="fas fa-backward-step"></i>
@@ -5582,7 +6654,9 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                 </button>
                                 <button
                                     onClick={onNext}
-                                    className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-cyan-900/50"
+                                    className={`px-3 py-1.5 rounded-lg text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md cursor-pointer ${
+                                        isCod ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-900/50' : 'bg-cyan-600 hover:bg-cyan-500 shadow-cyan-900/50'
+                                    }`}
                                     title="Next track"
                                 >
                                     <span className="hidden sm:inline">Next</span>
@@ -5592,10 +6666,10 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                 <button
                                     type="button"
                                     onClick={handleRandomTrack}
-                                    className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-white/[0.1] text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                                    title="Play a random track from playlist"
+                                    className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.1] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                    title="Play a random track from current playlist"
                                 >
-                                    <i className="fas fa-shuffle text-cyan-400"></i>
+                                    <i className={`fas fa-shuffle ${isCod ? 'text-amber-400' : 'text-cyan-400'}`}></i>
                                     <span className="hidden sm:inline">Randomize</span>
                                 </button>
 
@@ -5604,11 +6678,11 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                     <button
                                         type="button"
                                         onClick={toggleMute}
-                                        className="text-slate-400 hover:text-cyan-400 transition-colors focus:outline-none"
+                                        className={`text-slate-400 hover:${isCod ? 'text-amber-400' : 'text-cyan-400'} transition-colors focus:outline-none cursor-pointer`}
                                         title={isMuted ? "Unmute" : "Mute"}
                                         aria-label="Toggle mute"
                                     >
-                                        <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? 'fa-volume-low text-cyan-400' : 'fa-volume-high text-cyan-400'} text-xs`}></i>
+                                        <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? (isCod ? 'fa-volume-low text-amber-400' : 'fa-volume-low text-cyan-400') : (isCod ? 'fa-volume-high text-amber-400' : 'fa-volume-high text-cyan-400')} text-xs`}></i>
                                     </button>
                                     <input
                                         type="range"
@@ -5616,7 +6690,7 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                         max="100"
                                         value={isMuted ? 0 : volume}
                                         onChange={(e) => handleVolumeChange(e.target.value)}
-                                        className="w-20 sm:w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                                        className={`w-20 sm:w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer ${isCod ? 'accent-amber-400' : 'accent-cyan-400'}`}
                                         aria-label="Volume slider"
                                         title={`Volume: ${isMuted ? 0 : volume}%`}
                                     />
@@ -5641,36 +6715,44 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                         {/* Tracklist selection */}
                         <div>
                             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between font-mono">
-                                <span>Playlist Selection ({FF_CLASSIC_TRACKS.length} Tracks)</span>
+                                <span>{activePlaylist.name} Selection ({trackList.length} Tracks)</span>
                                 <div className="flex items-center gap-2">
                                     <button
                                         type="button"
                                         onClick={handleRandomTrack}
-                                        className="px-2.5 py-1 rounded bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 hover:text-white text-[11px] font-mono font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+                                        className={`px-2.5 py-1 rounded border text-[11px] font-mono font-semibold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer ${
+                                            isCod
+                                                ? 'bg-amber-950/80 hover:bg-amber-900 border-amber-500/40 text-amber-300 hover:text-white'
+                                                : 'bg-cyan-950/80 hover:bg-cyan-900 border-cyan-500/40 text-cyan-300 hover:text-white'
+                                        }`}
                                         title="Pick and play a random track from the playlist"
                                     >
                                         <i className="fas fa-shuffle text-xs"></i>
                                         <span>Randomize Tracks</span>
                                     </button>
-                                    <span className="text-cyan-400/70 text-[11px] lowercase hidden sm:inline">click to play</span>
+                                    <span className="text-slate-400 text-[11px] lowercase hidden sm:inline">click to play</span>
                                 </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {FF_CLASSIC_TRACKS.map((track, idx) => {
+                                {trackList.map((track, idx) => {
                                     const isCurrent = idx === state.trackIndex;
                                     return (
                                         <button
                                             key={track.id}
                                             onClick={() => onSelectTrack(idx)}
-                                            className={`p-2.5 rounded-lg text-left transition-all border flex items-center justify-between gap-2.5 ${
+                                            className={`p-2.5 rounded-lg text-left transition-all border flex items-center justify-between gap-2.5 cursor-pointer ${
                                                 isCurrent
-                                                    ? 'bg-cyan-950/40 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40'
+                                                    ? (isCod
+                                                        ? 'bg-amber-950/40 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/40'
+                                                        : 'bg-cyan-950/40 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40')
                                                     : 'bg-white/[0.03] border-white/[0.08] hover:border-white/[0.2] hover:bg-white/[0.06]'
                                             }`}
                                         >
                                             <div className="flex items-center gap-2.5 min-w-0">
                                                 <div className={`w-7 h-7 rounded-md flex items-center justify-center font-mono text-xs font-bold shrink-0 overflow-hidden relative ${
-                                                    isCurrent ? 'bg-cyan-500 text-black' : 'bg-white/[0.08] text-slate-400'
+                                                    isCurrent
+                                                        ? (isCod ? 'bg-amber-500 text-black' : 'bg-cyan-500 text-black')
+                                                        : 'bg-white/[0.08] text-slate-400'
                                                 }`}>
                                                     <img src={`https://img.youtube.com/vi/${track.id}/default.jpg`} className="absolute inset-0 w-full h-full object-cover opacity-40" alt="" />
                                                     <span className="relative z-10">
@@ -5678,7 +6760,9 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                                     </span>
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <div className={`text-xs font-semibold truncate ${isCurrent ? 'text-cyan-300 font-bold' : 'text-slate-200'}`}>
+                                                    <div className={`text-xs font-semibold truncate ${
+                                                        isCurrent ? (isCod ? 'text-amber-300 font-bold' : 'text-cyan-300 font-bold') : 'text-slate-200'
+                                                    }`}>
                                                         {track.title}
                                                     </div>
                                                     <div className="text-[10px] text-slate-400 truncate">
@@ -5688,7 +6772,7 @@ const FinalFantasyJukebox = ({ state, onClose, onMinimize, onExpand, onNext, onP
                                             </div>
                                             <div className="text-slate-400 shrink-0">
                                                 {isCurrent ? (
-                                                    <span className="text-[10px] font-mono text-cyan-400 uppercase font-bold tracking-wider">
+                                                    <span className={`text-[10px] font-mono uppercase font-bold tracking-wider ${isCod ? 'text-amber-400' : 'text-cyan-400'}`}>
                                                         {isPlaying ? 'Playing' : 'Paused'}
                                                     </span>
                                                 ) : (
@@ -5923,7 +7007,7 @@ const ZarathustraEasterEgg = ({ isOpen, onClose, isMinimized, setIsMinimized }) 
     if (isMinimized) {
         return (
             <div className="fixed bottom-6 left-6 z-50 animate-in slide-in-from-bottom-2 duration-200">
-                <div className="flex items-center gap-3 px-3.5 py-2 rounded-xl bg-[#0c1220]/95 border border-white/[0.15] shadow-2xl backdrop-blur-md text-white text-xs">
+                <div className="flex items-center gap-3 px-3.5 py-2 rounded-xl bg-[#050505]/95 border border-white/[0.12] shadow-2xl backdrop-blur-xl text-white text-xs">
                     <button
                         onClick={togglePlay}
                         className="w-7 h-7 rounded-lg bg-primary hover:bg-sky-400 text-slate-950 font-bold flex items-center justify-center transition-transform"
@@ -5965,8 +7049,8 @@ const ZarathustraEasterEgg = ({ isOpen, onClose, isMinimized, setIsMinimized }) 
 
     // CLEAN, PROFESSIONAL TECHNICAL AUDIO MODAL (No vibecoded slop)
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#0c1220] border border-white/[0.15] rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-left">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-left">
                 {/* Header */}
                 <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/[0.08]">
                     <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
@@ -6144,6 +7228,7 @@ const App = () => {
                         isActive: true,
                         isOpen: false,
                         isMinimized: true,
+                        playlist: 'ff',
                         trackIndex: 0
                     };
                 }
@@ -6153,6 +7238,7 @@ const App = () => {
             isActive: false,
             isOpen: false,
             isMinimized: false,
+            playlist: 'ff',
             trackIndex: 0
         };
     });
@@ -6164,22 +7250,87 @@ const App = () => {
                 isActive: true,
                 isOpen: false,
                 isMinimized: true,
+                playlist: 'ff',
                 trackIndex: 0
             });
         }
     }, [settings.musicPlayer, settings.musicAutoPlay]);
 
     const handleMusicCommand = (action, payload) => {
-        if (action === 'play' || action === 'playMinimized') {
+        const currentPl = ffMusicState.playlist === 'cod' ? 'cod' : 'ff';
+        const getTrackList = (pl) => pl === 'cod' ? COD_MENU_TRACKS : FF_CLASSIC_TRACKS;
+
+        if (action === 'ff') {
+            const list = FF_CLASSIC_TRACKS;
+            const targetIdx = typeof payload === 'number' && payload >= 0 && payload < list.length ? payload : 0;
+            setFfMusicState({
+                isActive: true,
+                isOpen: false,
+                isMinimized: true,
+                playlist: 'ff',
+                trackIndex: targetIdx
+            });
+            setSettings(prev => {
+                if (!prev.musicPlayer) {
+                    const next = { ...prev, musicPlayer: true };
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch (e) {}
+                    return next;
+                }
+                return prev;
+            });
+            return { ...list[targetIdx], playlist: 'ff', index: targetIdx };
+        } else if (action === 'cod') {
+            const list = COD_MENU_TRACKS;
+            const targetIdx = typeof payload === 'number' && payload >= 0 && payload < list.length ? payload : 0;
+            setFfMusicState({
+                isActive: true,
+                isOpen: false,
+                isMinimized: true,
+                playlist: 'cod',
+                trackIndex: targetIdx
+            });
+            setSettings(prev => {
+                if (!prev.musicPlayer) {
+                    const next = { ...prev, musicPlayer: true };
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch (e) {}
+                    return next;
+                }
+                return prev;
+            });
+            return { ...list[targetIdx], playlist: 'cod', index: targetIdx };
+        } else if (action === 'switchPlaylist') {
+            const targetPl = payload === 'cod' ? 'cod' : 'ff';
+            const list = getTrackList(targetPl);
+            setFfMusicState(prev => ({
+                ...prev,
+                isActive: true,
+                playlist: targetPl,
+                trackIndex: 0
+            }));
+            return { ...list[0], playlist: targetPl, index: 0 };
+        } else if (action === 'togglePlaylist') {
+            const nextPl = currentPl === 'cod' ? 'ff' : 'cod';
+            const list = getTrackList(nextPl);
+            setFfMusicState(prev => ({
+                ...prev,
+                isActive: true,
+                playlist: nextPl,
+                trackIndex: 0
+            }));
+            return { ...list[0], playlist: nextPl, index: 0 };
+        } else if (action === 'play' || action === 'playMinimized') {
             const isMin = action === 'playMinimized' || (typeof payload === 'object' && payload?.minimized);
+            const targetPl = (typeof payload === 'object' && payload?.playlist) || currentPl;
+            const list = getTrackList(targetPl);
             const targetIdx = typeof payload === 'number' 
                 ? payload 
                 : (typeof payload === 'object' && typeof payload?.index === 'number' ? payload.index : ffMusicState.trackIndex);
-            const nextIdx = targetIdx >= 0 && targetIdx < FF_CLASSIC_TRACKS.length ? targetIdx : 0;
+            const nextIdx = targetIdx >= 0 && targetIdx < list.length ? targetIdx : 0;
             setFfMusicState({
                 isActive: true,
                 isOpen: !isMin,
                 isMinimized: isMin,
+                playlist: targetPl,
                 trackIndex: nextIdx
             });
             setSettings(prev => {
@@ -6190,34 +7341,37 @@ const App = () => {
                 }
                 return prev;
             });
-            return { ...FF_CLASSIC_TRACKS[nextIdx], index: nextIdx };
+            return { ...list[nextIdx], playlist: targetPl, index: nextIdx };
         } else if (action === 'next') {
-            const nextIdx = (ffMusicState.trackIndex + 1) % FF_CLASSIC_TRACKS.length;
+            const list = getTrackList(currentPl);
+            const nextIdx = (ffMusicState.trackIndex + 1) % list.length;
             setFfMusicState(prev => ({
                 ...prev,
                 isActive: true,
                 trackIndex: nextIdx
             }));
-            return { ...FF_CLASSIC_TRACKS[nextIdx], index: nextIdx };
+            return { ...list[nextIdx], playlist: currentPl, index: nextIdx };
         } else if (action === 'prev') {
-            const prevIdx = (ffMusicState.trackIndex - 1 + FF_CLASSIC_TRACKS.length) % FF_CLASSIC_TRACKS.length;
+            const list = getTrackList(currentPl);
+            const prevIdx = (ffMusicState.trackIndex - 1 + list.length) % list.length;
             setFfMusicState(prev => ({
                 ...prev,
                 isActive: true,
                 trackIndex: prevIdx
             }));
-            return { ...FF_CLASSIC_TRACKS[prevIdx], index: prevIdx };
+            return { ...list[prevIdx], playlist: currentPl, index: prevIdx };
         } else if (action === 'random' || action === 'shuffle') {
-            let nextIdx = Math.floor(Math.random() * FF_CLASSIC_TRACKS.length);
-            if (FF_CLASSIC_TRACKS.length > 1 && nextIdx === ffMusicState.trackIndex) {
-                nextIdx = (nextIdx + 1) % FF_CLASSIC_TRACKS.length;
+            const list = getTrackList(currentPl);
+            let nextIdx = Math.floor(Math.random() * list.length);
+            if (list.length > 1 && nextIdx === ffMusicState.trackIndex) {
+                nextIdx = (nextIdx + 1) % list.length;
             }
             setFfMusicState(prev => ({
                 ...prev,
                 isActive: true,
                 trackIndex: nextIdx
             }));
-            return { ...FF_CLASSIC_TRACKS[nextIdx], index: nextIdx };
+            return { ...list[nextIdx], playlist: currentPl, index: nextIdx };
         } else if (action === 'stop' || action === 'pause') {
             setFfMusicState(prev => ({
                 ...prev,
@@ -6235,13 +7389,15 @@ const App = () => {
             });
             return null;
         } else if (action === 'open') {
+            const list = getTrackList(currentPl);
+            const currentIdx = ffMusicState.trackIndex >= 0 && ffMusicState.trackIndex < list.length ? ffMusicState.trackIndex : 0;
             setFfMusicState(prev => ({
                 ...prev,
                 isActive: true,
                 isOpen: true,
                 isMinimized: false
             }));
-            return { ...FF_CLASSIC_TRACKS[ffMusicState.trackIndex], index: ffMusicState.trackIndex };
+            return { ...list[currentIdx], playlist: currentPl, index: currentIdx };
         }
         return null;
     };
@@ -6340,7 +7496,12 @@ const App = () => {
 
     return (
         <LanguageContext.Provider value={{ lang, setLang, t }}>
-            <SpaceCanvas theme={settings.theme} />
+            {settings.theme === 'space2' ? (
+                <React.Fragment>
+                    <SpaceCanvasV2 />
+                    <div className="fixed inset-0 z-0 bg-black/40 pointer-events-none" />
+                </React.Fragment>
+            ) : <SpaceCanvas theme={settings.theme} />}
 
             <TopBar
                 onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
@@ -6373,7 +7534,7 @@ const App = () => {
                 onClick={scrollToTop}
                 aria-label={lang === 'pt' ? 'Voltar ao topo' : 'Scroll to top'}
                 title={lang === 'pt' ? 'Voltar ao topo' : 'Scroll to top'}
-                className={`fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-slate-900/90 hover:bg-primary text-slate-300 hover:text-white border border-white/[0.15] hover:border-primary/60 shadow-xl shadow-black/70 hover:shadow-primary/30 backdrop-blur-md flex items-center justify-center transition-all duration-300 transform group clickable cursor-pointer ${
+                className={`fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#050505]/90 hover:bg-primary text-slate-300 hover:text-white border border-white/[0.15] hover:border-primary/60 shadow-xl shadow-black/70 hover:shadow-primary/30 backdrop-blur-xl flex items-center justify-center transition-all duration-300 transform group clickable cursor-pointer ${
                     showScrollTop
                         ? 'opacity-100 translate-y-0 pointer-events-auto'
                         : 'opacity-0 translate-y-4 pointer-events-none'
@@ -6397,7 +7558,7 @@ const App = () => {
                     onOpenCV={() => setIsCVOpen(true)}
                     onOpenEaster={(game) => setEasterGame(game)}
                     onMusicCommand={handleMusicCommand}
-                    activeMusicTrack={ffMusicState.isActive ? FF_CLASSIC_TRACKS[ffMusicState.trackIndex] : null}
+                    activeMusicTrack={ffMusicState.isActive ? (ffMusicState.playlist === 'cod' ? COD_MENU_TRACKS[ffMusicState.trackIndex] : FF_CLASSIC_TRACKS[ffMusicState.trackIndex]) : null}
                     onOpenSettings={() => setIsSettingsOpen(true)}
                 />
             )}
@@ -6436,6 +7597,7 @@ const App = () => {
                 onPrev={() => handleMusicCommand('prev')}
                 onRandom={() => handleMusicCommand('random')}
                 onSelectTrack={(idx) => handleMusicCommand('play', idx)}
+                onSwitchPlaylist={(pl) => handleMusicCommand('switchPlaylist', pl)}
             />
         
             {settings.companionBot && (
@@ -6451,8 +7613,8 @@ const App = () => {
 
             {showPatreonModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowPatreonModal(false)}></div>
-                    <div className="relative bg-[#0c1220] border border-white/[0.15] p-8 rounded-2xl max-w-md w-full shadow-2xl text-center">
+                    <div className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={() => setShowPatreonModal(false)}></div>
+                    <div className="relative bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] p-8 rounded-2xl max-w-md w-full shadow-2xl text-center">
                         <button onClick={() => setShowPatreonModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
                             <i className="fas fa-times"></i>
                         </button>

@@ -66,10 +66,16 @@
         a, button, .clickable { cursor: none !important; }
         
         .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(5, 5, 5, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
         }
         
         ::-webkit-scrollbar { width: 8px; }
@@ -100,11 +106,11 @@
         }
         
         .privacy-content h1 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
-        .privacy-content h2 { font-size: 1.25rem; font-weight: 600; color: #fff; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
+        .privacy-content h2 { font-size: 1.25rem; font-weight: 600; color: #fff; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem; }
         .privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #cbd5e1; }
         .privacy-content a { color: #38bdf8; text-decoration: none; }
         .privacy-content a:hover { text-decoration: underline; }
-        .privacy-content code { background: rgba(15, 23, 42, 0.85); padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #38bdf8; font-family: monospace; font-size: 0.9em; }
+        .privacy-content code { background: rgba(5, 5, 5, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #38bdf8; font-family: monospace; font-size: 0.9em; }
     
         @keyframes walk-back-and-forth {
             0% { transform: translateX(0) scaleX(1); }
@@ -122,12 +128,11 @@
             filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
         }
 </style>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 </head>
 <body class="antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
     
     <div id="custom-cursor"></div>
-    <canvas id="space-canvas" class="fixed inset-0 -z-10 opacity-70"></canvas>
+    <canvas id="space-canvas" class="fixed inset-0 -z-10 opacity-95 pointer-events-none transition-opacity duration-700"></canvas>
 
 
     <nav class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
@@ -149,11 +154,15 @@
                 <a href="/journal" class="font-bold text-primary">Journal</a>
                 <a href="/#contact" class="hover:text-primary transition-colors">Contact</a>
             </div>
-            <div class="flex items-center gap-3">
-                <a href="https://www.patreon.com/15458299/join" target="_blank" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-[#FF424D] bg-[#FF424D]/10 hover:bg-[#FF424D]/20 border border-[#FF424D]/20 rounded-lg transition-colors">
+            <div class="flex items-center gap-2.5">
+                <button id="theme-toggle-btn" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 rounded-lg transition-all clickable" title="Toggle Theme (Space / Sky)">
+                    <i id="theme-toggle-icon" class="fas fa-sun text-amber-400"></i>
+                    <span id="theme-toggle-label" class="hidden sm:inline">Sky Theme</span>
+                </button>
+                <a href="https://www.patreon.com/15458299/join" target="_blank" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-[#FF424D] bg-[#FF424D]/10 hover:bg-[#FF424D]/20 border border-[#FF424D]/20 rounded-lg transition-colors clickable">
                     <i class="fab fa-patreon"></i> Patreon
                 </a>
-                <a href="/" class="flex items-center gap-2 px-4 py-1.5 text-sm font-bold text-white bg-primary hover:bg-primaryHover rounded-lg transition-colors">
+                <a href="/" class="flex items-center gap-2 px-4 py-1.5 text-sm font-bold text-white bg-primary hover:bg-primaryHover rounded-lg transition-colors clickable">
                     <i class="fas fa-undo"></i> Back to Home
                 </a>
             </div>
@@ -183,15 +192,15 @@
     </main>
 
 
-    <footer class="mt-12 py-12 border-t border-slate-800/50 bg-[#030303] relative z-10 text-center text-sm text-slate-500">
-        <div class="max-w-md mx-auto mb-8 bg-slate-900/80 p-6 rounded-2xl border border-white/[0.05] shadow-lg">
+    <footer class="mt-12 py-12 border-t border-white/[0.08] bg-[#050505]/95 backdrop-blur-md relative z-10 text-center text-sm text-slate-500">
+        <div class="max-w-md mx-auto mb-8 glass-panel p-6 rounded-2xl border border-white/[0.1] shadow-2xl">
             <h3 class="text-white font-bold mb-2 flex items-center justify-center gap-2">
                 <i class="fas fa-envelope-open-text text-primary"></i> Technical Journal Newsletter
             </h3>
             <p class="text-xs text-slate-400 mb-4">Receive email updates whenever a new reverse engineering breakdown, sandbox bypass, or game tooling post is published.</p>
             <form onsubmit="event.preventDefault(); alert('Newsletter subscribed successfully!');" class="flex gap-2">
-                <input type="email" placeholder="your.email@example.com" required class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary text-sm">
-                <button type="submit" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm flex items-center gap-2">
+                <input type="email" placeholder="your.email@example.com" required class="flex-1 bg-black/60 border border-white/[0.12] rounded-lg px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-primary text-sm transition-colors">
+                <button type="submit" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm flex items-center gap-2 shadow-md shadow-primary/20">
                     <i class="fas fa-paper-plane"></i> Subscribe
                 </button>
             </form>
@@ -212,126 +221,189 @@
 
 
     <script>
-        
-function initSpaceCanvas() {
-    const canvas = document.getElementById('space-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    
-let isSky = false;
-try {
-    const settingsStr = localStorage.getItem('spetdev_portfolio_settings');
-    if (settingsStr) {
-        const settings = JSON.parse(settingsStr);
-        isSky = settings.theme === 'sky';
-    }
-} catch (e) {}
-
-let moonPos = { x: window.innerWidth * 0.8, y: window.innerHeight * 0.22 };
-let rocket = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.35, angle: -Math.PI / 4 };
-let jet2 = { x: window.innerWidth * 0.5 - 60, y: window.innerHeight * 0.35 - 30, vx: 0, vy: 0, angle: -Math.PI / 4 };
-let astro = { x: window.innerWidth * 0.5 + 50, y: window.innerHeight * 0.35 + 50, vx: 0, vy: 0, angle: 0 };
-let mouse = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.35, lastX: window.innerWidth * 0.5, lastY: window.innerHeight * 0.35 };
-let particles = [];
-let clouds = [];
-let keys = {};
-let hasMouseMoved = false;
-
-const initClouds = () => {
-    clouds = Array.from({ length: 9 }).map((_, i) => ({
-        x: (i / 9) * window.innerWidth + (Math.random() * 80 - 40),
-        y: Math.random() * (window.innerHeight * 0.72) + 25,
-        speed: Math.random() * 0.35 + 0.15,
-        scale: Math.random() * 0.6 + 0.65,
-        opacity: Math.random() * 0.25 + 0.55,
-        blobs: [
-            { ox: 0, oy: 0, r: 26 },
-            { ox: 22, oy: -10, r: 34 },
-            { ox: 50, oy: -6, r: 36 },
-            { ox: 76, oy: 0, r: 26 },
-            { ox: 38, oy: 12, r: 30 }
-        ]
-    }));
-};
-if (isSky) initClouds();
-
-// Listen to storage events to update theme dynamically if changed in another tab
-window.addEventListener('storage', (e) => {
-    if (e.key === 'spetdev_portfolio_settings') {
-        try {
-            const settings = JSON.parse(e.newValue);
-            isSky = settings.theme === 'sky';
-            if (isSky && clouds.length === 0) initClouds();
-        } catch(err) {}
-    }
-});
-
-
-    let animationFrameId;
-        let stars = [];
-
-        const initStars = () => {
-            stars = Array.from({ length: 300 }).map(() => ({
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                z: Math.random() * window.innerWidth,
-                size: Math.random() * 1.5 + 0.5
-            }));
-        };
-
-        const handleResize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            moonPos = { x: window.innerWidth * 0.82, y: window.innerHeight * 0.2 };
-            initStars();
-            initClouds();
-        };
-
-        handleResize();
-
-        const handleKeyDown = (e) => {
-            const activeTag = document.activeElement ? document.activeElement.tagName.toUpperCase() : '';
-            if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
-
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                e.preventDefault();
-                keys[e.key] = true;
-            }
-        };
-
-        const handleKeyUp = (e) => {
-            keys[e.key] = false;
-        };
-
-        const handleMouseMove = (e) => {
-            const clientX = e.clientX;
-            const clientY = e.clientY;
+        // Space & Sky Interactive Canvas Logic (Cosmic Space & Earth Sky Themes with Parachuter)
+        function initSpaceCanvas() {
+            const canvas = document.getElementById('space-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
             
-            const cursor = document.getElementById('custom-cursor');
-            if (cursor) {
-                cursor.style.left = clientX + 'px';
-                cursor.style.top = clientY + 'px';
+            const STORAGE_KEY = 'spet_portfolio_settings';
+            let currentTheme = 'sky'; // Default to Earth Sky with Parachuter
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.theme) currentTheme = parsed.theme;
+                }
+            } catch (e) {}
+
+            function updateThemeToggleUI() {
+                const btn = document.getElementById('theme-toggle-btn');
+                const icon = document.getElementById('theme-toggle-icon');
+                const label = document.getElementById('theme-toggle-label');
+                if (!btn || !icon || !label) return;
+                if (currentTheme === 'sky') {
+                    icon.className = 'fas fa-sun text-amber-400';
+                    label.textContent = 'Sky Theme';
+                    btn.title = 'Switch to Cosmic Space Theme';
+                    canvas.className = 'fixed inset-0 -z-10 transition-opacity duration-700 opacity-95 pointer-events-none';
+                } else {
+                    icon.className = 'fas fa-moon text-sky-400';
+                    label.textContent = 'Space Theme';
+                    btn.title = 'Switch to Earth Sky Theme';
+                    canvas.className = 'fixed inset-0 -z-10 transition-opacity duration-700 opacity-85 pointer-events-none';
+                }
             }
 
-            if (!hasMouseMoved) {
-                mouse = { x: clientX, y: clientY, lastX: clientX, lastY: clientY };
-                rocket.x = clientX;
-                rocket.y = clientY;
-                jet2.x = clientX - 60;
-                jet2.y = clientY - 30;
-                astro.x = Math.random() * window.innerWidth;
-                astro.y = Math.random() * window.innerHeight;
-                hasMouseMoved = true;
-            } else {
-                mouse.x = clientX;
-                mouse.y = clientY;
+            const toggleBtn = document.getElementById('theme-toggle-btn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    currentTheme = currentTheme === 'sky' ? 'space' : 'sky';
+                    try {
+                        let parsed = {};
+                        const saved = localStorage.getItem(STORAGE_KEY);
+                        if (saved) parsed = JSON.parse(saved);
+                        parsed.theme = currentTheme;
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                    } catch (e) {}
+                    updateThemeToggleUI();
+                    if (currentTheme === 'sky' && clouds.length === 0) {
+                        initClouds();
+                    }
+                });
             }
-        };
 
-        window.addEventListener('keydown', handleKeyDown, { passive: false });
-        window.addEventListener('keyup', handleKeyUp);
-        
-            // Cursor Hover effects
+            window.addEventListener('storage', (e) => {
+                if (e.key === STORAGE_KEY && e.newValue) {
+                    try {
+                        const parsed = JSON.parse(e.newValue);
+                        if (parsed.theme && parsed.theme !== currentTheme) {
+                            currentTheme = parsed.theme;
+                            updateThemeToggleUI();
+                            if (currentTheme === 'sky' && clouds.length === 0) initClouds();
+                        }
+                    } catch (err) {}
+                }
+            });
+
+            updateThemeToggleUI();
+
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+            let stars = [];
+            let clouds = [];
+            let particles = [];
+            let keys = {};
+            let hasMouseMoved = false;
+
+            // Actor (Parachuter in Sky / Astronaut in Space)
+            let astro = {
+                x: w * 0.45,
+                y: h * 0.35,
+                vx: 0,
+                vy: 0,
+                angle: 0
+            };
+
+            // Lead Aircraft / Rocket
+            let rocket = {
+                x: w * 0.5,
+                y: h * 0.3,
+                angle: -Math.PI / 4
+            };
+
+            // Wingman Jet (for Sky theme)
+            let jet2 = {
+                x: w * 0.5 - 60,
+                y: h * 0.3 - 30,
+                vx: 0,
+                vy: 0,
+                angle: -Math.PI / 4
+            };
+
+            let mouse = { x: w * 0.5, y: h * 0.3 };
+
+            function initClouds() {
+                clouds = Array.from({ length: 9 }).map((_, i) => ({
+                    x: (i / 9) * w + (Math.random() * 80 - 40),
+                    y: Math.random() * (h * 0.72) + 25,
+                    speed: Math.random() * 0.35 + 0.15,
+                    scale: Math.random() * 0.6 + 0.65,
+                    opacity: Math.random() * 0.25 + 0.55,
+                    blobs: [
+                        { ox: 0, oy: 0, r: 26 },
+                        { ox: 22, oy: -10, r: 34 },
+                        { ox: 50, oy: -6, r: 36 },
+                        { ox: 76, oy: 0, r: 26 },
+                        { ox: 38, oy: 12, r: 30 }
+                    ]
+                }));
+            }
+
+            function initStars() {
+                stars = Array.from({ length: 300 }).map(() => ({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    z: Math.random() * w,
+                    size: Math.random() * 1.5 + 0.5
+                }));
+            }
+
+            initClouds();
+            initStars();
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                initStars();
+                initClouds();
+            }
+            window.addEventListener('resize', resize);
+
+            window.addEventListener('keydown', (e) => {
+                const activeTag = document.activeElement ? document.activeElement.tagName.toUpperCase() : '';
+                if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                    keys[e.key] = true;
+                }
+            }, { passive: false });
+
+            window.addEventListener('keyup', (e) => {
+                keys[e.key] = false;
+            });
+
+            const handleMove = (clientX, clientY) => {
+                if (!hasMouseMoved) {
+                    mouse.x = clientX;
+                    mouse.y = clientY;
+                    rocket.x = clientX;
+                    rocket.y = clientY;
+                    jet2.x = clientX - 60;
+                    jet2.y = clientY - 30;
+                    astro.x = clientX + 40;
+                    astro.y = clientY + 40;
+                    hasMouseMoved = true;
+                } else {
+                    mouse.x = clientX;
+                    mouse.y = clientY;
+                }
+
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor) {
+                    cursor.style.left = clientX + 'px';
+                    cursor.style.top = clientY + 'px';
+                }
+            };
+
+            document.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+            document.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches.length > 0) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches.length > 0) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+
             document.addEventListener('mouseover', (e) => {
                 const cursor = document.getElementById('custom-cursor');
                 if (cursor && (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable'))) {
@@ -345,500 +417,471 @@ window.addEventListener('storage', (e) => {
                 }
             });
 
-window.addEventListener('resize', handleResize);
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 0) handleMouseMove({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
-        }, { passive: true });
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) handleMouseMove({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
-        }, { passive: true });
-
-        // Helper to draw a modern supersonic fighter jet
-        const drawFighterJet = (ctx, x, y, angle, isLead = true) => {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.rotate(angle);
-
-            // Fuselage & Delta Wings
-            ctx.fillStyle = isLead ? '#cbd5e1' : '#94a3b8';
-            ctx.beginPath();
-            ctx.moveTo(22, 0); // Pointed nose
-            ctx.lineTo(8, 3.5);
-            ctx.lineTo(-4, 18); // Starboard wingtip
-            ctx.lineTo(-8, 18);
-            ctx.lineTo(-6, 4);
-            ctx.lineTo(-18, 12); // Starboard stabilizer
-            ctx.lineTo(-20, 12);
-            ctx.lineTo(-17, 3);
-            ctx.lineTo(-19, 0); // Center exhaust
-            ctx.lineTo(-17, -3);
-            ctx.lineTo(-20, -12); // Port stabilizer
-            ctx.lineTo(-18, -12);
-            ctx.lineTo(-6, -4);
-            ctx.lineTo(-8, -18); // Port wingtip
-            ctx.lineTo(-4, -18);
-            ctx.lineTo(8, -3.5);
-            ctx.closePath();
-            ctx.fill();
-
-            // Wing panel accent lines
-            ctx.strokeStyle = isLead ? '#94a3b8' : '#64748b';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(6, 3);
-            ctx.lineTo(-4, 15);
-            ctx.moveTo(6, -3);
-            ctx.lineTo(-4, -15);
-            ctx.stroke();
-
-            // Twin angled tailfins
-            ctx.fillStyle = isLead ? '#94a3b8' : '#64748b';
-            ctx.beginPath();
-            ctx.moveTo(-10, 4);
-            ctx.lineTo(-16, 7);
-            ctx.lineTo(-18, 4);
-            ctx.closePath();
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(-10, -4);
-            ctx.lineTo(-16, -7);
-            ctx.lineTo(-18, -4);
-            ctx.closePath();
-            ctx.fill();
-
-            // Glass canopy with sky reflection
-            const canopyGrad = ctx.createLinearGradient(0, -2, 10, 2);
-            canopyGrad.addColorStop(0, '#38bdf8');
-            canopyGrad.addColorStop(1, '#0284c7');
-            ctx.fillStyle = canopyGrad;
-            ctx.beginPath();
-            ctx.ellipse(3, 0, 7, 2.8, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Twin afterburner flames
-            ctx.fillStyle = 'rgba(255, 130, 0, 0.9)';
-            ctx.beginPath();
-            ctx.moveTo(-17, -3);
-            ctx.lineTo(-26, 0);
-            ctx.lineTo(-17, 3);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = '#fef08a';
-            ctx.beginPath();
-            ctx.moveTo(-17, -1.5);
-            ctx.lineTo(-22, 0);
-            ctx.lineTo(-17, 1.5);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.restore();
-        };
-
-        // Helper to draw Astro as a Parachuter (Para)
-        const drawParachuter = (ctx, x, y, angle, vx, vy) => {
-            ctx.save();
-            ctx.translate(x, y);
-
-            // Aerodynamic sway angle based on glide velocity
-            const sway = Math.max(-0.35, Math.min(0.35, vx * 0.08));
-            ctx.rotate(sway);
-
-            // 1. Suspension lines (shroud cords from canopy down to harness)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(-25, -36);
-            ctx.lineTo(0, -3);
-            ctx.moveTo(-9, -40);
-            ctx.lineTo(0, -3);
-            ctx.moveTo(9, -40);
-            ctx.lineTo(0, -3);
-            ctx.moveTo(25, -36);
-            ctx.lineTo(0, -3);
-            ctx.stroke();
-
-            // 2. Parachute Canopy (curved ram-air aerodynamic canopy above)
-            ctx.fillStyle = '#0284c7';
-            ctx.beginPath();
-            ctx.moveTo(-26, -35);
-            ctx.bezierCurveTo(-20, -54, 20, -54, 26, -35);
-            ctx.bezierCurveTo(16, -40, -16, -40, -26, -35);
-            ctx.closePath();
-            ctx.fill();
-
-            // Cell 1: Cyan
-            ctx.fillStyle = '#00aaff';
-            ctx.beginPath();
-            ctx.moveTo(-26, -35);
-            ctx.bezierCurveTo(-22, -50, -14, -52, -13, -38);
-            ctx.bezierCurveTo(-18, -40, -22, -38, -26, -35);
-            ctx.closePath();
-            ctx.fill();
-
-            // Cell 2: White
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.moveTo(-13, -38);
-            ctx.bezierCurveTo(-14, -52, 0, -54, 0, -40);
-            ctx.bezierCurveTo(-5, -40, -10, -39, -13, -38);
-            ctx.closePath();
-            ctx.fill();
-
-            // Cell 3: Orange
-            ctx.fillStyle = '#f97316';
-            ctx.beginPath();
-            ctx.moveTo(0, -40);
-            ctx.bezierCurveTo(0, -54, 14, -52, 13, -38);
-            ctx.bezierCurveTo(9, -39, 4, -40, 0, -40);
-            ctx.closePath();
-            ctx.fill();
-
-            // Cell 4: Cyan
-            ctx.fillStyle = '#00aaff';
-            ctx.beginPath();
-            ctx.moveTo(13, -38);
-            ctx.bezierCurveTo(14, -52, 22, -50, 26, -35);
-            ctx.bezierCurveTo(22, -38, 18, -40, 13, -38);
-            ctx.closePath();
-            ctx.fill();
-
-            // 3. Astro Para Body
-            // Parachute harness container
-            ctx.fillStyle = '#334155';
-            ctx.fillRect(-4, -4, 8, 9);
-
-            // Flight suit
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillRect(-5, 0, 10, 11);
-
-            // Helmet
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(0, -6, 6, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Visor
-            ctx.fillStyle = '#00aaff';
-            ctx.beginPath();
-            ctx.arc(1.5, -6, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Arms holding risers
-            ctx.fillStyle = '#94a3b8';
-            ctx.beginPath();
-            ctx.moveTo(-5, 0); ctx.lineTo(-8, -4); ctx.lineTo(-7, 2); ctx.closePath(); ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(5, 0); ctx.lineTo(8, -4); ctx.lineTo(7, 2); ctx.closePath(); ctx.fill();
-
-            // Legs swaying gently
-            const legSwing = Math.sin(Date.now() * 0.006) * 1.5;
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillRect(-4, 11, 3, 7 + legSwing);
-            ctx.fillRect(1, 11, 3, 7 - legSwing);
-
-            // Boots
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-4.5, 18 + legSwing, 4, 3);
-            ctx.fillRect(0.5, 18 - legSwing, 4, 3);
-
-            ctx.restore();
-        };
-
-        const render = () => {
-            if (isSky) {
-                // --- EARTH SKY THEME ---
-                // Atmospheric Blue Sky Gradient
-                const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                skyGrad.addColorStop(0, '#091c36');
-                skyGrad.addColorStop(0.3, '#103965');
-                skyGrad.addColorStop(0.65, '#17528e');
-                skyGrad.addColorStop(1, '#236ca8');
-                ctx.fillStyle = skyGrad;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Radiant Sun instead of the Moon
-                const sunX = moonPos.x;
-                const sunY = moonPos.y;
-
-                const sunGlow = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 130);
-                sunGlow.addColorStop(0, 'rgba(255, 245, 180, 0.45)');
-                sunGlow.addColorStop(0.35, 'rgba(253, 224, 71, 0.18)');
-                sunGlow.addColorStop(0.7, 'rgba(245, 158, 11, 0.06)');
-                sunGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
-                ctx.fillStyle = sunGlow;
-                ctx.beginPath();
-                ctx.arc(sunX, sunY, 130, 0, Math.PI * 2);
-                ctx.fill();
-
-                const sunCore = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, 30);
-                sunCore.addColorStop(0, '#ffffff');
-                sunCore.addColorStop(0.4, '#fef08a');
-                sunCore.addColorStop(0.85, '#facc15');
-                sunCore.addColorStop(1, '#eab308');
-                ctx.fillStyle = sunCore;
-                ctx.beginPath();
-                ctx.arc(sunX, sunY, 30, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Shimmering Solar Rays
+            // Drawing helpers
+            function drawFighterJet(x, y, angle, isLead = true) {
                 ctx.save();
-                ctx.translate(sunX, sunY);
-                ctx.strokeStyle = 'rgba(254, 240, 138, 0.22)';
-                ctx.lineWidth = 2;
-                const rayTime = Date.now() * 0.0004;
-                for (let r = 0; r < 8; r++) {
-                    const rayAngle = (r * Math.PI / 4) + rayTime;
-                    ctx.beginPath();
-                    ctx.moveTo(Math.cos(rayAngle) * 34, Math.sin(rayAngle) * 34);
-                    ctx.lineTo(Math.cos(rayAngle) * 70, Math.sin(rayAngle) * 70);
-                    ctx.stroke();
-                }
-                ctx.restore();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
 
-                // Drifting Earth Clouds
-                clouds.forEach(cloud => {
-                    cloud.x += cloud.speed;
-                    if (cloud.x > canvas.width + 120) {
-                        cloud.x = -130;
-                        cloud.y = Math.random() * (canvas.height * 0.72) + 25;
-                    }
-                    ctx.save();
-                    ctx.translate(cloud.x, cloud.y);
-                    ctx.scale(cloud.scale, cloud.scale);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${cloud.opacity * 0.85})`;
-                    cloud.blobs.forEach(b => {
-                        ctx.beginPath();
-                        ctx.arc(b.ox, b.oy, b.r, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                    // Soft under-cloud depth shading
-                    ctx.fillStyle = `rgba(200, 220, 240, ${cloud.opacity * 0.35})`;
-                    ctx.beginPath();
-                    ctx.ellipse(38, 12, 46, 14, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                });
-
-            } else {
-                // --- COSMIC SPACE THEME ---
-                ctx.fillStyle = '#050505';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Stars
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-                stars.forEach(star => {
-                    star.z -= 0.35;
-                    if (star.z <= 0) {
-                        star.z = canvas.width;
-                        star.x = Math.random() * canvas.width;
-                        star.y = Math.random() * canvas.height;
-                    }
-                    const perspective = canvas.width / star.z;
-                    const px = (star.x - canvas.width / 2) * perspective + canvas.width / 2;
-                    const py = (star.y - canvas.height / 2) * perspective + canvas.height / 2;
-                    const pSize = star.size * perspective * 0.45;
-
-                    ctx.beginPath();
-                    ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                // Ambient Moon
-                const moonX = moonPos.x;
-                const moonY = moonPos.y;
-                const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
-                gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
-                gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
-                ctx.fillStyle = gradient;
+                // Fuselage & Delta Wings
+                ctx.fillStyle = isLead ? '#cbd5e1' : '#94a3b8';
                 ctx.beginPath();
-                ctx.arc(moonX, moonY, 80, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#e2e8f0';
-                ctx.beginPath();
-                ctx.arc(moonX, moonY, 28, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Moon Craters
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
-                ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
-            }
-
-            if (!hasMouseMoved) {
-                animationFrameId = requestAnimationFrame(render);
-                return;
-            }
-
-            
-
-            rocket.x = mouse.x;
-            rocket.y = mouse.y;
-
-            const dxMouse = mouse.x - mouse.lastX;
-            const dyMouse = mouse.y - mouse.lastY;
-            if (dxMouse * dxMouse + dyMouse * dyMouse > 1) {
-                const targetAngle = Math.atan2(dyMouse, dxMouse);
-                let diff = targetAngle - rocket.angle;
-                while (diff < -Math.PI) diff += Math.PI * 2;
-                while (diff > Math.PI) diff -= Math.PI * 2;
-                rocket.angle += diff * 0.22;
-
-                if (Math.random() < 0.5) {
-                    particles.push({
-                        type: isSky ? 'contrail' : 'fire',
-                        x: rocket.x - Math.cos(rocket.angle) * 14,
-                        y: rocket.y - Math.sin(rocket.angle) * 14,
-                        vx: -Math.cos(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
-                        vy: -Math.sin(rocket.angle) * 2 + (Math.random() - 0.5) * 1.5,
-                        life: 1.0,
-                        size: Math.random() * 3 + 1.5
-                    });
-                }
-            }
-            mouse.lastX = mouse.x;
-            mouse.lastY = mouse.y;
-
-            // Wingman Jet 2 follows Lead Jet 1 in formation flight (Earth Sky)
-            if (isSky) {
-                const wingmanTargetX = rocket.x - Math.cos(rocket.angle) * 65 + Math.sin(rocket.angle) * 28;
-                const wingmanTargetY = rocket.y - Math.sin(rocket.angle) * 65 - Math.cos(rocket.angle) * 28;
-                jet2.vx = (wingmanTargetX - jet2.x) * 0.09;
-                jet2.vy = (wingmanTargetY - jet2.y) * 0.09;
-                jet2.x += jet2.vx;
-                jet2.y += jet2.vy;
-                const distJet2 = Math.hypot(jet2.vx, jet2.vy);
-                if (distJet2 > 0.4) {
-                    const targetAngle2 = Math.atan2(rocket.y - jet2.y, rocket.x - jet2.x);
-                    let diff2 = targetAngle2 - jet2.angle;
-                    while (diff2 < -Math.PI) diff2 += Math.PI * 2;
-                    while (diff2 > Math.PI) diff2 -= Math.PI * 2;
-                    jet2.angle += diff2 * 0.16;
-                }
-                if (Math.random() < 0.4) {
-                    particles.push({
-                        type: 'contrail',
-                        x: jet2.x - Math.cos(jet2.angle) * 15,
-                        y: jet2.y - Math.sin(jet2.angle) * 15,
-                        vx: -Math.cos(jet2.angle) * 1.5 + (Math.random() - 0.5),
-                        vy: -Math.sin(jet2.angle) * 1.5 + (Math.random() - 0.5),
-                        life: 1.0,
-                        size: Math.random() * 2.5 + 1.2
-                    });
-                }
-            }
-
-            // Independent Astro Movement
-            if (isSky) {
-                // Parachuter falling infinitely
-                astro.vy = 1.2; // constant fall speed
-                astro.vx = Math.sin(Date.now() * 0.001) * 0.5; // gentle sway
-                astro.y += astro.vy;
-                astro.x += astro.vx;
-                astro.angle = 0; // The drawParachuter function handles the sway rotation
-                
-                // Wrap vertically
-                if (astro.y > canvas.height + 60) {
-                    astro.y = -60;
-                    astro.x = Math.random() * canvas.width;
-                }
-            } else {
-                // Astronaut wandering space
-                if (!astro.rotVel) {
-                    astro.rotVel = (Math.random() - 0.5) * 0.02;
-                    astro.vx = (Math.random() - 0.5) * 1.5;
-                    astro.vy = (Math.random() - 0.5) * 1.5;
-                }
-                astro.x += astro.vx;
-                astro.y += astro.vy;
-                astro.angle += astro.rotVel;
-                
-                // Bounce/Wrap horizontally and vertically
-                if (astro.x > canvas.width + 50) astro.x = -50;
-                if (astro.x < -50) astro.x = canvas.width + 50;
-                if (astro.y > canvas.height + 50) astro.y = -50;
-                if (astro.y < -50) astro.y = canvas.height + 50;
-            }
-
-            // Particles
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.life -= p.type === 'fire' ? 0.035 : 0.02;
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                } else {
-                    if (p.type === 'fire') {
-                        ctx.fillStyle = `rgba(255, 80, 0, ${p.life * 0.8})`;
-                    } else if (p.type === 'contrail') {
-                        ctx.fillStyle = `rgba(255, 255, 255, ${p.life * 0.7})`;
-                    } else {
-                        ctx.fillStyle = `rgba(226, 232, 240, ${p.life * 0.6})`;
-                    }
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            if (isSky) {
-                // --- SKY THEME ACTORS ---
-                // Parachuter (Astro as Para)
-                drawParachuter(ctx, astro.x, astro.y, astro.angle, astro.vx, astro.vy);
-
-                // Wingman Fighter Jet (Following Lead Jet)
-                drawFighterJet(ctx, jet2.x, jet2.y, jet2.angle, false);
-
-                // Lead Fighter Jet (Following Mouse)
-                drawFighterJet(ctx, rocket.x, rocket.y, rocket.angle, true);
-            } else {
-                // --- SPACE THEME ACTORS ---
-                // Astronaut
-                ctx.save();
-                ctx.translate(astro.x, astro.y);
-                ctx.rotate(astro.angle + Math.PI / 2);
-                ctx.fillStyle = '#e2e8f0';
-                ctx.fillRect(-6, -2, 12, 14);
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath(); ctx.arc(0, -6, 7, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#00aaff';
-                ctx.beginPath(); ctx.arc(2, -6, 3.5, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#94a3b8';
-                ctx.fillRect(-8, 0, 3.5, 9);
-                ctx.fillStyle = '#e2e8f0';
-                ctx.fillRect(-5, 12, 3.5, 7);
-                ctx.fillRect(1, 12, 3.5, 7);
-                ctx.restore();
-
-                // Rocket
-                ctx.save();
-                ctx.translate(rocket.x, rocket.y);
-                ctx.rotate(rocket.angle);
-                ctx.fillStyle = '#e2e8f0';
-                ctx.beginPath();
-                ctx.moveTo(18, 0);
-                ctx.lineTo(-12, 10);
-                ctx.lineTo(-6, 0);
-                ctx.lineTo(-12, -10);
+                ctx.moveTo(22, 0);
+                ctx.lineTo(8, 3.5);
+                ctx.lineTo(-4, 18);
+                ctx.lineTo(-8, 18);
+                ctx.lineTo(-6, 4);
+                ctx.lineTo(-18, 12);
+                ctx.lineTo(-20, 12);
+                ctx.lineTo(-17, 3);
+                ctx.lineTo(-19, 0);
+                ctx.lineTo(-17, -3);
+                ctx.lineTo(-20, -12);
+                ctx.lineTo(-18, -12);
+                ctx.lineTo(-6, -4);
+                ctx.lineTo(-8, -18);
+                ctx.lineTo(-4, -18);
+                ctx.lineTo(8, -3.5);
                 ctx.closePath();
                 ctx.fill();
-                ctx.fillStyle = '#00aaff';
-                ctx.beginPath(); ctx.arc(4, 0, 3.5, 0, Math.PI * 2); ctx.fill();
+
+                // Wing panel accent lines
+                ctx.strokeStyle = isLead ? '#94a3b8' : '#64748b';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(6, 3); ctx.lineTo(-4, 15);
+                ctx.moveTo(6, -3); ctx.lineTo(-4, -15);
+                ctx.stroke();
+
+                // Twin angled tailfins
+                ctx.fillStyle = isLead ? '#94a3b8' : '#64748b';
+                ctx.beginPath();
+                ctx.moveTo(-10, 4); ctx.lineTo(-16, 7); ctx.lineTo(-18, 4); ctx.closePath(); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(-10, -4); ctx.lineTo(-16, -7); ctx.lineTo(-18, -4); ctx.closePath(); ctx.fill();
+
+                // Glass canopy
+                const canopyGrad = ctx.createLinearGradient(0, -2, 10, 2);
+                canopyGrad.addColorStop(0, '#38bdf8');
+                canopyGrad.addColorStop(1, '#0284c7');
+                ctx.fillStyle = canopyGrad;
+                ctx.beginPath();
+                ctx.ellipse(3, 0, 7, 2.8, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Twin afterburners
+                ctx.fillStyle = 'rgba(255, 130, 0, 0.9)';
+                ctx.beginPath();
+                ctx.moveTo(-17, -3); ctx.lineTo(-26, 0); ctx.lineTo(-17, 3); ctx.closePath(); ctx.fill();
+                ctx.fillStyle = '#fef08a';
+                ctx.beginPath();
+                ctx.moveTo(-17, -1.5); ctx.lineTo(-22, 0); ctx.lineTo(-17, 1.5); ctx.closePath(); ctx.fill();
+
                 ctx.restore();
             }
 
-            animationFrameId = requestAnimationFrame(render);
-        };
+            // Parachuter (Replacing astronaut in Earth Sky theme!)
+            function drawParachuter(x, y, vx) {
+                ctx.save();
+                ctx.translate(x, y);
 
-        render();
+                const sway = Math.max(-0.35, Math.min(0.35, vx * 0.08));
+                ctx.rotate(sway);
 
-        
-}
-document.addEventListener('DOMContentLoaded', initSpaceCanvas);
+                // 1. Suspension lines (shroud cords)
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(-25, -36); ctx.lineTo(0, -3);
+                ctx.moveTo(-9, -40); ctx.lineTo(0, -3);
+                ctx.moveTo(9, -40); ctx.lineTo(0, -3);
+                ctx.moveTo(25, -36); ctx.lineTo(0, -3);
+                ctx.stroke();
+
+                // 2. Parachute Canopy (aerodynamic curved wing)
+                ctx.fillStyle = '#0284c7';
+                ctx.beginPath();
+                ctx.moveTo(-26, -35);
+                ctx.bezierCurveTo(-20, -54, 20, -54, 26, -35);
+                ctx.bezierCurveTo(16, -40, -16, -40, -26, -35);
+                ctx.closePath();
+                ctx.fill();
+
+                // Cell 1: Cyan
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath();
+                ctx.moveTo(-26, -35);
+                ctx.bezierCurveTo(-22, -50, -14, -52, -13, -38);
+                ctx.bezierCurveTo(-18, -40, -22, -38, -26, -35);
+                ctx.closePath();
+                ctx.fill();
+
+                // Cell 2: White
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.moveTo(-13, -38);
+                ctx.bezierCurveTo(-14, -52, 0, -54, 0, -40);
+                ctx.bezierCurveTo(-5, -40, -10, -39, -13, -38);
+                ctx.closePath();
+                ctx.fill();
+
+                // Cell 3: Orange
+                ctx.fillStyle = '#f97316';
+                ctx.beginPath();
+                ctx.moveTo(0, -40);
+                ctx.bezierCurveTo(0, -54, 14, -52, 13, -38);
+                ctx.bezierCurveTo(9, -39, 4, -40, 0, -40);
+                ctx.closePath();
+                ctx.fill();
+
+                // Cell 4: Cyan
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath();
+                ctx.moveTo(13, -38);
+                ctx.bezierCurveTo(14, -52, 22, -50, 26, -35);
+                ctx.bezierCurveTo(22, -38, 18, -40, 13, -38);
+                ctx.closePath();
+                ctx.fill();
+
+                // 3. Parachuter body
+                ctx.fillStyle = '#334155';
+                ctx.fillRect(-4, -4, 8, 9); // Harness
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-5, 0, 10, 11); // Flight suit
+
+                // Helmet
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(0, -6, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Visor
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath();
+                ctx.arc(1.5, -6, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Arms holding risers
+                ctx.fillStyle = '#94a3b8';
+                ctx.beginPath();
+                ctx.moveTo(-5, 0); ctx.lineTo(-8, -4); ctx.lineTo(-7, 2); ctx.closePath(); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(5, 0); ctx.lineTo(8, -4); ctx.lineTo(7, 2); ctx.closePath(); ctx.fill();
+
+                // Legs swaying gently
+                const legSwing = Math.sin(Date.now() * 0.006) * 1.5;
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(-4, 11, 3, 7 + legSwing);
+                ctx.fillRect(1, 11, 3, 7 - legSwing);
+
+                // Boots
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(-4.5, 18 + legSwing, 4, 3);
+                ctx.fillRect(0.5, 18 - legSwing, 4, 3);
+
+                ctx.restore();
+            }
+
+            function render() {
+                const isSky = currentTheme === 'sky';
+
+                if (isSky) {
+                    // Atmospheric Blue Sky Gradient
+                    const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+                    skyGrad.addColorStop(0, '#091c36');
+                    skyGrad.addColorStop(0.3, '#103965');
+                    skyGrad.addColorStop(0.65, '#17528e');
+                    skyGrad.addColorStop(1, '#236ca8');
+                    ctx.fillStyle = skyGrad;
+                    ctx.fillRect(0, 0, w, h);
+
+                    // Radiant Sun
+                    const sunX = w * 0.82;
+                    const sunY = h * 0.2;
+                    const sunGlow = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 130);
+                    sunGlow.addColorStop(0, 'rgba(255, 245, 180, 0.45)');
+                    sunGlow.addColorStop(0.35, 'rgba(253, 224, 71, 0.18)');
+                    sunGlow.addColorStop(0.7, 'rgba(245, 158, 11, 0.06)');
+                    sunGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                    ctx.fillStyle = sunGlow;
+                    ctx.beginPath();
+                    ctx.arc(sunX, sunY, 130, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    const sunCore = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, 30);
+                    sunCore.addColorStop(0, '#ffffff');
+                    sunCore.addColorStop(0.4, '#fef08a');
+                    sunCore.addColorStop(0.85, '#facc15');
+                    sunCore.addColorStop(1, '#eab308');
+                    ctx.fillStyle = sunCore;
+                    ctx.beginPath();
+                    ctx.arc(sunX, sunY, 30, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Shimmering Solar Rays
+                    ctx.save();
+                    ctx.translate(sunX, sunY);
+                    ctx.strokeStyle = 'rgba(254, 240, 138, 0.22)';
+                    ctx.lineWidth = 2;
+                    const rayTime = Date.now() * 0.0004;
+                    for (let r = 0; r < 8; r++) {
+                        const rayAngle = (r * Math.PI / 4) + rayTime;
+                        ctx.beginPath();
+                        ctx.moveTo(Math.cos(rayAngle) * 34, Math.sin(rayAngle) * 34);
+                        ctx.lineTo(Math.cos(rayAngle) * 70, Math.sin(rayAngle) * 70);
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+
+                    // Drifting Clouds
+                    clouds.forEach(cloud => {
+                        cloud.x += cloud.speed;
+                        if (cloud.x > w + 120) {
+                            cloud.x = -130;
+                            cloud.y = Math.random() * (h * 0.72) + 25;
+                        }
+                        ctx.save();
+                        ctx.translate(cloud.x, cloud.y);
+                        ctx.scale(cloud.scale, cloud.scale);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${cloud.opacity * 0.85})`;
+                        cloud.blobs.forEach(b => {
+                            ctx.beginPath();
+                            ctx.arc(b.ox, b.oy, b.r, 0, Math.PI * 2);
+                            ctx.fill();
+                        });
+                        ctx.restore();
+                    });
+
+                } else {
+                    // Cosmic Space Theme
+                    ctx.fillStyle = '#050505';
+                    ctx.fillRect(0, 0, w, h);
+
+                    // Stars
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+                    stars.forEach(star => {
+                        star.z -= 0.35;
+                        if (star.z <= 0) {
+                            star.z = w;
+                            star.x = Math.random() * w;
+                            star.y = Math.random() * h;
+                        }
+                        const perspective = w / star.z;
+                        const px = (star.x - w / 2) * perspective + w / 2;
+                        const py = (star.y - h / 2) * perspective + h / 2;
+                        const pSize = star.size * perspective * 0.45;
+                        ctx.beginPath();
+                        ctx.arc(px, py, pSize > 0 ? pSize : 0.1, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+
+                    // Ambient Moon
+                    const moonX = w * 0.82;
+                    const moonY = h * 0.2;
+                    const gradient = ctx.createRadialGradient(moonX, moonY, 15, moonX, moonY, 80);
+                    gradient.addColorStop(0, 'rgba(0, 170, 255, 0.12)');
+                    gradient.addColorStop(1, 'rgba(0, 170, 255, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath(); ctx.arc(moonX, moonY, 80, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath(); ctx.arc(moonX, moonY, 28, 0, Math.PI * 2); ctx.fill();
+
+                    // Moon Craters
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+                    ctx.beginPath(); ctx.arc(moonX - 8, moonY - 8, 5, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(moonX + 10, moonY + 4, 7, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(moonX - 4, moonY + 12, 3.5, 0, Math.PI * 2); ctx.fill();
+                }
+
+                // Physics: Rocket / Lead Fighter Jet tracking mouse
+                const dxLead = mouse.x - rocket.x;
+                const dyLead = mouse.y - rocket.y;
+                const distLead = Math.hypot(dxLead, dyLead);
+                const leadSpeed = isSky ? 0.08 : 0.07;
+                rocket.x += dxLead * leadSpeed;
+                rocket.y += dyLead * leadSpeed;
+
+                if (distLead > 3) {
+                    const targetAngle = Math.atan2(dyLead, dxLead);
+                    let diff = targetAngle - rocket.angle;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    rocket.angle += diff * 0.18;
+                }
+
+                // Exhaust Particles
+                if (Math.random() < (isSky ? 0.8 : 0.5)) {
+                    particles.push({
+                        type: isSky ? (Math.random() < 0.6 ? 'contrail' : 'fire') : 'fire',
+                        x: rocket.x - Math.cos(rocket.angle) * 16,
+                        y: rocket.y - Math.sin(rocket.angle) * 16,
+                        vx: -Math.cos(rocket.angle) * (isSky ? 2.5 : 2.2) + (Math.random() - 0.5) * 1.5,
+                        vy: -Math.sin(rocket.angle) * (isSky ? 2.5 : 2.2) + (Math.random() - 0.5) * 1.5,
+                        life: 1.0,
+                        size: Math.random() * (isSky ? 3 : 2) + 1.2
+                    });
+                }
+
+                // Wingman Jet (Sky theme)
+                if (isSky) {
+                    const wingmanTargetX = rocket.x - Math.cos(rocket.angle) * 65 + Math.sin(rocket.angle) * 28;
+                    const wingmanTargetY = rocket.y - Math.sin(rocket.angle) * 65 - Math.cos(rocket.angle) * 28;
+                    jet2.vx = (wingmanTargetX - jet2.x) * 0.09;
+                    jet2.vy = (wingmanTargetY - jet2.y) * 0.09;
+                    jet2.x += jet2.vx;
+                    jet2.y += jet2.vy;
+                    const distJet2 = Math.hypot(jet2.vx, jet2.vy);
+                    if (distJet2 > 0.4) {
+                        const targetAngle2 = Math.atan2(rocket.y - jet2.y, rocket.x - jet2.x);
+                        let diff2 = targetAngle2 - jet2.angle;
+                        while (diff2 < -Math.PI) diff2 += Math.PI * 2;
+                        while (diff2 > Math.PI) diff2 -= Math.PI * 2;
+                        jet2.angle += diff2 * 0.16;
+                    }
+                    if (Math.random() < 0.4) {
+                        particles.push({
+                            type: 'contrail',
+                            x: jet2.x - Math.cos(jet2.angle) * 15,
+                            y: jet2.y - Math.sin(jet2.angle) * 15,
+                            vx: -Math.cos(jet2.angle) * 1.5 + (Math.random() - 0.5),
+                            vy: -Math.sin(jet2.angle) * 1.5 + (Math.random() - 0.5),
+                            life: 1.0,
+                            size: Math.random() * 2.5 + 1.2
+                        });
+                    }
+                }
+
+                // Keyboard Steering for Parachuter / Astronaut
+                const speed = 1.2;
+                if (keys['ArrowUp']) astro.vy -= speed;
+                if (keys['ArrowDown']) astro.vy += speed;
+                if (keys['ArrowLeft']) astro.vx -= speed;
+                if (keys['ArrowRight']) astro.vx += speed;
+
+                // Tether / wind between aircraft and parachuter/astronaut
+                const dxTether = astro.x - rocket.x;
+                const dyTether = astro.y - rocket.y;
+                const distance = Math.hypot(dxTether, dyTether);
+                const tetherLength = isSky ? 160 : 140;
+
+                if (distance > tetherLength) {
+                    const stretch = distance - tetherLength;
+                    const force = stretch * (isSky ? 0.06 : 0.08);
+                    const angle = Math.atan2(dyTether, dxTether);
+                    astro.vx -= Math.cos(angle) * force;
+                    astro.vy -= Math.sin(angle) * force;
+                }
+
+                if (isSky) {
+                    astro.vy += 0.08; // Gentle downward drift for realistic parachute glide
+                }
+
+                const friction = 0.94;
+                astro.vx *= friction;
+                astro.vy *= friction;
+                astro.x += astro.vx;
+                astro.y += astro.vy;
+
+                // Screen bounds
+                if (astro.x < 10) { astro.x = 10; astro.vx = Math.abs(astro.vx) * 0.5; }
+                if (astro.x > w - 10) { astro.x = w - 10; astro.vx = -Math.abs(astro.vx) * 0.5; }
+                if (astro.y < 10) { astro.y = 10; astro.vy = Math.abs(astro.vy) * 0.5; }
+                if (astro.y > h - 10) { astro.y = h - 10; astro.vy = -Math.abs(astro.vy) * 0.5; }
+
+                // Line / Streamer between aircraft and parachuter/astronaut
+                if (distance < w / 2) {
+                    ctx.strokeStyle = isSky ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 170, 255, 0.25)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(astro.x, astro.y);
+                    ctx.lineTo(rocket.x, rocket.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                // Render particles
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= p.type === 'fire' ? 0.035 : 0.02;
+                    if (p.life <= 0) {
+                        particles.splice(i, 1);
+                    } else {
+                        if (p.type === 'fire') {
+                            ctx.fillStyle = `rgba(255, 80, 0, ${p.life * 0.8})`;
+                        } else if (p.type === 'contrail') {
+                            ctx.fillStyle = `rgba(255, 255, 255, ${p.life * 0.7})`;
+                        } else {
+                            ctx.fillStyle = `rgba(226, 232, 240, ${p.life * 0.6})`;
+                        }
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                if (isSky) {
+                    // Parachuter actor
+                    drawParachuter(astro.x, astro.y, astro.vx);
+                    // Wingman jet
+                    drawFighterJet(jet2.x, jet2.y, jet2.angle, false);
+                    // Lead fighter jet
+                    drawFighterJet(rocket.x, rocket.y, rocket.angle, true);
+                } else {
+                    // Space theme astronaut
+                    ctx.save();
+                    ctx.translate(astro.x, astro.y);
+                    ctx.rotate(Math.atan2(astro.vy, astro.vx) + Math.PI / 2);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.fillRect(-6, -2, 12, 14);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath(); ctx.arc(0, -6, 7, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#00aaff';
+                    ctx.beginPath(); ctx.arc(2, -6, 3.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.fillRect(-8, 0, 3.5, 9);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.fillRect(-5, 12, 3.5, 7);
+                    ctx.fillRect(1, 12, 3.5, 7);
+                    ctx.restore();
+
+                    // Space rocket
+                    ctx.save();
+                    ctx.translate(rocket.x, rocket.y);
+                    ctx.rotate(rocket.angle);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath();
+                    ctx.moveTo(18, 0); ctx.lineTo(-12, 10); ctx.lineTo(-6, 0); ctx.lineTo(-12, -10);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#00aaff';
+                    ctx.beginPath(); ctx.arc(4, 0, 3.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(render);
+            }
+
+            render();
+        }
+        initSpaceCanvas();
+    
+        // DevTools detection for Galo Astronauta
+        function checkDevTools() {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth > threshold;
+            const heightDiff = window.outerHeight - window.innerHeight > threshold;
+            const galo = document.getElementById('galo-easter-egg');
+            if (galo) {
+                galo.style.display = (widthDiff || heightDiff) ? 'inline-block' : 'none';
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+        checkDevTools();
 
     </script>
 </body>
