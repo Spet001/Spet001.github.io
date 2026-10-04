@@ -8,7 +8,7 @@
     <title>Eduardo Gelain | Software & Game Developer</title>
     <meta name="description"
         content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
-    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Quake WebAssembly, Outcaster, Sparky Rush, Brazil, Remote Developer">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -407,6 +407,16 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <style>
+        .text-glow {
+            text-shadow: 0px 2px 8px rgba(0,0,0,0.9), 0px 4px 20px rgba(0,0,0,0.8);
+        }
+        .text-glow-none {
+            text-shadow: none !important;
+        }
+    </style>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white">
@@ -453,7 +463,7 @@
                     <p class="text-slate-400 text-base leading-relaxed mb-8">
                         Building high-performance game mechanics, custom authoritative netcode, runtime memory pattern scanners, and bytecode virtual machines. Author of the SpetDev Technical Research Journal.
                     </p>
-                    <div class="flex flex-wrap gap-4 text-sm font-semibold">
+                    <div class="flex flex-wrap gap-4 text-sm font-semibold text-glow-none">
                         <a href="#projects" class="px-6 py-3 rounded-xl bg-primary hover:bg-primaryHover text-white transition-all shadow-lg shadow-primary/20">
                             Explore Featured Projects
                         </a>
@@ -533,7 +543,7 @@
                         <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 mb-3 inline-block">Unity · C# · Multiplayer</span>
                         <h3 class="text-xl font-bold text-white mb-2">Outcaster</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            High-adrenaline top-down multiplayer arena shooter built in Unity with custom authoritative client-server netcode, dynamic projectile simulation, and low-latency packet serialization.
+                            Doom Like Unity FPS Template.
                         </p>
                         <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1.5">
                             View on GitHub <i class="fas fa-external-link-alt text-[10px]"></i>
@@ -557,7 +567,7 @@
                         <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30 mb-3 inline-block">JavaScript · Bytecode VM · Web</span>
                         <h3 class="text-xl font-bold text-white mb-2">Call of Duty Zombies GSC VM in HTML5</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            Web-based bytecode virtual machine interpreter emulating Treyarch's proprietary Call of Duty Game Scripting C (GSC) engine inside modern browsers, executing multithreaded script logic natively.
+                            Web-based bytecode virtual machine interpreter emulating Treyarch's proprietary Call of Duty Game Scripting (GSC) engine inside modern browsers, executing multithreaded script logic natively.
                         </p>
                         <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="text-xs font-bold text-purple-400 hover:underline inline-flex items-center gap-1.5">
                             View Bytecode Interpreter <i class="fas fa-external-link-alt text-[10px]"></i>
@@ -566,13 +576,13 @@
 
                     <!-- Project 4 -->
                     <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-3 inline-block">WebAssembly · C · WebGL</span>
-                        <h3 class="text-xl font-bold text-white mb-2">Quake 1 (NetQuake WebAssembly)</h3>
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-3 inline-block">IDA PRO · C/C++ · GDK</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Resurge GDK Client</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            Classic id Tech 2 Quake engine compiled to WebAssembly running directly inside modern browsers with WebGL acceleration, canvas input capture, and authentic sound synthesis.
+                           A client for MS Store (GDK) Black Ops 3.
                         </p>
-                        <a href="#quake" class="text-xs font-bold text-amber-400 hover:underline inline-flex items-center gap-1.5">
-                            Play Quake 1 in Browser <i class="fas fa-gamepad text-[10px]"></i>
+                        <a href="#" class="text-xs font-bold text-amber-400 hover:underline inline-flex items-center gap-1.5">
+                             <i class="fas fa-gamepad text-[10px]"></i>
                         </a>
                     </article>
                 </div>
@@ -903,6 +913,8 @@ const PORTFOLIO_DATA = {
                 themeSpace2Sub: "Modelos 3D Interativos",
                 themeSky: "Céu Terrestre",
                 themeSkySub: "Caças & Paraquedista",
+                themeSky2: "Céu Terrestre 2.0 (Beta)",
+                themeSky2Sub: "Jatos 3D & Paraquedista",
                 easterSign: "Placa secreta do Gant Bridge",
                 easterSignDesc: "Exibe a placa clássica do GTA na barra de navegação superior",
                 reset: "Restaurar padrões",
@@ -1047,6 +1059,8 @@ const PORTFOLIO_DATA = {
                 themeSpace2Sub: "Interactive 3D Models",
                 themeSky: "Earth Sky",
                 themeSkySub: "Fighter Jets & Parachuter",
+                themeSky2: "Earth Sky 2.0 (Beta)",
+                themeSky2Sub: "3D Jets & Parachuter",
                 easterSign: "Gant Bridge Secret Sign",
                 easterSignDesc: "Display legacy Easter Egg sign in the top navigation bar",
                 reset: "Reset to defaults",
@@ -1090,13 +1104,13 @@ const PORTFOLIO_DATA = {
                 pt: [
                     "Desenvolvimento de mecânicas de gameplay, física e sistemas interativos utilizando Unity (C#) e Unreal Engine (C++).",
                     "Programação de máquinas de estado para IA de inimigos, locomoção fluida de personagens (FSM) e sistemas dinâmicos de armas.",
-                    "Otimização de rotinas de renderização e profiling de performance para garantia de altas taxas de quadros (144+ FPS).",
+                    "Otimização de rotinas de renderização e profiling de performance para garantia de altas taxas de quadros.",
                     "Criação de templates modulares para a comunidade de desenvolvedores independentes."
                 ],
                 en: [
                     "Engineered core gameplay mechanics, physics, and interactive systems using Unity (C#) and Unreal Engine (C++).",
                     "Programmed state machines for enemy AI, fluid character locomotion (FSM), and dynamic weapon management systems.",
-                    "Profiled and optimized rendering pipelines to sustain high framerates (144+ FPS).",
+                    "Profiled and optimized rendering pipelines to sustain high framerates.",
                     "Built modular game templates for the independent game development community."
                 ]
             },
@@ -1148,6 +1162,35 @@ const PORTFOLIO_DATA = {
 
     // PROJECTS DATA - Uses ONLY authentic local images from assets/
     projectsData: [
+        {
+            id: "free_3d_assets",
+            category: "gamedev",
+            categoryLabel: { pt: "Recursos 3D & Arte", en: "3D Assets & Art" },
+            image: "assets/free_3d_assets_thumbnail.jpg",
+            title: "Free to Use 3D Assets (Low Poly)",
+            featured: true,
+            github: "#", 
+            live: "#",
+            tags: ["Game Assets", "Low Poly", "WebGL"],
+            description: {
+                pt: "Pacote de modelos 3D autorais low poly (Jato, Paraquedista, Foguete, Astronauta) desenvolvidos para a simulação deste portfólio. Disponível gratuitamente para uso em jogos e projetos.",
+                en: "Collection of original low-poly 3D models (Jet, Paratrooper, Rocket, Astronaut) created for this portfolio's simulation. Free to use in your own games and projects."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Criar modelos otimizados para WebGL com baixo custo de processamento, garantindo que rodem bem diretamente no navegador (Three.js).",
+                    en: "Create highly optimized WebGL models with low poly counts to ensure 60fps rendering in browser-based engines (Three.js)."
+                },
+                solution: {
+                    pt: "Aplicação de texturas flat e materiais unlit/simples (como metalness zero) para reduzir draw calls e o uso de VRAM.",
+                    en: "Applied flat textures and simple unlit materials (zero metalness) to reduce draw calls and VRAM footprint."
+                },
+                impact: {
+                    pt: "Os modelos agora fazem parte da simulação principal e estão abertos para a comunidade.",
+                    en: "The models are now featured in the main portfolio simulation and open-sourced for the community."
+                }
+            }
+        },
 {
             id: "outcaster_fps",
             category: "gamedev",
@@ -1158,8 +1201,8 @@ const PORTFOLIO_DATA = {
             live: "https://spet01.itch.io/",
             tags: ["Unity", "C#", "Game Design", "AI Navigation", "Physics"],
             description: {
-                pt: "Templates completos de FPS retrô (boomer shooter) criados em Unity e C#. Sistemas de movimentação (bunny hop, dash), gerenciamento de armas, projéteis balísticos e IA inimiga por estados.",
-                en: "Complete retro FPS templates (boomer shooter style) developed in Unity and C#. Features locomotion physics (bunny hopping, dashes), weapon management, ballistic projectiles, and state-machine enemy AI."
+                pt: "Templates completos de FPS retrô (boomer shooter) criados em Unity e C#. Sistemas de movimentação, gerenciamento de armas, projéteis balísticos e IA inimiga por estados.",
+                en: "Complete retro FPS templates (boomer shooter style) developed in Unity and C#. Features locomotion physics , weapon management, ballistic projectiles, and state-machine enemy AI."
             },
             caseStudy: {
                 challenge: {
@@ -1191,11 +1234,11 @@ const PORTFOLIO_DATA = {
             },
             caseStudy: {
                 challenge: {
-                    pt: "Garantir a integridade da física do personagem em colisões angulares complexas e evitar perda de progresso durante saves simultâneos.",
-                    en: "Verify physics robustness during steep angular character collisions and prevent race-condition save game corruption."
+                    pt: "Garantir a integridade dos sistemas do jogo, permitindo que o jogador tenha uma gameplay sem problemas.",
+                    en: "Verify physics robustness during steep angular character collisions and prevent race-condition save game corruption, also verify game-breaking bugs."
                 },
                 solution: {
-                    pt: "Criação de matrizes sistemáticas de teste com casos de borda e stress-testing reproduzindo condições de hardware de baixa performance.",
+                    pt: "Criação de matrizes sistemáticas de teste com casos de borda e stress-testing reproduzindo condições de hardware de baixa performance, além de identificação de softlocks.",
                     en: "Designed comprehensive test matrices covering edge-case inputs, physics desync, and low-spec hardware regression."
                 },
                 impact: {
@@ -1511,8 +1554,8 @@ const PORTFOLIO_DATA = {
             featured: false,
             tags: ["React", "TailwindCSS", "HTML5 Canvas Physics", "WebAssembly", "Express.js", "Technical Journal"],
             description: {
-                pt: "O próprio site em que você está navegando: uma SPA interativa e de alta performance construída em React e TailwindCSS. Conta com simulação de física em Canvas (tether astronauta), Journal técnico em Markdown, emulador NetQuake/Wasm, terminal CLI interativo (Ctrl+K) e suporte bilíngue.",
-                en: "The very website you are currently exploring: an interactive, high-performance SPA crafted with React and TailwindCSS. Features custom Canvas tether physics, a technical Markdown Journal, WebAssembly NetQuake engine, interactive CLI terminal (Ctrl+K), and seamless bilingual support."
+                pt: "O próprio site em que você está navegando: uma SPA interativa e de alta performance construída em React e TailwindCSS. Conta com simulação de física em Canvas (tether astronauta), Journal técnico em Markdown, easter egss interativos (jogos,musicas), terminal CLI interativo (Ctrl+K) e suporte bilíngue.",
+                en: "The very website you are currently exploring: an interactive, high-performance SPA crafted with React and TailwindCSS. Features custom Canvas tether physics, a technical Markdown Journal, easter eggs, interactive CLI terminal (Ctrl+K), and seamless bilingual support."
             },
             caseStudy: {
                 challenge: { 
@@ -1997,15 +2040,325 @@ const playSoftClick = () => {
 
 
 
-// --- SPACE 2.0 CANVAS (THREE.JS GLB MODELS) ---
-const SpaceCanvasV2 = () => {
+
+
+// --- SKY 2.0 CANVAS (THREE.JS GLB MODELS) ---
+const SkyCanvasV2 = () => {
     const containerRef = useRef(null);
     const keysRef = useRef({});
+    const sceneRef = useRef(null);
+
+    const normalizeModel = (gltfScene, targetSize, isSkybox = false) => {
+        const box = new THREE.Box3().setFromObject(gltfScene);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+            const scale = targetSize / maxDim;
+            gltfScene.scale.setScalar(scale);
+        }
+        if (!isSkybox) {
+            gltfScene.traverse(child => {
+                if (child.isMesh) child.geometry.computeBoundingBox();
+            });
+        }
+        return gltfScene;
+    };
 
     useEffect(() => {
         if (!containerRef.current || !window.THREE) return;
 
         const scene = new THREE.Scene();
+        sceneRef.current = scene;
+        
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.z = 50;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        containerRef.current.appendChild(renderer.domElement);
+
+        // Stronger lighting for Sky theme
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+        scene.add(ambientLight);
+        
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 1.5);
+        scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight.position.set(100, 200, 50);
+        scene.add(dirLight);
+
+        const loader = new THREE.GLTFLoader();
+        
+        let skybox, jet, para, rope;
+
+        // Fallback color in case skybox fails or is transparent
+        scene.background = new THREE.Color('#87ceeb');
+
+        // 1. Skybox
+        loader.load('./3d/skyclouds.glb', (gltf) => {
+            skybox = gltf.scene;
+            normalizeModel(skybox, 800, true);
+            // DO NOT flip materials to BackSide, the model likely already points inwards!
+            skybox.traverse((child) => {
+                if (child.isMesh) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => { m.depthWrite = false; });
+                    } else if (child.material) {
+                        child.material.depthWrite = false;
+                    }
+                }
+            });
+            scene.add(skybox);
+        }, undefined, (err) => console.error("Skybox failed:", err));
+
+        // 2. Jet
+        loader.load('./3d/jet.glb', (gltf) => {
+            jet = gltf.scene;
+            normalizeModel(jet, 5); 
+            
+            // Fix Pitch Black Material (Disable metallic reflecting void)
+            jet.traverse(child => {
+                if (child.isMesh && child.material) {
+                    child.material.metalness = 0.1;
+                    child.material.roughness = 0.8;
+                }
+            });
+            
+            const jetGroup = new THREE.Group();
+            jetGroup.position.set(0, 0, 10);
+            
+            // Reset rotation to 0 for debugging
+            jet.rotation.set(0, 0, Math.PI * 1.5); 
+            jet.position.set(0,0,0);
+            
+            jetGroup.add(jet);
+            scene.add(jetGroup);
+            jet = jetGroup; 
+            
+            // Debug Jet Rotation
+            window.debugJet = jet.children[0];
+        });
+
+        // 3. Paratrooper
+        loader.load('./3d/Paratrooper.glb', (gltf) => {
+            para = gltf.scene;
+            normalizeModel(para, 2.0); 
+            
+            para.traverse(child => {
+                if (child.isMesh && child.material) {
+                    child.material.metalness = 0.0;
+                    child.material.roughness = 1.0;
+                }
+            });
+            
+            // Make them hang down
+            para.rotation.set(0, Math.PI, 0);
+            
+            para.position.set(5, -15, 10);
+            scene.add(para);
+        });
+
+        // Rope
+        const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+        const ropeMat = new THREE.LineBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.6 });
+        rope = new THREE.Line(ropeGeo, ropeMat);
+        scene.add(rope);
+
+        // Jet Contrail (Smoke)
+        const particleCount = 80;
+        const particles = [];
+        const partGeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+        for(let i=0; i<particleCount; i++) {
+            const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
+            const p = new THREE.Mesh(partGeo, mat);
+            p.visible = false;
+            scene.add(p);
+            particles.push({ mesh: p, life: 0, maxLife: 0, velocity: new THREE.Vector3() });
+        }
+        let pIndex = 0;
+
+        const mouse = new THREE.Vector2(0, 0);
+        const paraVelocity = new THREE.Vector3();
+
+        const handleMouseMove = (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        };
+        const handleKeyDown = (e) => { 
+            keysRef.current[e.key] = true; 
+            // Debug Jet Rotation
+            if (window.debugJet) {
+                if (e.key === 'x') window.debugJet.rotation.x += Math.PI / 2;
+                if (e.key === 'y') window.debugJet.rotation.y += Math.PI / 2;
+                if (e.key === 'z') window.debugJet.rotation.z += Math.PI / 2;
+            }
+        };
+        const handleKeyUp = (e) => { keysRef.current[e.key] = false; };
+        
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        const handleResize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+        window.addEventListener('resize', handleResize);
+
+        let animationId;
+        let time = 0;
+        const animate = () => {
+            animationId = requestAnimationFrame(animate);
+            time += 0.01;
+
+            if (skybox) {
+                skybox.rotation.y = time * 0.01; 
+            }
+            
+            const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+            vector.unproject(camera);
+            const dir = vector.sub(camera.position).normalize();
+            const distance = (10 - camera.position.z) / dir.z; 
+            const finalTarget = camera.position.clone().add(dir.multiplyScalar(distance));
+
+            let tailPos = new THREE.Vector3();
+
+            if (jet) {
+                jet.position.lerp(finalTarget, 0.06);
+                
+                const moveDelta = finalTarget.clone().sub(jet.position);
+                if (moveDelta.lengthSq() > 0.1) {
+                    const angle = Math.atan2(moveDelta.y, moveDelta.x);
+                    let targetRot = angle - Math.PI / 2;
+                    let diff = targetRot - jet.rotation.z;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    jet.rotation.z += diff * 0.1;
+                    
+                    jet.children[0].rotation.y = -diff * 0.5;
+                }
+                
+                jet.children[0].position.y = Math.sin(time * 6) * 0.1;
+                
+                // Tail offset (adjust based on orientation, assume -Y is back)
+                const tailOffset = new THREE.Vector3(0, -2.5, 0).applyEuler(jet.rotation);
+                tailPos.copy(jet.position).add(tailOffset);
+                tailPos.y += jet.children[0].position.y; 
+
+                const p = particles[pIndex];
+                p.life = Math.random() * 20 + 10;
+                p.maxLife = p.life;
+                p.mesh.position.copy(tailPos);
+                p.mesh.position.x += (Math.random()-0.5)*0.5;
+                p.mesh.position.y += (Math.random()-0.5)*0.5;
+                p.mesh.visible = true;
+                
+                const tailDir = new THREE.Vector3(0, -1, 0).applyEuler(jet.rotation).normalize();
+                p.velocity.copy(tailDir).multiplyScalar(0.15).add(new THREE.Vector3((Math.random()-0.5)*0.02, (Math.random()-0.5)*0.02, 0));
+                pIndex = (pIndex + 1) % particleCount;
+            }
+
+            particles.forEach(p => {
+                if (p.life > 0) {
+                    p.life--;
+                    p.mesh.position.add(p.velocity);
+                    const scale = p.life / p.maxLife * 1.5;
+                    p.mesh.scale.setScalar(scale);
+                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.3;
+                    if (p.life <= 0) p.mesh.visible = false;
+                }
+            });
+
+            if (para && jet) {
+                const diff = tailPos.clone().sub(para.position);
+                const dist = diff.length();
+                const restingLength = 8.0; 
+                
+                if (dist > 0) {
+                    const force = (dist - restingLength) * 0.005; 
+                    const springForce = diff.normalize().multiplyScalar(force);
+                    paraVelocity.add(springForce);
+                }
+
+                paraVelocity.y -= 0.015;
+
+                const speed = 0.01;
+                if (keysRef.current['ArrowLeft'] || keysRef.current['a']) { paraVelocity.x -= speed; }
+                if (keysRef.current['ArrowRight'] || keysRef.current['d']) { paraVelocity.x += speed; }
+
+                paraVelocity.multiplyScalar(0.92); 
+                para.position.add(paraVelocity);
+                
+                if (dist > 16) {
+                    const pullBack = diff.clone().normalize().multiplyScalar((dist - 16) * 0.1);
+                    para.position.add(pullBack);
+                }
+                
+                para.rotation.y = Math.sin(time) * 0.2; 
+                para.rotation.z = -paraVelocity.x * 2; 
+                
+                if (rope) {
+                    const positions = rope.geometry.attributes.position.array;
+                    positions[0] = tailPos.x; positions[1] = tailPos.y; positions[2] = tailPos.z;
+                    positions[3] = para.position.x; positions[4] = para.position.y + 1.0; positions[5] = para.position.z;
+                    rope.geometry.attributes.position.needsUpdate = true;
+                }
+            }
+
+            renderer.render(scene, camera);
+        };
+        animate();
+
+        return () => {
+            cancelAnimationFrame(animationId);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('resize', handleResize);
+            if (containerRef.current) {
+                containerRef.current.removeChild(renderer.domElement);
+            }
+            renderer.dispose();
+        };
+    }, []);
+
+    return <div ref={containerRef} className="fixed inset-0 z-0 bg-black pointer-events-none" />;
+};
+
+// --- SPACE 2.0 CANVAS (THREE.JS GLB MODELS) ---
+const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
+    const containerRef = useRef(null);
+    const keysRef = useRef({});
+    const sceneRef = useRef(null);
+    const loaderRef = useRef(null);
+    const skyboxRef = useRef(null);
+
+    const normalizeModel = (gltfScene, targetSize, isSkybox = false) => {
+        const box = new THREE.Box3().setFromObject(gltfScene);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+            const scale = targetSize / maxDim;
+            gltfScene.scale.setScalar(scale);
+        }
+        if (!isSkybox) {
+            gltfScene.traverse(child => {
+                if (child.isMesh) child.geometry.computeBoundingBox();
+            });
+        }
+        return gltfScene;
+    };
+
+    // Effect 1: Monolithic Setup
+    useEffect(() => {
+        if (!containerRef.current || !window.THREE) return;
+
+        const scene = new THREE.Scene();
+        sceneRef.current = scene;
+        
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
         camera.position.z = 50;
 
@@ -2022,42 +2375,10 @@ const SpaceCanvasV2 = () => {
         scene.add(dirLight);
 
         const loader = new THREE.GLTFLoader();
+        loaderRef.current = loader;
         
-        let nebula, moon, rocket, astronaut, rope;
+        let moon, rocket, astronaut, rope;
         const asteroids = [];
-        
-        const normalizeModel = (gltfScene, targetSize, isSkybox = false) => {
-            const box = new THREE.Box3().setFromObject(gltfScene);
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            if (maxDim > 0) {
-                const scale = targetSize / maxDim;
-                gltfScene.scale.setScalar(scale);
-            }
-            if (!isSkybox) {
-                gltfScene.traverse(child => {
-                    if (child.isMesh) child.geometry.computeBoundingBox();
-                });
-            }
-            return gltfScene;
-        };
-
-        // 1. Skybox (nebula0.glb)
-        loader.load('./3d/nebula0.glb', (gltf) => {
-            nebula = gltf.scene;
-            normalizeModel(nebula, 800, true);
-            nebula.traverse((child) => {
-                if (child.isMesh) {
-                    if (Array.isArray(child.material)) {
-                        child.material.forEach(m => { m.side = THREE.BackSide; m.depthWrite = false; });
-                    } else if (child.material) {
-                        child.material.side = THREE.BackSide;
-                        child.material.depthWrite = false;
-                    }
-                }
-            });
-            scene.add(nebula);
-        });
 
         // 2. Moon (moon.glb)
         loader.load('./3d/moon.glb', (gltf) => {
@@ -2078,13 +2399,10 @@ const SpaceCanvasV2 = () => {
             
             const rocketGroup = new THREE.Group();
             rocketGroup.position.set(0, 0, 10);
-            
             rocket.rotation.z = 0; 
             rocket.position.set(0,0,0);
-            
             rocketGroup.add(rocket);
             scene.add(rocketGroup);
-            
             rocket = rocketGroup; 
         });
 
@@ -2171,7 +2489,15 @@ const SpaceCanvasV2 = () => {
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
         };
-        const handleKeyDown = (e) => { keysRef.current[e.key] = true; };
+        const handleKeyDown = (e) => { 
+            keysRef.current[e.key] = true; 
+            // Debug Jet Rotation
+            if (window.debugJet) {
+                if (e.key === 'x') window.debugJet.rotation.x += Math.PI / 2;
+                if (e.key === 'y') window.debugJet.rotation.y += Math.PI / 2;
+                if (e.key === 'z') window.debugJet.rotation.z += Math.PI / 2;
+            }
+        };
         const handleKeyUp = (e) => { keysRef.current[e.key] = false; };
         
         window.addEventListener('mousemove', handleMouseMove);
@@ -2191,9 +2517,9 @@ const SpaceCanvasV2 = () => {
             animationId = requestAnimationFrame(animate);
             time += 0.01;
 
-            if (nebula) {
-                nebula.rotation.y = time * 0.02; 
-                nebula.rotation.x = Math.sin(time * 0.01) * 0.1;
+            if (skyboxRef.current) {
+                skyboxRef.current.rotation.y = time * 0.02; 
+                skyboxRef.current.rotation.x = Math.sin(time * 0.01) * 0.1;
             }
             if (moon) {
                 moon.rotation.y = time * 0.1; 
@@ -2263,19 +2589,16 @@ const SpaceCanvasV2 = () => {
             });
 
             if (astronaut && rocket) {
-                // Space Physics (Zero-G floaty feeling)
                 const diff = tailPos.clone().sub(astronaut.position);
                 const dist = diff.length();
                 const restingLength = 6.0; 
                 
                 if (dist > 0) {
-                    // Soft spring constant for zero-G feel
                     const force = (dist - restingLength) * 0.002; 
                     const springForce = diff.normalize().multiplyScalar(force);
                     astroVelocity.add(springForce);
                 }
 
-                // Keyboard Thruster Physics
                 const speed = 0.015;
                 let isThrusting = false;
                 if (keysRef.current['ArrowUp'] || keysRef.current['w'] || keysRef.current['W']) { astroVelocity.y += speed; isThrusting = true; }
@@ -2284,28 +2607,25 @@ const SpaceCanvasV2 = () => {
                 if (keysRef.current['ArrowRight'] || keysRef.current['d'] || keysRef.current['D']) { astroVelocity.x += speed; isThrusting = true; }
 
                 if (isThrusting) {
-                    // Spawn Oxygen/Gas Particle
                     const p = oxParticles[oxIndex];
                     p.life = Math.random() * 20 + 10;
                     p.maxLife = p.life;
                     p.mesh.position.copy(astronaut.position);
-                    p.mesh.position.y -= 0.3; // back/jetpack
+                    p.mesh.position.y -= 0.3; 
                     p.mesh.visible = true;
                     p.mesh.scale.setScalar(1);
                     p.velocity.set((Math.random()-0.5)*0.04, -0.04 - Math.random()*0.04, (Math.random()-0.5)*0.04);
                     oxIndex = (oxIndex + 1) % oxCount;
                 }
 
-                astroVelocity.multiplyScalar(0.98); // Very low damping (glides in space)
+                astroVelocity.multiplyScalar(0.98); 
                 astronaut.position.add(astroVelocity);
                 
-                // Hard constraint for rope max length
                 if (dist > 12) {
                     const pullBack = diff.clone().normalize().multiplyScalar((dist - 12) * 0.1);
                     astronaut.position.add(pullBack);
                 }
                 
-                // Astronaut spins based on velocity
                 astronaut.rotation.y = time * 0.5;
                 astronaut.rotation.z = -astroVelocity.x * 2;
                 
@@ -2347,8 +2667,44 @@ const SpaceCanvasV2 = () => {
         };
     }, []);
 
+    // Effect 2: Swap Skyboxes
+    useEffect(() => {
+        if (!sceneRef.current || !loaderRef.current) return;
+        const scene = sceneRef.current;
+        const loader = loaderRef.current;
+        
+        if (skyboxRef.current) {
+            scene.remove(skyboxRef.current);
+            skyboxRef.current = null;
+        }
+
+        // Try to load the skybox index
+        loader.load(`./3d/nebula${skyboxIndex}.glb`, (gltf) => {
+            const nebula = gltf.scene;
+            const box = new THREE.Box3().setFromObject(nebula);
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            if (maxDim > 0) {
+                nebula.scale.setScalar(800 / maxDim);
+            }
+            nebula.traverse((child) => {
+                if (child.isMesh) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => { m.side = THREE.BackSide; m.depthWrite = false; });
+                    } else if (child.material) {
+                        child.material.side = THREE.BackSide;
+                        child.material.depthWrite = false;
+                    }
+                }
+            });
+            scene.add(nebula);
+            skyboxRef.current = nebula;
+        }, undefined, (e) => console.error("Failed to load skybox:", e));
+    }, [skyboxIndex]);
+
     return <div ref={containerRef} className="fixed inset-0 z-0 bg-black pointer-events-none" />;
 };
+
 
 
 
@@ -3181,15 +3537,15 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                     <span>{t('hero.status')}</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight text-glow">
                     Eduardo Gelain
                 </h1>
                 
-                <p className="text-xl sm:text-2xl font-semibold text-primary mt-3">
+                <p className="text-xl sm:text-2xl font-semibold text-primary mt-3 text-glow">
                     {t('hero.role')}
                 </p>
 
-                <p className="text-slate-300 text-base sm:text-lg leading-relaxed mt-5 max-w-2xl">
+                <p className="text-slate-300 text-base sm:text-lg leading-relaxed mt-5 max-w-2xl text-glow">
                     {t('hero.desc')}
                 </p>
 
@@ -3575,7 +3931,55 @@ const ExperienceSection = () => {
 };
 
 // --- CASE STUDY DEEP DIVE MODAL ---
-const ProjectModal = ({ project, onClose, lang }) => {
+
+const ModelViewerModal = ({ onClose, lang }) => {
+    const models = [
+        { id: 'jet', name: 'Jet', file: './3d/jet.glb' },
+        { id: 'para', name: 'Paratrooper', file: './3d/Paratrooper.glb' },
+        { id: 'rocket', name: 'Rocket', file: './3d/rocket.glb' },
+        { id: 'astro', name: 'Astronaut', file: './3d/astro.glb' }
+    ];
+    const [selected, setSelected] = React.useState(models[0]);
+
+    return (
+        <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+            <div className="bg-[#050505]/95 border border-white/[0.1] rounded-2xl max-w-4xl w-full h-[80vh] flex flex-col relative overflow-hidden shadow-2xl animate-fade-in">
+                <button onClick={onClose} className="absolute top-4 right-4 z-10 w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"><i className="fas fa-times"></i></button>
+                
+                <div className="flex-1 relative bg-black/40">
+                    <model-viewer
+                        src={selected.file}
+                        auto-rotate
+                        camera-controls
+                        shadow-intensity="1"
+                        style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+                        exposure="1.2"
+                        environment-image="legacy"
+                    ></model-viewer>
+                </div>
+                
+                <div className="p-4 sm:p-6 border-t border-white/[0.1] flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                        {models.map(m => (
+                            <button 
+                                key={m.id}
+                                onClick={() => setSelected(m)}
+                                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${selected.id === m.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-white/[0.04] text-slate-400 hover:text-white hover:bg-white/[0.1]'}`}
+                            >
+                                {m.name}
+                            </button>
+                        ))}
+                    </div>
+                    <a href={selected.file} download className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2 whitespace-nowrap w-full sm:w-auto justify-center">
+                        <i className="fas fa-download"></i> {lang === 'pt' ? 'Baixar Modelo' : 'Download Model'}
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ProjectModal = ({ project, onClose, lang, onOpen3DViewer }) => {
     if (!project) return null;
     const { t } = useContext(LanguageContext);
 
@@ -3668,7 +4072,7 @@ const ProjectModal = ({ project, onClose, lang }) => {
                             <i className="fab fa-gitlab"></i> {t('projects.sourceCode')}
                         </a>
                     )}
-                    {project.live && (
+                    {project.live && project.id !== "free_3d_assets" && (
                         <a
                             href={project.live}
                             target="_blank"
@@ -3677,6 +4081,14 @@ const ProjectModal = ({ project, onClose, lang }) => {
                         >
                             <i className="fas fa-external-link-alt"></i> {t('projects.liveDemo')}
                         </a>
+                    )}
+                    {project.id === "free_3d_assets" && (
+                        <button
+                            onClick={onOpen3DViewer}
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
+                        >
+                            <i className="fas fa-cube"></i> {lang === 'pt' ? 'Ver Modelos' : 'View Models'}
+                        </button>
                     )}
                     {project.journalId && (
                         <a
@@ -3792,6 +4204,7 @@ const ProjectsSection = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [activeModalProject, setActiveModalProject] = useState(null);
+    const [show3DViewer, setShow3DViewer] = useState(false);
 
     const allProjects = PORTFOLIO_DATA.projectsData;
 
@@ -3956,7 +4369,7 @@ const ProjectsSection = () => {
                                                         <i className="fas fa-folder-tree"></i>
                                                     </a>
                                                 )}
-                                                {p.live && (
+                                                {p.live && p.id !== 'free_3d_assets' && (
                                                     <a
                                                         href={p.live}
                                                         target="_blank"
@@ -3966,6 +4379,15 @@ const ProjectsSection = () => {
                                                     >
                                                         <i className="fas fa-external-link-alt"></i>
                                                     </a>
+                                                )}
+                                                {p.id === 'free_3d_assets' && (
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); setShow3DViewer(true); }}
+                                                        className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
+                                                        title={lang === 'pt' ? 'Ver Modelos 3D' : 'View 3D Models'}
+                                                    >
+                                                        <i className="fas fa-cube"></i>
+                                                    </button>
                                                 )}
                                             </div>
                                         </div>
@@ -3984,6 +4406,14 @@ const ProjectsSection = () => {
                 <ProjectModal
                     project={activeModalProject}
                     onClose={() => setActiveModalProject(null)}
+                    lang={lang}
+                    onOpen3DViewer={() => setShow3DViewer(true)}
+                />
+            )}
+            {/* 3D Model Viewer Modal */}
+            {show3DViewer && (
+                <ModelViewerModal
+                    onClose={() => setShow3DViewer(false)}
                     lang={lang}
                 />
             )}
@@ -4451,6 +4881,16 @@ const Footer = ({ onOpenEasterMenu }) => {
                 <div className="pt-3 text-slate-600 text-[11px]">
                     {t('footer.rights')}
                 </div>
+
+                {/* 3D Asset Credits Section */}
+                <div className="pt-4 mt-6 border-t border-white/[0.06] text-[10px] text-slate-500 space-y-1 pb-4">
+                    <p className="font-semibold text-slate-400 mb-1.5 uppercase tracking-widest text-[9px]">3D Asset Credits & Attributes</p>
+                    <p>"SkyBox In The Cloud" by <a href="https://skfb.ly/oIINq" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">Paul</a></p>
+                    <p>Purple Sky Space by <a href="https://sketchfab.com/alexandr.melas" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">Aliaksandr.melas</a></p>
+                    <p>Other Space Skyboxes by <a href="https://sketchfab.com/jungle_jim" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">Jungle Jim</a></p>
+                    <p>Moon by Unknown <i className="opacity-70">(Downloaded from a mysterious Russian site)</i></p>
+                    <p>Asteroids by <a href="https://sketchfab.com/gryaznov" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">gryaznov</a></p>
+                </div>
             </div>
         
                     <div className="mt-4 text-center">
@@ -4605,7 +5045,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
     );
 };
 
-// --- EASTER EGG VAULT (Quake 1, GTA Vice City, COD Zombies) ---
+// --- EASTER EGG VAULT (Quake 1, COD Zombies) ---
 // Replaced broken Doom with Quake (https://www.netquake.io/quake)
 const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
     const { t, lang } = useContext(LanguageContext);
@@ -4939,6 +5379,28 @@ const SettingsModal = ({
                                         {t('settings.themeSkySub')}
                                     </div>
                                 </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'sky2')}
+                                    disabled={window.IS_LOW_END}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
+                                        settings.theme === 'sky2'
+                                            ? 'bg-[#050505]/90 border-sky-400 text-white shadow-sm'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                                    }`}
+                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span>{t('settings.themeSky2')}</span>
+                                        {settings.theme === 'sky2' && <i className="fas fa-check text-[10px] text-sky-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {window.IS_LOW_END ? (lang === 'pt' ? 'Desativado (Hardware Limitado)' : 'Disabled (Hardware Limit)') : t('settings.themeSky2Sub')}
+                                    </div>
+                                </button>
+
                             </div>
 <button
                                     type="button"
@@ -4960,6 +5422,25 @@ const SettingsModal = ({
                                         {window.IS_LOW_END ? (lang === 'pt' ? 'Desativado (Hardware Limitado)' : 'Disabled (Hardware Limit)') : t('settings.themeSpace2Sub')}
                                     </div>
                                 </button>
+                                {settings.theme === 'space2' && !window.IS_LOW_END && (
+                                    <div className="flex gap-2 mt-2 w-full">
+                                        {[0, 1, 2].map((idx) => (
+                                            <button 
+                                                key={idx}
+                                                type="button"
+                                                onClick={() => onUpdateSetting('skyboxIndex', idx)}
+                                                className={`flex-1 p-2 rounded text-xs transition-all ${
+                                                    (settings.skyboxIndex || 0) === idx 
+                                                        ? 'bg-violet-500/20 text-violet-300 border border-violet-500/50 shadow-[0_0_10px_rgba(139,92,246,0.2)]' 
+                                                        : 'bg-black/30 text-slate-400 border border-white/5 hover:bg-black/50 hover:text-white'
+                                                }`}
+                                            >
+                                                Nebula {idx + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+
 
                         </div>
                     </div>
@@ -7168,6 +7649,7 @@ const App = () => {
         musicAutoPlay: false,
         defaultLang: 'pt',
         theme: 'space',
+        skyboxIndex: 0,
         easterEggSign: false
     };
 
@@ -7187,6 +7669,7 @@ const App = () => {
                     musicAutoPlay: parsed.musicAutoPlay !== undefined ? parsed.musicAutoPlay : DEFAULT_SETTINGS.musicAutoPlay,
                     defaultLang: parsed.defaultLang || parsed.defaultLanguage || DEFAULT_SETTINGS.defaultLang,
                     theme: parsed.theme || DEFAULT_SETTINGS.theme,
+                      skyboxIndex: parsed.skyboxIndex !== undefined ? parsed.skyboxIndex : DEFAULT_SETTINGS.skyboxIndex,
                     easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign
                 };
             } else if (astroWelcomeSaved !== null) {
@@ -7498,8 +7981,13 @@ const App = () => {
         <LanguageContext.Provider value={{ lang, setLang, t }}>
             {settings.theme === 'space2' ? (
                 <React.Fragment>
-                    <SpaceCanvasV2 />
-                    <div className="fixed inset-0 z-0 bg-black/40 pointer-events-none" />
+                    <SpaceCanvasV2 skyboxIndex={settings.skyboxIndex || 0} />
+                    <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-black/80 via-black/40 to-transparent pointer-events-none" />
+                </React.Fragment>
+            ) : settings.theme === 'sky2' ? (
+                <React.Fragment>
+                    <SkyCanvasV2 />
+                    <div className="fixed inset-0 z-0 bg-black/50 pointer-events-none" />
                 </React.Fragment>
             ) : <SpaceCanvas theme={settings.theme} />}
 
