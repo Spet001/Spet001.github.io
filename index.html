@@ -172,6 +172,16 @@
 
     <!-- Custom CSS for base tweaks -->
     <style>
+        html {
+            scroll-behavior: smooth !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+        }
+
         body {
             background-color: #050505;
             color: #e2e8f0;
@@ -241,15 +251,9 @@
         }
 
         .fade-in-section {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            will-change: opacity, visibility;
-        }
-
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: none;
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
         }
 
         /* Subtle Project Card Fade-In on Filter & Search */
@@ -269,10 +273,29 @@
             will-change: opacity, transform;
         }
 
+        /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
+        #projects article {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+            position: relative;
+        }
+
+        #projects article:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 170, 255, 0.6) !important;
+            box-shadow: 
+                inset 0 0 0 1px rgba(0, 170, 255, 0.45),
+                inset 0 0 22px rgba(0, 170, 255, 0.15),
+                0 16px 36px -8px rgba(0, 170, 255, 0.24),
+                0 12px 28px -6px rgba(0, 0, 0, 0.65) !important;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .project-card-animate {
                 animation: none !important;
                 opacity: 1 !important;
+                transform: none !important;
+            }
+            #projects article:hover {
                 transform: none !important;
             }
         }
@@ -417,10 +440,44 @@
         }
     </style>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="custom-cursor"></div>
+    <!-- Pre-hydration initial loading overlay -->
+    <div id="initial-loading-screen" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+        <div class="flex items-center gap-2.5">
+            <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-xs text-slate-400">SpetDev</span>
+        </div>
+
+        <div class="max-w-xs w-full">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+                <span>Iniciando ambiente...</span>
+                <span>···</span>
+            </div>
+            <div class="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
+                <div class="h-full bg-primary/70 rounded-full w-1/3 animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.dismissInitialLoadingScreen = function() {
+            var el = document.getElementById('initial-loading-screen');
+            if (el && el.parentNode) {
+                el.style.transition = 'opacity 0.7s ease-out';
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    if (el && el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }, 700);
+            }
+        };
+    </script>
     <div id="root">
         <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
         <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
@@ -1173,8 +1230,8 @@ const PORTFOLIO_DATA = {
             live: "#",
             tags: ["Game Assets", "Low Poly", "WebGL"],
             description: {
-                pt: "Pacote de modelos 3D autorais low poly (Jato, Paraquedista, Foguete, Astronauta) desenvolvidos para a simulação deste portfólio. Disponível gratuitamente para uso em jogos e projetos.",
-                en: "Collection of original low-poly 3D models (Jet, Paratrooper, Rocket, Astronaut) created for this portfolio's simulation. Free to use in your own games and projects."
+                pt: "Pacote de modelos 3D autorais low poly (Jato, Paraquedista, Foguete, Astronauta, Galinha Espacial) desenvolvidos para a simulação deste portfólio. Disponível gratuitamente para uso em jogos e projetos.",
+                en: "Collection of original low-poly 3D models (Jet, Paratrooper, Rocket, Astronaut, Space Chicken) created for this portfolio's simulation. Free to use in your own games and projects."
             },
             caseStudy: {
                 challenge: {
@@ -2015,7 +2072,7 @@ const Starfield = () => {
         }
 
 // Interactive Portfolio Application for Eduardo Gelain (SpetDev)
-const { useState, useEffect, useRef, useMemo, createContext, useContext } = React;
+const { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback, createContext, useContext } = React;
 
 const LanguageContext = createContext();
 
@@ -2091,13 +2148,27 @@ const SkyCanvasV2 = () => {
 
         const loader = new THREE.GLTFLoader();
         
+        const loadWithFallback = (localPath, onLoad, onError) => {
+            const fileName = localPath.split('/').pop();
+            const githubUrl = `https://raw.githubusercontent.com/Spet001/Spet001.github.io/main/3d/${fileName}`;
+            loader.load(
+                localPath,
+                onLoad,
+                undefined,
+                (err) => {
+                    console.warn(`[Sky 2.0] Failed loading local model ${localPath}, trying GitHub fallback ${githubUrl}`, err);
+                    loader.load(githubUrl, onLoad, undefined, onError);
+                }
+            );
+        };
+        
         let skybox, jet, para, rope;
 
         // Fallback color in case skybox fails or is transparent
         scene.background = new THREE.Color('#87ceeb');
 
         // 1. Skybox
-        loader.load('./3d/skyclouds.glb', (gltf) => {
+        loadWithFallback('./3d/skyclouds.glb', (gltf) => {
             skybox = gltf.scene;
             normalizeModel(skybox, 800, true);
             // DO NOT flip materials to BackSide, the model likely already points inwards!
@@ -2111,10 +2182,10 @@ const SkyCanvasV2 = () => {
                 }
             });
             scene.add(skybox);
-        }, undefined, (err) => console.error("Skybox failed:", err));
+        }, (err) => console.error("Skybox failed:", err));
 
         // 2. Jet
-        loader.load('./3d/jet.glb', (gltf) => {
+        loadWithFallback('./3d/jet.glb', (gltf) => {
             jet = gltf.scene;
             normalizeModel(jet, 5); 
             
@@ -2142,7 +2213,7 @@ const SkyCanvasV2 = () => {
         });
 
         // 3. Paratrooper
-        loader.load('./3d/Paratrooper.glb', (gltf) => {
+        loadWithFallback('./3d/Paratrooper.glb', (gltf) => {
             para = gltf.scene;
             normalizeModel(para, 2.0); 
             
@@ -2329,12 +2400,48 @@ const SkyCanvasV2 = () => {
 };
 
 // --- SPACE 2.0 CANVAS (THREE.JS GLB MODELS) ---
-const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
+const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
     const containerRef = useRef(null);
     const keysRef = useRef({});
     const sceneRef = useRef(null);
+    const cameraRef = useRef(null);
+    const rendererRef = useRef(null);
     const loaderRef = useRef(null);
     const skyboxRef = useRef(null);
+    const pendingAssetsRef = useRef(new Set(['moon', 'rocket', 'astronaut', 'asteroid1', 'asteroid2', 'nebula']));
+    const isInitialMountRef = useRef(true);
+
+    const onProgressRef = useRef(onLoadingProgress);
+    const onLoadedRef = useRef(onLoaded);
+    useEffect(() => {
+        onProgressRef.current = onLoadingProgress;
+        onLoadedRef.current = onLoaded;
+    });
+
+    const markAssetFinished = useCallback((key, label) => {
+        if (!pendingAssetsRef.current.has(key)) return;
+        pendingAssetsRef.current.delete(key);
+        const loadedCount = 6 - pendingAssetsRef.current.size;
+        const pct = Math.min(100, Math.round((loadedCount / 6) * 100));
+        if (onProgressRef.current) {
+            onProgressRef.current(pct, label);
+        }
+        if (pendingAssetsRef.current.size === 0) {
+            // All 6 assets including the nebula skybox and models are fully initialized and added!
+            if (rendererRef.current && sceneRef.current && cameraRef.current) {
+                try {
+                    // Pre-compile shaders, geometries, and textures (including nebula background texture) into WebGL buffer
+                    rendererRef.current.compile(sceneRef.current, cameraRef.current);
+                    rendererRef.current.render(sceneRef.current, cameraRef.current);
+                } catch(e) {
+                    console.warn('[Space 2.0] Pre-render compile error:', e);
+                }
+            }
+            if (onLoadedRef.current) {
+                onLoadedRef.current();
+            }
+        }
+    }, []);
 
     const normalizeModel = (gltfScene, targetSize, isSkybox = false) => {
         const box = new THREE.Box3().setFromObject(gltfScene);
@@ -2352,7 +2459,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
         return gltfScene;
     };
 
-    // Effect 1: Monolithic Setup
+    // Effect 1: Monolithic Setup & Initial Assets Loading
     useEffect(() => {
         if (!containerRef.current || !window.THREE) return;
 
@@ -2361,10 +2468,12 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
         
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
         camera.position.z = 50;
+        cameraRef.current = camera;
 
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
+        rendererRef.current = renderer;
         containerRef.current.appendChild(renderer.domElement);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -2376,15 +2485,59 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
 
         const loader = new THREE.GLTFLoader();
         loaderRef.current = loader;
+
+        // Model Loader with GitHub fallback (e.g., if local workspace asset is absent)
+        const loadWithFallback = (localPath, key, label, onLoad) => {
+            const fileName = localPath.split('/').pop();
+            const githubUrl = `https://raw.githubusercontent.com/Spet001/Spet001.github.io/main/3d/${fileName}`;
+
+            loader.load(
+                localPath,
+                (gltf) => {
+                    try {
+                        if (onLoad) onLoad(gltf);
+                    } catch(err) {
+                        console.error("[Space 2.0] Error applying " + fileName, err);
+                    }
+                    markAssetFinished(key, label);
+                },
+                undefined,
+                (err) => {
+                    console.warn(`[Space 2.0] Failed loading local model ${localPath}, trying GitHub fallback ${githubUrl}`, err);
+                    loader.load(
+                        githubUrl,
+                        (gltf) => {
+                            console.log(`[Space 2.0] Loaded ${fileName} from GitHub fallback`);
+                            try {
+                                if (onLoad) onLoad(gltf);
+                            } catch(err) {
+                                console.error("[Space 2.0] Error applying fallback " + fileName, err);
+                            }
+                            markAssetFinished(key, label);
+                        },
+                        undefined,
+                        (fallbackErr) => {
+                            console.error(`[Space 2.0] Error loading ${fileName} from both local and GitHub:`, fallbackErr);
+                            markAssetFinished(key, label);
+                        }
+                    );
+                }
+            );
+        };
         
         let moon, rocket, astronaut, rope;
+        let moonChicken = null;
+        let isMoonChickenActive = Boolean(window.__spetMoonChickenActive);
         const asteroids = [];
 
-        // 2. Moon (moon.glb)
-        loader.load('./3d/moon.glb', (gltf) => {
+        // 1. Moon (moon.glb)
+        loadWithFallback('./3d/moon.glb', 'moon', 'Moon / Lua', (gltf) => {
             moon = gltf.scene;
             normalizeModel(moon, 20); 
             moon.position.set(25, 15, -30); 
+            if (isMoonChickenActive) {
+                moon.visible = false;
+            }
             scene.add(moon);
             
             const moonLight = new THREE.PointLight(0xaaccff, 1.5, 300);
@@ -2392,8 +2545,8 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
             scene.add(moonLight);
         });
 
-        // 3. Rocket (rocket.glb)
-        loader.load('./3d/rocket.glb', (gltf) => {
+        // 2. Rocket (rocket.glb)
+        loadWithFallback('./3d/rocket.glb', 'rocket', 'Rocket / Foguete', (gltf) => {
             rocket = gltf.scene;
             normalizeModel(rocket, 4); 
             
@@ -2406,8 +2559,8 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
             rocket = rocketGroup; 
         });
 
-        // 4. Astronaut (Astronaut.glb)
-        loader.load('./3d/Astronaut.glb', (gltf) => {
+        // 3. Astronaut (Astronaut.glb)
+        loadWithFallback('./3d/Astronaut.glb', 'astronaut', 'Astronaut / Astronauta', (gltf) => {
             astronaut = gltf.scene;
             normalizeModel(astronaut, 1.5); 
             astronaut.position.set(5, -5, 10);
@@ -2446,26 +2599,150 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
         }
         let oxIndex = 0;
 
-        // 5. Asteroids
+        // 4 & 5. Asteroids & Space Chicken Easter Egg
         let ast1, ast2;
         let spawned = false;
+        let chickenModel = null;
+        let isChickenMode = Boolean(window.__spetChickenActive);
+
+        const swapAsteroids = (toChicken) => {
+            isChickenMode = toChicken;
+            window.__spetChickenActive = toChicken;
+            if (!toChicken && isMoonChickenActive) {
+                isMoonChickenActive = false;
+                window.__spetMoonChickenActive = false;
+                if (moon) moon.visible = true;
+                if (moonChicken) moonChicken.visible = false;
+            }
+
+            const performSwap = () => {
+                for (let i = 0; i < asteroids.length; i++) {
+                    const oldMesh = asteroids[i];
+                    let newSource;
+                    if (isChickenMode && chickenModel) {
+                        newSource = chickenModel;
+                    } else if (ast1 || ast2) {
+                        const isAst1 = Math.random() > 0.5;
+                        newSource = (isAst1 ? ast1 : ast2) || ast1 || ast2;
+                    }
+                    if (!newSource) continue;
+
+                    const newMesh = newSource.clone();
+                    newMesh.position.copy(oldMesh.position);
+                    newMesh.rotation.copy(oldMesh.rotation);
+
+                    if (isChickenMode) {
+                        // Prominently scale chickens so they are clearly visible across deep space
+                        const scaleMultiplier = Math.random() * 0.8 + 1.2;
+                        newMesh.scale.set(scaleMultiplier, scaleMultiplier, scaleMultiplier);
+                        if (newMesh.position.z < -100) {
+                            newMesh.position.z = Math.random() * -90 - 10;
+                        }
+                        newMesh.userData = {
+                            speed: Math.random() * 0.5 + 0.25,
+                            rotSpeedX: (Math.random() - 0.5) * 0.03,
+                            rotSpeedY: (Math.random() - 0.5) * 0.05,
+                            rotSpeedZ: (Math.random() - 0.5) * 0.03
+                        };
+                    } else {
+                        newMesh.scale.copy(oldMesh.userData.origScale || oldMesh.scale);
+                        newMesh.userData = { ...oldMesh.userData };
+                    }
+
+                    scene.remove(oldMesh);
+                    scene.add(newMesh);
+                    asteroids[i] = newMesh;
+                }
+            };
+
+            if (toChicken && !chickenModel) {
+                loader.load('./3d/space_chicken!.glb', (gltf) => {
+                    chickenModel = gltf.scene;
+                    normalizeModel(chickenModel, 18);
+                    chickenModel.traverse((child) => {
+                        if (child.isMesh && child.material) {
+                            child.material.metalness = 0.05;
+                            child.material.roughness = 0.35;
+                        }
+                    });
+                    performSwap();
+                }, undefined, (err) => {
+                    console.error('[Space 2.0] Failed to load space chicken model:', err);
+                });
+            } else {
+                performSwap();
+            }
+        };
+
+        const handleChickenToggle = (e) => {
+            const desired = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isChickenMode;
+            swapAsteroids(desired);
+        };
+        window.addEventListener('spet:chicken-toggle', handleChickenToggle);
+
+        const handleMoonChickenToggle = (e) => {
+            isMoonChickenActive = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isMoonChickenActive;
+            window.__spetMoonChickenActive = isMoonChickenActive;
+
+            const applyMoonState = () => {
+                if (moon) {
+                    moon.visible = !isMoonChickenActive;
+                }
+                if (moonChicken) {
+                    moonChicken.visible = isMoonChickenActive;
+                }
+            };
+
+            if (isMoonChickenActive && !moonChicken) {
+                loader.load('./3d/space_chicken!.glb', (gltf) => {
+                    moonChicken = gltf.scene;
+                    normalizeModel(moonChicken, 42); // Big colossal chicken moon!
+                    moonChicken.position.set(25, 15, -30);
+                    moonChicken.traverse((child) => {
+                        if (child.isMesh && child.material) {
+                            child.material.metalness = 0.05;
+                            child.material.roughness = 0.35;
+                        }
+                    });
+                    scene.add(moonChicken);
+                    applyMoonState();
+                }, undefined, (err) => {
+                    console.error('[Space 2.0] Failed to load moon chicken model:', err);
+                });
+            } else {
+                applyMoonState();
+            }
+        };
+        window.addEventListener('spet:moon-chicken-toggle', handleMoonChickenToggle);
+
         const checkSpawn = () => {
             if (ast1 && ast2 && !spawned) {
                 spawned = true;
                 for (let i = 0; i < 40; i++) {
                     const isAst1 = Math.random() > 0.5;
-                    const mesh = (isAst1 ? ast1 : ast2).clone();
+                    const baseSource = (isChickenMode && chickenModel) ? chickenModel : (isAst1 ? ast1 : ast2);
+                    const mesh = baseSource.clone();
                     
-                    mesh.position.set(
-                        (Math.random() - 0.5) * 150,
-                        (Math.random() - 0.5) * 100,
-                        Math.random() * -300 - 50
-                    );
-                    
-                    mesh.scale.multiplyScalar(Math.random() * 0.5 + 0.5); 
+                    if (isChickenMode) {
+                        mesh.position.set(
+                            (Math.random() - 0.5) * 160,
+                            (Math.random() - 0.5) * 110,
+                            Math.random() * -110 - 10
+                        );
+                        const scaleMultiplier = Math.random() * 0.8 + 1.2;
+                        mesh.scale.set(scaleMultiplier, scaleMultiplier, scaleMultiplier);
+                    } else {
+                        mesh.position.set(
+                            (Math.random() - 0.5) * 150,
+                            (Math.random() - 0.5) * 100,
+                            Math.random() * -300 - 50
+                        );
+                        mesh.scale.multiplyScalar(Math.random() * 0.5 + 0.5); 
+                    }
                     mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
                     
                     mesh.userData = {
+                        origScale: mesh.scale.clone(),
                         speed: Math.random() * 0.8 + 0.2, 
                         rotSpeedX: (Math.random() - 0.5) * 0.04,
                         rotSpeedY: (Math.random() - 0.5) * 0.04,
@@ -2478,8 +2755,79 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
             }
         };
 
-        loader.load('./3d/asteroid1.glb', (gltf) => { ast1 = gltf.scene; normalizeModel(ast1, 3); checkSpawn(); });
-        loader.load('./3d/asteroid2.glb', (gltf) => { ast2 = gltf.scene; normalizeModel(ast2, 3); checkSpawn(); });
+        loadWithFallback('./3d/asteroid1.glb', 'asteroid1', 'Asteroid Field 1', (gltf) => { ast1 = gltf.scene; normalizeModel(ast1, 3); checkSpawn(); });
+        loadWithFallback('./3d/asteroid2.glb', 'asteroid2', 'Asteroid Field 2', (gltf) => { ast2 = gltf.scene; normalizeModel(ast2, 3); checkSpawn(); });
+
+        if (window.__spetChickenActive) {
+            loader.load('./3d/space_chicken!.glb', (gltf) => {
+                chickenModel = gltf.scene;
+                normalizeModel(chickenModel, 18);
+                chickenModel.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.metalness = 0.05;
+                        child.material.roughness = 0.35;
+                    }
+                });
+                if (spawned) swapAsteroids(true);
+            });
+        }
+
+        if (window.__spetMoonChickenActive) {
+            loader.load('./3d/space_chicken!.glb', (gltf) => {
+                moonChicken = gltf.scene;
+                normalizeModel(moonChicken, 42);
+                moonChicken.position.set(25, 15, -30);
+                moonChicken.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.metalness = 0.05;
+                        child.material.roughness = 0.35;
+                    }
+                });
+                scene.add(moonChicken);
+                if (moon) moon.visible = false;
+            });
+        }
+
+        // 6. Nebula Skybox Background (Loaded in parallel right in Effect 1 so it's guaranteed ready with the scene)
+        const initialNebulaPath = `./3d/nebula${skyboxIndex}.glb`;
+        loadWithFallback(initialNebulaPath, 'nebula', 'Nebula Skybox Background', (gltf) => {
+            const nebula = gltf.scene;
+            const box = new THREE.Box3().setFromObject(nebula);
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            if (maxDim > 0) {
+                nebula.scale.setScalar(800 / maxDim);
+            }
+            nebula.traverse((child) => {
+                if (child.isMesh) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => {
+                            m.side = THREE.BackSide;
+                            m.depthWrite = false;
+                            if (m.map) m.map.needsUpdate = true;
+                        });
+                    } else if (child.material) {
+                        child.material.side = THREE.BackSide;
+                        child.material.depthWrite = false;
+                        if (child.material.map) child.material.map.needsUpdate = true;
+                    }
+                }
+            });
+            scene.add(nebula);
+            skyboxRef.current = nebula;
+        });
+
+        // Emergency fallback timeout only (60s) to never prematurely dismiss before large 3D models & nebula load
+        const safetyTimeout = setTimeout(() => {
+            if (pendingAssetsRef.current.size > 0) {
+                console.warn("[Space 2.0] Emergency 60s timeout reached, clearing remaining pending assets:", Array.from(pendingAssetsRef.current));
+                pendingAssetsRef.current.clear();
+                if (rendererRef.current && sceneRef.current && cameraRef.current) {
+                    try { rendererRef.current.render(sceneRef.current, cameraRef.current); } catch(e) {}
+                }
+                if (onLoadedRef.current) onLoadedRef.current();
+            }
+        }, 60000);
 
         // Interactivity
         const mouse = new THREE.Vector2(0, 0);
@@ -2524,6 +2872,11 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
             if (moon) {
                 moon.rotation.y = time * 0.1; 
             }
+            if (moonChicken && isMoonChickenActive) {
+                moonChicken.rotation.y += 0.06; // Fast spinning mega chicken!
+                moonChicken.rotation.x = Math.sin(time * 3) * 0.12; 
+                moonChicken.rotation.z = Math.cos(time * 2.5) * 0.08;
+            }
             
             const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
             vector.unproject(camera);
@@ -2551,6 +2904,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
                 const tailOffset = new THREE.Vector3(0, -2.2, 0).applyEuler(rocket.rotation);
                 tailPos.copy(rocket.position).add(tailOffset);
                 tailPos.y += rocket.children[0].position.y; 
+
 
                 const p = particles[pIndex];
                 p.life = Math.random() * 15 + 10;
@@ -2643,10 +2997,16 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
                 ast.rotation.y += ast.userData.rotSpeedY;
                 ast.rotation.z += ast.userData.rotSpeedZ;
 
-                if (ast.position.z > 60) {
-                    ast.position.z = Math.random() * -200 - 150; 
-                    ast.position.x = (Math.random() - 0.5) * 250;
-                    ast.position.y = (Math.random() - 0.5) * 150;
+                if (ast.position.z > (isChickenMode ? 40 : 60)) {
+                    if (isChickenMode) {
+                        ast.position.z = Math.random() * -110 - 20; 
+                        ast.position.x = (Math.random() - 0.5) * 160;
+                        ast.position.y = (Math.random() - 0.5) * 110;
+                    } else {
+                        ast.position.z = Math.random() * -200 - 150; 
+                        ast.position.x = (Math.random() - 0.5) * 250;
+                        ast.position.y = (Math.random() - 0.5) * 150;
+                    }
                 }
             });
 
@@ -2655,11 +3015,14 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
         animate();
 
         return () => {
+            clearTimeout(safetyTimeout);
             cancelAnimationFrame(animationId);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('spet:chicken-toggle', handleChickenToggle);
+            window.removeEventListener('spet:moon-chicken-toggle', handleMoonChickenToggle);
             if (containerRef.current) {
                 containerRef.current.removeChild(renderer.domElement);
             }
@@ -2667,8 +3030,12 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
         };
     }, []);
 
-    // Effect 2: Swap Skyboxes
+    // Effect 2: Swap Skyboxes ONLY when user changes skybox in settings (skip initial mount)
     useEffect(() => {
+        if (isInitialMountRef.current) {
+            isInitialMountRef.current = false;
+            return;
+        }
         if (!sceneRef.current || !loaderRef.current) return;
         const scene = sceneRef.current;
         const loader = loaderRef.current;
@@ -2678,8 +3045,11 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
             skyboxRef.current = null;
         }
 
-        // Try to load the skybox index
-        loader.load(`./3d/nebula${skyboxIndex}.glb`, (gltf) => {
+        const nebulaPath = `./3d/nebula${skyboxIndex}.glb`;
+        const fileName = `nebula${skyboxIndex}.glb`;
+        const githubUrl = `https://raw.githubusercontent.com/Spet001/Spet001.github.io/main/3d/${fileName}`;
+
+        const applyNebula = (gltf) => {
             const nebula = gltf.scene;
             const box = new THREE.Box3().setFromObject(nebula);
             const size = box.getSize(new THREE.Vector3());
@@ -2699,7 +3069,28 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0 }) => {
             });
             scene.add(nebula);
             skyboxRef.current = nebula;
-        }, undefined, (e) => console.error("Failed to load skybox:", e));
+        };
+
+        loader.load(
+            nebulaPath,
+            (gltf) => {
+                applyNebula(gltf);
+            },
+            undefined,
+            (e) => {
+                console.warn(`[Space 2.0] Failed loading local skybox ${nebulaPath}, trying GitHub fallback ${githubUrl}`, e);
+                loader.load(
+                    githubUrl,
+                    (gltf) => {
+                        applyNebula(gltf);
+                    },
+                    undefined,
+                    (fallbackErr) => {
+                        console.error("[Space 2.0] Failed to load skybox from local and GitHub:", fallbackErr);
+                    }
+                );
+            }
+        );
     }, [skyboxIndex]);
 
     return <div ref={containerRef} className="fixed inset-0 z-0 bg-black pointer-events-none" />;
@@ -2721,7 +3112,7 @@ const SpaceCanvas = ({ theme = 'space' }) => {
     const particlesRef = useRef([]);
     const cloudsRef = useRef([]);
     const keysRef = useRef({});
-    const hasMouseMovedRef = useRef(false);
+    const hasMouseMovedRef = useRef(true);
 
     useEffect(() => {
         themeRef.current = theme;
@@ -3932,23 +4323,62 @@ const ExperienceSection = () => {
 
 // --- CASE STUDY DEEP DIVE MODAL ---
 
-const ModelViewerModal = ({ onClose, lang }) => {
+const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
     const models = [
         { id: 'jet', name: 'Jet', file: './3d/jet.glb' },
         { id: 'para', name: 'Paratrooper', file: './3d/Paratrooper.glb' },
         { id: 'rocket', name: 'Rocket', file: './3d/rocket.glb' },
-        { id: 'astro', name: 'Astronaut', file: './3d/astro.glb' }
+        { id: 'astro', name: 'Astronaut', file: './3d/Astronaut.glb' },
+        { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: './3d/space_chicken!.glb' }
     ];
-    const [selected, setSelected] = React.useState(models[0]);
+    const initial = models.find(m => m.id === initialModelId) || models[0];
+    const [selected, setSelected] = React.useState(initial);
+    const modalRef = React.useRef(null);
+
+    React.useEffect(() => {
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        if (modalRef.current) modalRef.current.focus();
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.body.style.overflow = originalOverflow;
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
-        <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
-            <div className="bg-[#050505]/95 border border-white/[0.1] rounded-2xl max-w-4xl w-full h-[80vh] flex flex-col relative overflow-hidden shadow-2xl animate-fade-in">
-                <button onClick={onClose} className="absolute top-4 right-4 z-10 w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"><i className="fas fa-times"></i></button>
+        <div 
+            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+            className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6"
+        >
+            <div 
+                ref={modalRef}
+                tabIndex={-1}
+                role="dialog"
+                aria-modal="true"
+                className="bg-[#080808] border border-white/[0.16] rounded-2xl max-w-4xl w-full h-[80vh] flex flex-col relative overflow-hidden shadow-2xl shadow-black/90 ring-1 ring-primary/40 focus:ring-2 focus:ring-primary/60 outline-none animate-fade-in"
+            >
+                <button 
+                    onClick={onClose} 
+                    className="absolute top-4 right-4 z-10 w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/60"
+                    aria-label="Close"
+                    autoFocus
+                >
+                    <i className="fas fa-times"></i>
+                </button>
                 
                 <div className="flex-1 relative bg-black/40">
                     <model-viewer
+                        key={selected.id}
                         src={selected.file}
+                        alt={selected.name}
                         auto-rotate
                         camera-controls
                         shadow-intensity="1"
@@ -3970,7 +4400,7 @@ const ModelViewerModal = ({ onClose, lang }) => {
                             </button>
                         ))}
                     </div>
-                    <a href={selected.file} download className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2 whitespace-nowrap w-full sm:w-auto justify-center">
+                    <a href={selected.file} download={selected.id === 'chicken' ? 'space_chicken.glb' : undefined} className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2 whitespace-nowrap w-full sm:w-auto justify-center">
                         <i className="fas fa-download"></i> {lang === 'pt' ? 'Baixar Modelo' : 'Download Model'}
                     </a>
                 </div>
@@ -3982,15 +4412,56 @@ const ModelViewerModal = ({ onClose, lang }) => {
 const ProjectModal = ({ project, onClose, lang, onOpen3DViewer }) => {
     if (!project) return null;
     const { t } = useContext(LanguageContext);
+    const modalRef = React.useRef(null);
+
+    React.useEffect(() => {
+        // Prevent background scrolling while modal is open
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        // Immediately focus the modal tab dialog container
+        if (modalRef.current) {
+            modalRef.current.focus();
+            modalRef.current.scrollTop = 0;
+        }
+
+        // Close on Escape
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.body.style.overflow = originalOverflow;
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative">
-                
+        <div 
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+            className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
+        >
+            <div 
+                ref={modalRef}
+                tabIndex={-1}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
+                className="bg-[#080808] border border-white/[0.16] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/90 p-6 sm:p-8 relative outline-none ring-1 ring-primary/40 focus:ring-2 focus:ring-primary/60 transition-all"
+            >
                 <button
                     onClick={onClose}
-                    className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.15] flex items-center justify-center transition-colors"
+                    className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.15] flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary/60"
                     aria-label="Close"
+                    autoFocus
                 >
                     <i className="fas fa-times"></i>
                 </button>
@@ -3998,7 +4469,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer }) => {
                 <div className="text-xs font-mono uppercase tracking-wider text-primary font-semibold mb-1">
                     {project.categoryLabel[lang]}
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 id="modal-title" className="text-2xl font-bold text-white mb-4">
                     {typeof project.title === "object" ? project.title[lang] : project.title}
                 </h3>
 
@@ -4205,6 +4676,16 @@ const ProjectsSection = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeModalProject, setActiveModalProject] = useState(null);
     const [show3DViewer, setShow3DViewer] = useState(false);
+    const [viewerModelId, setViewerModelId] = useState('jet');
+
+    useEffect(() => {
+        const handleOpenViewer = (e) => {
+            setViewerModelId(e.detail?.modelId || 'chicken');
+            setShow3DViewer(true);
+        };
+        window.addEventListener('spet:open-3d-viewer', handleOpenViewer);
+        return () => window.removeEventListener('spet:open-3d-viewer', handleOpenViewer);
+    }, []);
 
     const allProjects = PORTFOLIO_DATA.projectsData;
 
@@ -4294,10 +4775,10 @@ const ProjectsSection = () => {
                         className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
                     >
                         {filteredProjects.map((p, idx) => (
-                            <div
+                            <article
                                 key={`${p.id}-${selectedCategory}-${searchQuery}`}
                                 style={{ animationDelay: `${Math.min(idx * 40, 240)}ms` }}
-                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group hover:border-primary/50 transition-all duration-300 project-card-animate"
+                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group transition-all duration-300 project-card-animate"
                             >
                                 {/* Authentic Project Image - Cleanly cropped border-to-border */}
                                 <div 
@@ -4380,7 +4861,7 @@ const ProjectsSection = () => {
                                                         <i className="fas fa-external-link-alt"></i>
                                                     </a>
                                                 )}
-                                                {p.id === 'free_3d_assets' && (
+                                                 {p.id === 'free_3d_assets' && (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); setShow3DViewer(true); }}
                                                         className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
@@ -4394,7 +4875,7 @@ const ProjectsSection = () => {
                                     </div>
 
                                 </div>
-                            </div>
+                            </article>
                         ))}
                     </div>
                 )}
@@ -4407,12 +4888,13 @@ const ProjectsSection = () => {
                     project={activeModalProject}
                     onClose={() => setActiveModalProject(null)}
                     lang={lang}
-                    onOpen3DViewer={() => setShow3DViewer(true)}
+                    onOpen3DViewer={() => { setViewerModelId('jet'); setShow3DViewer(true); }}
                 />
             )}
             {/* 3D Model Viewer Modal */}
             {show3DViewer && (
                 <ModelViewerModal
+                    initialModelId={viewerModelId}
                     onClose={() => setShow3DViewer(false)}
                     lang={lang}
                 />
@@ -5347,6 +5829,27 @@ const SettingsModal = ({
                             <div className="grid grid-cols-2 gap-2 pt-1">
                                 <button
                                     type="button"
+                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space2')}
+                                    disabled={window.IS_LOW_END}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
+                                        settings.theme === 'space2'
+                                            ? 'bg-[#050505]/90 border-violet-500 text-white shadow-sm'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                                    }`}
+                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span>{t('settings.themeSpace2')}</span>
+                                        {settings.theme === 'space2' && <i className="fas fa-check text-[10px] text-violet-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {window.IS_LOW_END ? (lang === 'pt' ? 'Desativado (Hardware Limitado)' : 'Disabled (Hardware Limit)') : t('settings.themeSpace2Sub')}
+                                    </div>
+                                </button>
+
+                                <button
+                                    type="button"
                                     onClick={() => onUpdateSetting('theme', 'space')}
                                     className={`p-2.5 rounded-lg text-left border transition-all ${
                                         settings.theme === 'space'
@@ -5360,23 +5863,6 @@ const SettingsModal = ({
                                     </div>
                                     <div className="text-[10px] text-slate-400 mt-0.5">
                                         {t('settings.themeSpaceSub')}
-                                    </div>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => onUpdateSetting('theme', 'sky')}
-                                    className={`p-2.5 rounded-lg text-left border transition-all ${
-                                        settings.theme === 'sky'
-                                            ? 'bg-[#050505]/90 border-sky-400 text-white shadow-sm'
-                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
-                                    }`}
-                                >
-                                    <div className="flex items-center justify-between font-medium text-xs">
-                                        <span>{t('settings.themeSky')}</span>
-                                        {settings.theme === 'sky' && <i className="fas fa-check text-[10px] text-sky-400"></i>}
-                                    </div>
-                                    <div className="text-[10px] text-slate-400 mt-0.5">
-                                        {t('settings.themeSkySub')}
                                     </div>
                                 </button>
 
@@ -5401,27 +5887,24 @@ const SettingsModal = ({
                                     </div>
                                 </button>
 
-                            </div>
-<button
+                                <button
                                     type="button"
-                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space2')}
-                                    disabled={window.IS_LOW_END}
+                                    onClick={() => onUpdateSetting('theme', 'sky')}
                                     className={`p-2.5 rounded-lg text-left border transition-all ${
-                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
-                                        settings.theme === 'space2'
-                                            ? 'bg-[#050505]/90 border-violet-500 text-white shadow-sm'
+                                        settings.theme === 'sky'
+                                            ? 'bg-[#050505]/90 border-sky-400 text-white shadow-sm'
                                             : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
                                     }`}
-                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
                                 >
                                     <div className="flex items-center justify-between font-medium text-xs">
-                                        <span>{t('settings.themeSpace2')}</span>
-                                        {settings.theme === 'space2' && <i className="fas fa-check text-[10px] text-violet-400"></i>}
+                                        <span>{t('settings.themeSky')}</span>
+                                        {settings.theme === 'sky' && <i className="fas fa-check text-[10px] text-sky-400"></i>}
                                     </div>
                                     <div className="text-[10px] text-slate-400 mt-0.5">
-                                        {window.IS_LOW_END ? (lang === 'pt' ? 'Desativado (Hardware Limitado)' : 'Disabled (Hardware Limit)') : t('settings.themeSpace2Sub')}
+                                        {t('settings.themeSkySub')}
                                     </div>
                                 </button>
+                            </div>
                                 {settings.theme === 'space2' && !window.IS_LOW_END && (
                                     <div className="flex gap-2 mt-2 w-full">
                                         {[0, 1, 2].map((idx) => (
@@ -5532,7 +6015,7 @@ const SettingsModal = ({
 };
 
 // --- INTERACTIVE TERMINAL CLI (SpetTerm) ---
-const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings }) => {
+const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer }) => {
     const [history, setHistory] = useState([
         { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
         { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
@@ -5554,6 +6037,145 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand
         const cleanCmd = cmd.replace(/['"]/g, '').trim();
 
         const newHistory = [...history, { type: 'user', text: `> ${inputVal}` }];
+
+        // Chicken easter egg command
+        if (cleanCmd === 'chicken' || cleanCmd === 'chicken!' || cleanCmd === 'space_chicken' || cleanCmd === 'space_chicken!' || cleanCmd === 'space chicken' || cleanCmd === 'space chicken!') {
+            const nextState = !window.__spetChickenActive;
+            window.__spetChickenActive = nextState;
+            window.dispatchEvent(new CustomEvent('spet:chicken-toggle', { detail: { enabled: nextState } }));
+            
+            // Play retro chicken squawk synth
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const now = ctx.currentTime;
+                    [0, 0.12].forEach((offset, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(idx === 0 ? 580 : 720, now + offset);
+                        osc.frequency.exponentialRampToValueAtTime(idx === 0 ? 280 : 240, now + offset + 0.08);
+                        gain.gain.setValueAtTime(0.18, now + offset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.08);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.09);
+                    });
+                }
+            } catch(err) {}
+
+            if (nextState) {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🚀🐔 SPACE CHICKEN PROTOCOL ENGAGED! 🐔🚀]
+   \\
+    \\   🐔
+     \\  (o>
+     \\\\_//)
+      \\_/_)
+       _|_
+
+BWAAAWK! Cosmic anomaly engaged!
+All cosmic asteroids in the 3D space background have transformed into Space Chickens!
+Look at the deep space canvas — interstellar chickens are now tumbling through the void!
+
+Quick Commands:
+• Type 'MORE' for critical poultry overload (spinning Chicken Moon)!
+• Type 'chicken!' again to restore the asteroid field.
+• Type 'preview chicken' to inspect the Space Chicken in the 3D viewer.`
+                });
+            } else {
+                window.__spetMoonChickenActive = false;
+                window.dispatchEvent(new CustomEvent('spet:moon-chicken-toggle', { detail: { enabled: false } }));
+                newHistory.push({
+                    type: 'output',
+                    text: `[🪨 Asteroids & Moon Restored]
+Space chickens safely returned to the coop. Classic asteroid field and lunar orbit resumed.`
+                });
+            }
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
+        // MORE command (Mega Spinning Moon Chicken easter egg)
+        if (cleanCmd === 'more' || cleanCmd === 'more!') {
+            if (!window.__spetChickenActive) {
+                newHistory.push({
+                    type: 'error',
+                    text: `[!] Access Denied: Poultry threshold not met! You must enable 'chicken!' first before requesting MORE!`
+                });
+                setHistory(newHistory);
+                setInputVal('');
+                return;
+            }
+
+            const nextMoonState = !window.__spetMoonChickenActive;
+            window.__spetMoonChickenActive = nextMoonState;
+            window.dispatchEvent(new CustomEvent('spet:moon-chicken-toggle', { detail: { enabled: nextMoonState } }));
+
+            // Dramatic mega chicken screech audio
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const now = ctx.currentTime;
+                    [0, 0.1, 0.22, 0.35].forEach((offset, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sawtooth';
+                        const freqs = [320, 480, 720, 960];
+                        osc.frequency.setValueAtTime(freqs[idx], now + offset);
+                        osc.frequency.exponentialRampToValueAtTime(freqs[idx] * 0.55, now + offset + 0.14);
+                        gain.gain.setValueAtTime(0.24, now + offset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.14);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.16);
+                    });
+                }
+            } catch(err) {}
+
+            if (nextMoonState) {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🌕🐔 CRITICAL OVERLOAD: THE MOON IS NOW A SPINNING MEGA CHICKEN! 🐔🌕]
+   \\
+    \\   🐔  *BWAAAAAAAWK!!*
+     \\  (O>
+     \\\\_//)
+      \\_/_)
+       _|_
+
+LUNAR GRAVITATIONAL EQUILIBRIUM COLLAPSED!
+The Moon has transformed into a colossal, rapidly spinning Celestial Space Chicken!
+Look up at the upper-right sky to witness the cosmic Mega-Chicken in full rotation!
+
+Commands:
+• Type 'more' again to restore the natural lunar orb.
+• Type 'chicken!' to reset the entire asteroid field and moon.`
+                });
+            } else {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🌕 Moon Restored]
+Celestial Mega-Chicken recalled. Natural lunar orbit and gravitational tides restored.`
+                });
+            }
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
+        // Preview chicken / 3d models command
+        if (cleanCmd === 'preview chicken' || cleanCmd === 'chicken preview' || cleanCmd === 'model chicken' || cleanCmd === '3d chicken') {
+            if (onOpen3DViewer) onOpen3DViewer('chicken');
+            onClose();
+            return;
+        }
 
         // Check for music easter egg command
         if (cleanCmd === 'music' || cleanCmd.startsWith('music ') || cleanCmd === 'ost' || cleanCmd === 'ff' || cleanCmd === 'cod') {
@@ -5693,6 +6315,9 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
   projects   - Output featured engineering repositories
   skills     - List low-level tech stack
   music      - Play OST Jukebox ('music ff' or 'music cod')
+  chicken!   - Easter Egg: Transform asteroids into Space Chickens!
+  MORE       - (While chicken! active) Turn the Moon into a giant spinning Chicken!
+  models     - Open 3D model viewer (or 'preview chicken')
   settings   - Open preferences & configuration panel
   quake      - Launch Quake 1 in browser
   cv         - Open curriculum vitae (resume)
@@ -5736,6 +6361,12 @@ Scripting: Python, PowerShell, Electron, Git`
                 return;
             case 'quake':
                 onOpenEaster('quake');
+                onClose();
+                return;
+            case 'models':
+            case 'preview':
+            case '3d':
+                if (onOpen3DViewer) onOpen3DViewer('chicken');
                 onClose();
                 return;
             case 'cv':
@@ -6770,6 +7401,7 @@ const FinalFantasyJukebox = ({
     onSwitchPlaylist
 }) => {
     const iframeRef = React.useRef(null);
+    const hasTriggeredNextRef = React.useRef(false);
     const [volume, setVolume] = React.useState(() => {
         try {
             const saved = localStorage.getItem('ff_jukebox_volume');
@@ -6785,6 +7417,18 @@ const FinalFantasyJukebox = ({
     const activePlaylist = OST_PLAYLISTS[activePlaylistKey];
     const trackList = activePlaylist.tracks;
     const currentTrack = trackList[state.trackIndex] || trackList[0];
+
+    // Reset track-ended debounce latch whenever track or playlist changes
+    React.useEffect(() => {
+        hasTriggeredNextRef.current = false;
+    }, [currentTrack.id, activePlaylistKey]);
+
+    const triggerNextTrack = React.useCallback(() => {
+        if (!hasTriggeredNextRef.current) {
+            hasTriggeredNextRef.current = true;
+            if (onNext) onNext();
+        }
+    }, [onNext]);
 
     const handleRandomTrack = () => {
         if (onRandom) {
@@ -6805,6 +7449,26 @@ const FinalFantasyJukebox = ({
                 func: func,
                 args: args
             }), '*');
+        }
+    }, []);
+
+    const registerApi = React.useCallback(() => {
+        if (iframeRef.current && iframeRef.current.contentWindow) {
+            try {
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({
+                    event: 'listening'
+                }), '*');
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'addEventListener',
+                    args: ['onStateChange']
+                }), '*');
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'addEventListener',
+                    args: ['onError']
+                }), '*');
+            } catch (e) {}
         }
     }, []);
 
@@ -6848,8 +7512,10 @@ const FinalFantasyJukebox = ({
 
     // Apply volume, mute, and play commands whenever iframe finishes loading
     const handleIframeLoad = () => {
+        hasTriggeredNextRef.current = false;
         setIsPlaying(true);
         const activeVol = isMuted ? 0 : volume;
+        registerApi();
         sendPlayerCommand('setVolume', [activeVol]);
         if (isMuted) {
             sendPlayerCommand('mute');
@@ -6858,35 +7524,90 @@ const FinalFantasyJukebox = ({
         }
         sendPlayerCommand('playVideo');
 
-        // Second verification push to ensure YouTube JS API is fully bound
-        setTimeout(() => {
-            sendPlayerCommand('setVolume', [activeVol]);
-            if (!isMuted) sendPlayerCommand('unMute');
-            sendPlayerCommand('playVideo');
-        }, 600);
+        // Verification pushes to ensure YouTube JS API is bound once internal player loads
+        [300, 700, 1500, 2500].forEach((delay) => {
+            setTimeout(() => {
+                registerApi();
+                sendPlayerCommand('setVolume', [activeVol]);
+                if (!isMuted) sendPlayerCommand('unMute');
+                sendPlayerCommand('playVideo');
+            }, delay);
+        });
     };
 
-    // Listen for YouTube player state updates
+    // Listen for YouTube player state updates and automatically advance to next track
     React.useEffect(() => {
         if (!state.isActive) return;
 
         const handleMessage = (e) => {
             try {
-                const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-                if (data && data.event === 'infoDelivery' && data.info) {
-                    if (data.info.playerState === 0) {
-                        onNext();
-                    } else if (data.info.playerState === 1) {
+                let data = e.data;
+                if (typeof data === 'string') {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (err) {
+                        return;
+                    }
+                }
+                if (!data || typeof data !== 'object') return;
+
+                // 1. YouTube direct onStateChange event
+                if (data.event === 'onStateChange') {
+                    const pState = Number(data.info !== undefined ? data.info : data.data);
+                    if (pState === 0) { // 0 = ENDED
+                        triggerNextTrack();
+                    } else if (pState === 1) { // 1 = PLAYING
                         setIsPlaying(true);
-                    } else if (data.info.playerState === 2) {
+                    } else if (pState === 2) { // 2 = PAUSED
                         setIsPlaying(false);
                     }
+                }
+
+                // 2. YouTube infoDelivery event (playerState or progress near end)
+                if (data.event === 'infoDelivery' && data.info) {
+                    if (data.info.playerState !== undefined) {
+                        const pState = Number(data.info.playerState);
+                        if (pState === 0) {
+                            triggerNextTrack();
+                        } else if (pState === 1) {
+                            setIsPlaying(true);
+                        } else if (pState === 2) {
+                            setIsPlaying(false);
+                        }
+                    }
+
+                    // Check currentTime vs duration if provided by infoDelivery
+                    const cur = Number(data.info.currentTime);
+                    const dur = Number(data.info.duration);
+                    if (!isNaN(cur) && !isNaN(dur) && dur > 0 && cur >= dur - 0.75) {
+                        triggerNextTrack();
+                    }
+                }
+
+                // 3. Fallback on error (skip unavailable or region-locked video)
+                if (data.event === 'onError') {
+                    setTimeout(() => {
+                        triggerNextTrack();
+                    }, 1500);
                 }
             } catch(err) {}
         };
         window.addEventListener('message', handleMessage);
         return () => window.removeEventListener('message', handleMessage);
-    }, [state.isActive, onNext]);
+    }, [state.isActive, triggerNextTrack]);
+
+    // Active polling fallback to ensure tracks never get stuck at the end
+    React.useEffect(() => {
+        if (!state.isActive) return;
+
+        const interval = setInterval(() => {
+            sendPlayerCommand('getPlayerState');
+            sendPlayerCommand('getCurrentTime');
+            sendPlayerCommand('getDuration');
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [state.isActive, sendPlayerCommand]);
 
     if (!state.isActive) return null;
 
@@ -7082,7 +7803,7 @@ const FinalFantasyJukebox = ({
                             <iframe
                                 ref={iframeRef}
                                 key={`${activePlaylistKey}-${currentTrack.id}`}
-                                src={`https://www.youtube-nocookie.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`}
+                                src={`https://www.youtube-nocookie.com/embed/${currentTrack.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0${typeof window !== 'undefined' && window.location.origin ? `&origin=${encodeURIComponent(window.location.origin)}` : ''}`}
                                 title={currentTrack.title}
                                 className="w-full h-full border-none"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -7648,7 +8369,7 @@ const App = () => {
         musicPlayer: false,
         musicAutoPlay: false,
         defaultLang: 'pt',
-        theme: 'space',
+        theme: 'space2',
         skyboxIndex: 0,
         easterEggSign: false
     };
@@ -7668,8 +8389,8 @@ const App = () => {
                     musicPlayer: parsed.musicPlayer !== undefined ? parsed.musicPlayer : DEFAULT_SETTINGS.musicPlayer,
                     musicAutoPlay: parsed.musicAutoPlay !== undefined ? parsed.musicAutoPlay : DEFAULT_SETTINGS.musicAutoPlay,
                     defaultLang: parsed.defaultLang || parsed.defaultLanguage || DEFAULT_SETTINGS.defaultLang,
-                    theme: parsed.theme || DEFAULT_SETTINGS.theme,
-                      skyboxIndex: parsed.skyboxIndex !== undefined ? parsed.skyboxIndex : DEFAULT_SETTINGS.skyboxIndex,
+                    theme: (!parsed.theme || parsed.theme === 'space') ? DEFAULT_SETTINGS.theme : parsed.theme,
+                    skyboxIndex: parsed.skyboxIndex !== undefined ? parsed.skyboxIndex : DEFAULT_SETTINGS.skyboxIndex,
                     easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign
                 };
             } else if (astroWelcomeSaved !== null) {
@@ -7693,6 +8414,73 @@ const App = () => {
         } catch (e) {}
         return 'pt';
     });
+
+    // --- LOADING SCREEN STATE ---
+    const [isLoadingScreen, setIsLoadingScreen] = useState(true);
+    const [loadingProgress, setLoadingProgress] = useState(15);
+    const [loadingAsset, setLoadingAsset] = useState(() =>
+        lang === 'pt' ? 'Iniciando ambiente Espaço 2.0...' : 'Initializing Space 2.0 environment...'
+    );
+    const [isFadeOut, setIsFadeOut] = useState(false);
+
+    // Seamlessly hand off from the static pre-hydration HTML placeholder to React's dynamic 3D asset loading overlay
+    useLayoutEffect(() => {
+        const initScreen = document.getElementById('initial-loading-screen');
+        if (initScreen && initScreen.parentNode) {
+            initScreen.parentNode.removeChild(initScreen);
+        }
+    }, []);
+
+    const handleCanvasProgress = useCallback((percent, assetName) => {
+        setLoadingProgress(prev => Math.max(prev, percent));
+        if (assetName) {
+            setLoadingAsset(lang === 'pt' ? `Carregando ${assetName}...` : `Loading ${assetName}...`);
+        }
+    }, [lang]);
+
+    const handleCanvasLoaded = useCallback(() => {
+        setLoadingProgress(100);
+        setLoadingAsset(lang === 'pt' ? 'Ambiente 3D pronto!' : '3D environment ready!');
+
+        // Ensure static pre-hydration initial-loading-screen is also dismissed
+        if (typeof window.dismissInitialLoadingScreen === 'function') {
+            window.dismissInitialLoadingScreen();
+        } else {
+            const initScreen = document.getElementById('initial-loading-screen');
+            if (initScreen && initScreen.parentNode) {
+                initScreen.parentNode.removeChild(initScreen);
+            }
+        }
+
+        setTimeout(() => {
+            setIsFadeOut(true);
+            setTimeout(() => {
+                setIsLoadingScreen(false);
+            }, 750);
+        }, 400);
+    }, [lang]);
+
+    // Emergency timeout: 60s fallback in case of complete network failure, ensuring loading screen never prematurely dismisses before 3D models and nebula load
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsFadeOut(true);
+            setTimeout(() => {
+                setIsLoadingScreen(false);
+            }, 750);
+        }, 60000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    // If theme is changed away from 3D (space2 / sky2), complete loading screen promptly
+    useEffect(() => {
+        if (settings.theme !== 'space2' && settings.theme !== 'sky2') {
+            const t = setTimeout(() => {
+                setIsFadeOut(true);
+                setTimeout(() => setIsLoadingScreen(false), 500);
+            }, 600);
+            return () => clearTimeout(t);
+        }
+    }, [settings.theme]);
     const [isCVOpen, setIsCVOpen] = useState(false);
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
     const [showPatreonModal, setShowPatreonModal] = useState(false);
@@ -7826,35 +8614,50 @@ const App = () => {
             });
             return { ...list[nextIdx], playlist: targetPl, index: nextIdx };
         } else if (action === 'next') {
-            const list = getTrackList(currentPl);
-            const nextIdx = (ffMusicState.trackIndex + 1) % list.length;
-            setFfMusicState(prev => ({
-                ...prev,
-                isActive: true,
-                trackIndex: nextIdx
-            }));
-            return { ...list[nextIdx], playlist: currentPl, index: nextIdx };
+            let nextTrackObj = null;
+            setFfMusicState(prev => {
+                const currentPl = prev.playlist === 'cod' ? 'cod' : 'ff';
+                const list = getTrackList(currentPl);
+                const nextIdx = (prev.trackIndex + 1) % list.length;
+                nextTrackObj = { ...list[nextIdx], playlist: currentPl, index: nextIdx };
+                return {
+                    ...prev,
+                    isActive: true,
+                    trackIndex: nextIdx
+                };
+            });
+            return nextTrackObj;
         } else if (action === 'prev') {
-            const list = getTrackList(currentPl);
-            const prevIdx = (ffMusicState.trackIndex - 1 + list.length) % list.length;
-            setFfMusicState(prev => ({
-                ...prev,
-                isActive: true,
-                trackIndex: prevIdx
-            }));
-            return { ...list[prevIdx], playlist: currentPl, index: prevIdx };
+            let prevTrackObj = null;
+            setFfMusicState(prev => {
+                const currentPl = prev.playlist === 'cod' ? 'cod' : 'ff';
+                const list = getTrackList(currentPl);
+                const prevIdx = (prev.trackIndex - 1 + list.length) % list.length;
+                prevTrackObj = { ...list[prevIdx], playlist: currentPl, index: prevIdx };
+                return {
+                    ...prev,
+                    isActive: true,
+                    trackIndex: prevIdx
+                };
+            });
+            return prevTrackObj;
         } else if (action === 'random' || action === 'shuffle') {
-            const list = getTrackList(currentPl);
-            let nextIdx = Math.floor(Math.random() * list.length);
-            if (list.length > 1 && nextIdx === ffMusicState.trackIndex) {
-                nextIdx = (nextIdx + 1) % list.length;
-            }
-            setFfMusicState(prev => ({
-                ...prev,
-                isActive: true,
-                trackIndex: nextIdx
-            }));
-            return { ...list[nextIdx], playlist: currentPl, index: nextIdx };
+            let randTrackObj = null;
+            setFfMusicState(prev => {
+                const currentPl = prev.playlist === 'cod' ? 'cod' : 'ff';
+                const list = getTrackList(currentPl);
+                let nextIdx = Math.floor(Math.random() * list.length);
+                if (list.length > 1 && nextIdx === prev.trackIndex) {
+                    nextIdx = (nextIdx + 1) % list.length;
+                }
+                randTrackObj = { ...list[nextIdx], playlist: currentPl, index: nextIdx };
+                return {
+                    ...prev,
+                    isActive: true,
+                    trackIndex: nextIdx
+                };
+            });
+            return randTrackObj;
         } else if (action === 'stop' || action === 'pause') {
             setFfMusicState(prev => ({
                 ...prev,
@@ -7979,9 +8782,77 @@ const App = () => {
 
     return (
         <LanguageContext.Provider value={{ lang, setLang, t }}>
+            {/* Loading Screen Overlay with Space 1.0 Live Background */}
+            {isLoadingScreen && (
+                <div
+                    id="loading-screen"
+                    className={`fixed inset-0 z-[99999] flex flex-col justify-between p-6 sm:p-10 select-none transition-opacity duration-700 ease-out overflow-hidden ${
+                        isFadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+                    }`}
+                    style={{
+                        backgroundColor: '#050505'
+                    }}
+                >
+                    {/* Space 1.0 (Canvas 2D) as real-time interactive animated background while Space 2.0 3D assets initialize */}
+                    <div className="absolute inset-0 pointer-events-auto">
+                        <SpaceCanvas theme="space" />
+                    </div>
+
+                    {/* Subtle top & bottom soft vignette for readability */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/75 pointer-events-none" />
+
+                    {/* Top Header: Restrained, authentic branding */}
+                    <div className="relative z-10 flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                            <span className="text-sm font-bold tracking-tight text-white">Eduardo Gelain</span>
+                            <span className="text-slate-600 text-xs">/</span>
+                            <span className="text-xs text-slate-400">SpetDev</span>
+                        </div>
+                        <div className="text-xs text-slate-500 font-mono hidden sm:block">
+                            {lang === 'pt' ? 'Espaço 1.0 Interativo' : 'Interactive Space 1.0'}
+                        </div>
+                    </div>
+
+                    {/* Bottom Status & Progress Dock: Clean, unboxed, zero AI-slop */}
+                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div className="max-w-sm w-full">
+                            <div className="flex items-center justify-between text-xs mb-2">
+                                <span className="text-slate-300 font-medium">
+                                    {lang === 'pt' ? 'Carregando universo 3D' : 'Loading 3D space'}
+                                </span>
+                                <span className="text-primary font-mono font-bold text-xs">{loadingProgress}%</span>
+                            </div>
+
+                            {/* Minimal 2px hairline progress bar */}
+                            <div className="h-[2px] w-full bg-white/[0.12] rounded-full overflow-hidden mb-2">
+                                <div
+                                    className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
+                                    style={{ width: `${loadingProgress}%` }}
+                                />
+                            </div>
+
+                            <p className="text-[11px] text-slate-400 truncate font-mono">
+                                {loadingAsset}
+                            </p>
+                        </div>
+
+                        {/* Interactive pilot hint */}
+                        <div className="text-[11px] text-slate-400 font-mono sm:text-right">
+                            {lang === 'pt' 
+                                ? 'Mova o cursor para navegar · Setas (↑ ← ↓ →) ou W/A/S/D guiam o astronauta'
+                                : 'Move cursor to fly · Arrow keys (↑ ← ↓ →) or W/A/S/D pilot astronaut'}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {settings.theme === 'space2' ? (
                 <React.Fragment>
-                    <SpaceCanvasV2 skyboxIndex={settings.skyboxIndex || 0} />
+                    <SpaceCanvasV2 
+                        skyboxIndex={settings.skyboxIndex || 0} 
+                        onLoadingProgress={handleCanvasProgress}
+                        onLoaded={handleCanvasLoaded}
+                    />
                     <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-black/80 via-black/40 to-transparent pointer-events-none" />
                 </React.Fragment>
             ) : settings.theme === 'sky2' ? (
@@ -7991,45 +8862,48 @@ const App = () => {
                 </React.Fragment>
             ) : <SpaceCanvas theme={settings.theme} />}
 
-            <TopBar
-                onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
-                onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(prev => !prev); }}
-                onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
-                onOpenPatreon={() => { playSoftClick(); setShowPatreonModal(true); }}
-                onOpenSettings={() => { playSoftClick(); setIsSettingsOpen(true); }}
-                settings={settings}
-            />
-
-            <main>
-                <Hero
+            {/* Main Website Content - hidden while loading to prevent overlap */}
+            <div className={`transition-opacity duration-700 ${isLoadingScreen && !isFadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+                <TopBar
                     onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
-                    onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(true); }}
+                    onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(prev => !prev); }}
+                    onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
+                    onOpenPatreon={() => { playSoftClick(); setShowPatreonModal(true); }}
+                    onOpenSettings={() => { playSoftClick(); setIsSettingsOpen(true); }}
+                    settings={settings}
                 />
-                <AboutSection />
-                <ExperienceSection />
-                <ProjectsSection />
-                <SkillsSection />
-                <JournalSection />
-                <ContactSection />
-            </main>
 
-            <Footer
-                onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
-            />
+                <main>
+                    <Hero
+                        onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
+                        onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(true); }}
+                    />
+                    <AboutSection />
+                    <ExperienceSection />
+                    <ProjectsSection />
+                    <SkillsSection />
+                    <JournalSection />
+                    <ContactSection />
+                </main>
 
-            {/* Floating 'Scroll to Top' Button */}
-            <button
-                onClick={scrollToTop}
-                aria-label={lang === 'pt' ? 'Voltar ao topo' : 'Scroll to top'}
-                title={lang === 'pt' ? 'Voltar ao topo' : 'Scroll to top'}
-                className={`fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#050505]/90 hover:bg-primary text-slate-300 hover:text-white border border-white/[0.15] hover:border-primary/60 shadow-xl shadow-black/70 hover:shadow-primary/30 backdrop-blur-xl flex items-center justify-center transition-all duration-300 transform group clickable cursor-pointer ${
-                    showScrollTop
-                        ? 'opacity-100 translate-y-0 pointer-events-auto'
-                        : 'opacity-0 translate-y-4 pointer-events-none'
-                }`}
-            >
-                <i className="fas fa-chevron-up text-sm sm:text-base transition-transform duration-200 group-hover:-translate-y-0.5"></i>
-            </button>
+                <Footer
+                    onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
+                />
+
+                {/* Floating 'Scroll to Top' Button */}
+                <button
+                    onClick={scrollToTop}
+                    aria-label={lang === 'pt' ? 'Voltar ao topo' : 'Scroll to top'}
+                    title={lang === 'pt' ? 'Voltar ao topo' : 'Scroll to top'}
+                    className={`fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#050505]/90 hover:bg-primary text-slate-300 hover:text-white border border-white/[0.15] hover:border-primary/60 shadow-xl shadow-black/70 hover:shadow-primary/30 backdrop-blur-xl flex items-center justify-center transition-all duration-300 transform group clickable cursor-pointer ${
+                        showScrollTop
+                            ? 'opacity-100 translate-y-0 pointer-events-auto'
+                            : 'opacity-0 translate-y-4 pointer-events-none'
+                    }`}
+                >
+                    <i className="fas fa-chevron-up text-sm sm:text-base transition-transform duration-200 group-hover:-translate-y-0.5"></i>
+                </button>
+            </div>
 
             {/* Modals */}
             {isCVOpen && (
@@ -8048,6 +8922,9 @@ const App = () => {
                     onMusicCommand={handleMusicCommand}
                     activeMusicTrack={ffMusicState.isActive ? (ffMusicState.playlist === 'cod' ? COD_MENU_TRACKS[ffMusicState.trackIndex] : FF_CLASSIC_TRACKS[ffMusicState.trackIndex]) : null}
                     onOpenSettings={() => setIsSettingsOpen(true)}
+                    onOpen3DViewer={(modelId) => {
+                        window.dispatchEvent(new CustomEvent('spet:open-3d-viewer', { detail: { modelId: modelId || 'chicken' } }));
+                    }}
                 />
             )}
 
