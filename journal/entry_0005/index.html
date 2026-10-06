@@ -5,23 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Technical Journal | Eduardo Gelain – Reverse Engineering & Game Dev</title>
-    <meta name="description" content="In-depth technical research papers, reverse engineering breakdowns, GSC bytecode VM analysis, UWP/GDK sandbox bypasses by Eduardo Gelain (SpetDev).">
+    <title>Open Source GSC Injector for Black Ops 2 (MS Store) | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <!-- Canonical URL & Alternate Discovery -->
-    <link rel="canonical" href="https://spet01.dev/journal/">
+    <link rel="canonical" href="https://spet01.dev/journal/T6-GSC-Injector-MS-Store/">
     <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spet01.dev/">
-    <meta property="og:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta property="og:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta property="og:url" content="https://spet01.dev/journal/T6-GSC-Injector-MS-Store/">
+    <meta property="og:title" content="Open Source GSC Injector for Black Ops 2 (MS Store) | Eduardo Gelain">
+    <meta property="og:description" content="Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -34,123 +33,34 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://spet01.dev/">
-    <meta name="twitter:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta name="twitter:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta name="twitter:url" content="https://spet01.dev/journal/T6-GSC-Injector-MS-Store/">
+    <meta name="twitter:title" content="Open Source GSC Injector for Black Ops 2 (MS Store) | Eduardo Gelain">
+    <meta name="twitter:description" content="Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://spet01.dev/#website",
-          "url": "https://spet01.dev/",
-          "name": "Eduardo Gelain | Software & Game Developer",
-          "description": "Portfólio e Journal Técnico de Eduardo Gelain (SpetDev) - Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa.",
-          "inLanguage": ["pt-BR", "en-US"],
-          "publisher": { "@id": "https://spet01.dev/#person" }
-        },
-        {
-          "@type": "Person",
-          "@id": "https://spet01.dev/#person",
-          "name": "Eduardo Gelain",
-          "alternateName": "SpetDev",
-          "url": "https://spet01.dev",
-          "jobTitle": "Software & Game Developer",
-          "email": "mailto:gelain15mj@gmail.com",
-          "image": "https://spet01.dev/assets/portweb.png",
-          "description": "Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa de engines e sandboxes.",
-          "knowsAbout": [
-            "C++",
-            "C#",
-            "Unity",
-            "Unreal Engine 5",
-            "Reverse Engineering",
-            "Game Scripting C (GSC)",
-            "Memory Pattern Scanning",
-            "WebAssembly",
-            "Cloudflare Workers",
-            "x86/x64 Assembly",
-            "Game Development"
-          ],
-          "sameAs": [
-            "https://github.com/Spet001",
-            "https://gitlab.com/Spet001",
-            "https://spet01.itch.io",
-            "https://www.nexusmods.com/profile/Spet001/mods",
-            "https://www.linkedin.com/in/eduardo-gelain/"
-          ]
-        },
-        {
-          "@type": "ItemList",
-          "@id": "https://spet01.dev/#projects",
-          "name": "Featured Software & Game Projects",
-          "itemListElement": [
-            {
-              "@type": "SoftwareApplication",
-              "position": 1,
-              "name": "Outcaster - Retro FPS Templates",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete retro FPS templates (boomer shooter style) developed in Unity and C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 2,
-              "name": "Sparky Rush: Purrils in Pawsville",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Commercial 3D platformer game on Steam. Quality assurance, bug mapping, and code deductions in Unity/C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 3,
-              "name": "Resurge Client (BO3 Multi-Platform)",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Custom client for Black Ops 3 supporting both UWP and Steam with native C++ injection DLL."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 4,
-              "name": "CW GSC Injector (MS Store / Xbox PC)",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "C++ GSC injector for Call of Duty: BOCW Microsoft Store with dynamic pattern scanning."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 5,
-              "name": "BO1 & BO2 MS Store Clients & GSC Injector",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 6,
-              "name": "GSC Dumps and Pre-Compiled/Uncompiled Sources",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "GSC bytecode dumps and custom menu sources for Call of Duty PC releases."
-            }
-          ]
-        },
-        {
-          "@type": "Blog",
-          "@id": "https://spet01.dev/journal/#blog",
-          "name": "Eduardo Gelain Technical Journal",
-          "url": "https://spet01.dev/journal/",
-          "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
-          "author": { "@id": "https://spet01.dev/#person" }
-        }
-      ]
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Open Source GSC Injector for Black Ops 2 (MS Store)",
+  "description": "Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.",
+  "datePublished": "Sep 20, 2026",
+  "url": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
+  "mainEntityOfPage": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
     </script>
 
     <!-- Fonts & Icons -->
@@ -545,93 +455,138 @@
             </div>
         </header>
 
-                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-5xl mx-auto">
-            <div class="mb-8">
-                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
             </div>
-            <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md mb-8">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold mb-3">
-                    <i class="fas fa-book-open text-[10px]"></i> Reverse Engineering & Game Dev Research
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 20, 2026</time>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Open Source GSC Injector for Black Ops 2 (MS Store)</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="T6-GSC-Injector-MS-Store">
+<h1>Engineering the First Open Source GSC Injector for Black Ops 2 (MS Store)</h1>
+<p>Writing a custom GSC (Game Script Code) injector for <em>Call of Duty: Black Ops II</em> (T6) on PC is a notoriously difficult challenge. For years, the community has relied on closed-source tools like <em>GSC Studio</em>, which makes learning and porting mods to new environments—like the modern UWP / Microsoft Store release of the game—virtually impossible.</p>
+<p>Determined to break this barrier, I set out to build a <strong>100% open-source GSC Injector</strong> specifically tailored for the Black Ops 2 Microsoft Store version (as no BO2 GSC PC Injectors are open source lol). Here&#39;s the deep-dive story of how it evolved from a simple database hook to a full-blown inline execution detour and x86-to-x64 bytecode transpiler.</p>
+<hr>
+<h2>Iteration 1: The Experimental Hook</h2>
+<p>My journey started by looking for the foundational function responsible for loading game assets: <code>DB_FindXAssetHeaderInternal</code>.</p>
+<p>Through reverse engineering with IDA Pro, I successfully located this function at <code>base + 0x213650</code>. 
+I wrote my first experimental build (<code>gsc_injector_EXPERIMENTAL.cpp</code>) that placed a detour hook directly on this function. </p>
+<p>The logic was straightforward:</p>
+<ol>
+<li>Intercept calls to <code>DB_FindXAssetHeaderInternal</code>.</li>
+<li>Check if the game is requesting <code>ASSET_TYPE_SCRIPT_PARSETREE</code> (Type 48).</li>
+<li>Wait for the engine to request <code>_clientids.gsc</code>.</li>
+<li>Trigger a standard Windows <code>OpenFileDialog</code> to let the user select a custom compiled <code>.gsc</code> file.</li>
+<li>Overwrite the returned asset&#39;s bytecode pointer and length with our custom buffer.</li>
+</ol>
+<h3>The 64-bit Hashing Problem</h3>
+<p>The Microsoft Store version of BO2 is compiled as a native <strong>64-bit application</strong>, unlike the original Steam release - This means that the GSC VM is <strong>also x64</strong>. This meant that the classic 32-bit FNV-1a hashes used in the GSC Exports/Imports tables were completely incompatible. </p>
+<p>To fix this, the experimental injector dynamically parsed the bytecode header, resolved the string table, and re-hashed all function names (Exports, Imports, Globals) using a custom 64-bit FNV-1a algorithm (<code>Hash64</code>) masked to 63-bits to match the modern engine&#39;s specifications:</p>
+<pre><code class="language-cpp">// FNV-1a 64-bit hash masked to 63-bits (matching 64-bit Call of Duty engine)
+uint64_t Hash64(const std::string&amp; str) {
+    uint64_t hash = 0xcbf29ce484222325;
+    for (char c : str) {
+        char lower_c = (c &gt;= &#39;A&#39; &amp;&amp; c &lt;= &#39;Z&#39;) ? (c + 32) : c;
+        if (lower_c == &#39;\\&#39;) lower_c = &#39;/&#39;;
+        hash = (hash ^ lower_c) * 0x100000001b3;
+    }
+    return hash &amp; 0x7fffffffffffffff; // 63-bit mask
+}
+</code></pre>
+<p>This successfully loaded strings, but it proved to be a fragile method. <code>DB_FindXAssetHeaderInternal</code> is queried extremely often, and replacing bytecode <em>after</em> the asset header is queried can lead to horrific race conditions, memory leaks across map reloads, and broken dependencies.</p>
+<hr>
+<h2>Iteration 2: The Final Architecture</h2>
+<p>After studying my findings from Black Ops 1 (T5), I realized that hooking the asset database was too low-level. To achieve perfect execution timing, I needed to go straight to the scripting engine.</p>
+<p>I moved on to a second, fully functional iteration (<code>gsc_injector.cpp</code>) with a completely revamped architecture. This iteration bypasses <code>DB_FindXAssetHeaderInternal</code> entirely and hooks directly into the core script loading and execution thread dispatchers.</p>
+<h3>1. Dynamic Code Caves (<code>Scr_LoadScript</code> &amp; <code>Scr_ExecThread</code>)</h3>
+<p>To seamlessly intercept the game&#39;s script execution flow, I built dynamic <strong>Code Caves</strong> using <code>VirtualAlloc</code> near the engine&#39;s execution <code>.text</code> section (within the +/- 2GB jump limit). By writing pure x64 assembly trampolines (<code>ArmLoadCodeCave</code> and <code>ArmDispatcherCodeCave</code>), I hooked into:</p>
+<ul>
+<li><code>Scr_LoadScript</code> (<code>base + 0x506460</code>)</li>
+<li><code>Scr_ExecThread</code> (<code>base + 0x51dd10</code>)</li>
+</ul>
+<p>Here is an excerpt of the custom x64 trampoline injected for <code>Scr_LoadScript</code>:</p>
+<pre><code class="language-cpp">// 1. push rax,rcx,rdx,r8,r9,r10,r11,rbx,rsi,rdi; pushfq
+code[idx++] = 0x50; // push rax
+code[idx++] = 0x51; // push rcx
+// ... registers saved ...
+code[idx++] = 0x9C; // pushfq
+
+// 3. For each asset: memcpy pristine -&gt; buf, then Scr_LoadScript(0, name_ptr)
+for (auto&amp; [name, asset] : g_InjectedAssets) {
+    uintptr_t pristine_addr = reinterpret_cast&lt;uintptr_t&gt;(asset.pristine_bytecode.data());
+    uintptr_t buf_addr = asset.runtime_address;
+    uint32_t sz = static_cast&lt;uint32_t&gt;(asset.size);
+
+    // mov rsi, pristine_addr
+    code[idx++] = 0x48; code[idx++] = 0xBE;
+    memcpy(&amp;code[idx], &amp;pristine_addr, 8); idx += 8;
+    // mov rdi, buf_addr
+    code[idx++] = 0x48; code[idx++] = 0xBF;
+    memcpy(&amp;code[idx], &amp;buf_addr, 8); idx += 8;
+    // mov ecx, sz
+    code[idx++] = 0xB9;
+    memcpy(&amp;code[idx], &amp;sz, 4); idx += 4;
+    // rep movsb (Copy pristine bytecode to engine buffer)
+    code[idx++] = 0xF3; code[idx++] = 0xA4;
+
+    // Call engine&#39;s Scr_LoadScript(0, name_ptr)
+    code[idx++] = 0x31; code[idx++] = 0xC9; // xor ecx, ecx
+    // ...
+    code[idx++] = 0xFF; code[idx++] = 0xD0; // call rax
+}
+</code></pre>
+<p>This implementation allows the injector to completely overwrite the compiled GSC buffer with a pristine copy on every map reload, avoiding dirty bytecode states, while utilizing the engine&#39;s native <code>Scr_LoadScript</code> function to parse it properly.</p>
+<hr>
+<h3>2. The Final Boss: On-the-Fly Bytecode Transpiler (x86 -&gt; x64)</h3>
+<p>The absolute biggest hurdle for the MS Store release: most custom GSC mods available online (such as the massive Zombie mod menus) are compiled specifically for the 32-bit Steam version of BO2 using older compilers. </p>
+<p>In a 64-bit engine, the bytecode execution model changes drastically:</p>
+<ul>
+<li>Instructions that load pointers (like <code>ScriptFunctionCall</code> or <code>GetFunction</code>) now require an 8-byte pointer slot instead of 4-byte.</li>
+<li>Because instructions grow in size, <strong>all relative jump offsets</strong> (<code>JumpOnFalse</code>, <code>JumpOnTrue</code>, <code>Jump</code>) become completely misaligned!</li>
+</ul>
+<p>To solve this without forcing developers to recompile their mods from source, I built a full <strong>x86 to x64 GSC Bytecode Transpiler</strong> (<code>TranspileToX64</code>). </p>
+<p>The transpiler maps out the entire execution path using a custom OpCode dictionary (<code>G_OPS</code>):</p>
+<pre><code class="language-cpp">static const std::unordered_map&lt;uint8_t, OpInfo&gt; G_OPS = {
+    { 0x00, { &quot;End&quot;, OPK_TERM, 0, 0 } },
+    { 0x04, { &quot;GetByte&quot;, OPK_IMM, 1, 1 } },
+    { 0x08, { &quot;GetInteger&quot;, OPK_IMM, 4, 4 } },
+    { 0x15, { &quot;GetFunction&quot;, OPK_CALL0, 0, 0 } },
+    { 0x2e, { &quot;ScriptFunctionCall&quot;, OPK_CALL, 0, 0 } },
+    { 0x3b, { &quot;JumpOnFalse&quot;, OPK_JUMP, 0, 0 } },
+    // ... over 50 opcodes defined
+};
+</code></pre>
+<p>The transpilation process happens in 4 phases during injection:</p>
+<ol>
+<li><strong>Execution Walk:</strong> The injector linearly walks through the 32-bit bytecode, decoding instructions to map out every single jump origin, jump destination, and pointer slot.</li>
+<li><strong>Padding Injection:</strong> For every <code>OPK_CALL</code> (e.g. <code>ScriptFunctionCall</code> <code>0x2E</code>), the engine requires an 8-byte buffer for x64. The transpiler detects this, aligns the memory, and injects 4 bytes of padding (<code>0x01, 0x00, 0x00, 0x00</code>).</li>
+<li><strong>Jump Recalculation:</strong> Because padding was injected, the total size of the <code>.cseg</code> (code segment) grows. The transpiler goes back through the mapped <code>JumpOnFalse</code> and <code>JumpOnTrue</code> instructions and recalculates their relative int16 offsets to account for the new padding bytes.</li>
+<li><strong>Header Fixups:</strong> Finally, the Exports, Imports, and String tables are rebuilt with the shifted relative offsets.</li>
+</ol>
+<hr>
+<h3>3. Mod Packages &amp; Dependency Resolution</h3>
+<p>A major limitation of traditional GSC injectors is the inability to cleanly load multi-file projects. To modernize the workflow, I added a JSON parser that reads a <code>package.json</code> manifest.</p>
+<p>Developers can now organize their scripts in standard directory structures and define entry points:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;ZeroProxy Debug Menu&quot;,
+  &quot;entry_asset&quot;: &quot;maps/mp/_development_dvars&quot;,
+  &quot;entry_export&quot;: &quot;init&quot;,
+  &quot;assets&quot;: [
+    &quot;maps/mp/_development_dvars.gsc&quot;,
+    &quot;maps/mp/gametypes/_clientids.gsc&quot;
+  ]
+}
+</code></pre>
+<p>The injector recursively reads the folder, transpiles all <code>.gsc</code> files to x64, allocates them in memory, and wires the dependencies together via the <code>ArmDispatcherCodeCave</code> thread spawner.</p>
+<h3>Conclusion</h3>
+<p>By combining low-level assembly code caves with dynamic, on-the-fly bytecode transpilation, this project stands as the first open-source, fully functional GSC injector for the 64-bit era of Black Ops 2. It opens the door for developers to easily port their legacy 32-bit mod menus into the modern UWP ecosystem without losing their minds over undocumented opcodes. No more relying on closed-source black boxes!</p>
+
                 </div>
-                <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">Technical Journal & Research Papers</h1>
-                <p class="text-slate-300 text-sm leading-relaxed max-w-2xl mb-8">
-                    Documentação profunda de pesquisas em engenharia reversa, análise do motor de bytecode GSC de Call of Duty, bypasses de sandbox UWP/GDK e arquiteturas de backend serverless.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 30, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-GSC/" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.</p>
-                        <a href="/journal/What-Is-GSC/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 28, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Cloudflare-Workers-Backend/" class="hover:text-primary transition-colors">Quick Entry: Having a Backend on a Static Website with Cloudflare workers!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.</p>
-                        <a href="/journal/Cloudflare-Workers-Backend/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-Open-Source-GSC-Mods/" class="hover:text-primary transition-colors">Providing Open Source T6 Custom Game Modes GSC!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.</p>
-                        <a href="/journal/T6-Open-Source-GSC-Mods/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/entry_0007/" class="hover:text-primary transition-colors">Unlock This Entry With Patreon!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Classified technical breakdown of Call of Duty Black Ops Cold War mod management and engine hooks.</p>
-                        <a href="/journal/entry_0007/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for Call of Duty DLCs</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.</p>
-                        <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 20, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.</p>
-                        <a href="/journal/T6-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T5-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.</p>
-                        <a href="/journal/T5-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/shame_for_the_leakers/" class="hover:text-primary transition-colors">Leakers....Shame for you all</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.</p>
-                        <a href="/journal/shame_for_the_leakers/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 18, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/CW-GSC-Injection-MS-Store/" class="hover:text-primary transition-colors">CW GSC Injection Findings</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.</p>
-                        <a href="/journal/CW-GSC-Injection-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                </div>
-            </section>
+            </article>
         </main>
 
         <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">

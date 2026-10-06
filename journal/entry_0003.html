@@ -5,23 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Technical Journal | Eduardo Gelain – Reverse Engineering & Game Dev</title>
-    <meta name="description" content="In-depth technical research papers, reverse engineering breakdowns, GSC bytecode VM analysis, UWP/GDK sandbox bypasses by Eduardo Gelain (SpetDev).">
+    <title>Leakers....Shame for you all | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <!-- Canonical URL & Alternate Discovery -->
-    <link rel="canonical" href="https://spet01.dev/journal/">
+    <link rel="canonical" href="https://spet01.dev/journal/shame_for_the_leakers/">
     <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spet01.dev/">
-    <meta property="og:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta property="og:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta property="og:url" content="https://spet01.dev/journal/shame_for_the_leakers/">
+    <meta property="og:title" content="Leakers....Shame for you all | Eduardo Gelain">
+    <meta property="og:description" content="Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -34,123 +33,34 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://spet01.dev/">
-    <meta name="twitter:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta name="twitter:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta name="twitter:url" content="https://spet01.dev/journal/shame_for_the_leakers/">
+    <meta name="twitter:title" content="Leakers....Shame for you all | Eduardo Gelain">
+    <meta name="twitter:description" content="Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://spet01.dev/#website",
-          "url": "https://spet01.dev/",
-          "name": "Eduardo Gelain | Software & Game Developer",
-          "description": "Portfólio e Journal Técnico de Eduardo Gelain (SpetDev) - Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa.",
-          "inLanguage": ["pt-BR", "en-US"],
-          "publisher": { "@id": "https://spet01.dev/#person" }
-        },
-        {
-          "@type": "Person",
-          "@id": "https://spet01.dev/#person",
-          "name": "Eduardo Gelain",
-          "alternateName": "SpetDev",
-          "url": "https://spet01.dev",
-          "jobTitle": "Software & Game Developer",
-          "email": "mailto:gelain15mj@gmail.com",
-          "image": "https://spet01.dev/assets/portweb.png",
-          "description": "Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa de engines e sandboxes.",
-          "knowsAbout": [
-            "C++",
-            "C#",
-            "Unity",
-            "Unreal Engine 5",
-            "Reverse Engineering",
-            "Game Scripting C (GSC)",
-            "Memory Pattern Scanning",
-            "WebAssembly",
-            "Cloudflare Workers",
-            "x86/x64 Assembly",
-            "Game Development"
-          ],
-          "sameAs": [
-            "https://github.com/Spet001",
-            "https://gitlab.com/Spet001",
-            "https://spet01.itch.io",
-            "https://www.nexusmods.com/profile/Spet001/mods",
-            "https://www.linkedin.com/in/eduardo-gelain/"
-          ]
-        },
-        {
-          "@type": "ItemList",
-          "@id": "https://spet01.dev/#projects",
-          "name": "Featured Software & Game Projects",
-          "itemListElement": [
-            {
-              "@type": "SoftwareApplication",
-              "position": 1,
-              "name": "Outcaster - Retro FPS Templates",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete retro FPS templates (boomer shooter style) developed in Unity and C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 2,
-              "name": "Sparky Rush: Purrils in Pawsville",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Commercial 3D platformer game on Steam. Quality assurance, bug mapping, and code deductions in Unity/C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 3,
-              "name": "Resurge Client (BO3 Multi-Platform)",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Custom client for Black Ops 3 supporting both UWP and Steam with native C++ injection DLL."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 4,
-              "name": "CW GSC Injector (MS Store / Xbox PC)",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "C++ GSC injector for Call of Duty: BOCW Microsoft Store with dynamic pattern scanning."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 5,
-              "name": "BO1 & BO2 MS Store Clients & GSC Injector",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 6,
-              "name": "GSC Dumps and Pre-Compiled/Uncompiled Sources",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "GSC bytecode dumps and custom menu sources for Call of Duty PC releases."
-            }
-          ]
-        },
-        {
-          "@type": "Blog",
-          "@id": "https://spet01.dev/journal/#blog",
-          "name": "Eduardo Gelain Technical Journal",
-          "url": "https://spet01.dev/journal/",
-          "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
-          "author": { "@id": "https://spet01.dev/#person" }
-        }
-      ]
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Leakers....Shame for you all",
+  "description": "Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.",
+  "datePublished": "Sep 19, 2026",
+  "url": "https://spet01.dev/journal/shame_for_the_leakers/",
+  "mainEntityOfPage": "https://spet01.dev/journal/shame_for_the_leakers/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
     </script>
 
     <!-- Fonts & Icons -->
@@ -545,93 +455,173 @@
             </div>
         </header>
 
-                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-5xl mx-auto">
-            <div class="mb-8">
-                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
             </div>
-            <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md mb-8">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold mb-3">
-                    <i class="fas fa-book-open text-[10px]"></i> Reverse Engineering & Game Dev Research
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 19, 2026</time>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Leakers....Shame for you all</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="shame_for_the_leakers">
+<h1>Leakers....Shame for you all</h1>
+<blockquote>
+<p><strong>Public Integrity Notice &amp; Declaration of Authorship:</strong>
+The <strong>BO2 Crossplay Relay</strong> project was strictly a confidential, proprietary research project and <strong>100% CLOSED SOURCE</strong>. Recently, my private GitLab account was unlawfully compromised (hacked), and the private repository was leaked and dumped to the public without authorization.</p>
+<p>Immediately following the breach, opportunistic leakers and bad actors began redistributing the codebase, stripping repository history, and compiling builds while <strong>BLATANTLY STEALING THE CREDITS</strong> from those who actually researched, reverse-engineered, and engineered this breakthrough.</p>
+<p>Let this article stand as the <strong>permanent, immutable historical record</strong>:</p>
+<h3><strong>THE TRUE AUTHORS &amp; OFFICIAL CREDITS:</strong></h3>
+<ul>
+<li><strong>Xirus</strong></li>
+<li><strong>rolltide11</strong></li>
+<li><strong>AAA (Qurance)</strong></li>
+<li><strong>Waffle</strong></li>
+<li><strong>Heretics Software</strong></li>
+<li><strong>Spet</strong></li>
+</ul>
+<p><strong>A Direct Warning to the Scene:</strong>
+If you encounter any repository, binary, tool, GUI, or fork of this Crossplay Relay anywhere on the internet and these exact names (<strong>Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet</strong>) are not prominently and explicitly credited, <strong>IT IS STOLEN SOURCE CODE</strong>. Period.</p>
+<h3><strong>The Theft of the ZPGDK GSC Injector:</strong></h3>
+<p>And the shameless behavior doesn&#39;t stop with the Relay: people have also been actively stealing and rebranding my <strong>ZPGDK GSC Injector</strong>.
+Let this be etched into the record for the entire Call of Duty modding and reverse engineering ecosystem: <strong>The first and only functional GSC injector for the Microsoft Store / Xbox PC (GDK) edition of Call of Duty was created by Spet. Anyone else claiming authorship of a Microsoft Store GSC injector is a fraud distributing stolen code.</strong></p>
+</blockquote>
+<hr>
+<h2>What is the BO2 Crossplay Relay?</h2>
+<p>The <strong>BO2 Crossplay Relay</strong> is a real-time protocol translation engine and Layer-2 network emulator designed to bridge the modern PC platform (<strong>Microsoft Store / Xbox PC GDK x64 / Win32</strong>) with console generations (<strong>PlayStation 5, PlayStation 4, and Xbox 360</strong>) over the LAN System Link protocol of <em>Call of Duty: Black Ops II</em> (Treyarch T6 engine), with architectural modularity expandable to <em>Black Ops III</em> (T7).</p>
+<p>Historically, enabling PC players to play with console players on pre-modern Call of Duty titles was considered <strong>virtually impossible</strong> by the development community. The architectural divide included:</p>
+<ol>
+<li><strong>Network Protocol Version Mismatch:</strong> The PS4/PS5 binary runs under wire protocol version <code>2095</code> (playlist <code>1735</code>), whereas the Microsoft Store PC client strictly operates on protocol <code>2092</code> (playlist <code>1734</code>).</li>
+<li><strong>Interface &amp; Gamestate Checksum Divergence:</strong> In Custom Games, the console disconnects and rejects sessions whose LUI checksum differs from <code>0x0030A5F3</code>, while the Microsoft Store client broadcasts <code>0x297163A2</code>.</li>
+<li><strong>Binary Incompatibility in <code>usercmd_t</code>:</strong> The modern 64-bit Microsoft Store executable (<code>t6mp.exe</code>) introduced an exclusive wire field at offset <code>+0x3A</code> between <code>+0x28</code> and <code>+0x30</code> that does not exist in console binaries, corrupting player movement and viewangle serialization over the wire.</li>
+<li><strong>Proprietary Cryptographic Framing:</strong> The Windows Store build rejects unauthenticated packets and does not use legacy Steam XOR masks, demanding an authentic <strong>HMAC-SHA1 + 3DES-CBC</strong> cryptographic envelope.</li>
+</ol>
+<p>Below is the exhaustive technical breakdown of how our team conquered every single one of these barriers.</p>
+<hr>
+<h2>1. Transport Security: Conquering HMAC-SHA1 + 3DES-CBC</h2>
+<p>During early experimental iterations, community speculation claimed that the Microsoft Store build (<code>1.1.12.0</code>) on System Link still used the 2012 Steam XOR packet obfuscation.</p>
+<p>Our disassembly and live network captures proved conclusively that Store replies are <strong>NOT Steam XOR packets</strong>. Attempting to parse them with Steam routines yielded the fatal error:</p>
+<pre><code class="language-text">[ERROR] Invalid PC session marker
+</code></pre>
+<p>By disassembling the native party dispatcher (<code>joinParty</code>) in IDA Pro, we proved that the Microsoft Store edition implements console-style cryptography combined with a 2-byte PC game checksum:</p>
+<pre><code class="language-text">[ Console PS5 Packet ] ───&gt; [ 0x01-0x04 Association Handshake ] ───&gt; [ 3DES-CBC Decryption ]
+                                                                             │
+                                                                             ▼
+[ Real-Time Protocol Translation (2095 &lt;-&gt; 2092) ] &lt;────────────────────────┘
+                       │
+                       ▼
+[ RFC 768 UDP Checksum + 2-Byte Game Hash ] ───&gt; [ HMAC-SHA1/3DES Framing ] ───&gt; [ t6mp.exe UDP 3074 ]
+</code></pre>
+<h3>The Bidirectional Translation Pipeline:</h3>
+<h4>A. PlayStation 5 ──&gt; Microsoft Store (PC):</h4>
+<ol>
+<li>Intercepts and drives the 4-way association handshake (<code>0x01 -&gt; 0x02 -&gt; 0x03 -&gt; 0x04</code>).</li>
+<li>Captures the active Store session association key and validates the cryptographic signature against the PS5 HMAC.</li>
+<li>Decrypts the console&#39;s type-06 packet.</li>
+<li>Translates the protocol version header: <code>console_protocol = 2095</code> ──&gt; <code>pc_protocol = 2092</code>.</li>
+<li>Preserves playlist state if no local Store playlist is mapped.</li>
+<li>Computes and appends the 2-byte engine checksum (<code>checksum(data)</code> little-endian).</li>
+<li>Re-encrypts using Store-verified <code>HMAC-SHA1 + 3DES-CBC</code> framing and transmits directly to <code>t6mp.exe</code> on UDP port <code>3074</code>.</li>
+</ol>
+<h4>B. Microsoft Store (PC) ──&gt; PlayStation 5:</h4>
+<ol>
+<li>Decodes Store responses using the associated <code>3DES-CBC</code> context.</li>
+<li>Validates and removes the Store-specific 2-byte checksum.</li>
+<li>Translates protocol integers back: <code>2092</code> ──&gt; <code>2095</code>.</li>
+<li>Translates party endpoints and gametype settings.</li>
+<li>Re-encrypts into standard PlayStation framing and routes the reply to the console.</li>
+</ol>
+<hr>
+<h2>2. Resolving the &quot;Incompatible UI Version&quot; Crash: Dynamic LUI Checksum Translation</h2>
+<p>Even with transport handshakes succeeding, attempting to enter a Custom Game immediately crashed the console with:</p>
+<pre><code class="language-text">Incompatible UI Version
+</code></pre>
+<p>Dissecting segmented in-band transmissions in Wireshark and tracking gamestate buffer reconstruction in memory revealed the exact root cause:</p>
+<p>In the final segmented gamestate fragment, the engine transmits a <strong>raw-DEFLATE</strong> (<code>zlib -13</code>) compressed stream preceded by <code>PC_DDL_HEADER</code>:</p>
+<pre><code class="language-hex">00 00 00 00 00 00 00 1e 00 00 00 02 be ef 00 00 ...
+</code></pre>
+<p>Immediately following the 523-byte decompressed DDL stream (at payload offset <code>497</code>), were exactly 5 trailing bytes:</p>
+<pre><code class="language-text">Payload Trailing Bytes: A2 63 71 29 0E
+</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>A2 63 71 29</code> is the <strong>Microsoft Store LUI Checksum</strong> in Little-Endian (<code>0x297163A2</code>).</li>
+<li><code>0x0E</code> is the Treyarch fragment termination marker.</li>
+<li>The PS4/PS5, however, strictly demands the checksum <code>0x0030A5F3</code> (<code>F3 A5 30 00</code> in Little-Endian).</li>
+</ul>
+<h3>The Surgical In-Flight Patch:</h3>
+<p>Rather than attempting reckless global memory replacements (which corrupted engine pointers), we developed a targeted stream parser in Python (<code>gametype_settings_translation.py</code>):</p>
+<pre><code class="language-python">def find_valid_ddl_stream(payload: bytes):
+    for off in range(len(payload)):
+        try:
+            d = zlib.decompressobj(-13)
+            out = d.decompress(payload[off:])
+            consumed = len(payload[off:]) - len(d.unused_data)
+        except zlib.error:
+            continue
+        if consumed &gt; 0 and len(out) &gt;= 48 and out[:48] == PC_DDL_HEADER:
+            return off, consumed, len(out)
+    return None
+</code></pre>
+<p>When the relay identifies the final segmented fragment with trailing byte <code>0x0E</code>, it dynamically patches the 4-byte checksum:</p>
+<pre><code class="language-text">Store: 0x297163A2 ───&gt; Patched: 0x0030A5F3
+</code></pre>
+<p>Furthermore, because Black Ops II reuses segmented sequence IDs upon map reload, we built a session reset gate that clears cached fragment state on every new <code>0x01</code> (<code>session-init</code>) packet, permanently banishing UI version desyncs across consecutive matches.</p>
+<hr>
+<h2>3. Kernel Memory Patching: The Dynamic <code>usercmd +0x3A</code> Delta Bypass</h2>
+<p>Once in-game, consoles experienced severe movement desynchronization. </p>
+<p>Reverse-engineering the internal structs between console binaries and the 64-bit Windows Store binary revealed an internal change in <code>usercmd_t</code>:
+The team that ported the game to modern Windows added a proprietary wire field at offset <strong><code>+0x3A</code></strong> (between <code>+0x28</code> and <code>+0x30</code>). This field does not exist on PlayStation or Xbox 360!</p>
+<p>To solve this, we built a live memory patcher (<code>store_usercmd_patch.py</code>). The relay attaches to the running <code>t6mp.exe</code> process via Win32 APIs (<code>PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION</code>) and executes a wildcard pattern scan across the code neighborhood <code>0x003A0000</code> to <code>0x003BFFFF</code>:</p>
+<pre><code class="language-python"># Wildcard signature for the live usercmd writer path
+WRITER_PATTERN = [
+    0x44, 0x0F, 0xB7, 0x4E, 0x3A,       # movzx r9d, word [rsi+3A]
+    0x41, 0x8B, 0xD7,                   # mov edx, r15d
+    0x44, 0x0F, 0xB7, 0x45, 0x3A,       # movzx r8d, word [rbp+3A]
+    0x48, 0x8B, 0xCB,                   # mov rcx, rbx
+    0xE8, None, None, None, None,       # call &lt;delta writer&gt;
+    0x44, 0x0F, 0xBF, 0x4E, 0x30,       # next field +0x30
+]
+</code></pre>
+<p>The algorithm discovers:</p>
+<ul>
+<li><strong>2 writer paths</strong></li>
+<li><strong>2 reader paths</strong></li>
+</ul>
+<p>It dynamically patches the opcodes to skip the <code>+0x3A</code> block entirely, establishing perfect binary wire alignment with console structures (<code>ps4_ps5_layout</code>).</p>
+<h3>Restart-Safe State Machine:</h3>
+<p>If the relay is restarted while <code>t6mp.exe</code> remains active, the scanner detects whether patches are already present (<code>already_patched_writer_hits = 2</code>, <code>already_patched_reader_hits = 2</code>) and safely skips re-patching, guaranteeing 100% crash immunity.</p>
+<hr>
+<h2>4. Layer-2 Npcap Ethernet Sniffing &amp; Xbox 360 System Link</h2>
+<p>Why does the relay utilize <strong>Npcap</strong> in WinPcap-compatible mode?</p>
+<p>When <code>t6mp.exe</code> launches on PC, it claims exclusive ownership of UDP port <code>3074</code>. A standard Windows UDP socket would fail with <code>WSAEADDRINUSE (10048)</code>.</p>
+<p>Npcap operates at <strong>Layer-2 (Ethernet 802.3)</strong>:</p>
+<ul>
+<li>Intercepts raw network frames directly from the network adapter before the Windows socket layer processes them.</li>
+<li>Injects raw UDP frames into local network traffic.</li>
+<li>Re-computes <strong>RFC 768</strong> UDP checksums over IPv4 pseudo-headers in real time to prevent console network stacks from dropping packets.</li>
+<li>For <strong>Xbox 360</strong>, processes XNet VHost Beacons (<code>0x68 / 0x69</code>), parses <code>XSESSION_SEARCHRESULT</code> structs, converts Big-Endian <code>XNADDR</code> structures, and extracts live <code>XNKID</code> / <code>XNKEY</code> session tokens.</li>
+</ul>
+<hr>
+<h2>Conclusion: Setting the Record Straight</h2>
+<p>The BO2 Crossplay Relay is not a trivial wrapper or a generic proxy. It is an <strong>unprecedented feat of reverse engineering</strong>, uniting x64 assembly hooking, real-time symmetric transport cryptography, zlib/DDL stream manipulation, and Layer-2 packet injection into a cohesive system link bridge.</p>
+<p>Whoever breached my GitLab account or is currently redistributing this code without our names <strong>did not write a single line of this architecture and could never recreate it from scratch</strong>.</p>
+<p>The code, the commits, and the signatures stand immutable. The true credits belong to:</p>
+<h3><strong>Official Credits:</strong></h3>
+<ul>
+<li><strong>Xirus</strong></li>
+<li><strong>rolltide11</strong></li>
+<li><strong>AAA (Qurance)</strong></li>
+<li><strong>Waffle</strong></li>
+<li><strong>Heretics Software</strong></li>
+<li><strong>Spet</strong></li>
+</ul>
+<p><em>Published on the Technical Journal of Eduardo Gelain (SpetDev) — September 19, 2026.</em></p>
+
                 </div>
-                <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">Technical Journal & Research Papers</h1>
-                <p class="text-slate-300 text-sm leading-relaxed max-w-2xl mb-8">
-                    Documentação profunda de pesquisas em engenharia reversa, análise do motor de bytecode GSC de Call of Duty, bypasses de sandbox UWP/GDK e arquiteturas de backend serverless.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 30, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-GSC/" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.</p>
-                        <a href="/journal/What-Is-GSC/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 28, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Cloudflare-Workers-Backend/" class="hover:text-primary transition-colors">Quick Entry: Having a Backend on a Static Website with Cloudflare workers!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.</p>
-                        <a href="/journal/Cloudflare-Workers-Backend/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-Open-Source-GSC-Mods/" class="hover:text-primary transition-colors">Providing Open Source T6 Custom Game Modes GSC!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.</p>
-                        <a href="/journal/T6-Open-Source-GSC-Mods/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/entry_0007/" class="hover:text-primary transition-colors">Unlock This Entry With Patreon!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Classified technical breakdown of Call of Duty Black Ops Cold War mod management and engine hooks.</p>
-                        <a href="/journal/entry_0007/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for Call of Duty DLCs</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.</p>
-                        <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 20, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.</p>
-                        <a href="/journal/T6-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T5-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.</p>
-                        <a href="/journal/T5-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/shame_for_the_leakers/" class="hover:text-primary transition-colors">Leakers....Shame for you all</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.</p>
-                        <a href="/journal/shame_for_the_leakers/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 18, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/CW-GSC-Injection-MS-Store/" class="hover:text-primary transition-colors">CW GSC Injection Findings</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.</p>
-                        <a href="/journal/CW-GSC-Injection-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                </div>
-            </section>
+            </article>
         </main>
 
         <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">

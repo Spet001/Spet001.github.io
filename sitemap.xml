@@ -3,7 +3,7 @@
   <!-- Main Portfolio -->
   <url>
     <loc>https://spet01.dev/</loc>
-    <lastmod>2026-10-03</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,59 +11,77 @@
   <!-- Technical Journal -->
   <url>
     <loc>https://spet01.dev/journal/</loc>
-    <lastmod>2026-10-03</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Journal Articles -->
+  <!-- Journal Articles (Static Prerendered SEO URLs) -->
   <url>
-    <loc>https://spet01.dev/journal/#What-Is-GSC</loc>
+    <loc>https://spet01.dev/journal/What-Is-GSC/</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://spet01.dev/journal/#Cloudflare-Workers-Backend</loc>
+    <loc>https://spet01.dev/journal/Cloudflare-Workers-Backend/</loc>
     <lastmod>2026-09-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://spet01.dev/journal/#T6-Open-Source-GSC-Mods</loc>
+    <loc>https://spet01.dev/journal/T6-Open-Source-GSC-Mods/</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://spet01.dev/journal/#UWPCOD-GDK-DLC-Unlocker</loc>
+    <loc>https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://spet01.dev/journal/#T6-GSC-Injector-MS-Store</loc>
+    <loc>https://spet01.dev/journal/T6-GSC-Injector-MS-Store/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://spet01.dev/journal/#T5-GSC-Injector-MS-Store</loc>
+    <loc>https://spet01.dev/journal/T5-GSC-Injector-MS-Store/</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://spet01.dev/journal/#CW-GSC-Injection-MS-Store</loc>
+    <loc>https://spet01.dev/journal/CW-GSC-Injection-MS-Store/</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/journal/shame_for_the_leakers/</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/journal/entry_0003/</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/journal/entry_0007/</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <!-- LLM Context & Privacy -->
   <url>
     <loc>https://spet01.dev/llm.txt</loc>
-    <lastmod>2026-10-03</lastmod>
+    <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

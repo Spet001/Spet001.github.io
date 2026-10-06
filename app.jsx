@@ -724,7 +724,7 @@ const PORTFOLIO_DATA = {
             repoLabel: { pt: "Repositório GitHub", en: "GitHub Repository" },
             isLocked: false,
             featured: true,
-            journalId: "entry_0008",
+            journalId: "T6-Open-Source-GSC-Mods",
             tags: ["GSC", "Black Ops 2", "Modding", "Zombieland", "Deathrun"],
             caseStudy: {
                 challenge: {
@@ -826,6 +826,34 @@ const PORTFOLIO_DATA = {
                       pt: "Uma aplicação leve, de alta performance e totalmente responsiva, consolidando a marca SpetDev com mais de 1200 acessos contabilizados em tempo real.",
                       en: "A lightweight, high-performance, and fully responsive application, consolidating the SpetDev brand with over 1200 real-time visits."
                   }
+            }
+        },
+        {
+            id: "fable3_fixer",
+            title: "Fable 3 Fixer (App Electron)",
+            category: "tools",
+            categoryLabel: { pt: "Ferramentas & Otimização", en: "Tools & Optimization" },
+            image: "assets/fable3_fixer.png",
+            live: "https://www.nexusmods.com/fableIII/mods/27",
+            featured: false,
+            tags: ["Electron", "DXVK", "Vulkan", "ReShade", "4GB Patch", "GFWL", "NexusMods"],
+            description: {
+                pt: "Aplicativo desktop em Electron que automatiza a instalação de um renderizador customizado Vulkan (DXVK), preset calibrado do ReShade, patch de memória Large Address Aware (4GB) e compatibilidade total com Games for Windows Live (GFWL), dobrando a taxa de quadros e eliminando stuttering no Fable III.",
+                en: "Desktop Electron application automating the installation of a custom Vulkan DXVK renderer, hand-tuned ReShade preset, Large Address Aware (4GB) memory patch, and full Games for Windows Live (GFWL) compatibility, doubling FPS and eliminating stuttering in Fable III."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Fable III no PC sofre de desempenho instável em GPUs modernas sob DirectX 9, stuttering severo, limite nativo de 2GB de RAM que causa crashes por estouro de memória, e quebra de renderização ao tentar injetar shaders mantendo a compatibilidade do Games for Windows Live (GFWL).",
+                    en: "Fable III on PC suffers from unstable performance on modern GPUs under DirectX 9, severe stuttering, native 2GB RAM limits triggering out-of-memory crashes, and rendering conflicts when attempting shader injection while preserving Games for Windows Live (GFWL) connectivity."
+                },
+                solution: {
+                    pt: "Desenvolvimento de um instalador desktop moderno em Electron com UI amigável e instalação em 1 clique. Integra DXVK para traduzir chamadas DirectX 9 em instruções Vulkan modernas, preset afinado de ReShade que aprimora texturas e iluminação sem quebrar a direção de arte original, patch 4GB (LAA) para estabilidade e integração nativa com o GFWL sem necessidade de bypass externo.",
+                    en: "Engineered a modern Electron desktop installer featuring a streamlined 1-click UI. Integrates DXVK translating DirectX 9 calls into modern Vulkan instructions, a tuned ReShade preset improving textures and lighting without disrupting original art direction, a 4GB LAA memory patch, and seamless GFWL integration without external bypass mods."
+                },
+                impact: {
+                    pt: "Mais de 5.200 downloads totais (4.600+ downloads únicos) e 23.400+ visualizações no NexusMods com 54 Endorsements, proporcionando até 2x mais FPS, eliminando pop-in e stuttering, e revitalizando o jogo para a comunidade em PCs modernos.",
+                    en: "Over 5,200 total downloads (4,600+ unique downloads) and 23,400+ views on NexusMods with 54 Endorsements, delivering up to 2× higher frame rates, eliminating stuttering, and revitalizing the game on modern PC hardware."
+                }
             }
         }
     ],
@@ -962,12 +990,12 @@ const PORTFOLIO_DATA = {
             excerpt: "Documenting memory signatures and thread redirection techniques in older Treyarch engines adapted for the Microsoft Store."
         },
         {
-            id: "entry_0003",
-            title: "Unlock This Entry With Patreon!",
+            id: "shame_for_the_leakers",
+            title: "Leakers....Shame for you all",
             date: "Sep 19, 2026",
-            file: "Crossplay-PS5-XBOX-PC.md",
-            category: "Patreon Exclusive",
-            excerpt: "Confidential technical journal entry. Unlock the architecture breakdown and source code details with a Patreon subscription."
+            file: "shame_for_the_leakers.md",
+            category: "Network Engineering & Security",
+            excerpt: "Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical architectural overview of the real-time crossplay relay."
         },
         {
             id: "CW-GSC-Injection-MS-Store",
@@ -2962,12 +2990,23 @@ const SpaceCanvas = ({ theme = 'space' }) => {
 };
 
 // --- TOPBAR: SpetDev Brand + Easter Egg Image Button + Navigation ---
-const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, onOpenSettings, settings }) => {
+const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, onOpenSettings, settings, currentView, onNavigateHome, onNavigateJournal }) => {
     const { lang, setLang, t } = useContext(LanguageContext);
 
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
+
+    const handleSectionClick = (e, sectionId) => {
+        if (currentView !== 'home') {
+            e.preventDefault();
+            if (onNavigateHome) onNavigateHome();
+            setTimeout(() => {
+                const el = document.getElementById(sectionId);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+    };
 
     useEffect(() => {
         const threshold = 160;
@@ -2997,7 +3036,16 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                 
                 {/* Brand: SpetDev with Terminal Icon */}
                 <div className="flex items-center gap-3">
-                    <a href="#top" className="flex items-center gap-2 group focus:outline-none">
+                    <a
+                        href="/"
+                        onClick={(e) => {
+                            if (currentView !== 'home') {
+                                e.preventDefault();
+                                if (onNavigateHome) onNavigateHome();
+                            }
+                        }}
+                        className="flex items-center gap-2 group focus:outline-none cursor-pointer"
+                    >
                         <i className="fas fa-terminal text-primary text-base"></i>
                         
                         <span className="text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors">
@@ -3034,12 +3082,21 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
 
                 {/* Nav Links */}
                 <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-sm font-medium text-slate-300">
-                    <a href="#about" className="hover:text-white transition-colors">{t('nav.about')}</a>
-                    <a href="#experience" className="hover:text-white transition-colors">{t('nav.experience')}</a>
-                    <a href="#projects" className="hover:text-white transition-colors">{t('nav.projects')}</a>
-                    <a href="#skills" className="hover:text-white transition-colors">{t('nav.skills')}</a>
-                    <a href="/journal" className="hover:text-primary transition-colors text-primary font-semibold">{t('nav.journal')}</a>
-                    <a href="#contact" className="hover:text-white transition-colors">{t('nav.contact')}</a>
+                    <a href="#about" onClick={(e) => handleSectionClick(e, 'about')} className="hover:text-white transition-colors">{t('nav.about')}</a>
+                    <a href="#experience" onClick={(e) => handleSectionClick(e, 'experience')} className="hover:text-white transition-colors">{t('nav.experience')}</a>
+                    <a href="#projects" onClick={(e) => handleSectionClick(e, 'projects')} className="hover:text-white transition-colors">{t('nav.projects')}</a>
+                    <a href="#skills" onClick={(e) => handleSectionClick(e, 'skills')} className="hover:text-white transition-colors">{t('nav.skills')}</a>
+                    <a
+                        href="/journal"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (onNavigateJournal) onNavigateJournal();
+                        }}
+                        className={`hover:text-primary transition-colors font-semibold cursor-pointer ${currentView === 'journal' ? 'text-primary' : 'text-slate-300'}`}
+                    >
+                        {t('nav.journal')}
+                    </a>
+                    <a href="#contact" onClick={(e) => handleSectionClick(e, 'contact')} className="hover:text-white transition-colors">{t('nav.contact')}</a>
                 </nav>
 
                 {/* Actions: CLI, Settings, CV, Lang, Mobile Toggle */}
@@ -3099,12 +3156,12 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
             {/* Mobile Menu */}
             {mobileMenuOpen && (
                 <div className="lg:hidden bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.08] px-6 py-4 space-y-3">
-                    <a onClick={() => setMobileMenuOpen(false)} href="#about" className="block text-sm text-slate-300 hover:text-primary">{t('nav.about')}</a>
-                    <a onClick={() => setMobileMenuOpen(false)} href="#experience" className="block text-sm text-slate-300 hover:text-primary">{t('nav.experience')}</a>
-                    <a onClick={() => setMobileMenuOpen(false)} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
-                    <a onClick={() => setMobileMenuOpen(false)} href="#skills" className="block text-sm text-slate-300 hover:text-primary">{t('nav.skills')}</a>
-                    <a onClick={() => setMobileMenuOpen(false)} href="/journal" className="block text-sm text-primary font-semibold">{t('nav.journal')}</a>
-                    <a onClick={() => setMobileMenuOpen(false)} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'about'); }} href="#about" className="block text-sm text-slate-300 hover:text-primary">{t('nav.about')}</a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'experience'); }} href="#experience" className="block text-sm text-slate-300 hover:text-primary">{t('nav.experience')}</a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'projects'); }} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'skills'); }} href="#skills" className="block text-sm text-slate-300 hover:text-primary">{t('nav.skills')}</a>
+                    <a onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); if (onNavigateJournal) onNavigateJournal(); }} href="/journal" className="block text-sm text-primary font-semibold">{t('nav.journal')}</a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'contact'); }} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenPatreon(); }} className="w-full text-left text-sm text-[#FF424D] hover:text-[#e03640] flex items-center gap-2 font-bold mb-3"><i className="fab fa-patreon"></i> Login with Patreon</button>
                     <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
                         <i className="fas fa-terminal text-primary"></i> Terminal CLI
@@ -3623,7 +3680,7 @@ const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
     );
 };
 
-const ProjectModal = ({ project, onClose, lang, onOpen3DViewer }) => {
+const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJournal }) => {
     if (!project) return null;
     const { t } = useContext(LanguageContext);
     const modalRef = React.useRef(null);
@@ -3777,8 +3834,13 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer }) => {
                     )}
                     {project.journalId && (
                         <a
-                            href={`/journal#${project.journalId}`}
-                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.04] border border-white/[0.08] text-primary hover:text-white transition-colors flex items-center gap-2"
+                            href={`/journal/${project.journalId}/`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onClose();
+                                if (onNavigateJournal) onNavigateJournal(project.journalId);
+                            }}
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.04] border border-white/[0.08] text-primary hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
                         >
                             <i className="fas fa-book-open"></i> {lang === 'pt' ? 'Artigo no Journal' : 'Journal Entry'}
                         </a>
@@ -3884,7 +3946,7 @@ const ProjectTags = ({ tags, lang }) => {
     );
 };
 
-const ProjectsSection = () => {
+const ProjectsSection = ({ onNavigateJournal }) => {
     const { t, lang } = useContext(LanguageContext);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
@@ -4103,6 +4165,7 @@ const ProjectsSection = () => {
                     onClose={() => setActiveModalProject(null)}
                     lang={lang}
                     onOpen3DViewer={() => { setViewerModelId('jet'); setShow3DViewer(true); }}
+                    onNavigateJournal={onNavigateJournal}
                 />
             )}
             {/* 3D Model Viewer Modal */}
@@ -4183,7 +4246,7 @@ const SkillsSection = () => {
 };
 
 // --- TECHNICAL JOURNAL PREVIEW ---
-const JournalSection = () => {
+const JournalSection = ({ onNavigateJournal }) => {
     const { t, lang } = useContext(LanguageContext);
     const entries = PORTFOLIO_DATA.journalEntries;
 
@@ -4203,7 +4266,11 @@ const JournalSection = () => {
 
                     <a
                         href="/journal"
-                        className="text-xs font-semibold text-primary hover:text-white flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (onNavigateJournal) onNavigateJournal();
+                        }}
+                        className="text-xs font-semibold text-primary hover:text-white flex items-center gap-1.5 transition-colors self-start sm:self-auto cursor-pointer"
                     >
                         <span>{t('journal.viewAll')}</span>
                         <i className="fas fa-arrow-right text-[10px]"></i>
@@ -4214,8 +4281,12 @@ const JournalSection = () => {
                     {entries.map((entry) => (
                         <a
                             key={entry.id}
-                            href={`/journal#${entry.id}`}
-                            className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start"
+                            href={`/journal/${entry.id}/`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (onNavigateJournal) onNavigateJournal(entry.id);
+                            }}
+                            className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start cursor-pointer"
                         >
                             <div>
                                 <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2">
@@ -4426,7 +4497,7 @@ const ContactSection = () => {
 };
 
 // --- FOOTER: Preserves Exact Original Quote & Journal Newsletter ---
-const Footer = ({ onOpenEasterMenu }) => {
+const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigatePrivacy, currentView }) => {
     const { t, lang } = useContext(LanguageContext);
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
@@ -4487,12 +4558,12 @@ const Footer = ({ onOpenEasterMenu }) => {
                 
                 {/* Brand & Nav */}
                 <div className="flex flex-wrap items-center justify-center gap-6 text-slate-400 font-medium text-xs">
-                    <a href="#top" className="hover:text-primary transition-colors">Home</a>
-                    <a href="#experience" className="hover:text-primary transition-colors">{t('nav.experience')}</a>
-                    <a href="#projects" className="hover:text-primary transition-colors">{t('nav.projects')}</a>
-                    <a href="#skills" className="hover:text-primary transition-colors">{t('nav.skills')}</a>
-                    <a href="/journal" className="hover:text-primary transition-colors text-primary font-semibold">{t('nav.journal')}</a>
-                    <a href="#contact" className="hover:text-primary transition-colors">{t('nav.contact')}</a>
+                    <a href="#top" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); } }} className="hover:text-primary transition-colors cursor-pointer">Home</a>
+                    <a href="#experience" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.experience')}</a>
+                    <a href="#projects" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.projects')}</a>
+                    <a href="#skills" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.skills')}</a>
+                    <a href="/journal" onClick={(e) => { e.preventDefault(); if (onNavigateJournal) onNavigateJournal(); }} className="hover:text-primary transition-colors text-primary font-semibold cursor-pointer">{t('nav.journal')}</a>
+                    <a href="#contact" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.contact')}</a>
                 </div>
 
                 {/* EXACT RESTORED USER QUOTE */}
@@ -4592,7 +4663,14 @@ const Footer = ({ onOpenEasterMenu }) => {
                     <div className="mt-4 text-center">
                         <p className="text-[10px] text-slate-500">
                             {lang === 'pt' ? 'Ao navegar neste site, você concorda com a nossa ' : 'By browsing this site, you accept our '}
-                            <a href="/privacy.html" className="text-primary hover:underline">
+                            <a
+                                href="/privacy.html"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (onNavigatePrivacy) onNavigatePrivacy();
+                                }}
+                                className="text-primary hover:underline cursor-pointer"
+                            >
                                 {lang === 'pt' ? 'Política de Privacidade' : 'Privacy Statement'}
                             </a>.
                         </p>
@@ -5229,7 +5307,7 @@ const SettingsModal = ({
 };
 
 // --- INTERACTIVE TERMINAL CLI (SpetTerm) ---
-const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer }) => {
+const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer, onNavigateJournal }) => {
     const [history, setHistory] = useState([
         { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
         { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
@@ -5528,6 +5606,7 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
   about      - Display brief engineer profile
   projects   - Output featured engineering repositories
   skills     - List low-level tech stack
+  journal    - Read research papers in Technical Journal
   music      - Play OST Jukebox ('music ff' or 'music cod')
   chicken!   - Easter Egg: Transform asteroids into Space Chickens!
   MORE       - (While chicken! active) Turn the Moon into a giant spinning Chicken!
@@ -5592,6 +5671,16 @@ Scripting: Python, PowerShell, Electron, Git`
                 setHistory([]);
                 setInputVal('');
                 return;
+            case 'journal':
+                newHistory.push({
+                    type: 'output',
+                    text: `Navigating to Technical Journal...`
+                });
+                if (onNavigateJournal) {
+                    onClose();
+                    onNavigateJournal();
+                }
+                break;
             case 'exit':
                 onClose();
                 return;
@@ -7574,6 +7663,409 @@ const ZarathustraEasterEgg = ({ isOpen, onClose, isMinimized, setIsMinimized }) 
 
 
 
+// --- FULL INTEGRATED TECHNICAL JOURNAL VIEW (SPA) ---
+const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }) => {
+    const { t, lang } = useContext(LanguageContext);
+    const [entries, setEntries] = useState(PORTFOLIO_DATA.journalEntries || []);
+    const [selectedId, setSelectedId] = useState(activePostId || (PORTFOLIO_DATA.journalEntries[0]?.id || 'What-Is-GSC'));
+    const [postContent, setPostContent] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [isLocked, setIsLocked] = useState(false);
+    const [searchFilter, setSearchFilter] = useState('');
+
+    useEffect(() => {
+        if (activePostId) {
+            setSelectedId(activePostId);
+        }
+    }, [activePostId]);
+
+    useEffect(() => {
+        fetch('/journal/entries.json')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    setEntries(data);
+                }
+            })
+            .catch(() => {});
+    }, []);
+
+    useEffect(() => {
+        if (!selectedId) return;
+
+        const entry = entries.find(e => 
+            e.id === selectedId || 
+            e.file === selectedId || 
+            (e.file && e.file.replace(/\.md$/, '') === selectedId)
+        );
+
+        const locked = (
+            (entry && entry.file === 'T9-Mod-Manager-RE.md') || 
+            selectedId === 'T9-Mod-Manager-RE' || 
+            selectedId === 'entry_0007'
+        );
+
+        setIsLocked(locked);
+
+        if (locked) {
+            const targetKey = (selectedId === 'T9-Mod-Manager-RE' || selectedId === 'entry_0007' || (entry && entry.file === 'T9-Mod-Manager-RE.md')) ? 't9_md' : 'relay_md';
+            const cached = localStorage.getItem(targetKey);
+            if (cached) {
+                setPostContent(cached);
+                setIsLocked(false);
+            } else {
+                setPostContent('');
+            }
+            return;
+        }
+
+        const filename = entry ? entry.file : `${selectedId}.md`;
+        setLoading(true);
+        setError(null);
+
+        fetch(`/journal/md/${encodeURIComponent(filename)}`)
+            .then(async res => {
+                if (!res.ok) throw new Error(lang === 'pt' ? 'Artigo não encontrado localmente' : 'Article not found locally');
+                return res.text();
+            })
+            .then(mdText => {
+                setPostContent(mdText);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
+
+    }, [selectedId, entries, lang]);
+
+    useEffect(() => {
+        if (window.hljs) {
+            document.querySelectorAll('#journal-reader pre code').forEach((block) => {
+                window.hljs.highlightElement(block);
+            });
+        }
+    }, [postContent, loading]);
+
+    const activeEntry = entries.find(e => 
+        e.id === selectedId || 
+        e.file === selectedId || 
+        (e.file && e.file.replace(/\.md$/, '') === selectedId)
+    );
+
+    const filteredEntries = entries.filter(e => {
+        if (!searchFilter.trim()) return true;
+        const q = searchFilter.toLowerCase();
+        return (e.title && e.title.toLowerCase().includes(q)) || 
+               (e.category && e.category.toLowerCase().includes(q)) || 
+               (e.date && e.date.toLowerCase().includes(q));
+    });
+
+    const handleSelectPost = (id) => {
+        playSoftClick();
+        setSelectedId(id);
+        if (onSelectPost) onSelectPost(id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    return (
+        <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto relative z-10 animate-fade-in">
+            {/* Top Navigation Bar inside Journal */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8 glass-panel p-4 sm:p-5 rounded-2xl border border-white/[0.1] shadow-2xl backdrop-blur-xl">
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => { playSoftClick(); onBackToHome(); }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white text-xs sm:text-sm font-semibold transition-all hover:border-primary/50 shadow-md group cursor-pointer clickable"
+                    >
+                        <i className="fas fa-arrow-left text-primary group-hover:-translate-x-1 transition-transform"></i>
+                        <span>{lang === 'pt' ? 'Voltar ao Portfólio' : 'Back to Portfolio'}</span>
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <a
+                        href="https://github.com/Spet001"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] text-xs font-medium transition-colors"
+                    >
+                        <i className="fab fa-github"></i> Spet001
+                    </a>
+                    <button
+                        onClick={() => { playSoftClick(); onOpenPatreon(); }}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#FF424D]/15 hover:bg-[#FF424D]/25 border border-[#FF424D]/30 text-[#FF424D] hover:text-white text-xs font-bold transition-all shadow-lg shadow-[#FF424D]/10 cursor-pointer"
+                    >
+                        <i className="fab fa-patreon"></i> Patreon
+                    </button>
+                </div>
+            </div>
+
+            {/* Layout: Sidebar + Main Content */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                {/* Left Sidebar: Entries List */}
+                <aside className="lg:col-span-4 glass-panel rounded-2xl p-5 border border-white/[0.08] shadow-2xl backdrop-blur-xl lg:sticky lg:top-24 max-h-[85vh] flex flex-col">
+                    <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/[0.08]">
+                        <h2 className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
+                            <i className="fas fa-list-ul text-primary"></i>
+                            <span>{lang === 'pt' ? 'Artigos & Análises' : 'Articles & Research'}</span>
+                        </h2>
+                        <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08]">
+                            {entries.length}
+                        </span>
+                    </div>
+
+                    {/* Search filter */}
+                    <div className="py-3">
+                        <div className="relative">
+                            <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
+                            <input
+                                type="text"
+                                value={searchFilter}
+                                onChange={(e) => setSearchFilter(e.target.value)}
+                                placeholder={lang === 'pt' ? 'Filtrar artigos...' : 'Filter articles...'}
+                                className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/50 border border-white/[0.1] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-primary/60 transition-colors"
+                            />
+                        </div>
+                    </div>
+
+                    {/* List */}
+                    <ul className="space-y-2 overflow-y-auto pr-1 journal-entries-scroll flex-1 pt-1" style={{ scrollbarGutter: 'stable' }}>
+                        {filteredEntries.map((e) => {
+                            const isSelected = (
+                                e.id === selectedId || 
+                                e.file === selectedId || 
+                                (e.file && e.file.replace(/\.md$/, '') === selectedId)
+                            );
+                            const isEntryLocked = (
+                                e.file === 'T9-Mod-Manager-RE.md' || 
+                                e.id === 'entry_0007'
+                            );
+                            const slug = isEntryLocked ? e.id : (e.file ? e.file.replace(/\.md$/, '') : e.id);
+
+                            return (
+                                <li key={e.id || e.file}>
+                                    <button
+                                        onClick={() => handleSelectPost(slug)}
+                                        className={`w-full text-left p-3 rounded-xl transition-all border flex flex-col gap-1 cursor-pointer clickable ${
+                                            isSelected
+                                                ? 'border-primary/60 bg-primary/10 text-white shadow-lg shadow-primary/10'
+                                                : 'border-transparent hover:border-white/[0.12] hover:bg-white/[0.04] text-slate-300'
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between text-[11px] font-mono">
+                                            <span className={isSelected ? 'text-primary font-bold' : 'text-slate-400'}>
+                                                {e.category || (isEntryLocked ? 'Classified' : 'Article')}
+                                            </span>
+                                            <span className="text-slate-500 text-[10px]">{e.date}</span>
+                                        </div>
+                                        <div className={`text-xs font-semibold leading-snug line-clamp-2 ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                                            {isEntryLocked && <i className="fas fa-lock text-[#FF424D] mr-1.5 text-[10px]"></i>}
+                                            {e.title}
+                                        </div>
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </aside>
+
+                {/* Right Column: Markdown Reader */}
+                <main className="lg:col-span-8 glass-panel rounded-2xl p-6 sm:p-10 border border-white/[0.08] shadow-2xl backdrop-blur-xl min-h-[600px] flex flex-col justify-between">
+                    <div>
+                        {/* Header Details */}
+                        {activeEntry && (
+                            <div className="pb-6 mb-6 border-b border-white/[0.08]">
+                                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                                    <span><i className="far fa-calendar-alt mr-1"></i> {activeEntry.date}</span>
+                                    <span><i className="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
+                                    {activeEntry.title}
+                                </h1>
+                            </div>
+                        )}
+
+                        {/* Article Content / State */}
+                        {loading && (
+                            <div className="flex flex-col items-center justify-center py-24 text-center">
+                                <i className="fas fa-circle-notch fa-spin text-4xl text-primary mb-4"></i>
+                                <p className="text-slate-400 text-sm font-medium">{lang === 'pt' ? 'Carregando análise técnica...' : 'Loading technical analysis...'}</p>
+                            </div>
+                        )}
+
+                        {error && !loading && (
+                            <div className="text-center py-16">
+                                <i className="fas fa-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+                                <h3 className="text-lg font-bold text-white mb-2">{lang === 'pt' ? 'Erro ao carregar artigo' : 'Error loading article'}</h3>
+                                <p className="text-slate-400 text-xs max-w-md mx-auto">{error}</p>
+                            </div>
+                        )}
+
+                        {isLocked && !loading && !error && (
+                            <div className="flex flex-col items-center justify-center py-16 text-center max-w-lg mx-auto">
+                                <div className="w-16 h-16 rounded-2xl bg-[#FF424D]/15 border border-[#FF424D]/30 flex items-center justify-center mb-6 shadow-xl shadow-[#FF424D]/20">
+                                    <i className="fas fa-lock text-3xl text-[#FF424D]"></i>
+                                </div>
+                                <h2 className="text-2xl font-bold text-white mb-3">
+                                    {lang === 'pt' ? 'Projeto Classificado & Confidencial' : 'Classified Technical Breakdown'}
+                                </h2>
+                                <p className="text-slate-400 text-sm leading-relaxed mb-8">
+                                    {lang === 'pt'
+                                        ? 'Esta análise técnica de engenharia reversa e arquitetura de software é confidencial. Para ler a dissecação de estruturas e código-fonte, apoie nosso trabalho no Patreon.'
+                                        : 'This reverse engineering and architectural deep dive is confidential. Unlock full memory struct dumps and source code analysis by supporting on Patreon.'}
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                                    <a
+                                        href="https://www.patreon.com/15458299/join"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="px-6 py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#FF424D]/25 flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fab fa-patreon"></i> {lang === 'pt' ? 'Assinar no Patreon' : 'Subscribe on Patreon'}
+                                    </a>
+                                    <button
+                                        onClick={() => { playSoftClick(); onOpenPatreon(); }}
+                                        className="px-6 py-3 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.12] text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                    >
+                                        <i className="fas fa-key"></i> {lang === 'pt' ? 'Já sou membro (Login)' : 'Already a Member (Log In)'}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {!loading && !error && !isLocked && postContent && (
+                            <div
+                                id="journal-reader"
+                                className="markdown-body leading-relaxed text-slate-300 selection:bg-primary selection:text-white"
+                                dangerouslySetInnerHTML={{
+                                    __html: window.DOMPurify 
+                                        ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(postContent) : postContent)
+                                        : (window.marked ? window.marked.parse(postContent) : postContent)
+                                }}
+                            />
+                        )}
+                    </div>
+
+                    {/* Footer citation inside Journal */}
+                    <div className="pt-8 mt-12 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
+                        <div>
+                            <span>Eduardo Gelain (SpetDev) · Research Papers</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                                className="hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
+                            >
+                                <i className="fas fa-arrow-up text-[10px]"></i> {lang === 'pt' ? 'Topo' : 'Top'}
+                            </button>
+                        </div>
+                    </div>
+                </main>
+
+            </div>
+        </div>
+    );
+};
+
+// --- FULL INTEGRATED PRIVACY STATEMENT VIEW (SPA) ---
+const PrivacyView = ({ onBackToHome }) => {
+    const { lang } = useContext(LanguageContext);
+
+    return (
+        <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto relative z-10 animate-fade-in">
+            {/* Top Navigation Bar */}
+            <div className="flex items-center justify-between gap-4 mb-8 glass-panel p-4 sm:p-5 rounded-2xl border border-white/[0.1] shadow-2xl backdrop-blur-xl">
+                <button
+                    onClick={() => { playSoftClick(); onBackToHome(); }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white text-xs sm:text-sm font-semibold transition-all hover:border-primary/50 shadow-md group cursor-pointer clickable"
+                >
+                    <i className="fas fa-arrow-left text-primary group-hover:-translate-x-1 transition-transform"></i>
+                    <span>{lang === 'pt' ? 'Voltar ao Portfólio' : 'Back to Portfolio'}</span>
+                </button>
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                    <i className="fas fa-shield-alt text-primary"></i>
+                    <span>{lang === 'pt' ? 'Termos & Privacidade' : 'Privacy & Security'}</span>
+                </div>
+            </div>
+
+            {/* Privacy Card */}
+            <article className="glass-panel rounded-2xl p-6 sm:p-12 border border-white/[0.08] shadow-2xl backdrop-blur-xl text-slate-300 space-y-8">
+                <div className="border-b border-white/[0.08] pb-6">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                        {lang === 'pt' ? 'Política de Privacidade & Cookies' : 'Privacy Policy & Cookie Statement'}
+                    </h1>
+                    <p className="text-xs font-mono text-slate-500">
+                        {lang === 'pt' ? 'Última atualização: Setembro 2026' : 'Last updated: September 2026'}
+                    </p>
+                </div>
+
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <span className="text-primary font-mono">01.</span>
+                        <span>{lang === 'pt' ? 'Coleta de Dados & Telemetria' : 'Data Collection & Analytics'}</span>
+                    </h2>
+                    <p className="text-sm leading-relaxed text-slate-400">
+                        {lang === 'pt'
+                            ? 'Este portfólio é hospedado como um site estático no GitHub Pages e utiliza Cloudflare Workers na borda para funcionalidades de backend (contador de visitas e inteligência artificial).'
+                            : 'This portfolio is hosted as a static website on GitHub Pages and leverages Cloudflare Workers at the edge for backend functionality.'}
+                    </p>
+                    <p className="text-sm leading-relaxed text-slate-400">
+                        {lang === 'pt'
+                            ? 'Para exibir o contador de visitas do portfólio, este site envia um ping anônimo para um Cloudflare Worker ao carregar. Esse worker lê metadados genéricos não identificáveis (como ASN, país e User-Agent) unicamente para fins estatísticos agregados e mitigação de bots.'
+                            : 'In order to display the "Portfolio Visitors" counter, this site sends an anonymous ping to a Cloudflare Worker upon loading. This function reads non-identifying metadata (such as generic ASN/Country data and User-Agent) solely for the purpose of aggregated analytics and mitigating bot abuse.'}
+                    </p>
+                </div>
+
+                <div className="space-y-4 border-t border-white/[0.06] pt-6">
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <span className="text-primary font-mono">02.</span>
+                        <span>{lang === 'pt' ? 'Ausência de Cookies de Rastreamento Persistente' : 'No Persistent Tracking Cookies'}</span>
+                    </h2>
+                    <p className="text-sm leading-relaxed text-slate-400">
+                        {lang === 'pt'
+                            ? 'Este site NÃO utiliza cookies de rastreamento de terceiros (como Google Analytics, Meta Pixel ou anunciantes) e não armazena informações de identificação pessoal (PII) no seu dispositivo.'
+                            : 'This website does not use tracking cookies (e.g., Google Analytics, Meta Pixel) and does not store personally identifiable information (PII) on your device without your explicit consent.'}
+                    </p>
+                    <p className="text-sm leading-relaxed text-slate-400">
+                        {lang === 'pt'
+                            ? 'Preferências de interface como tema 3D ativo, idioma selecionado e som são salvas exclusivamente no localStorage do seu próprio navegador.'
+                            : 'UI preferences such as the active 3D space theme, selected language, and audio state are saved exclusively in your browser\'s local storage.'}
+                    </p>
+                </div>
+
+                <div className="space-y-4 border-t border-white/[0.06] pt-6">
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <span className="text-primary font-mono">03.</span>
+                        <span>{lang === 'pt' ? 'Integrações de Terceiros (Patreon)' : 'Third-Party Integrations'}</span>
+                    </h2>
+                    <p className="text-sm leading-relaxed text-slate-400">
+                        {lang === 'pt'
+                            ? 'Caso você utilize o recurso "Entrar com Patreon" para desbloquear artigos confidenciais do Journal, a autenticação ocorre com segurança via OAuth 2.0 nos servidores do Patreon. O seu token nunca é compartilhado com terceiros e serve apenas para checar o status de apoiador.'
+                            : 'If you use the "Log in with Patreon" feature to unlock exclusive Journal entries, you will be subject to Patreon\'s Privacy Policy. The authentication process is handled securely via OAuth 2.0 and is only used to verify your subscription status.'}
+                    </p>
+                </div>
+
+                <div className="space-y-4 border-t border-white/[0.06] pt-6">
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <span className="text-primary font-mono">04.</span>
+                        <span>{lang === 'pt' ? 'Contato & Responsável' : 'Contact'}</span>
+                    </h2>
+                    <p className="text-sm leading-relaxed text-slate-400">
+                        {lang === 'pt'
+                            ? 'Se você tiver qualquer dúvida sobre como os dados são tratados neste site, entre em contato diretamente pelo e-mail:'
+                            : 'If you have any questions regarding how data is handled on this site, feel free to contact me at:'}
+                    </p>
+                    <div className="inline-block px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-primary font-mono text-xs">
+                        <i className="fas fa-envelope mr-2"></i> gelain15mj@gmail.com
+                    </div>
+                </div>
+            </article>
+        </div>
+    );
+};
+
 // --- ROOT APPLICATION COMPONENT ---
 const App = () => {
     const STORAGE_KEY = 'spet_portfolio_settings';
@@ -7628,6 +8120,88 @@ const App = () => {
         } catch (e) {}
         return 'pt';
     });
+
+    // --- ROUTING STATE (SPA: Home / Journal / Privacy) ---
+    const parseRoute = () => {
+        try {
+            const path = window.location.pathname.replace(/\/index\.html$/, '');
+            const hash = window.location.hash.replace(/^#/, '');
+            const params = new URLSearchParams(window.location.search);
+            const postParam = params.get('post');
+
+            if (path.includes('/privacy') || hash === 'privacy') {
+                return { view: 'privacy', postId: null };
+            }
+
+            if (path.includes('/journal') || hash.startsWith('entry_') || hash === 'journal' || postParam) {
+                let postId = postParam || null;
+                if (!postId) {
+                    const match = path.match(/\/journal\/([^\/\.]+)/);
+                    if (match && match[1] && match[1] !== 'index') {
+                        postId = decodeURIComponent(match[1]);
+                    } else if (hash && hash !== 'journal') {
+                        postId = hash;
+                    }
+                }
+                return { view: 'journal', postId };
+            }
+        } catch (e) {}
+        return { view: 'home', postId: null };
+    };
+
+    const initialRoute = parseRoute();
+    const [currentView, setCurrentView] = useState(initialRoute.view);
+    const [activeJournalPost, setActiveJournalPost] = useState(initialRoute.postId);
+
+    const navigateTo = useCallback((view, payload) => {
+        if (typeof playSoftClick === 'function') playSoftClick();
+        if (view === 'home') {
+            const targetSection = typeof payload === 'string' ? payload : null;
+            setCurrentView('home');
+            setActiveJournalPost(null);
+            if (targetSection) {
+                window.history.pushState({ view: 'home', sectionId: targetSection }, '', `/#${targetSection}`);
+                setTimeout(() => {
+                    const el = document.getElementById(targetSection);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            } else {
+                window.history.pushState({ view: 'home' }, '', '/');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        } else if (view === 'journal') {
+            const postId = typeof payload === 'string' ? payload : null;
+            setCurrentView('journal');
+            setActiveJournalPost(postId);
+            const targetUrl = postId ? `/journal/${postId}/` : '/journal/';
+            window.history.pushState({ view: 'journal', postId }, '', targetUrl);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (view === 'privacy') {
+            setCurrentView('privacy');
+            setActiveJournalPost(null);
+            window.history.pushState({ view: 'privacy' }, '', '/privacy.html');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, []);
+
+    useEffect(() => {
+        const handlePopState = () => {
+            const route = parseRoute();
+            setCurrentView(route.view);
+            setActiveJournalPost(route.postId);
+            if (route.view === 'home') {
+                const hash = window.location.hash.replace(/^#/, '');
+                if (hash) {
+                    setTimeout(() => {
+                        const el = document.getElementById(hash);
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }, 50);
+                }
+            }
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
 
     // --- LOADING SCREEN STATE ---
     const [isLoadingScreen, setIsLoadingScreen] = useState(true);
@@ -8085,23 +8659,49 @@ const App = () => {
                     onOpenPatreon={() => { playSoftClick(); setShowPatreonModal(true); }}
                     onOpenSettings={() => { playSoftClick(); setIsSettingsOpen(true); }}
                     settings={settings}
+                    currentView={currentView}
+                    onNavigateHome={(sec) => navigateTo('home', sec)}
+                    onNavigateJournal={(id) => navigateTo('journal', id)}
                 />
 
                 <main>
-                    <Hero
-                        onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
-                        onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(true); }}
-                    />
-                    <AboutSection />
-                    <ExperienceSection />
-                    <ProjectsSection />
-                    <SkillsSection />
-                    <JournalSection />
-                    <ContactSection />
+                    {currentView === 'home' && (
+                        <React.Fragment>
+                            <Hero
+                                onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
+                                onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(true); }}
+                            />
+                            <AboutSection />
+                            <ExperienceSection />
+                            <ProjectsSection onNavigateJournal={(id) => navigateTo('journal', id)} />
+                            <SkillsSection />
+                            <JournalSection onNavigateJournal={(id) => navigateTo('journal', id)} />
+                            <ContactSection />
+                        </React.Fragment>
+                    )}
+
+                    {currentView === 'journal' && (
+                        <JournalView
+                            activePostId={activeJournalPost}
+                            onSelectPost={(id) => navigateTo('journal', id)}
+                            onBackToHome={() => navigateTo('home')}
+                            onOpenPatreon={() => { playSoftClick(); setShowPatreonModal(true); }}
+                        />
+                    )}
+
+                    {currentView === 'privacy' && (
+                        <PrivacyView
+                            onBackToHome={() => navigateTo('home')}
+                        />
+                    )}
                 </main>
 
                 <Footer
+                    currentView={currentView}
                     onOpenEasterMenu={() => { playSoftClick(); setEasterGame('sign'); }}
+                    onNavigateHome={(sec) => navigateTo('home', sec)}
+                    onNavigateJournal={(id) => navigateTo('journal', id)}
+                    onNavigatePrivacy={() => navigateTo('privacy')}
                 />
 
                 {/* Floating 'Scroll to Top' Button */}
@@ -8136,6 +8736,7 @@ const App = () => {
                     onMusicCommand={handleMusicCommand}
                     activeMusicTrack={ffMusicState.isActive ? (ffMusicState.playlist === 'cod' ? COD_MENU_TRACKS[ffMusicState.trackIndex] : FF_CLASSIC_TRACKS[ffMusicState.trackIndex]) : null}
                     onOpenSettings={() => setIsSettingsOpen(true)}
+                    onNavigateJournal={(id) => navigateTo('journal', id)}
                     onOpen3DViewer={(modelId) => {
                         window.dispatchEvent(new CustomEvent('spet:open-3d-viewer', { detail: { modelId: modelId || 'chicken' } }));
                     }}

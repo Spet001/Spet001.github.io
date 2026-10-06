@@ -5,23 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Technical Journal | Eduardo Gelain – Reverse Engineering & Game Dev</title>
-    <meta name="description" content="In-depth technical research papers, reverse engineering breakdowns, GSC bytecode VM analysis, UWP/GDK sandbox bypasses by Eduardo Gelain (SpetDev).">
+    <title>What is GSC? (Game Scripting C) Guide | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <!-- Canonical URL & Alternate Discovery -->
-    <link rel="canonical" href="https://spet01.dev/journal/">
+    <link rel="canonical" href="https://spet01.dev/journal/What-Is-GSC/">
     <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spet01.dev/">
-    <meta property="og:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta property="og:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta property="og:url" content="https://spet01.dev/journal/What-Is-GSC/">
+    <meta property="og:title" content="What is GSC? (Game Scripting C) Guide | Eduardo Gelain">
+    <meta property="og:description" content="Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -34,123 +33,34 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://spet01.dev/">
-    <meta name="twitter:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta name="twitter:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta name="twitter:url" content="https://spet01.dev/journal/What-Is-GSC/">
+    <meta name="twitter:title" content="What is GSC? (Game Scripting C) Guide | Eduardo Gelain">
+    <meta name="twitter:description" content="Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://spet01.dev/#website",
-          "url": "https://spet01.dev/",
-          "name": "Eduardo Gelain | Software & Game Developer",
-          "description": "Portfólio e Journal Técnico de Eduardo Gelain (SpetDev) - Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa.",
-          "inLanguage": ["pt-BR", "en-US"],
-          "publisher": { "@id": "https://spet01.dev/#person" }
-        },
-        {
-          "@type": "Person",
-          "@id": "https://spet01.dev/#person",
-          "name": "Eduardo Gelain",
-          "alternateName": "SpetDev",
-          "url": "https://spet01.dev",
-          "jobTitle": "Software & Game Developer",
-          "email": "mailto:gelain15mj@gmail.com",
-          "image": "https://spet01.dev/assets/portweb.png",
-          "description": "Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa de engines e sandboxes.",
-          "knowsAbout": [
-            "C++",
-            "C#",
-            "Unity",
-            "Unreal Engine 5",
-            "Reverse Engineering",
-            "Game Scripting C (GSC)",
-            "Memory Pattern Scanning",
-            "WebAssembly",
-            "Cloudflare Workers",
-            "x86/x64 Assembly",
-            "Game Development"
-          ],
-          "sameAs": [
-            "https://github.com/Spet001",
-            "https://gitlab.com/Spet001",
-            "https://spet01.itch.io",
-            "https://www.nexusmods.com/profile/Spet001/mods",
-            "https://www.linkedin.com/in/eduardo-gelain/"
-          ]
-        },
-        {
-          "@type": "ItemList",
-          "@id": "https://spet01.dev/#projects",
-          "name": "Featured Software & Game Projects",
-          "itemListElement": [
-            {
-              "@type": "SoftwareApplication",
-              "position": 1,
-              "name": "Outcaster - Retro FPS Templates",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete retro FPS templates (boomer shooter style) developed in Unity and C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 2,
-              "name": "Sparky Rush: Purrils in Pawsville",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Commercial 3D platformer game on Steam. Quality assurance, bug mapping, and code deductions in Unity/C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 3,
-              "name": "Resurge Client (BO3 Multi-Platform)",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Custom client for Black Ops 3 supporting both UWP and Steam with native C++ injection DLL."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 4,
-              "name": "CW GSC Injector (MS Store / Xbox PC)",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "C++ GSC injector for Call of Duty: BOCW Microsoft Store with dynamic pattern scanning."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 5,
-              "name": "BO1 & BO2 MS Store Clients & GSC Injector",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 6,
-              "name": "GSC Dumps and Pre-Compiled/Uncompiled Sources",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "GSC bytecode dumps and custom menu sources for Call of Duty PC releases."
-            }
-          ]
-        },
-        {
-          "@type": "Blog",
-          "@id": "https://spet01.dev/journal/#blog",
-          "name": "Eduardo Gelain Technical Journal",
-          "url": "https://spet01.dev/journal/",
-          "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
-          "author": { "@id": "https://spet01.dev/#person" }
-        }
-      ]
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What is GSC? (Game Scripting C) Guide",
+  "description": "Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.",
+  "datePublished": "Sep 30, 2026",
+  "url": "https://spet01.dev/journal/What-Is-GSC/",
+  "mainEntityOfPage": "https://spet01.dev/journal/What-Is-GSC/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
     </script>
 
     <!-- Fonts & Icons -->
@@ -545,93 +455,155 @@
             </div>
         </header>
 
-                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-5xl mx-auto">
-            <div class="mb-8">
-                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
             </div>
-            <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md mb-8">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold mb-3">
-                    <i class="fas fa-book-open text-[10px]"></i> Reverse Engineering & Game Dev Research
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 30, 2026</time>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is GSC? (Game Scripting C) Guide</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="What-Is-GSC">
+<h1>What is GSC?</h1>
+<p>Game Script Code/Game Scripting C, commonly known as <strong>GSC</strong>, is the proprietary, server-side scripting language used across almost all major <em>Call of Duty</em> titles powered by the IW engine and Treyarch&#39;s derivatives. Its syntax is heavily inspired by C and C++, but it behaves like a dynamically-typed scripting language with built-in multithreading, event-driven execution, and game-specific data structures.</p>
+<p>Developed initially by Infinity Ward, GSC is the invisible backbone that dictates the flow of single-player campaigns, orchestrates multiplayer game logic, and drives the intricate state machines of the iconic Zombies mode.</p>
+<p>This guide provides a universal overview of GSC concepts, applicable (with engine-specific variations) across <strong>T4 (World at War)</strong>, <strong>T5 (Black Ops 1)</strong>, <strong>T6 (Black Ops 2)</strong>, <strong>T7 (Black Ops 3)</strong>, <strong>T8 (Black Ops 4)</strong>, and <strong>T9 (Black Ops Cold War)</strong>.</p>
+<hr>
+<h2>The GSC Virtual Machine</h2>
+<p>GSC is not compiled into native machine code (x86/x64). Instead, the game&#39;s compiler (often part of the mod tools or done at build time by the developers) translates the raw <code>.gsc</code> scripts into bytecode. This bytecode is then executed at runtime by a Virtual Machine (VM) embedded directly within the game engine.</p>
+<p>The VM handles:</p>
+<ol>
+<li><strong>Memory Management:</strong> Dynamic allocation and garbage collection for script variables.</li>
+<li><strong>Thread Scheduling:</strong> GSC natively supports executing multiple functions concurrently via threads. The VM schedules these threads frame-by-frame.</li>
+<li><strong>Engine Interfacing:</strong> Built-in functions allow GSC scripts to directly read and write engine memory, manipulate Dvars (developer variables), spawn 3D entities, and control HUD elements.</li>
+</ol>
+<hr>
+<h2>Basic Syntax &amp; Grammar</h2>
+<p>GSC syntax will look instantly familiar to anyone who has programmed in C, C++, or JavaScript.</p>
+<h3>Includes and Namespaces</h3>
+<p>At the top of a file, you typically define <code>#include</code> directives to import functions from other scripts. In newer engines (T7+), namespaces and auto-executing directives (<code>#using</code>, <code>#namespace</code>, <code>#autoexec</code>) become prevalent to strictly organize the massive codebase.</p>
+<pre><code class="language-c">#include maps\mp\_utility;
+#include common_scripts\utility;
+
+// In T7+ (Black Ops 3 onwards), namespaces are common:
+#namespace custom_zombies_logic;
+</code></pre>
+<h3>Variables and Types</h3>
+<p>Variables in GSC are <strong>dynamically typed</strong>. You do not declare their type (<code>int</code>, <code>string</code>, etc.). A variable can hold a string, integer, float, array, or a reference to a game entity.</p>
+<p>Variables can have different scopes:</p>
+<ul>
+<li><strong>Local Variables:</strong> Scoped only to the current function or thread.</li>
+<li><strong>Level Variables (<code>level.var_name</code>):</strong> Global variables accessible from anywhere. <code>level</code> is a globally persistent entity structure.</li>
+<li><strong>Self Variables (<code>self.var_name</code>):</strong> Variables attached to a specific entity (like a player or a zombie).</li>
+</ul>
+<pre><code class="language-c">level.custom_round = 1;         // Global integer
+self.is_invincible = true;      // Boolean attached to &#39;self&#39; (the player)
+local_weapon = &quot;ray_gun&quot;;       // Local string
+</code></pre>
+<h3>Arrays and Structs</h3>
+<p>GSC relies heavily on arrays. They can be indexed numerically or associatively (using strings as keys).</p>
+<pre><code class="language-c">// Creating an array
+players = get_players(); 
+
+// Associative array
+level.weapon_costs = [];
+level.weapon_costs[&quot;m1911&quot;] = 500;
+
+// Structs (Useful for holding grouped data without creating full entities)
+spawn_point = spawnstruct();
+spawn_point.origin = (0, 0, 0);
+spawn_point.angles = (0, 90, 0);
+</code></pre>
+<hr>
+<h2>Execution Control: Threads and Events</h2>
+<p>The most powerful aspect of GSC is its event-driven, multithreaded nature.</p>
+<h3>Threads (<code>thread</code>)</h3>
+<p>You can launch a function in parallel alongside the current execution flow using the <code>thread</code> keyword. If you don&#39;t use <code>thread</code>, the current script will wait for the function to finish before continuing.</p>
+<pre><code class="language-c">// Spawns a parallel process. The main script continues immediately.
+level thread background_music_manager();
+
+// Called on a specific entity
+player thread monitor_player_health();
+</code></pre>
+<h3>Waiting and Yielding (<code>wait</code>)</h3>
+<p>Because the VM runs frame-by-frame, infinite loops will crash the game (Server Command Overflow). You <strong>must</strong> yield execution using <code>wait</code>.</p>
+<pre><code class="language-c">while ( true )
+{
+    // Do something every second
+    print(&quot;One second passed.&quot;);
+    wait 1.0; 
+}
+</code></pre>
+<h3>Event System (<code>waittill</code> and <code>endon</code>)</h3>
+<p>GSC uses a string-based publish/subscribe model for events. Entities can wait for specific events to fire, or terminate their threads if an event occurs.</p>
+<ul>
+<li><code>waittill(&quot;event_string&quot;)</code>: Pauses the thread until the entity broadcasts this exact string.</li>
+<li><code>endon(&quot;event_string&quot;)</code>: Immediately kills the thread if the entity broadcasts this string.</li>
+</ul>
+<pre><code class="language-c">monitor_damage()
+{
+    // Stop this thread if the player disconnects or dies
+    self endon(&quot;disconnect&quot;);
+    self endon(&quot;death&quot;);
+
+    while ( true )
+    {
+        // Wait until the player takes damage. 
+        // Capture the event arguments into variables.
+        self waittill(&quot;damage&quot;, amount, attacker, direction_vec);
+        
+        iPrintLn(&quot;You took &quot; + amount + &quot; damage!&quot;);
+    }
+}
+</code></pre>
+<p>Entities trigger these events using <code>notify</code>.</p>
+<pre><code class="language-c">// Somewhere else in the code...
+self notify(&quot;damage&quot;, 50, level.zombie_boss, (1,0,0));
+</code></pre>
+<hr>
+<h2>Common Tasks Across Engines</h2>
+<p>While functions vary between World at War (T4) and Cold War (T9), the core mechanics remain the same.</p>
+<h3>Printing to Console / Screen</h3>
+<p>Useful for debugging.</p>
+<pre><code class="language-c">Print(&quot;Console log message&quot;);       // Prints to server console
+iPrintLn(&quot;On-screen message&quot;);      // Prints to the killfeed area
+iPrintLnBold(&quot;Center screen text&quot;); // Big text in the center
+</code></pre>
+<h3>Modifying Players</h3>
+<p>Scripts frequently target the array of active players.</p>
+<pre><code class="language-c">players = get_players();
+for ( i = 0; i &lt; players.size; i++ )
+{
+    player = players[i];
+    
+    // Give weapon and max ammo
+    player GiveWeapon(&quot;ray_gun&quot;);
+    player GiveMaxAmmo(&quot;ray_gun&quot;);
+    player SwitchToWeapon(&quot;ray_gun&quot;);
+    
+    // Change health
+    player.maxhealth = 250;
+    player.health = player.maxhealth;
+}
+</code></pre>
+<h3>Spawning Entities</h3>
+<p>You can spawn models, triggers, and effects dynamically.</p>
+<pre><code class="language-c">// Spawn a script model at a specific coordinate
+mystery_box = spawn(&quot;script_model&quot;, (100, -500, 10));
+mystery_box setModel(&quot;zombie_mystery_box&quot;);
+
+// Move it over 5 seconds
+mystery_box MoveTo((100, -500, 100), 5.0);
+</code></pre>
+<hr>
+<h2>Conclusion</h2>
+<p>Understanding GSC is the master key to modifying Call of Duty. Whether you are building complex custom Zombies maps on Black Ops 3 (T7), injecting mod menus into Black Ops 2 (T6) via memory, or analyzing compiled bytecode in Cold War (T9), the foundational logic—threads, events, and dynamic entities—remains the universal language of the engine.</p>
+
                 </div>
-                <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">Technical Journal & Research Papers</h1>
-                <p class="text-slate-300 text-sm leading-relaxed max-w-2xl mb-8">
-                    Documentação profunda de pesquisas em engenharia reversa, análise do motor de bytecode GSC de Call of Duty, bypasses de sandbox UWP/GDK e arquiteturas de backend serverless.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 30, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-GSC/" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.</p>
-                        <a href="/journal/What-Is-GSC/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 28, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Cloudflare-Workers-Backend/" class="hover:text-primary transition-colors">Quick Entry: Having a Backend on a Static Website with Cloudflare workers!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.</p>
-                        <a href="/journal/Cloudflare-Workers-Backend/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-Open-Source-GSC-Mods/" class="hover:text-primary transition-colors">Providing Open Source T6 Custom Game Modes GSC!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.</p>
-                        <a href="/journal/T6-Open-Source-GSC-Mods/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/entry_0007/" class="hover:text-primary transition-colors">Unlock This Entry With Patreon!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Classified technical breakdown of Call of Duty Black Ops Cold War mod management and engine hooks.</p>
-                        <a href="/journal/entry_0007/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for Call of Duty DLCs</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.</p>
-                        <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 20, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.</p>
-                        <a href="/journal/T6-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T5-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.</p>
-                        <a href="/journal/T5-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/shame_for_the_leakers/" class="hover:text-primary transition-colors">Leakers....Shame for you all</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.</p>
-                        <a href="/journal/shame_for_the_leakers/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 18, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/CW-GSC-Injection-MS-Store/" class="hover:text-primary transition-colors">CW GSC Injection Findings</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.</p>
-                        <a href="/journal/CW-GSC-Injection-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                </div>
-            </section>
+            </article>
         </main>
 
         <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">

@@ -95,34 +95,50 @@
             {
               "@type": "SoftwareApplication",
               "position": 1,
-              "name": "Outcaster",
+              "name": "Outcaster - Retro FPS Templates",
               "applicationCategory": "GameApplication",
               "operatingSystem": "Windows",
-              "description": "Doom-like Unity FPS Template."
+              "description": "Complete retro FPS templates (boomer shooter style) developed in Unity and C#."
             },
             {
               "@type": "SoftwareApplication",
               "position": 2,
-              "name": "Sparky Rush",
+              "name": "Sparky Rush: Purrils in Pawsville",
               "applicationCategory": "GameApplication",
               "operatingSystem": "Windows",
-              "description": "2D physics puzzle platformer and horror game available on Steam."
+              "description": "Commercial 3D platformer game on Steam. Quality assurance, bug mapping, and code deductions in Unity/C#."
             },
             {
               "@type": "SoftwareApplication",
               "position": 3,
-              "name": "Call of Duty Zombies GSC VM in HTML5",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Web",
-              "description": "Web-based bytecode virtual machine emulating the Treyarch Call of Duty GSC scripting engine inside the browser - avaible as a easter egg on spet01.dev."
+              "name": "Resurge Client (BO3 Multi-Platform)",
+              "applicationCategory": "GameApplication",
+              "operatingSystem": "Windows",
+              "description": "Custom client for Black Ops 3 supporting both UWP and Steam with native C++ injection DLL."
             },
             {
               "@type": "SoftwareApplication",
               "position": 4,
-              "name": "Resurge Client",
-              "applicationCategory": "GameApplication",
+              "name": "CW GSC Injector (MS Store / Xbox PC)",
+              "applicationCategory": "DeveloperApplication",
               "operatingSystem": "Windows",
-              "description": "Client for Black Ops 3 on MS Store."
+              "description": "C++ GSC injector for Call of Duty: BOCW Microsoft Store with dynamic pattern scanning."
+            },
+            {
+              "@type": "SoftwareApplication",
+              "position": 5,
+              "name": "BO1 & BO2 MS Store Clients & GSC Injector",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "Windows",
+              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
+            },
+            {
+              "@type": "SoftwareApplication",
+              "position": 6,
+              "name": "GSC Dumps and Pre-Compiled/Uncompiled Sources",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "Windows",
+              "description": "GSC bytecode dumps and custom menu sources for Call of Duty PC releases."
             }
           ]
         },
@@ -144,9 +160,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Markdown & Sanitizer for Mascot Chat -->
+    <!-- Markdown & Sanitizer for Mascot Chat & Technical Journal -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -421,6 +439,26 @@
             margin-left: 1rem;
             filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
         }
+
+        /* Journal Markdown Reader Styles */
+        .markdown-body h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff; }
+        .markdown-body h2 { font-size: 1.45rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .markdown-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e2e8f0; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+        .markdown-body a { color: #00aaff; text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-body a:hover { color: #38bdf8; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.35rem; }
+        .markdown-body blockquote { border-left: 4px solid #00aaff; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-bottom: 1.25rem; background: rgba(0, 170, 255, 0.05); padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body code { background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875em; color: #38bdf8; }
+        .markdown-body pre { background-color: rgba(5, 5, 5, 0.95); padding: 1.1rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .markdown-body pre code { background-color: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.85em; }
+        .markdown-body img { max-width: 100%; border-radius: 0.75rem; margin: 1.25rem 0; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .markdown-body hr { border-color: rgba(255, 255, 255, 0.08); margin: 2rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; text-align: left; }
+        .markdown-body th { background: rgba(255,255,255,0.05); color: #fff; }
 </style>
 
     <!-- React & Three.js Libraries -->
@@ -434,7 +472,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <style>
         .text-glow {
@@ -599,52 +637,76 @@
                     <h2 class="text-2xl font-bold text-white">Featured Projects</h2>
                     <span class="text-xs font-mono text-slate-400">Games, Tools & R&D</span>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Project 1 -->
                     <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 mb-3 inline-block">Unity · C# · Multiplayer</span>
-                        <h3 class="text-xl font-bold text-white mb-2">Outcaster</h3>
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 mb-3 inline-block">Unity · C# · Retro FPS</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Outcaster - Retro FPS Templates</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            Doom Like Unity FPS Template.
+                            Complete retro FPS templates (boomer shooter style) developed in Unity and C#. Locomotion physics, weapon management, ballistic projectiles, and state-machine enemy AI.
                         </p>
-                        <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1.5">
-                            View on GitHub <i class="fas fa-external-link-alt text-[10px]"></i>
+                        <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" class="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1.5">
+                            Available on Itch.io <i class="fas fa-external-link-alt text-[10px]"></i>
                         </a>
                     </article>
 
                     <!-- Project 2 -->
                     <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-3 inline-block">Unity · Steam · QA & Dev</span>
-                        <h3 class="text-xl font-bold text-white mb-2">Sparky Rush</h3>
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-3 inline-block">Unity · Steam · QA & Testing</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Sparky Rush: Purrils in Pawsville</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            2D physics puzzle platformer and horror game available on Steam. Features dynamic mechanics, custom level progression, responsive controls, and in-depth bug analysis.
+                            Commercial 3D platformer on Steam. Quality assurance role discovering, documenting, and resolving 50+ critical bugs via code-level deductions in Unity/C#.
                         </p>
-                        <a href="https://store.steampowered.com" target="_blank" rel="noreferrer" class="text-xs font-bold text-emerald-400 hover:underline inline-flex items-center gap-1.5">
+                        <a href="https://store.steampowered.com/app/3592020/Sparky_Rush_Purrils_in_Pawsville/" target="_blank" rel="noreferrer" class="text-xs font-bold text-emerald-400 hover:underline inline-flex items-center gap-1.5">
                             Available on Steam <i class="fas fa-external-link-alt text-[10px]"></i>
                         </a>
                     </article>
 
                     <!-- Project 3 -->
                     <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30 mb-3 inline-block">JavaScript · Bytecode VM · Web</span>
-                        <h3 class="text-xl font-bold text-white mb-2">Call of Duty Zombies GSC VM in HTML5</h3>
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-3 inline-block">C/C++ · Electron · Networking</span>
+                        <h3 class="text-xl font-bold text-white mb-2">Resurge Client (BO3 Multi-Platform)</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            Web-based bytecode virtual machine interpreter emulating Treyarch's proprietary Call of Duty Game Scripting (GSC) engine inside modern browsers, executing multithreaded script logic natively.
+                            Custom client for Black Ops 3 supporting both UWP and Steam. Features native C++ injection DLL, network relay proof-of-concept for crossplay, and Electron launcher.
                         </p>
-                        <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" class="text-xs font-bold text-purple-400 hover:underline inline-flex items-center gap-1.5">
-                            View Bytecode Interpreter <i class="fas fa-external-link-alt text-[10px]"></i>
+                        <a href="https://gitlab.com/Spet001/resurgegdkbackup" target="_blank" rel="noreferrer" class="text-xs font-bold text-amber-400 hover:underline inline-flex items-center gap-1.5">
+                            GitLab Repository <i class="fas fa-external-link-alt text-[10px]"></i>
                         </a>
                     </article>
 
                     <!-- Project 4 -->
                     <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-3 inline-block">IDA PRO · C/C++ · GDK</span>
-                        <h3 class="text-xl font-bold text-white mb-2">Resurge GDK Client</h3>
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30 mb-3 inline-block">C++ · Win32 · Memory Scanning</span>
+                        <h3 class="text-xl font-bold text-white mb-2">CW GSC Injector (MS Store / Xbox PC)</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                           A client for MS Store (GDK) Black Ops 3.
+                            High-performance C++ utility injecting custom GSC bytecode into Call of Duty: BOCW Microsoft Store build, bypassing UWP sandboxing via dynamic signature scanning.
                         </p>
-                        <a href="#" class="text-xs font-bold text-amber-400 hover:underline inline-flex items-center gap-1.5">
-                             <i class="fas fa-gamepad text-[10px]"></i>
+                        <a href="https://gitlab.com/Spet001/CW-UWP-GSC-Injector" target="_blank" rel="noreferrer" class="text-xs font-bold text-purple-400 hover:underline inline-flex items-center gap-1.5">
+                            GitLab Repository <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </article>
+
+                    <!-- Project 5 -->
+                    <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-rose-500/10 text-rose-400 border border-rose-500/30 mb-3 inline-block">C++ · VM Hooking · DLC Unlocker</span>
+                        <h3 class="text-xl font-bold text-white mb-2">BO1 & BO2 MS Store Clients & GSC Injector</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            Complete C++ suite featuring custom client modification, real-time GSC script injector, and DLC unlocker for Black Ops 1 & 2 Windows Store.
+                        </p>
+                        <a href="https://gitlab.com/Spet001/msclients" target="_blank" rel="noreferrer" class="text-xs font-bold text-rose-400 hover:underline inline-flex items-center gap-1.5">
+                            GitLab Repository <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </article>
+
+                    <!-- Project 6 -->
+                    <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 mb-3 inline-block">Bytecode Dumps · Jiggy Menu · GDK</span>
+                        <h3 class="text-xl font-bold text-white mb-2">GSC Dumps and Pre-Compiled Sources</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            Repository of GSC bytecode dumps for GDK releases (T5, IW5), working T5 GDK base menu, pre-compiled T6 Jiggy Menu v4.3, and standalone T6 GSC compiler.
+                        </p>
+                        <a href="https://gitlab.com/Spet001/t5-gdk-gsc-dumps" target="_blank" rel="noreferrer" class="text-xs font-bold text-indigo-400 hover:underline inline-flex items-center gap-1.5">
+                            GitLab Repository <i class="fas fa-external-link-alt text-[10px]"></i>
                         </a>
                     </article>
                 </div>
@@ -721,67 +783,67 @@
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 30, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/#What-Is-GSC" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
+                            <a href="/journal/What-Is-GSC/" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Comprehensive architectural guide to Call of Duty's server-side bytecode scripting virtual machine and event notifies.
                         </p>
-                        <a href="/journal/#What-Is-GSC" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/What-Is-GSC/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 28, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/#Cloudflare-Workers-Backend" class="hover:text-primary transition-colors">Static Site Backend with Cloudflare Workers</a>
+                            <a href="/journal/Cloudflare-Workers-Backend/" class="hover:text-primary transition-colors">Static Site Backend with Cloudflare Workers</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Implementing zero-cost serverless microservices, telemetry, and secure OAuth on static GitHub Pages websites.
                         </p>
-                        <a href="/journal/#Cloudflare-Workers-Backend" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/Cloudflare-Workers-Backend/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/#UWPCOD-GDK-DLC-Unlocker" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for DLCs</a>
+                            <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for DLCs</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Analyzing UWP/GDK sandbox pre-installed DLC assets and cryptographic entitlement verification routines.
                         </p>
-                        <a href="/journal/#UWPCOD-GDK-DLC-Unlocker" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 20, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/#T6-GSC-Injector-MS-Store" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2</a>
+                            <a href="/journal/T6-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Building a C++ injector with inline execution detours and calling convention translation for Microsoft Store binaries.
                         </p>
-                        <a href="/journal/#T6-GSC-Injector-MS-Store" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/T6-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/#T5-GSC-Injector-MS-Store" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
+                            <a href="/journal/T5-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             IDA Pro cross-referencing and offset discovery for legacy engine memory hooks inside modern Windows containers.
                         </p>
-                        <a href="/journal/#T5-GSC-Injector-MS-Store" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/T5-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 18, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/#CW-GSC-Injection-MS-Store" class="hover:text-primary transition-colors">Dynamic Sigscan Pattern Matching in Cold War</a>
+                            <a href="/journal/CW-GSC-Injection-MS-Store/" class="hover:text-primary transition-colors">Dynamic Sigscan Pattern Matching in Cold War</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Eliminating hardcoded offset breakages across patches with dynamic runtime memory pattern scanning in C++.
                         </p>
-                        <a href="/journal/#CW-GSC-Injection-MS-Store" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/CW-GSC-Injection-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
                 </div>
             </section>
@@ -833,7 +895,7 @@
         </noscript>
     </div>
 
-    <script defer src="app.min.js"></script>
+    <script defer src="/app.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cursor = document.getElementById('custom-cursor');
