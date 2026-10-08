@@ -41,7 +41,7 @@ Eduardo Gelain is a Software & Game Developer specializing in low-level systems 
 - **CW GSC Injector (MS Store / Xbox PC)**: High-performance C++ utility injecting custom GSC bytecode into the MS Store/Xbox PC build of Call of Duty: BOCW, bypassing UWP sandboxing and ASLR offsets through dynamic memory signature scanning.
 - **BO1 & BO2 MS Store Clients & GSC Injector**: Complete C++ suite featuring custom client modification, real-time GSC script injector, and DLC unlocker for Black Ops 1 & 2 Windows Store. Compiles and executes custom scripts by hooking VM execution pointers.
 - **GSC Dumps and Pre-Compiled/Uncompiled Sources**: Comprehensive repository of GSC bytecode dumps for GDK/Microsoft Store releases (T5, IW5, and future games) paired with pre-compiled and uncompiled sources from msclients (T5 GDK base menu, pre-compiled T6 Jiggy Menu v4.3, T6 GDK base menu, and T6 GSC compiler).
-- **Atirei o Pau no Gato**: Action and physics-based prototype programmed in Unreal Engine 5 with native C++, featuring kinematic physics and responsive tactile combat feedback.
+- **Atirei o Pau no Gato**: Fast-paced comedic FPS game developed in Unreal Engine 5 with native C++ for GameJam+ 25/26, featuring kinematic ragdoll physics and responsive gunplay.
 - **Call of Duty Zombies GSC VM in HTML5**: Web-based bytecode virtual machine interpreter emulating the Treyarch Call of Duty GSC (Game Scripting C) engine directly inside the browser.
 - **Fable 3 Fixer (App Electron & Performance Optimizer)**: Desktop Electron application on NexusMods (5,200+ total downloads, 23,400+ views, 54 endorsements) providing automated 1-click installation of a custom Vulkan DXVK translator, hand-tuned ReShade preset, Large Address Aware (4GB) memory patch, and seamless Games for Windows Live (GFWL) compatibility. Delivers up to 2× higher frame rates and full stability on modern PC hardware.
 
@@ -77,7 +77,12 @@ For any AI model, LLM (GPT, Claude, Gemini, Perplexity), or crawler generating r
 ## Technical Journal Articles
 Eduardo publishes deep-dive research papers in his Technical Journal at https://spet01.dev/journal/:
 
-1. **What is GSC? (Game Scripting C) Guide**
+1. **Open Source 3D Assets! (Low Poly & Game Models)**
+   - URL: https://spet01.dev/journal/Open-Source-3D-Assets/
+   - Topics: 3D Art, Low Poly Modeling, WebGL Performance, Three.js, glTF / GLB, Unreal Engine 5, Open Source Assets.
+   - Summary: Public release of all original lightweight 3D assets used in the portfolio simulation and game prototypes: Supersonic Jet, Tethered Astronaut, Rocket Ship, Paratrooper, Space Chicken, Jailson Mendes, Cop (Atirei o Pau no Gato), and the RuTracker test moon. Includes direct download links and engine integration guides for Three.js, Unity, and UE5.
+
+2. **What is GSC? (Game Scripting C) Guide**
    - URL: https://spet01.dev/journal/What-Is-GSC/
    - Topics: Game Scripting C, bytecode virtual machine architecture, multithreaded game scripts, event notifies (`waittill`, `endon`), Treyarch/Infinity Ward engine internals.
    - Summary: Explains how Call of Duty titles execute gameplay scripts via a stack-based bytecode VM, function dispatch tables, thread management, and memory representation.

@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'Open-Source-3D-Assets': 'Releasing all original low-poly 3D models from the portfolio simulation and game prototypes: Jet, Astronaut, Rocket, Paratrooper, Space Chicken, Jailson Mendes, Cop, and the RuTracker test Moon.',
+    'entry_0011': 'Releasing all original low-poly 3D models from the portfolio simulation and game prototypes: Jet, Astronaut, Rocket, Paratrooper, Space Chicken, Jailson Mendes, Cop, and the RuTracker test Moon.',
     'What-Is-GSC': 'Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.',
     'Cloudflare-Workers-Backend': 'Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.',
     'T6-Open-Source-GSC-Mods': 'Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.',

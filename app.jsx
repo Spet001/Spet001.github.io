@@ -419,35 +419,6 @@ const PORTFOLIO_DATA = {
     // PROJECTS DATA - Uses ONLY authentic local images from assets/
     projectsData: [
         {
-            id: "free_3d_assets",
-            category: "gamedev",
-            categoryLabel: { pt: "Recursos 3D & Arte", en: "3D Assets & Art" },
-            image: "assets/free_3d_assets_thumbnail.jpg",
-            title: "Free to Use 3D Assets (Low Poly)",
-            featured: true,
-            github: "#", 
-            live: "#",
-            tags: ["Game Assets", "Low Poly", "WebGL"],
-            description: {
-                pt: "Pacote de modelos 3D autorais low poly (Jato, Paraquedista, Foguete, Astronauta, Galinha Espacial) desenvolvidos para a simulação deste portfólio. Disponível gratuitamente para uso em jogos e projetos.",
-                en: "Collection of original low-poly 3D models (Jet, Paratrooper, Rocket, Astronaut, Space Chicken) created for this portfolio's simulation. Free to use in your own games and projects."
-            },
-            caseStudy: {
-                challenge: {
-                    pt: "Criar modelos otimizados para WebGL com baixo custo de processamento, garantindo que rodem bem diretamente no navegador (Three.js).",
-                    en: "Create highly optimized WebGL models with low poly counts to ensure 60fps rendering in browser-based engines (Three.js)."
-                },
-                solution: {
-                    pt: "Aplicação de texturas flat e materiais unlit/simples (como metalness zero) para reduzir draw calls e o uso de VRAM.",
-                    en: "Applied flat textures and simple unlit materials (zero metalness) to reduce draw calls and VRAM footprint."
-                },
-                impact: {
-                    pt: "Os modelos agora fazem parte da simulação principal e estão abertos para a comunidade.",
-                    en: "The models are now featured in the main portfolio simulation and open-sourced for the community."
-                }
-            }
-        },
-{
             id: "outcaster_fps",
             category: "gamedev",
             categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
@@ -532,7 +503,36 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
+            id: "free_3d_assets",
+            category: "gamedev",
+            categoryLabel: { pt: "Recursos 3D & Arte", en: "3D Assets & Art" },
+            image: "assets/free_3d_assets_thumbnail.jpg",
+            title: "Free to Use 3D Assets (Low Poly)",
+            featured: true,
+            github: "#", 
+            live: "#",
+            tags: ["Game Assets", "Low Poly", "WebGL"],
+            description: {
+                pt: "Pacote de modelos 3D autorais low poly (Jato, Paraquedista, Foguete, Astronauta, Galinha Espacial) desenvolvidos para a simulação deste portfólio. Disponível gratuitamente para uso em jogos e projetos.",
+                en: "Collection of original low-poly 3D models (Jet, Paratrooper, Rocket, Astronaut, Space Chicken) created for this portfolio's simulation. Free to use in your own games and projects."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Criar modelos otimizados para WebGL com baixo custo de processamento, garantindo que rodem bem diretamente no navegador (Three.js).",
+                    en: "Create highly optimized WebGL models with low poly counts to ensure 60fps rendering in browser-based engines (Three.js)."
+                },
+                solution: {
+                    pt: "Aplicação de texturas flat e materiais unlit/simples (como metalness zero) para reduzir draw calls e o uso de VRAM.",
+                    en: "Applied flat textures and simple unlit materials (zero metalness) to reduce draw calls and VRAM footprint."
+                },
+                impact: {
+                    pt: "Os modelos agora fazem parte da simulação principal e estão abertos para a comunidade.",
+                    en: "The models are now featured in the main portfolio simulation and open-sourced for the community."
+                }
+            }
+        },
+        {
             id: "cw_gsc_injector",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa", en: "Reverse Engineering" },
@@ -634,10 +634,10 @@ const PORTFOLIO_DATA = {
             title: "Atirei o Pau no Gato",
             featured: false,
             live: "https://zodiacogames.itch.io/atirei-o-pau-no-gato-mas-o-gato-no-morreu-e-agora-ele-vai-se-vingar",
-            tags: ["Unreal Engine 5", "C++", "Game Design", "Physics"],
+            tags: ["Unreal Engine 5", "C++", "FPS", "Game Design", "Physics"],
             description: {
-                pt: "Jogo de combate e física programado em Unreal Engine 5 com C++ nativo. Inclui mecânicas dinâmicas de movimento, IA de oponentes e feedback tátil de impacto.",
-                en: "Action and physics-based game programmed in Unreal Engine 5 with native C++. Features dynamic movement mechanics, opponent AI, and responsive tactile combat feedback."
+                pt: "Jogo FPS de tiro e física cômica desenvolvido em Unreal Engine 5 com C++ nativo para a GameJam+ 25/26. Inclui mecânicas dinâmicas de gunplay, IA de oponentes e feedback tátil de impacto.",
+                en: "Fast-paced comedic FPS game developed in Unreal Engine 5 with native C++ for GameJam+ 25/26. Features dynamic gunplay, opponent AI, and responsive tactile combat feedback."
             },
             caseStudy: {
                 challenge: {
@@ -941,6 +941,14 @@ const PORTFOLIO_DATA = {
 
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
+        {
+            id: "Open-Source-3D-Assets",
+            title: "Open Source 3D Assets! (Low Poly & Game Models)",
+            date: "Oct 8, 2026",
+            file: "Open-Source-3D-Assets.md",
+            category: "3D Art & Assets",
+            excerpt: "Releasing all original low-poly 3D models from the portfolio simulation and game prototypes: Jet, Astronaut, Rocket, Paratrooper, Space Chicken, Jailson Mendes, Cop, and the test Moon."
+        },
         {
             id: "What-Is-GSC",
             title: "What is GSC? (Game Scripting C) Guide",
@@ -1739,11 +1747,14 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         let moon, rocket, astronaut, rope;
         let moonChicken = null;
         let isMoonChickenActive = Boolean(window.__spetMoonChickenActive);
+        let moonJailson = null;
+        let isDeliciaActive = Boolean(window.__spetDeliciaActive);
         const asteroids = [];
         let ast1, ast2;
         let spawned = false;
         let chickenModel = null;
         let isChickenMode = Boolean(window.__spetChickenActive);
+        let orangeModel = null;
 
         // Rope
         const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
@@ -1777,6 +1788,70 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         }
         let oxIndex = 0;
 
+        const performSwap = () => {
+            for (let i = 0; i < asteroids.length; i++) {
+                const oldMesh = asteroids[i];
+                let newSource;
+                if (isDeliciaActive && orangeModel) {
+                    newSource = orangeModel;
+                } else if (isChickenMode && chickenModel) {
+                    newSource = chickenModel;
+                } else if (ast1 || ast2) {
+                    const isAst1 = Math.random() > 0.5;
+                    newSource = (isAst1 ? ast1 : ast2) || ast1 || ast2;
+                }
+                if (!newSource) continue;
+
+                const newMesh = newSource.clone();
+                newMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+
+                if (isDeliciaActive && orangeModel) {
+                    newMesh.position.set(
+                        (Math.random() - 0.5) * 160,
+                        (Math.random() - 0.5) * 110,
+                        Math.random() * -120 - 10
+                    );
+                    newMesh.scale.multiplyScalar(Math.random() * 0.4 + 0.85);
+                    newMesh.userData = {
+                        speed: Math.random() * 0.5 + 0.3,
+                        rotSpeedX: (Math.random() - 0.5) * 0.05,
+                        rotSpeedY: (Math.random() - 0.5) * 0.06,
+                        rotSpeedZ: (Math.random() - 0.5) * 0.05
+                    };
+                } else if (isChickenMode) {
+                    newMesh.position.set(
+                        (Math.random() - 0.5) * 160,
+                        (Math.random() - 0.5) * 110,
+                        Math.random() * -110 - 10
+                    );
+                    newMesh.scale.multiplyScalar(Math.random() * 0.5 + 0.9);
+                    newMesh.userData = {
+                        speed: Math.random() * 0.5 + 0.25,
+                        rotSpeedX: (Math.random() - 0.5) * 0.03,
+                        rotSpeedY: (Math.random() - 0.5) * 0.05,
+                        rotSpeedZ: (Math.random() - 0.5) * 0.03
+                    };
+                } else {
+                    newMesh.position.set(
+                        (Math.random() - 0.5) * 150,
+                        (Math.random() - 0.5) * 100,
+                        Math.random() * -300 - 50
+                    );
+                    newMesh.scale.multiplyScalar(Math.random() * 0.5 + 0.5);
+                    newMesh.userData = {
+                        speed: Math.random() * 0.8 + 0.2, 
+                        rotSpeedX: (Math.random() - 0.5) * 0.04,
+                        rotSpeedY: (Math.random() - 0.5) * 0.04,
+                        rotSpeedZ: (Math.random() - 0.5) * 0.04
+                    };
+                }
+
+                scene.remove(oldMesh);
+                scene.add(newMesh);
+                asteroids[i] = newMesh;
+            }
+        };
+
         const swapAsteroids = (toChicken) => {
             isChickenMode = toChicken;
             window.__spetChickenActive = toChicken;
@@ -1786,55 +1861,6 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 if (moon) moon.visible = true;
                 if (moonChicken) moonChicken.visible = false;
             }
-
-            const performSwap = () => {
-                for (let i = 0; i < asteroids.length; i++) {
-                    const oldMesh = asteroids[i];
-                    let newSource;
-                    if (isChickenMode && chickenModel) {
-                        newSource = chickenModel;
-                    } else if (ast1 || ast2) {
-                        const isAst1 = Math.random() > 0.5;
-                        newSource = (isAst1 ? ast1 : ast2) || ast1 || ast2;
-                    }
-                    if (!newSource) continue;
-
-                    const newMesh = newSource.clone();
-                    newMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-
-                    if (isChickenMode) {
-                        newMesh.position.set(
-                            (Math.random() - 0.5) * 160,
-                            (Math.random() - 0.5) * 110,
-                            Math.random() * -110 - 10
-                        );
-                        newMesh.scale.multiplyScalar(Math.random() * 0.5 + 0.9);
-                        newMesh.userData = {
-                            speed: Math.random() * 0.5 + 0.25,
-                            rotSpeedX: (Math.random() - 0.5) * 0.03,
-                            rotSpeedY: (Math.random() - 0.5) * 0.05,
-                            rotSpeedZ: (Math.random() - 0.5) * 0.03
-                        };
-                    } else {
-                        newMesh.position.set(
-                            (Math.random() - 0.5) * 150,
-                            (Math.random() - 0.5) * 100,
-                            Math.random() * -300 - 50
-                        );
-                        newMesh.scale.multiplyScalar(Math.random() * 0.5 + 0.5);
-                        newMesh.userData = {
-                            speed: Math.random() * 0.8 + 0.2, 
-                            rotSpeedX: (Math.random() - 0.5) * 0.04,
-                            rotSpeedY: (Math.random() - 0.5) * 0.04,
-                            rotSpeedZ: (Math.random() - 0.5) * 0.04
-                        };
-                    }
-
-                    scene.remove(oldMesh);
-                    scene.add(newMesh);
-                    asteroids[i] = newMesh;
-                }
-            };
 
             if (toChicken && !chickenModel) {
                 loader.load('./3d/space_chicken!.glb', (gltf) => {
@@ -1866,11 +1892,17 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             window.__spetMoonChickenActive = isMoonChickenActive;
 
             const applyMoonState = () => {
-                if (moon) {
-                    moon.visible = !isMoonChickenActive;
-                }
-                if (moonChicken) {
-                    moonChicken.visible = isMoonChickenActive;
+                if (isDeliciaActive) {
+                    if (moon) moon.visible = false;
+                    if (moonChicken) moonChicken.visible = false;
+                    if (moonJailson) moonJailson.visible = true;
+                } else {
+                    if (moon) {
+                        moon.visible = !isMoonChickenActive;
+                    }
+                    if (moonChicken) {
+                        moonChicken.visible = isMoonChickenActive;
+                    }
                 }
             };
 
@@ -1896,15 +1928,101 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         };
         window.addEventListener('spet:moon-chicken-toggle', handleMoonChickenToggle);
 
+        const handleDeliciaToggle = (e) => {
+            isDeliciaActive = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isDeliciaActive;
+            window.__spetDeliciaActive = isDeliciaActive;
+
+            const applyDeliciaState = () => {
+                if (moonJailson) {
+                    moonJailson.visible = isDeliciaActive;
+                }
+                if (isDeliciaActive) {
+                    if (moon) moon.visible = false;
+                    if (moonChicken) moonChicken.visible = false;
+                } else {
+                    if (isMoonChickenActive && moonChicken) {
+                        moonChicken.visible = true;
+                    } else if (moon) {
+                        moon.visible = true;
+                    }
+                }
+                performSwap();
+            };
+
+            const ensureJailson = (cb) => {
+                if (isDeliciaActive && !moonJailson) {
+                    loader.load('./3d/jailson.glb', (gltf) => {
+                        moonJailson = gltf.scene;
+                        normalizeModel(moonJailson, 35);
+                        moonJailson.position.set(25, 15, -30);
+                        moonJailson.traverse((child) => {
+                            if (child.isMesh && child.material) {
+                                child.material.metalness = 0.05;
+                                child.material.roughness = 0.4;
+                            }
+                        });
+                        scene.add(moonJailson);
+                        cb();
+                    }, undefined, (err) => {
+                        console.error('[Space 2.0] Failed to load Jailson model:', err);
+                        cb();
+                    });
+                } else {
+                    cb();
+                }
+            };
+
+            const ensureOrange = (cb) => {
+                if (isDeliciaActive && !orangeModel) {
+                    loader.load('./3d/orange.glb', (gltf) => {
+                        orangeModel = gltf.scene;
+                        normalizeModel(orangeModel, 4.5);
+                        orangeModel.traverse((child) => {
+                            if (child.isMesh && child.material) {
+                                child.material.metalness = 0.05;
+                                child.material.roughness = 0.5;
+                            }
+                        });
+                        cb();
+                    }, undefined, (err) => {
+                        console.error('[Space 2.0] Failed to load Orange model:', err);
+                        cb();
+                    });
+                } else {
+                    cb();
+                }
+            };
+
+            ensureJailson(() => {
+                ensureOrange(() => {
+                    applyDeliciaState();
+                });
+            });
+        };
+        window.addEventListener('spet:delicia-toggle', handleDeliciaToggle);
+
         const checkSpawn = () => {
             if (ast1 && ast2 && !spawned) {
                 spawned = true;
                 for (let i = 0; i < 40; i++) {
                     const isAst1 = Math.random() > 0.5;
-                    const baseSource = (isChickenMode && chickenModel) ? chickenModel : (isAst1 ? ast1 : ast2);
+                    const baseSource = (isDeliciaActive && orangeModel) ? orangeModel : ((isChickenMode && chickenModel) ? chickenModel : (isAst1 ? ast1 : ast2));
                     const mesh = baseSource.clone();
                     
-                    if (isChickenMode) {
+                    if (isDeliciaActive && orangeModel) {
+                        mesh.position.set(
+                            (Math.random() - 0.5) * 160,
+                            (Math.random() - 0.5) * 110,
+                            Math.random() * -120 - 10
+                        );
+                        mesh.scale.multiplyScalar(Math.random() * 0.4 + 0.85);
+                        mesh.userData = {
+                            speed: Math.random() * 0.5 + 0.3, 
+                            rotSpeedX: (Math.random() - 0.5) * 0.05,
+                            rotSpeedY: (Math.random() - 0.5) * 0.06,
+                            rotSpeedZ: (Math.random() - 0.5) * 0.05
+                        };
+                    } else if (isChickenMode) {
                         mesh.position.set(
                             (Math.random() - 0.5) * 160,
                             (Math.random() - 0.5) * 110,
@@ -1974,7 +2092,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 moon = moonGltf.scene;
                 normalizeModel(moon, 20); 
                 moon.position.set(25, 15, -30); 
-                if (isMoonChickenActive) {
+                if (isMoonChickenActive || isDeliciaActive) {
                     moon.visible = false;
                 }
                 scene.add(moon);
@@ -2063,6 +2181,35 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                     if (moon) moon.visible = false;
                 });
             }
+
+            if (window.__spetDeliciaActive) {
+                loader.load('./3d/jailson.glb', (gltf) => {
+                    moonJailson = gltf.scene;
+                    normalizeModel(moonJailson, 35);
+                    moonJailson.position.set(25, 15, -30);
+                    moonJailson.traverse((child) => {
+                        if (child.isMesh && child.material) {
+                            child.material.metalness = 0.05;
+                            child.material.roughness = 0.4;
+                        }
+                    });
+                    scene.add(moonJailson);
+                    if (moon) moon.visible = false;
+                    if (moonChicken) moonChicken.visible = false;
+                    moonJailson.visible = true;
+                });
+                loader.load('./3d/orange.glb', (gltf) => {
+                    orangeModel = gltf.scene;
+                    normalizeModel(orangeModel, 4.5);
+                    orangeModel.traverse((child) => {
+                        if (child.isMesh && child.material) {
+                            child.material.metalness = 0.05;
+                            child.material.roughness = 0.5;
+                        }
+                    });
+                    if (spawned) performSwap();
+                });
+            }
         });
 
         // Emergency fallback timeout only (60s) to never prematurely dismiss before large 3D models & nebula load
@@ -2125,6 +2272,10 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 moonChicken.rotation.y += 0.06; // Fast spinning mega chicken!
                 moonChicken.rotation.x = Math.sin(time * 3) * 0.12; 
                 moonChicken.rotation.z = Math.cos(time * 2.5) * 0.08;
+            }
+            if (moonJailson && isDeliciaActive) {
+                moonJailson.rotation.y += 0.035;
+                moonJailson.rotation.x = Math.sin(time * 2) * 0.08;
             }
             
             const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
@@ -2272,6 +2423,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('spet:chicken-toggle', handleChickenToggle);
             window.removeEventListener('spet:moon-chicken-toggle', handleMoonChickenToggle);
+            window.removeEventListener('spet:delicia-toggle', handleDeliciaToggle);
             if (containerRef.current && renderer.domElement && containerRef.current.contains(renderer.domElement)) {
                 containerRef.current.removeChild(renderer.domElement);
             }
@@ -3600,7 +3752,11 @@ const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
         { id: 'para', name: 'Paratrooper', file: './3d/Paratrooper.glb' },
         { id: 'rocket', name: 'Rocket', file: './3d/rocket.glb' },
         { id: 'astro', name: 'Astronaut', file: './3d/Astronaut.glb' },
-        { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: './3d/space_chicken!.glb' }
+        { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: './3d/space_chicken!.glb' },
+        { id: 'jailson', name: 'Jailson Mendes', file: './3d/jailson.glb' },
+        { id: 'orange', name: lang === 'pt' ? 'Laranja Cósmica' : 'Cosmic Orange', file: './3d/orange.glb' },
+        { id: 'cop', name: lang === 'pt' ? 'Policial (Atirei o Pau no Gato)' : 'Cop (Atirei o Pau no Gato)', file: './3d/cop.glb' },
+        { id: 'moon_test', name: lang === 'pt' ? 'Lua de Teste (RuTracker)' : 'Test Moon (RuTracker)', file: './3d/moon_test.glb' }
     ];
     const initial = models.find(m => m.id === initialModelId) || models[0];
     const [selected, setSelected] = React.useState(initial);
@@ -3671,7 +3827,7 @@ const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
                             </button>
                         ))}
                     </div>
-                    <a href={selected.file} download={selected.id === 'chicken' ? 'space_chicken.glb' : undefined} className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2 whitespace-nowrap w-full sm:w-auto justify-center">
+                    <a href={selected.file} download={selected.file ? selected.file.split('/').pop() : 'model.glb'} className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2 whitespace-nowrap w-full sm:w-auto justify-center">
                         <i className="fas fa-download"></i> {lang === 'pt' ? 'Baixar Modelo' : 'Download Model'}
                     </a>
                 </div>
@@ -5462,9 +5618,109 @@ Celestial Mega-Chicken recalled. Natural lunar orbit and gravitational tides res
             return;
         }
 
+        // Secret DELICIA Easter Egg Command (NOT listed in 'help' command)
+        const isDelicia = (
+            cleanCmd === 'delicia' || 
+            cleanCmd === 'delicia!' || 
+            cleanCmd === 'delícia' || 
+            cleanCmd === 'delícia!' || 
+            cleanCmd === 'que delicia' || 
+            cleanCmd === 'que delícia' || 
+            cleanCmd === 'que delicia!' || 
+            cleanCmd === 'que delícia!' || 
+            cleanCmd === 'ai que delicia' || 
+            cleanCmd === 'ai que delícia' ||
+            cleanCmd === 'ai que delicia!' || 
+            cleanCmd === 'ai que delícia!' ||
+            cleanCmd === 'jailson' ||
+            cleanCmd === 'jailson mendes' ||
+            cleanCmd === 'suco de laranja'
+        );
+
+        if (isDelicia) {
+            const nextDeliciaState = !window.__spetDeliciaActive;
+            window.__spetDeliciaActive = nextDeliciaState;
+            window.dispatchEvent(new CustomEvent('spet:delicia-toggle', { detail: { enabled: nextDeliciaState } }));
+
+            // Fun triumphant chord synth
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const now = ctx.currentTime;
+                    [0, 0.12, 0.24].forEach((offset, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        const freqs = [440, 554.37, 659.25]; // A major
+                        osc.frequency.setValueAtTime(freqs[idx], now + offset);
+                        gain.gain.setValueAtTime(0.22, now + offset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.22);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.24);
+                    });
+                }
+            } catch(err) {}
+
+            if (nextDeliciaState) {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🍊 AI QUE DELÍCIA, CARA! 🍊]
+   \\
+    \\   ( ͡° ͜ʖ ͡°)  *ERA ESSA A PEÇA QUE VOCÊ QUERIA?*
+
+SUCO DE LARANJA PROTOCOL ENGAGED!
+• A Lua transformou-se no lendário Jailson Mendes!
+• O cinturão de asteroides transformou-se em laranjas espaciais 3D!
+• Trilha sonora relaxante iniciada em looping no fundo.
+
+Comandos secretos:
+• Digite 'delicia' novamente para desativar e restaurar a órbita lunar.
+• Digite 'preview jailson' ou 'preview orange' para inspecionar os modelos 3D.`
+                });
+            } else {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🌕 Gravidade & Órbita Lunar Restauradas]
+O suco de laranja acabou! A lua e os asteroides retornaram à órbita natural. Trilha sonora finalizada.`
+                });
+            }
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
         // Preview chicken / 3d models command
-        if (cleanCmd === 'preview chicken' || cleanCmd === 'chicken preview' || cleanCmd === 'model chicken' || cleanCmd === '3d chicken') {
-            if (onOpen3DViewer) onOpen3DViewer('chicken');
+        const previewModelMatch = cleanCmd.match(/^(?:preview|model|3d)\s+([a-z0-9_!-]+)$/) || cleanCmd.match(/^([a-z0-9_!-]+)\s+(?:preview|model|3d)$/);
+        if (previewModelMatch) {
+            const target = previewModelMatch[1].replace(/!/g, '');
+            const modelMap = {
+                chicken: 'chicken',
+                space_chicken: 'chicken',
+                galinha: 'chicken',
+                jailson: 'jailson',
+                delicia: 'jailson',
+                orange: 'orange',
+                laranja: 'orange',
+                suco: 'orange',
+                cop: 'cop',
+                police: 'cop',
+                policial: 'cop',
+                moon_test: 'moon_test',
+                moontest: 'moon_test',
+                moon: 'moon_test',
+                lua: 'moon_test',
+                jet: 'jet',
+                para: 'para',
+                paratrooper: 'para',
+                rocket: 'rocket',
+                astro: 'astro',
+                astronaut: 'astro'
+            };
+            const selectedModelId = modelMap[target] || 'jet';
+            if (onOpen3DViewer) onOpen3DViewer(selectedModelId);
             onClose();
             return;
         }
@@ -7661,7 +7917,112 @@ const ZarathustraEasterEgg = ({ isOpen, onClose, isMinimized, setIsMinimized }) 
     );
 };
 
+const DeliciaPlayer = ({ isActive, onClose, lang }) => {
+    const iframeRef = useRef(null);
+    const [volume, setVolume] = useState(40);
+    const [isMuted, setIsMuted] = useState(false);
 
+    const sendCommand = useCallback((func, args = []) => {
+        if (iframeRef.current && iframeRef.current.contentWindow) {
+            try {
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: func,
+                    args: args
+                }), '*');
+            } catch (e) {}
+        }
+    }, []);
+
+    const registerApi = useCallback(() => {
+        if (iframeRef.current && iframeRef.current.contentWindow) {
+            try {
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({
+                    event: 'listening'
+                }), '*');
+            } catch (e) {}
+        }
+    }, []);
+
+    const applyVolume = useCallback((vol, muted) => {
+        registerApi();
+        const targetVol = muted ? 0 : vol;
+        sendCommand('setVolume', [targetVol]);
+        if (muted) {
+            sendCommand('mute');
+        } else {
+            sendCommand('unMute');
+        }
+    }, [registerApi, sendCommand]);
+
+    const handleIframeLoad = () => {
+        applyVolume(volume, isMuted);
+        [200, 500, 1000, 1800, 3000].forEach((delay) => {
+            setTimeout(() => {
+                applyVolume(volume, isMuted);
+                sendCommand('playVideo');
+            }, delay);
+        });
+    };
+
+    const toggleMute = () => {
+        const nextMuted = !isMuted;
+        setIsMuted(nextMuted);
+        applyVolume(volume, nextMuted);
+    };
+
+    if (!isActive) return null;
+
+    return (
+        <>
+            <div 
+                id="delicia-audio-container" 
+                style={{ position: 'fixed', width: '1px', height: '1px', opacity: 0.01, pointerEvents: 'none', zIndex: -1, overflow: 'hidden', bottom: 0, left: 0 }}
+                aria-hidden="true"
+            >
+                <iframe
+                    ref={iframeRef}
+                    key="delicia-loop-player"
+                    width="100"
+                    height="100"
+                    src={`https://www.youtube-nocookie.com/embed/9wVmCLtuUx0?autoplay=1&loop=1&playlist=9wVmCLtuUx0&enablejsapi=1&playsinline=1&rel=0${typeof window !== 'undefined' && window.location.origin ? `&origin=${encodeURIComponent(window.location.origin)}` : ''}`}
+                    title="Delicia Theme Loop"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    onLoad={handleIframeLoad}
+                />
+            </div>
+            <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2.5 px-3.5 py-2 bg-[#120800]/95 border border-orange-500/60 rounded-xl shadow-xl shadow-orange-950/60 text-orange-200 text-xs backdrop-blur-xl animate-fade-in select-none">
+                <span className="text-lg animate-bounce select-none">🍊</span>
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-orange-400 font-mono text-[11px] leading-tight">DELÍCIA PROTOCOL</span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-orange-500/20 text-orange-300 font-mono font-bold">40% VOL</span>
+                    </div>
+                    <span className="text-[10px] text-orange-200/80">Jailson Mendes · Suco de Laranja · Looping OST</span>
+                </div>
+                <button
+                    type="button"
+                    onClick={toggleMute}
+                    className="ml-1 w-6 h-6 rounded flex items-center justify-center text-orange-400 hover:text-white hover:bg-orange-500/20 transition-colors cursor-pointer"
+                    title={isMuted ? (lang === 'pt' ? 'Ativar som' : 'Unmute') : (lang === 'pt' ? 'Mutar' : 'Mute')}
+                    aria-label="Toggle mute"
+                >
+                    <i className={`fas ${isMuted ? 'fa-volume-mute text-rose-400' : 'fa-volume-low text-orange-300'} text-xs`}></i>
+                </button>
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="w-6 h-6 rounded flex items-center justify-center text-orange-400 hover:text-white hover:bg-orange-500/20 transition-colors cursor-pointer"
+                    title={lang === 'pt' ? 'Desativar modo Delícia' : 'Disable Delícia mode'}
+                    aria-label="Disable Delícia mode"
+                >
+                    <i className="fas fa-times text-xs"></i>
+                </button>
+            </div>
+        </>
+    );
+};
 
 // --- FULL INTEGRATED TECHNICAL JOURNAL VIEW (SPA) ---
 const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }) => {
@@ -7746,6 +8107,39 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                 window.hljs.highlightElement(block);
             });
         }
+
+        const container = document.getElementById('journal-reader');
+        if (!container) return;
+
+        const handleGalleryClicks = (e) => {
+            const btn = e.target.closest('[data-model-src]');
+            if (btn) {
+                e.preventDefault();
+                const src = btn.getAttribute('data-model-src');
+                const viewer = document.getElementById('journal-model-viewer');
+                const dl = document.getElementById('journal-model-download');
+                if (viewer) viewer.src = src;
+                if (dl) {
+                    dl.href = src;
+                    dl.setAttribute('download', src.split('/').pop());
+                }
+                const parent = btn.parentElement;
+                if (parent) {
+                    const allBtns = parent.querySelectorAll('[data-model-src]');
+                    allBtns.forEach(b => {
+                        b.style.borderColor = 'rgba(255,255,255,0.12)';
+                        b.style.background = 'rgba(255,255,255,0.06)';
+                        b.style.color = '#e2e8f0';
+                    });
+                    btn.style.borderColor = '#00aaff';
+                    btn.style.background = 'rgba(0,170,255,0.2)';
+                    btn.style.color = '#00aaff';
+                }
+            }
+        };
+
+        container.addEventListener('click', handleGalleryClicks);
+        return () => container.removeEventListener('click', handleGalleryClicks);
     }, [postContent, loading]);
 
     const activeEntry = entries.find(e => 
@@ -7941,7 +8335,10 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                 className="markdown-body leading-relaxed text-slate-300 selection:bg-primary selection:text-white"
                                 dangerouslySetInnerHTML={{
                                     __html: window.DOMPurify 
-                                        ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(postContent) : postContent)
+                                        ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(postContent) : postContent, {
+                                            ADD_TAGS: ['model-viewer', 'iframe'],
+                                            ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick']
+                                        })
                                         : (window.marked ? window.marked.parse(postContent) : postContent)
                                 }}
                             />
@@ -8277,6 +8674,7 @@ const App = () => {
     const [isMascotOpen, setIsMascotOpen] = useState(false);
     const [isZarathustraOpen, setIsZarathustraOpen] = useState(false);
     const [isZarathustraMinimized, setIsZarathustraMinimized] = useState(false);
+    const [isDeliciaActive, setIsDeliciaActive] = useState(() => Boolean(typeof window !== 'undefined' && window.__spetDeliciaActive));
     const [ffMusicState, setFfMusicState] = useState(() => {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -8314,6 +8712,18 @@ const App = () => {
             });
         }
     }, [settings.musicPlayer, settings.musicAutoPlay]);
+
+    useEffect(() => {
+        const handleDelicia = (e) => {
+            const nextState = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isDeliciaActive;
+            setIsDeliciaActive(nextState);
+            if (nextState && ffMusicState.isActive) {
+                setFfMusicState(prev => ({ ...prev, isActive: false, isOpen: false, isMinimized: false }));
+            }
+        };
+        window.addEventListener('spet:delicia-toggle', handleDelicia);
+        return () => window.removeEventListener('spet:delicia-toggle', handleDelicia);
+    }, [isDeliciaActive, ffMusicState.isActive]);
 
     const handleMusicCommand = (action, payload) => {
         const currentPl = ffMusicState.playlist === 'cod' ? 'cod' : 'ff';
@@ -8790,6 +9200,16 @@ const App = () => {
                 />
             )}
             <ZarathustraEasterEgg isOpen={isZarathustraOpen} onClose={() => setIsZarathustraOpen(false)} isMinimized={isZarathustraMinimized} setIsMinimized={setIsZarathustraMinimized} />
+
+            {/* Delicia Easter Egg Looping Audio & Status Indicator (40% Default Volume) */}
+            <DeliciaPlayer 
+                isActive={isDeliciaActive} 
+                lang={lang} 
+                onClose={() => {
+                    window.__spetDeliciaActive = false;
+                    window.dispatchEvent(new CustomEvent('spet:delicia-toggle', { detail: { enabled: false } }));
+                }} 
+            />
 
             {showPatreonModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
