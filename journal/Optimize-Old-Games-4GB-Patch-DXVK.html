@@ -5,23 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Technical Journal | Eduardo Gelain – Reverse Engineering & Game Dev</title>
-    <meta name="description" content="In-depth technical research papers, reverse engineering breakdowns, GSC bytecode VM analysis, UWP/GDK sandbox bypasses by Eduardo Gelain (SpetDev).">
+    <title>Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK! | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <!-- Canonical URL & Alternate Discovery -->
-    <link rel="canonical" href="https://spet01.dev/journal/">
+    <link rel="canonical" href="https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/">
     <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spet01.dev/">
-    <meta property="og:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta property="og:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta property="og:url" content="https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/">
+    <meta property="og:title" content="Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK! | Eduardo Gelain">
+    <meta property="og:description" content="A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -34,123 +33,34 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://spet01.dev/">
-    <meta name="twitter:title" content="Eduardo Gelain | Software & Game Developer">
-    <meta name="twitter:description"
-        content="Portfólio de Eduardo Gelain - Desenvolvedor de Software e Jogos especializado em Unity, Python, C# e engenharia reversa.">
+    <meta name="twitter:url" content="https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/">
+    <meta name="twitter:title" content="Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK! | Eduardo Gelain">
+    <meta name="twitter:description" content="A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://spet01.dev/#website",
-          "url": "https://spet01.dev/",
-          "name": "Eduardo Gelain | Software & Game Developer",
-          "description": "Portfólio e Journal Técnico de Eduardo Gelain (SpetDev) - Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa.",
-          "inLanguage": ["pt-BR", "en-US"],
-          "publisher": { "@id": "https://spet01.dev/#person" }
-        },
-        {
-          "@type": "Person",
-          "@id": "https://spet01.dev/#person",
-          "name": "Eduardo Gelain",
-          "alternateName": "SpetDev",
-          "url": "https://spet01.dev",
-          "jobTitle": "Software & Game Developer",
-          "email": "mailto:gelain15mj@gmail.com",
-          "image": "https://spet01.dev/assets/portweb.png",
-          "description": "Desenvolvedor de Software e Jogos especializado em Unity, C++, C# e engenharia reversa de engines e sandboxes.",
-          "knowsAbout": [
-            "C++",
-            "C#",
-            "Unity",
-            "Unreal Engine 5",
-            "Reverse Engineering",
-            "Game Scripting C (GSC)",
-            "Memory Pattern Scanning",
-            "WebAssembly",
-            "Cloudflare Workers",
-            "x86/x64 Assembly",
-            "Game Development"
-          ],
-          "sameAs": [
-            "https://github.com/Spet001",
-            "https://gitlab.com/Spet001",
-            "https://spet01.itch.io",
-            "https://www.nexusmods.com/profile/Spet001/mods",
-            "https://www.linkedin.com/in/eduardo-gelain/"
-          ]
-        },
-        {
-          "@type": "ItemList",
-          "@id": "https://spet01.dev/#projects",
-          "name": "Featured Software & Game Projects",
-          "itemListElement": [
-            {
-              "@type": "SoftwareApplication",
-              "position": 1,
-              "name": "Outcaster - Retro FPS Templates",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete retro FPS templates (boomer shooter style) developed in Unity and C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 2,
-              "name": "Sparky Rush: Purrils in Pawsville",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Commercial 3D platformer game on Steam. Quality assurance, bug mapping, and code deductions in Unity/C#."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 3,
-              "name": "Resurge Client (BO3 Multi-Platform)",
-              "applicationCategory": "GameApplication",
-              "operatingSystem": "Windows",
-              "description": "Custom client for Black Ops 3 supporting both UWP and Steam with native C++ injection DLL."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 4,
-              "name": "CW GSC Injector (MS Store / Xbox PC)",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "C++ GSC injector for Call of Duty: BOCW Microsoft Store with dynamic pattern scanning."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 5,
-              "name": "BO1 & BO2 MS Store Clients & GSC Injector",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
-            },
-            {
-              "@type": "SoftwareApplication",
-              "position": 6,
-              "name": "GSC Dumps and Pre-Compiled/Uncompiled Sources",
-              "applicationCategory": "DeveloperApplication",
-              "operatingSystem": "Windows",
-              "description": "GSC bytecode dumps and custom menu sources for Call of Duty PC releases."
-            }
-          ]
-        },
-        {
-          "@type": "Blog",
-          "@id": "https://spet01.dev/journal/#blog",
-          "name": "Eduardo Gelain Technical Journal",
-          "url": "https://spet01.dev/journal/",
-          "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
-          "author": { "@id": "https://spet01.dev/#person" }
-        }
-      ]
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
+  "description": "A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.",
+  "datePublished": "Oct 9, 2026",
+  "url": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
+  "mainEntityOfPage": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
     </script>
 
     <!-- Fonts & Icons -->
@@ -545,109 +455,152 @@
             </div>
         </header>
 
-                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-5xl mx-auto">
-            <div class="mb-8">
-                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
             </div>
-            <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md mb-8">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold mb-3">
-                    <i class="fas fa-book-open text-[10px]"></i> Reverse Engineering & Game Dev Research
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <time class="text-xs font-mono text-slate-400 mb-2 block">Oct 9, 2026</time>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="Optimize-Old-Games-4GB-Patch-DXVK">
+<h1>Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!</h1>
+<blockquote>
+<p><strong>Date:</strong> October 9, 2026<br><strong>Category:</strong> Game Optimization, Low-Level Systems &amp; Modding<br><strong>Author:</strong> Eduardo Gelain (SpetDev)</p>
+</blockquote>
+<p>Modern PC hardware is a beast — multicore CPUs, fast NVMe drives, and GPUs with 16GB+ of VRAM that can push hundreds of frames in modern ray-traced engines. Yet, when you install a classic PC title from the 2000s/2010s era (like <em>Fable III</em>, <em>Fallout: New Vegas</em>, <em>The Elder Scrolls IV: Oblivion</em>, <em>Dragon Age: Origins</em>, <em>The Sims 2</em>, <em>Mafia II</em>, or <em>Saints Row 2</em>), you often face a bizarre reality: <strong>stuttering, micro-freezes, abysmal frame pacing, and random crashes to desktop (CTDs)</strong>.</p>
+<p>Earlier, I released <a href="https://www.nexusmods.com/fableIII/mods/27"><strong>Fable 3 Fixer</strong></a> on NexusMods — an automated Electron desktop app that packages a 4GB Large Address Aware patch, a custom Vulkan-based DXVK renderer, a hand-tuned ReShade preset, and Games for Windows Live (GFWL) compatibility. With <strong>over 5,200 downloads (4,600+ unique)</strong>, 23,000+ views, and dozens of endorsements, it proved just how hungry PC gamers are for modern fixes on abandoned classics.</p>
+<p>Here&#39;s the secret: <strong>you don&#39;t need a dedicated installer for every old game.</strong></p>
+<p>The exact core combo that powers Fable 3 Fixer — the <strong>4GB Memory Patch (Large Address Aware)</strong> and <strong>DXVK (DirectX-to-Vulkan)</strong> — can be applied manually to almost <strong>any 32-bit DirectX 9, 10, or 11 game</strong> in less than 3 minutes. Here is the complete breakdown of why it works and how you can do it yourself!</p>
+<hr>
+<h2>🧠 Part 1: The 4GB Patch (Large Address Aware)</h2>
+<h3>The Problem: The 2GB 32-Bit Memory Wall</h3>
+<p>Back in the 32-bit Windows era (Windows XP/Vista 32-bit), Microsoft limited user-mode applications to a <strong>2GB Virtual Address Space (VAS)</strong> by default, reserving the remaining 2GB for the Windows NT kernel.</p>
+<p>Even though you are running a 64-bit OS today with 16GB, 32GB, or 64GB of physical RAM, <strong>32-bit game executables still adhere to this 2GB limit unless specifically flagged otherwise</strong>.</p>
+<p>As soon as a game allocates textures, audio buffers, high-resolution mods, or suffers minor memory leaks that cross ~1.8GB–2.0GB, the Win32 memory manager throws an <code>Out of Memory</code> exception (<code>0xC0000005</code> Access Violation), resulting in an instantaneous crash to desktop.</p>
+<h3>The Fix: Flipping the <code>IMAGE_FILE_LARGE_ADDRESS_AWARE</code> Bit</h3>
+<p>In the PE (Portable Executable) format header of Windows binaries, inside <code>IMAGE_FILE_HEADER.Characteristics</code>, resides a single bit flag:</p>
+<ul>
+<li><strong><code>0x0020</code> (<code>IMAGE_FILE_LARGE_ADDRESS_AWARE</code>)</strong>: Signals the Windows kernel that the application can handle addresses greater than 2GB.</li>
+</ul>
+<p>On a 64-bit operating system, when this bit is enabled, the Windows memory manager immediately grants the 32-bit process <strong>the full 4GB Virtual Address Space</strong> (an extra 2GB of headroom). This completely eliminates out-of-memory crashes for modded and memory-heavy classics.</p>
+<h3>How to Apply It Manually:</h3>
+<h4>Option A: Standalone 4GB Patch Utility (Easiest)</h4>
+<ol>
+<li>Download Daniel Pistelli’s classic standalone <strong>4GB Patch tool</strong> (from NTCore or mod repositories).</li>
+<li><strong>Make a backup</strong> of your game&#39;s original <code>.exe</code> (e.g., copy <code>Game.exe</code> to <code>Game.exe.bak</code>).</li>
+<li>Run <code>4gb_patch.exe</code>.</li>
+<li>In the file picker dialog, navigate to your game&#39;s root directory and select the main game binary (e.g., <code>Fable3.exe</code>, <code>FalloutNV.exe</code>, <code>Oblivion.exe</code>).</li>
+<li>Click <strong>Open</strong>. A dialog box will immediately confirm:<br><code>✅ &quot;Executable successfully patched!&quot;</code></li>
+<li>That&#39;s it! The tool automatically flips the PE header bit and creates a <code>.Backup</code> file.</li>
+</ol>
+<h4>Option B: Developer Command Line (Visual Studio <code>editbin</code>)</h4>
+<p>If you have Visual Studio or the Windows SDK installed, you can toggle the flag from developer PowerShell / CMD without external GUI tools:</p>
+<pre><code class="language-powershell"># Apply Large Address Aware flag
+editbin.exe /LARGEADDRESSAWARE &quot;C:\Games\YourGame\Game.exe&quot;
+
+# Verify that the flag is active
+dumpbin.exe /headers &quot;C:\Games\YourGame\Game.exe&quot; | Select-String &quot;Application can handle large (&gt;2GB) addresses&quot;
+</code></pre>
+<hr>
+<h2>⚡ Part 2: DXVK (Vulkan Translation Layer)</h2>
+<h3>The Problem: Modern GPUs Choke on Legacy DirectX 9/10/11</h3>
+<p>Modern GPUs (NVIDIA RTX 30/40/50 series, AMD Radeon RDNA2/3, and Intel Arc) are designed around low-overhead, explicit APIs like DirectX 12 and Vulkan.</p>
+<p>Legacy DirectX 9 and 10 rely on single-threaded command buffers and heavy CPU driver overhead. Intel and AMD have even deprecated native legacy DirectX 9 hardware pipelines, relying on software emulation or translation layers like D3D9On12 which frequently introduce stutter and micro-freezes.</p>
+<h3>The Fix: Translating Direct3D into Vulkan</h3>
+<p><a href="https://github.com/doitsujin/dxvk"><strong>DXVK</strong></a> (created by Philip Rebohle / doitsujin and the open-source community) is a high-performance translation layer that translates Direct3D 9, 10, and 11 calls into Vulkan in real-time.</p>
+<p>By placing DXVK’s wrapper DLL next to your game binary, Windows loads DXVK instead of the system&#39;s <code>d3d9.dll</code>. The benefits are immediate:</p>
+<ul>
+<li><strong>Massive FPS Boosts</strong>: Often 1.5× to 2× higher frame rates in CPU-bottlenecked scenes.</li>
+<li><strong>Buttery Smooth Frame Pacing</strong>: Eliminates pipeline stalls and draw call bottlenecks.</li>
+<li><strong>Asynchronous Shader Compilation</strong>: Vastly reduces in-game shader compilation stuttering.</li>
+</ul>
+<h3>How to Install DXVK Manually:</h3>
+<h4>Step 1: Download DXVK</h4>
+<p>Head over to the official GitHub releases page:
+👉 <strong><a href="https://github.com/doitsujin/dxvk/releases">https://github.com/doitsujin/dxvk/releases</a></strong><br>Download the latest <code>dxvk-x.x.x.tar.gz</code> release asset.</p>
+<h4>Step 2: Understand <code>x32</code> vs <code>x64</code></h4>
+<p>Extract the downloaded <code>.tar.gz</code> using 7-Zip or WinRAR. You will see two folders:</p>
+<ul>
+<li><strong><code>x32</code></strong> (32-bit binaries)</li>
+<li><strong><code>x64</code></strong> (64-bit binaries)</li>
+</ul>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Match the bitness of the game binary, NOT your operating system!</strong><br>Virtually all classic DirectX 9 games (including <em>Fable III</em>, <em>Fallout: New Vegas</em>, <em>Oblivion</em>, <em>Dragon Age: Origins</em>, <em>The Sims 2</em>, <em>Mafia II</em>, <em>Saints Row 2</em>, <em>Dead Space</em>, <em>GTA IV</em>) are <strong>32-bit executables</strong>. Therefore, you <strong>MUST</strong> use the DLLs from the <strong><code>x32</code></strong> folder! If you put 64-bit DLLs into a 32-bit game, the game will fail to launch with error code <code>0xc000007b</code>.</p>
+</blockquote>
+<h4>Step 3: Copy the Wrapper DLLs</h4>
+<ol>
+<li>Open the game folder where the executable lives (e.g., <code>C:\Games\Fable III\</code> or <code>C:\Program Files (x86)\Steam\steamapps\common\YourGame\</code>).</li>
+<li>Identify which Direct3D version the game uses:<ul>
+<li><strong>DirectX 9 Game:</strong> Copy <strong><code>d3d9.dll</code></strong> from <code>dxvk/x32/</code> into the game folder.</li>
+<li><strong>DirectX 10/11 Game:</strong> Copy <strong><code>dxgi.dll</code></strong> and <strong><code>d3d11.dll</code></strong> from <code>dxvk/x32/</code> (or <code>x64/</code> if modern 64-bit) into the game folder.</li>
+</ul>
+</li>
+<li>Launch the game!</li>
+</ol>
+<h4>Step 4: Verification</h4>
+<p>When the game starts, DXVK will automatically create a log file in the game directory (e.g. <code>Fable3_d3d9.log</code>).<br>Open this log in Notepad. You should see:</p>
+<pre><code class="language-text">info:  Game: Fable3.exe
+info:  DXVK: v2.4 (or latest)
+info:  Vulkan: Found 1 device
+info:  Device: NVIDIA GeForce RTX ... (or AMD / Intel)
+</code></pre>
+<p>If you see your GPU listed and the log generated, DXVK is running and powering your game via Vulkan!</p>
+<hr>
+<h2>🛠️ Part 3: Pro Tips &amp; Tweaks</h2>
+<h3>1. Frame Rate Limiter (<code>dxvk.conf</code>)</h3>
+<p>Some physics engines in older games (like Havok or Gamebryo in Bethesda games) go crazy if your frame rate exceeds 60 FPS or 120 FPS. You can cap your frame rate cleanly at the Vulkan level without third-party software:</p>
+<ol>
+<li>Create a text file named <strong><code>dxvk.conf</code></strong> in the game folder alongside <code>d3d9.dll</code>.</li>
+<li>Add the following line:<pre><code class="language-ini">d3d9.maxFrameRate = 60
+</code></pre>
+<em>(or <code>120</code>, <code>144</code>, etc.)</em></li>
+</ol>
+<h3>2. DXVK-Async for Shader Stuttering</h3>
+<p>If you experience a tiny stutter the first time an explosion or magic effect occurs, you can use <strong>DXVK-Async</strong> (or DXVK with GPL - Graphics Pipeline Library enabled on modern drivers). In <code>dxvk.conf</code>:</p>
+<pre><code class="language-ini">dxvk.enableAsync = true
+</code></pre>
+<h3>3. Pairing with ReShade</h3>
+<p>If you want modern post-processing (ambient occlusion, sharpening, bloom, film grain) without breaking Vulkan:</p>
+<ul>
+<li>Install ReShade using the <strong>Vulkan</strong> API mode, or install ReShade as <code>dxgi.dll</code> while DXVK runs as <code>d3d9.dll</code>.</li>
+</ul>
+<hr>
+<h2>⚠️ When NOT to Use This</h2>
+<ul>
+<li><strong>Multiplayer games with Kernel-Level Anti-Cheat:</strong> Games protected by <em>Easy Anti-Cheat (EAC)</em>, <em>BattlEye</em>, or <em>Vanguard</em> may flag local wrapper DLLs (<code>d3d9.dll</code>) as unauthorized DLL injection or third-party hooks. <strong>Do not use DXVK in competitive anti-cheat multiplayer games!</strong></li>
+<li><strong>Non-Vulkan GPUs:</strong> You need a GPU and driver that supports <strong>Vulkan 1.3</strong> (all NVIDIA GTX 900+ / RTX series, AMD GCN 4.0+ / RDNA series, and Intel Arc / Iris Xe).</li>
+</ul>
+<hr>
+<h2>🎯 Summary</h2>
+<table>
+<thead>
+<tr>
+<th align="left">Optimization</th>
+<th align="left">What It Solves</th>
+<th align="left">How to Do It</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>4GB Patch (LAA)</strong></td>
+<td align="left">Out-of-memory crashes, texture pop-in, crash to desktop (CTD)</td>
+<td align="left">Run <code>4gb_patch.exe</code> on the game binary to flip the <code>IMAGE_FILE_LARGE_ADDRESS_AWARE</code> flag</td>
+</tr>
+<tr>
+<td align="left"><strong>DXVK</strong></td>
+<td align="left">Low FPS, CPU single-thread bottlenecks, frame drops on modern GPUs</td>
+<td align="left">Drop <code>d3d9.dll</code> (from DXVK <code>x32</code>) into the game folder next to <code>.exe</code></td>
+</tr>
+</tbody></table>
+<p>By spending 2 minutes copying <code>d3d9.dll</code> and running the 4GB patch, you can transform almost any abandoned 2000s or 2010s PC game from a stuttery, crashing mess into a fluid, rock-solid 60/120+ FPS modern experience.</p>
+<p>Give it a try on your favorite retro PC titles!</p>
+
                 </div>
-                <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">Technical Journal & Research Papers</h1>
-                <p class="text-slate-300 text-sm leading-relaxed max-w-2xl mb-8">
-                    Documentação profunda de pesquisas em engenharia reversa, análise do motor de bytecode GSC de Call of Duty, bypasses de sandbox UWP/GDK e arquiteturas de backend serverless.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 9, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Optimize-Old-Games-4GB-Patch-DXVK/" class="hover:text-primary transition-colors">Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.</p>
-                        <a href="/journal/Optimize-Old-Games-4GB-Patch-DXVK/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 8, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Open-Source-3D-Assets/" class="hover:text-primary transition-colors">Open Source 3D Assets! (Low Poly & Game Models)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Releasing all original low-poly 3D models from the portfolio simulation and game prototypes: Jet, Astronaut, Rocket, Paratrooper, Space Chicken, Jailson Mendes, Cop, and the RuTracker test Moon.</p>
-                        <a href="/journal/Open-Source-3D-Assets/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 30, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-GSC/" class="hover:text-primary transition-colors">What is GSC? (Game Scripting C) Guide</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.</p>
-                        <a href="/journal/What-Is-GSC/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 28, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Cloudflare-Workers-Backend/" class="hover:text-primary transition-colors">Quick Entry: Having a Backend on a Static Website with Cloudflare workers!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.</p>
-                        <a href="/journal/Cloudflare-Workers-Backend/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-Open-Source-GSC-Mods/" class="hover:text-primary transition-colors">Providing Open Source T6 Custom Game Modes GSC!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.</p>
-                        <a href="/journal/T6-Open-Source-GSC-Mods/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/entry_0007/" class="hover:text-primary transition-colors">Unlock This Entry With Patreon!</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Classified technical breakdown of Call of Duty Black Ops Cold War mod management and engine hooks.</p>
-                        <a href="/journal/entry_0007/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for Call of Duty DLCs</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.</p>
-                        <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 20, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T6-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">Open Source GSC Injector for Black Ops 2 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.</p>
-                        <a href="/journal/T6-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/T5-GSC-Injector-MS-Store/" class="hover:text-primary transition-colors">GSC Injection on Black Ops 1 (MS Store)</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.</p>
-                        <a href="/journal/T5-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/shame_for_the_leakers/" class="hover:text-primary transition-colors">Leakers....Shame for you all</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.</p>
-                        <a href="/journal/shame_for_the_leakers/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 18, 2026</time>
-                        <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/CW-GSC-Injection-MS-Store/" class="hover:text-primary transition-colors">CW GSC Injection Findings</a>
-                        </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.</p>
-                        <a href="/journal/CW-GSC-Injection-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
-                    </article>
-                </div>
-            </section>
+            </article>
         </main>
 
         <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">

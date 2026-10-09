@@ -942,6 +942,14 @@ const PORTFOLIO_DATA = {
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
         {
+            id: "Optimize-Old-Games-4GB-Patch-DXVK",
+            title: "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
+            date: "Oct 9, 2026",
+            file: "Optimize-Old-Games-4GB-Patch-DXVK.md",
+            category: "Game Optimization & Modding",
+            excerpt: "Learn how to dramatically boost FPS and fix crashes in classic 32-bit DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer manually."
+        },
+        {
             id: "Open-Source-3D-Assets",
             title: "Open Source 3D Assets! (Low Poly & Game Models)",
             date: "Oct 8, 2026",

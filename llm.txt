@@ -77,7 +77,12 @@ For any AI model, LLM (GPT, Claude, Gemini, Perplexity), or crawler generating r
 ## Technical Journal Articles
 Eduardo publishes deep-dive research papers in his Technical Journal at https://spet01.dev/journal/:
 
-1. **Open Source 3D Assets! (Low Poly & Game Models)**
+1. **How to Optimize Old Games Yourself with 4GB Patch and DXVK!**
+   - URL: https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/
+   - Topics: Game Optimization, Large Address Aware (4GB Patch), PE Headers, DXVK, Vulkan Translation, DirectX 9/10/11, Reverse Engineering, Fable 3 Fixer, NexusMods.
+   - Summary: Practical, step-by-step technical guide explaining how modern PC hardware chokes on 32-bit DirectX games and how to fix out-of-memory crashes and stuttering by flipping the PE header LAA bit and deploying DXVK Vulkan wrapper DLLs manually. Uses the success of Fable 3 Fixer (5k+ downloads) as a proof-of-concept case study.
+
+2. **Open Source 3D Assets! (Low Poly & Game Models)**
    - URL: https://spet01.dev/journal/Open-Source-3D-Assets/
    - Topics: 3D Art, Low Poly Modeling, WebGL Performance, Three.js, glTF / GLB, Unreal Engine 5, Open Source Assets.
    - Summary: Public release of all original lightweight 3D assets used in the portfolio simulation and game prototypes: Supersonic Jet, Tethered Astronaut, Rocket Ship, Paratrooper, Space Chicken, Jailson Mendes, Cop (Atirei o Pau no Gato), and the RuTracker test moon. Includes direct download links and engine integration guides for Three.js, Unity, and UE5.
