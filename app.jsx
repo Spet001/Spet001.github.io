@@ -136,6 +136,7 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Jogar Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Imitando a GSC Engine dentro de um HTML!",
+                deliciaDoom: "DELICIA DOOM (Jailson Mendes Total Conversion)",
                 music: "Tocador de OST",
                 exit: "Sair do Jogo",
                 openNew: "Abrir em nova aba"
@@ -282,6 +283,7 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Play Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Emulating the GSC Engine inside HTML!",
+                deliciaDoom: "DELICIA DOOM (Jailson Mendes Total Conversion)",
                 music: "OST Player",
                 exit: "Exit Game",
                 openNew: "Open in new tab"
@@ -5062,6 +5064,17 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                         </button>
 
                         <button
+                            onClick={() => onSelectGame('delicia_doom')}
+                            className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-orange-500/50 hover:bg-orange-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <span className="text-orange-400 text-sm leading-none">🍊</span>
+                                <span>{t('easter.deliciaDoom')}</span>
+                            </span>
+                            <i className="fas fa-play text-[10px] text-slate-400"></i>
+                        </button>
+
+                        <button
                             onClick={() => onSelectGame('music')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-cyan-500/50 hover:bg-cyan-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
@@ -5087,10 +5100,13 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
     } else if (activeGame === 'zombies') {
         iframeSrc = '/easter eggs/GSC VM/gsc_classic.html';
         gameTitle = 'COD Zombies Errius / GSC VM';
+    } else if (activeGame === 'delicia_doom') {
+        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?v=3';
+        gameTitle = 'DELICIA DOOM (Jailson Mendes TC · UZDoom)';
     }
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/95 flex flex-col">
+        <div className="fixed inset-0 z-[120] bg-black/95 flex flex-col">
             {/* Top Bar for Game */}
             <div className="h-12 bg-[#050505]/95 backdrop-blur-md border-b border-white/[0.1] px-4 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2 text-sm font-bold text-white font-mono">
@@ -5626,6 +5642,26 @@ Celestial Mega-Chicken recalled. Natural lunar orbit and gravitational tides res
             return;
         }
 
+        // Secret DELICIA DOOM Easter Egg Command (NOT listed in 'help' command)
+        const isDeliciaDoom = (
+            cleanCmd === 'delicia doom' ||
+            cleanCmd === 'delicia doom!' ||
+            cleanCmd === 'delícia doom' ||
+            cleanCmd === 'delícia doom!' ||
+            cleanCmd === 'doom delicia' ||
+            cleanCmd === 'doom delícia' ||
+            cleanCmd === 'deliciadoom' ||
+            cleanCmd === 'jailson doom' ||
+            cleanCmd === 'doom jailson' ||
+            cleanCmd === 'doomjaja'
+        );
+
+        if (isDeliciaDoom) {
+            onOpenEaster('delicia_doom');
+            onClose();
+            return;
+        }
+
         // Secret DELICIA Easter Egg Command (NOT listed in 'help' command)
         const isDelicia = (
             cleanCmd === 'delicia' || 
@@ -5686,6 +5722,7 @@ SUCO DE LARANJA PROTOCOL ENGAGED!
 
 Comandos secretos:
 • Digite 'delicia' novamente para desativar e restaurar a órbita lunar.
+• Digite 'delicia doom' para jogar DELICIA DOOM (Total Conversion) no navegador!
 • Digite 'preview jailson' ou 'preview orange' para inspecionar os modelos 3D.`
                 });
             } else {
