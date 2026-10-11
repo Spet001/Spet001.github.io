@@ -190,7 +190,7 @@
 
     <div id="boot-overlay">
         <div class="dos-window">
-            <div class="dos-header">
+            <div id="dos-header-title" class="dos-header">
                 DOOM II: Hell on Earth - DELICIA MOD (UZDoom v4.12)
             </div>
             <div class="dos-body">
@@ -216,7 +216,7 @@
                 </div>
 
                 <div class="dos-footer">
-                    <span>DOOM II (c) 1994 id Software | Engine: UZDoom (GPLv3)</span>
+                    <span id="dos-footer-copy">DOOM II (c) 1994 id Software | Engine: UZDoom (GPLv3)</span>
                     <a href="./NOTICE.MD" target="_blank" rel="noopener noreferrer">NOTICE.MD</a>
                 </div>
             </div>
@@ -253,6 +253,68 @@
     <script src="./engine/uzdoom.js"></script>
     <script>
         (function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashMode = (window.location.hash || '').replace(/^#/, '').trim().toLowerCase();
+            let storageMode = '';
+            try {
+                storageMode = (sessionStorage.getItem('spet_doom_mode') || localStorage.getItem('spet_doom_mode') || '').trim().toLowerCase();
+            } catch (e) {}
+            const rawMode = (urlParams.get('mode') || hashMode || storageMode || 'delicia').toLowerCase();
+
+            const MODE_CONFIGS = {
+                delicia: {
+                    title: 'DELICIA DOOM (UZDoom)',
+                    header: 'DOOM II: Hell on Earth - DELICIA MOD (UZDoom v4.12)',
+                    footer: 'DOOM II (c) 1994 id Software | Mod: Pai de Familia TC | Engine: UZDoom (GPLv3)',
+                    wadUrl: './doom2.WAD',
+                    wadLabel: 'doom2.WAD (Delicia Mod Total Conversion)',
+                    cacheKey: null,
+                    expectedBytes: 17825477,
+                    vfsIwad: '/wads/doom2.wad',
+                    isDeliciaTC: true,
+                    extraArgs: ['-nowidescreen', '-iwad', '/wads/doom2.wad', '-file', '/wads/delicia.wad']
+                },
+                e1m1: {
+                    title: 'DOOM - E1M1: Phobos (UZDoom)',
+                    header: 'The Ultimate DOOM - E1M1: Hangar [Phobos] (UZDoom v4.12)',
+                    footer: 'The Ultimate DOOM (c) 1993 id Software | Engine: UZDoom (GPLv3)',
+                    wadUrl: 'https://raw.githubusercontent.com/Akbar30Bill/DOOM_wads/master/doomu.wad',
+                    wadLabel: 'doomu.wad (The Ultimate DOOM IWAD)',
+                    cacheKey: 'doomu.wad',
+                    expectedBytes: 12408292,
+                    vfsIwad: '/wads/doomu.wad',
+                    isDeliciaTC: false,
+                    extraArgs: ['-iwad', '/wads/doomu.wad', '-skill', '3', '-warp', '1', '1', '+map', 'E1M1']
+                },
+                e2m1: {
+                    title: 'DOOM - E2M1: Deimos (UZDoom)',
+                    header: 'The Ultimate DOOM - E2M1: Deimos Anomaly (UZDoom v4.12)',
+                    footer: 'The Ultimate DOOM (c) 1993 id Software | Engine: UZDoom (GPLv3)',
+                    wadUrl: 'https://raw.githubusercontent.com/Akbar30Bill/DOOM_wads/master/doomu.wad',
+                    wadLabel: 'doomu.wad (The Ultimate DOOM IWAD)',
+                    cacheKey: 'doomu.wad',
+                    expectedBytes: 12408292,
+                    vfsIwad: '/wads/doomu.wad',
+                    isDeliciaTC: false,
+                    extraArgs: ['-iwad', '/wads/doomu.wad', '-skill', '3', '-warp', '2', '1', '+map', 'E2M1']
+                },
+                doom2: {
+                    title: 'DOOM II: Hell on Earth (UZDoom)',
+                    header: 'DOOM II: Hell on Earth - MAP01: Entryway [Earth] (UZDoom v4.12)',
+                    footer: 'DOOM II: Hell on Earth (c) 1994 id Software | Engine: UZDoom (GPLv3)',
+                    wadUrl: 'https://raw.githubusercontent.com/Akbar30Bill/DOOM_wads/master/doom2.wad',
+                    wadLabel: 'doom2.wad (DOOM II: Hell on Earth IWAD)',
+                    cacheKey: 'doom2_vanilla.wad',
+                    expectedBytes: 14604584,
+                    vfsIwad: '/wads/doom2.wad',
+                    isDeliciaTC: false,
+                    extraArgs: ['-iwad', '/wads/doom2.wad', '-skill', '3', '-warp', '1', '+map', 'MAP01']
+                }
+            };
+
+            const cfg = MODE_CONFIGS[rawMode] || MODE_CONFIGS.delicia;
+            document.title = cfg.title;
+
             const canvas = document.getElementById('canvas');
             const overlay = document.getElementById('boot-overlay');
             const launchBtn = document.getElementById('launch-btn');
@@ -260,6 +322,11 @@
             const progressPct = document.getElementById('progress-pct');
             const progressFill = document.getElementById('progress-fill');
             const dosLog = document.getElementById('dos-log');
+            const dosHeaderTitle = document.getElementById('dos-header-title');
+            const dosFooterCopy = document.getElementById('dos-footer-copy');
+
+            if (dosHeaderTitle) dosHeaderTitle.textContent = cfg.header;
+            if (dosFooterCopy) dosFooterCopy.textContent = cfg.footer;
 
             let enginePct = 0;
             let wadPct = 0;
@@ -269,6 +336,59 @@
             let wadBytes = null;
             let hasLaunched = false;
             let autoLaunchRequested = false;
+
+            const IDB_NAME = 'SPET_DOOM_WAD_CACHE';
+            const IDB_STORE = 'wads';
+
+            function openWadCacheDB() {
+                return new Promise((resolve, reject) => {
+                    if (!window.indexedDB) return reject(new Error('IndexedDB unavailable'));
+                    const req = indexedDB.open(IDB_NAME, 1);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(IDB_STORE)) {
+                            db.createObjectStore(IDB_STORE);
+                        }
+                    };
+                    req.onsuccess = (e) => resolve(e.target.result);
+                    req.onerror = (e) => reject(e.target.error || new Error('IDB open error'));
+                });
+            }
+
+            async function getCachedWad(key) {
+                if (!key) return null;
+                try {
+                    const db = await openWadCacheDB();
+                    return await new Promise((resolve) => {
+                        const tx = db.transaction(IDB_STORE, 'readonly');
+                        const store = tx.objectStore(IDB_STORE);
+                        const req = store.get(key);
+                        req.onsuccess = () => {
+                            const res = req.result;
+                            if (!res) return resolve(null);
+                            const arr = res instanceof Uint8Array ? res : new Uint8Array(res);
+                            resolve(arr.byteLength > 1000000 ? arr : null);
+                        };
+                        req.onerror = () => resolve(null);
+                    });
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            async function setCachedWad(key, bytes) {
+                if (!key || !bytes) return;
+                try {
+                    const db = await openWadCacheDB();
+                    await new Promise((resolve) => {
+                        const tx = db.transaction(IDB_STORE, 'readwrite');
+                        const store = tx.objectStore(IDB_STORE);
+                        store.put(bytes, key);
+                        tx.oncomplete = () => resolve();
+                        tx.onerror = () => resolve();
+                    });
+                } catch (e) {}
+            }
 
             function logLine(text, cls) {
                 const line = document.createElement('div');
@@ -309,10 +429,26 @@
 
             async function fetchWadWithProgress() {
                 try {
-                    logLine(' fetch ./doom2.WAD (Delicia Mod Total Conversion)...');
-                    const resp = await fetch('./doom2.WAD');
+                    if (cfg.cacheKey) {
+                        logLine(` checking IndexedDB cache for ${cfg.cacheKey}...`);
+                        const cached = await getCachedWad(cfg.cacheKey);
+                        if (cached) {
+                            wadBytes = cached;
+                            wadPct = 100;
+                            wadReady = true;
+                            const mbCached = (cached.byteLength / (1024 * 1024)).toFixed(1);
+                            logLine(`W_Cache: Loaded ${cfg.cacheKey} from local IndexedDB (${mbCached} MB).`, 'hl');
+                            logLine(` adding ${cfg.vfsIwad}`, 'hl');
+                            updateOverallProgress(`Loaded ${cfg.cacheKey} from cache.`);
+                            checkBothReady();
+                            return;
+                        }
+                    }
+
+                    logLine(` fetch ${cfg.wadLabel}...`);
+                    const resp = await fetch(cfg.wadUrl);
                     if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                    const total = Number(resp.headers.get('Content-Length')) || 17825477;
+                    const total = Number(resp.headers.get('Content-Length')) || cfg.expectedBytes;
                     const reader = resp.body.getReader();
                     const buf = new Uint8Array(total);
                     let loaded = 0;
@@ -330,7 +466,7 @@
                         wadPct = Math.min(100, (loaded / total) * 100);
                         const mbLoaded = (loaded / (1024 * 1024)).toFixed(1);
                         const mbTotal = (total / (1024 * 1024)).toFixed(1);
-                        updateOverallProgress(`Reading doom2.WAD (${mbLoaded}/${mbTotal} MB)...`);
+                        updateOverallProgress(`Downloading ${cfg.cacheKey || 'doom2.WAD'} (${mbLoaded}/${mbTotal} MB)...`);
                     }
 
                     if (chunks.length > 0 || loaded !== buf.byteLength) {
@@ -353,15 +489,22 @@
                         wadBytes[3] = 68; // 'D'
                     }
 
+                    if (cfg.cacheKey) {
+                        await setCachedWad(cfg.cacheKey, wadBytes);
+                        logLine(`W_Cache: Saved ${cfg.cacheKey} to browser IndexedDB.`, 'hl');
+                    }
+
                     wadPct = 100;
                     wadReady = true;
-                    logLine(' adding /wads/doom2.wad (2925 lumps)', 'hl');
-                    logLine(' adding /wads/delicia.wad (PWAD override)', 'hl');
+                    logLine(` adding ${cfg.vfsIwad}`, 'hl');
+                    if (cfg.isDeliciaTC) {
+                        logLine(' adding /wads/delicia.wad (PWAD override)', 'hl');
+                    }
                     checkBothReady();
                 } catch (err) {
-                    console.error('[DeliciaDoom] WAD fetch failed:', err);
+                    console.error('[UZDoom] WAD fetch failed:', err);
                     logLine('W_Init Error: ' + err.message, 'warn');
-                    progressText.textContent = 'Error loading doom2.WAD: ' + err.message;
+                    progressText.textContent = 'Error loading WAD: ' + err.message;
                 }
             }
 
@@ -414,7 +557,7 @@
 
                     const M = await factory(moduleConfig);
                     M.callbacks = {
-                        onReady: () => console.log('[DeliciaDoom] Engine Ready'),
+                        onReady: () => console.log('[UZDoom] Engine Ready'),
                         onFileWrite: () => {
                             try { M.FS.syncfs(false, () => {}); } catch (e) {}
                         }
@@ -426,7 +569,7 @@
                     logLine(' adding /uzdoom/game_support.pk3', 'hl');
                     checkBothReady();
                 } catch (err) {
-                    console.error('[DeliciaDoom] Engine bootstrap failed:', err);
+                    console.error('[UZDoom] Engine bootstrap failed:', err);
                     logLine('I_Init Error: ' + err.message, 'warn');
                     progressText.textContent = 'Error initializing UZDoom: ' + err.message;
                 }
@@ -446,19 +589,20 @@
                 try { M.FS.mkdirTree(SAVE_DIR); } catch (e) {}
                 try { M.FS.mkdirTree('/wads'); } catch (e) {}
 
-                M.FS.writeFile('/wads/doom2.wad', wadBytes);
+                M.FS.writeFile(cfg.vfsIwad, wadBytes);
 
-                const pwadBytes = new Uint8Array(wadBytes);
-                if (pwadBytes.length > 4) {
-                    pwadBytes[0] = 80; // 'P'
-                    pwadBytes[1] = 87; // 'W'
-                    pwadBytes[2] = 65; // 'A'
-                    pwadBytes[3] = 68; // 'D'
+                if (cfg.isDeliciaTC) {
+                    const pwadBytes = new Uint8Array(wadBytes);
+                    if (pwadBytes.length > 4) {
+                        pwadBytes[0] = 80; // 'P'
+                        pwadBytes[1] = 87; // 'W'
+                        pwadBytes[2] = 65; // 'A'
+                        pwadBytes[3] = 68; // 'D'
+                    }
+                    M.FS.writeFile('/wads/delicia.wad', pwadBytes);
+                    try { M.FS.unlink('/uzdoom/game_widescreen_gfx.pk3'); } catch (e) {}
                 }
-                M.FS.writeFile('/wads/delicia.wad', pwadBytes);
                 wadBytes = null;
-
-                try { M.FS.unlink('/uzdoom/game_widescreen_gfx.pk3'); } catch (e) {}
 
                 try { M.FS.chdir(HOME); } catch (e) {}
                 const defaultIni = [
@@ -494,7 +638,6 @@
                 const argv = [
                     '-config', 'uzdoom.ini',
                     '-savedir', SAVE_DIR,
-                    '-nowidescreen',
                     '+set', 'autoloadwidescreen', '0',
                     '+set', 'cl_gfxlocalization', '0',
                     '+set', 'language', 'en-US',
@@ -503,8 +646,7 @@
                     '+set', 'gl_texture_filter_anisotropic', '1',
                     '-width', String(w),
                     '-height', String(h),
-                    '-iwad', '/wads/doom2.wad',
-                    '-file', '/wads/delicia.wad'
+                    ...cfg.extraArgs
                 ];
 
                 try {
@@ -512,7 +654,7 @@
                 } catch (err) {
                     const s = String(err);
                     if (s.indexOf('unwind') === -1 && s.indexOf('SimulateInfiniteLoop') === -1) {
-                        console.error('[DeliciaDoom] callMain error:', err);
+                        console.error('[UZDoom] callMain error:', err);
                     }
                 }
             }

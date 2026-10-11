@@ -944,6 +944,14 @@ const PORTFOLIO_DATA = {
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
         {
+            id: "What-Is-A-WAD-Modern-Games",
+            title: "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
+            date: "Oct 11, 2026",
+            file: "What-Is-A-WAD-Modern-Games.md",
+            category: "Reverse Engineering & File Formats",
+            excerpt: "Tracing the WAD lump filesystem from 1993 DOOM to reverse-engineering Treyarch's undocumented 0x543377AB Demonware WAD containers in Call of Duty and modern id Tech 7/8 resources."
+        },
+        {
             id: "Optimize-Old-Games-4GB-Patch-DXVK",
             title: "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
             date: "Oct 9, 2026",
@@ -1659,6 +1667,8 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
     const skyboxRef = useRef(null);
     const pendingAssetsRef = useRef(new Set(['moon', 'rocket', 'astronaut', 'asteroid1', 'asteroid2', 'nebula']));
     const isInitialMountRef = useRef(true);
+    const [marsHoverInfo, setMarsHoverInfo] = useState(null);
+    const hoveredMarsTargetRef = useRef(null);
 
     const onProgressRef = useRef(onLoadingProgress);
     const onLoadedRef = useRef(onLoaded);
@@ -1706,6 +1716,27 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             });
         }
         return gltfScene;
+    };
+
+    const createNormalizedPivot = (gltfScene, targetSize) => {
+        const pivot = new THREE.Group();
+        gltfScene.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(gltfScene);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+            const scale = targetSize / maxDim;
+            gltfScene.scale.multiplyScalar(scale);
+            gltfScene.updateMatrixWorld(true);
+            const scaledBox = new THREE.Box3().setFromObject(gltfScene);
+            const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+            gltfScene.position.sub(scaledCenter);
+        }
+        gltfScene.traverse(child => {
+            if (child.isMesh) child.geometry.computeBoundingBox();
+        });
+        pivot.add(gltfScene);
+        return pivot;
     };
 
     // Effect 1: Monolithic Setup & Initial Assets Loading
@@ -1759,12 +1790,39 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         let isMoonChickenActive = Boolean(window.__spetMoonChickenActive);
         let moonJailson = null;
         let isDeliciaActive = Boolean(window.__spetDeliciaActive);
+        let isMarsActive = Boolean(window.__spetMarsActive);
+        let marsPivot = null;
+        let marsLight = null;
+        let phobosMesh = null;
+        let deimosMesh = null;
+        let earthPivot = null;
+        let earthMoonMesh = null;
+        let earthLight = null;
+        let slayerPivot = null;
         const asteroids = [];
         let ast1, ast2;
         let spawned = false;
         let chickenModel = null;
         let isChickenMode = Boolean(window.__spetChickenActive);
         let orangeModel = null;
+
+        const tagMarsTarget = (rootObj, targetId, hitRadius) => {
+            rootObj.userData.marsTarget = targetId;
+            rootObj.traverse((child) => {
+                child.userData.marsTarget = targetId;
+            });
+            if (hitRadius > 0) {
+                const hitGeo = new THREE.SphereGeometry(hitRadius, 14, 14);
+                const hitMat = new THREE.MeshBasicMaterial({
+                    transparent: true,
+                    opacity: 0,
+                    depthWrite: false
+                });
+                const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+                hitMesh.userData.marsTarget = targetId;
+                rootObj.add(hitMesh);
+            }
+        };
 
         // Rope
         const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
@@ -1862,14 +1920,50 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
         };
 
+        const syncCelestialVisibility = () => {
+            const showMars = isMarsActive;
+            if (marsPivot) marsPivot.visible = showMars;
+            if (marsLight) marsLight.visible = showMars;
+            if (phobosMesh) phobosMesh.visible = showMars;
+            if (deimosMesh) deimosMesh.visible = showMars;
+            if (earthPivot) earthPivot.visible = showMars;
+            if (earthMoonMesh) earthMoonMesh.visible = showMars;
+            if (earthLight) earthLight.visible = showMars;
+            if (slayerPivot) slayerPivot.visible = showMars;
+            if (astronaut) astronaut.visible = !showMars;
+
+            if (showMars) {
+                if (moon) moon.visible = false;
+                if (moonChicken) moonChicken.visible = false;
+                if (moonJailson) moonJailson.visible = false;
+            } else if (isDeliciaActive) {
+                if (moon) moon.visible = false;
+                if (moonChicken) moonChicken.visible = false;
+                if (moonJailson) moonJailson.visible = true;
+            } else if (isMoonChickenActive) {
+                if (moon) moon.visible = false;
+                if (moonChicken) moonChicken.visible = true;
+                if (moonJailson) moonJailson.visible = false;
+            } else {
+                if (moon) moon.visible = true;
+                if (moonChicken) moonChicken.visible = false;
+                if (moonJailson) moonJailson.visible = false;
+            }
+
+            if (!showMars && hoveredMarsTargetRef.current) {
+                hoveredMarsTargetRef.current = null;
+                document.body.style.cursor = '';
+                setMarsHoverInfo(null);
+            }
+        };
+
         const swapAsteroids = (toChicken) => {
             isChickenMode = toChicken;
             window.__spetChickenActive = toChicken;
             if (!toChicken) {
                 isMoonChickenActive = false;
                 window.__spetMoonChickenActive = false;
-                if (moon) moon.visible = true;
-                if (moonChicken) moonChicken.visible = false;
+                syncCelestialVisibility();
             }
 
             if (toChicken && !chickenModel) {
@@ -1900,26 +1994,15 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         const handleMoonChickenToggle = (e) => {
             isMoonChickenActive = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isMoonChickenActive;
             window.__spetMoonChickenActive = isMoonChickenActive;
-
-            const applyMoonState = () => {
-                if (isDeliciaActive) {
-                    if (moon) moon.visible = false;
-                    if (moonChicken) moonChicken.visible = false;
-                    if (moonJailson) moonJailson.visible = true;
-                } else {
-                    if (moon) {
-                        moon.visible = !isMoonChickenActive;
-                    }
-                    if (moonChicken) {
-                        moonChicken.visible = isMoonChickenActive;
-                    }
-                }
-            };
+            if (isMoonChickenActive && isMarsActive) {
+                isMarsActive = false;
+                window.__spetMarsActive = false;
+            }
 
             if (isMoonChickenActive && !moonChicken) {
                 loader.load('./3d/space_chicken!.glb', (gltf) => {
                     moonChicken = gltf.scene;
-                    normalizeModel(moonChicken, 42); // Big colossal chicken moon!
+                    normalizeModel(moonChicken, 42);
                     moonChicken.position.set(25, 15, -30);
                     moonChicken.traverse((child) => {
                         if (child.isMesh && child.material) {
@@ -1928,12 +2011,12 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                         }
                     });
                     scene.add(moonChicken);
-                    applyMoonState();
+                    syncCelestialVisibility();
                 }, undefined, (err) => {
                     console.error('[Space 2.0] Failed to load moon chicken model:', err);
                 });
             } else {
-                applyMoonState();
+                syncCelestialVisibility();
             }
         };
         window.addEventListener('spet:moon-chicken-toggle', handleMoonChickenToggle);
@@ -1941,21 +2024,13 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         const handleDeliciaToggle = (e) => {
             isDeliciaActive = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isDeliciaActive;
             window.__spetDeliciaActive = isDeliciaActive;
+            if (isDeliciaActive && isMarsActive) {
+                isMarsActive = false;
+                window.__spetMarsActive = false;
+            }
 
             const applyDeliciaState = () => {
-                if (moonJailson) {
-                    moonJailson.visible = isDeliciaActive;
-                }
-                if (isDeliciaActive) {
-                    if (moon) moon.visible = false;
-                    if (moonChicken) moonChicken.visible = false;
-                } else {
-                    if (isMoonChickenActive && moonChicken) {
-                        moonChicken.visible = true;
-                    } else if (moon) {
-                        moon.visible = true;
-                    }
-                }
+                syncCelestialVisibility();
                 performSwap();
             };
 
@@ -2010,6 +2085,144 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             });
         };
         window.addEventListener('spet:delicia-toggle', handleDeliciaToggle);
+
+        const ensureMarsAssets = () => {
+            // 1. Mars + Phobos + Deimos
+            if (!marsPivot) {
+                loader.load('./3d/mars.glb', (gltf) => {
+                    marsPivot = createNormalizedPivot(gltf.scene, 21);
+                    marsPivot.position.set(12, 14, -30);
+                    scene.add(marsPivot);
+
+                    marsLight = new THREE.PointLight(0xff5522, 1.8, 300);
+                    marsLight.position.copy(marsPivot.position);
+                    scene.add(marsLight);
+
+                    syncCelestialVisibility();
+                }, undefined, (err) => {
+                    console.error('[Space 2.0] Failed to load Mars model:', err);
+                });
+            }
+
+            if (!phobosMesh && (ast1 || ast2)) {
+                const phobosClone = (ast1 || ast2).clone(true);
+                phobosClone.scale.setScalar(1);
+                phobosClone.position.set(0, 0, 0);
+                phobosClone.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        const mats = Array.isArray(child.material) ? child.material.map(m => m.clone()) : [child.material.clone()];
+                        mats.forEach(m => {
+                            if (m.color) m.color.setHex(0xb86b52); // Rusty Phobos regolith
+                            if (m.emissive) m.emissive.setHex(0x2a0d06);
+                            m.roughness = 0.85;
+                            m.metalness = 0.08;
+                        });
+                        child.material = Array.isArray(child.material) ? mats : mats[0];
+                    }
+                });
+                phobosMesh = createNormalizedPivot(phobosClone, 3.6);
+                phobosMesh.position.set(-2, 18, -26);
+                tagMarsTarget(phobosMesh, 'phobos', 2.9);
+                scene.add(phobosMesh);
+            }
+
+            if (!deimosMesh && (ast2 || ast1)) {
+                const deimosClone = (ast2 || ast1).clone(true);
+                deimosClone.scale.setScalar(1);
+                deimosClone.position.set(0, 0, 0);
+                deimosClone.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        const mats = Array.isArray(child.material) ? child.material.map(m => m.clone()) : [child.material.clone()];
+                        mats.forEach(m => {
+                            if (m.color) m.color.setHex(0xd9be8b); // Pale ochre Deimos regolith
+                            if (m.emissive) m.emissive.setHex(0x241909);
+                            m.roughness = 0.8;
+                            m.metalness = 0.08;
+                        });
+                        child.material = Array.isArray(child.material) ? mats : mats[0];
+                    }
+                });
+                deimosMesh = createNormalizedPivot(deimosClone, 2.8);
+                deimosMesh.position.set(28, 22, -28);
+                tagMarsTarget(deimosMesh, 'deimos', 2.5);
+                scene.add(deimosMesh);
+            }
+
+            // 2. Earth + Orbiting Moon on the right side
+            if (!earthPivot) {
+                loader.load('./3d/earth.glb', (gltf) => {
+                    earthPivot = createNormalizedPivot(gltf.scene, 15);
+                    earthPivot.position.set(44, -6, -32);
+                    tagMarsTarget(earthPivot, 'earth', 8.5);
+                    scene.add(earthPivot);
+
+                    earthLight = new THREE.PointLight(0x88ccff, 1.3, 220);
+                    earthLight.position.set(38, 0, -24);
+                    scene.add(earthLight);
+
+                    syncCelestialVisibility();
+                }, undefined, (err) => {
+                    console.error('[Space 2.0] Failed to load Earth model:', err);
+                });
+            }
+
+            if (!earthMoonMesh) {
+                const createEarthMoonFromScene = (srcScene) => {
+                    if (earthMoonMesh) return;
+                    const moonClone = srcScene.clone(true);
+                    moonClone.scale.setScalar(1);
+                    moonClone.position.set(0, 0, 0);
+                    earthMoonMesh = createNormalizedPivot(moonClone, 3.8);
+                    earthMoonMesh.position.set(54, -4, -30);
+                    scene.add(earthMoonMesh);
+                    syncCelestialVisibility();
+                };
+                if (moon) {
+                    createEarthMoonFromScene(moon);
+                } else {
+                    loader.load('./3d/moon.glb', (gltf) => createEarthMoonFromScene(gltf.scene));
+                }
+            }
+
+            // 3. Doom Slayer replacing Astronaut on the rocket rope
+            if (!slayerPivot) {
+                loader.load('./3d/slayer.glb', (gltf) => {
+                    slayerPivot = createNormalizedPivot(gltf.scene, 2.3);
+                    if (astronaut) {
+                        slayerPivot.position.copy(astronaut.position);
+                    } else {
+                        slayerPivot.position.set(5, -5, 10);
+                    }
+                    scene.add(slayerPivot);
+                    syncCelestialVisibility();
+                }, undefined, (err) => {
+                    console.error('[Space 2.0] Failed to load Doom Slayer model:', err);
+                });
+            }
+
+            syncCelestialVisibility();
+        };
+
+        const handleMarsToggle = (e) => {
+            isMarsActive = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isMarsActive;
+            window.__spetMarsActive = isMarsActive;
+
+            if (isMarsActive) {
+                if (isDeliciaActive) {
+                    isDeliciaActive = false;
+                    window.__spetDeliciaActive = false;
+                    window.dispatchEvent(new CustomEvent('spet:delicia-toggle', { detail: { enabled: false } }));
+                }
+                if (isMoonChickenActive) {
+                    isMoonChickenActive = false;
+                    window.__spetMoonChickenActive = false;
+                }
+                ensureMarsAssets();
+            } else {
+                syncCelestialVisibility();
+            }
+        };
+        window.addEventListener('spet:mars-toggle', handleMarsToggle);
 
         const checkSpawn = () => {
             if (ast1 && ast2 && !spawned) {
@@ -2067,7 +2280,6 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
         };
 
-        // SEQUENTIAL ASSET PIPELINE (Ensures 100% reliable loading without socket drops)
         // PARALLEL ASSET PIPELINE (Ensures non-blocking, fast concurrent model loading)
         const loadNebula = async () => {
             const initialNebulaPath = `./3d/nebula${skyboxIndex}.glb`;
@@ -2102,7 +2314,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 moon = moonGltf.scene;
                 normalizeModel(moon, 20); 
                 moon.position.set(25, 15, -30); 
-                if (isMoonChickenActive || isDeliciaActive) {
+                if (isMoonChickenActive || isDeliciaActive || isMarsActive) {
                     moon.visible = false;
                 }
                 scene.add(moon);
@@ -2135,6 +2347,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 astronaut = astroGltf.scene;
                 normalizeModel(astronaut, 1.5); 
                 astronaut.position.set(5, -5, 10);
+                if (isMarsActive) astronaut.visible = false;
                 scene.add(astronaut);
             }
         };
@@ -2188,7 +2401,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                         }
                     });
                     scene.add(moonChicken);
-                    if (moon) moon.visible = false;
+                    syncCelestialVisibility();
                 });
             }
 
@@ -2204,9 +2417,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                         }
                     });
                     scene.add(moonJailson);
-                    if (moon) moon.visible = false;
-                    if (moonChicken) moonChicken.visible = false;
-                    moonJailson.visible = true;
+                    syncCelestialVisibility();
                 });
                 loader.load('./3d/orange.glb', (gltf) => {
                     orangeModel = gltf.scene;
@@ -2219,6 +2430,10 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                     });
                     if (spawned) performSwap();
                 });
+            }
+
+            if (window.__spetMarsActive) {
+                ensureMarsAssets();
             }
         });
 
@@ -2234,14 +2449,84 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
         }, 60000);
 
-        // Interactivity
+        // Interactivity & Raycasting for Mars Mode
         const mouse = new THREE.Vector2(0, 0);
+        const raycaster = new THREE.Raycaster();
         const astroVelocity = new THREE.Vector3();
+
+        const isOverInteractiveUI = (target) => {
+            if (!target || !(target instanceof Element)) return false;
+            return Boolean(target.closest('button, a, input, textarea, select, label, [role="dialog"], [role="button"], nav, iframe'));
+        };
+
+        const pickMarsTarget = (clientX, clientY) => {
+            if (!isMarsActive) return null;
+            const targets = [phobosMesh, deimosMesh, earthPivot].filter(Boolean);
+            if (targets.length === 0) return null;
+            const ndc = new THREE.Vector2(
+                (clientX / window.innerWidth) * 2 - 1,
+                -(clientY / window.innerHeight) * 2 + 1
+            );
+            raycaster.setFromCamera(ndc, camera);
+            const hits = raycaster.intersectObjects(targets, true);
+            for (const hit of hits) {
+                let obj = hit.object;
+                while (obj) {
+                    if (obj.userData && obj.userData.marsTarget) {
+                        return obj.userData.marsTarget;
+                    }
+                    obj = obj.parent;
+                }
+            }
+            return null;
+        };
 
         const handleMouseMove = (e) => {
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            if (!isMarsActive) return;
+            if (isOverInteractiveUI(e.target)) {
+                if (hoveredMarsTargetRef.current) {
+                    hoveredMarsTargetRef.current = null;
+                    document.body.style.cursor = '';
+                    setMarsHoverInfo(null);
+                }
+                return;
+            }
+
+            const hitTarget = pickMarsTarget(e.clientX, e.clientY);
+            if (hitTarget) {
+                hoveredMarsTargetRef.current = hitTarget;
+                document.body.style.cursor = 'pointer';
+                setMarsHoverInfo({ target: hitTarget, x: e.clientX, y: e.clientY });
+            } else if (hoveredMarsTargetRef.current) {
+                hoveredMarsTargetRef.current = null;
+                document.body.style.cursor = '';
+                setMarsHoverInfo(null);
+            }
         };
+
+        const handleSceneClick = (e) => {
+            if (!isMarsActive) return;
+            if (isOverInteractiveUI(e.target)) return;
+            const hitTarget = pickMarsTarget(e.clientX, e.clientY);
+            if (!hitTarget) return;
+
+            const gameMap = {
+                phobos: 'doom_e1m1',
+                deimos: 'doom_e2m1',
+                earth: 'doom_2'
+            };
+            const gameId = gameMap[hitTarget];
+            if (gameId) {
+                hoveredMarsTargetRef.current = null;
+                document.body.style.cursor = '';
+                setMarsHoverInfo(null);
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: gameId } }));
+            }
+        };
+
         const handleKeyDown = (e) => { 
             keysRef.current[e.key] = true; 
             // Debug Jet Rotation
@@ -2254,6 +2539,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         const handleKeyUp = (e) => { keysRef.current[e.key] = false; };
         
         window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('click', handleSceneClick);
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
@@ -2266,10 +2552,14 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
         let animationId;
         let time = 0;
+        let marsOrbitTime = 0;
         const animate = () => {
             animationId = requestAnimationFrame(animate);
             if (document.hidden) return; // VRAM & CPU Saver: Pause rendering when tab is hidden/inactive
             time += 0.01;
+            if (!hoveredMarsTargetRef.current) {
+                marsOrbitTime += 0.01;
+            }
 
             if (skyboxRef.current) {
                 skyboxRef.current.rotation.y = time * 0.02; 
@@ -2286,6 +2576,50 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             if (moonJailson && isDeliciaActive) {
                 moonJailson.rotation.y += 0.035;
                 moonJailson.rotation.x = Math.sin(time * 2) * 0.08;
+            }
+            if (isMarsActive) {
+                if (marsPivot) {
+                    marsPivot.rotation.y = time * 0.12;
+                }
+                const marsCenter = marsPivot ? marsPivot.position : { x: 12, y: 14, z: -30 };
+                if (phobosMesh) {
+                    const pAngle = marsOrbitTime * 0.45 + 0.5;
+                    const pR = 16.0;
+                    const pTilt = 0.35;
+                    phobosMesh.position.set(
+                        marsCenter.x + Math.cos(pAngle) * pR,
+                        marsCenter.y + Math.sin(pAngle) * Math.sin(pTilt) * pR,
+                        marsCenter.z + Math.sin(pAngle) * Math.cos(pTilt) * pR
+                    );
+                    phobosMesh.rotation.y = time * 0.45;
+                    phobosMesh.rotation.x = time * 0.25;
+                }
+                if (deimosMesh) {
+                    const dAngle = marsOrbitTime * 0.28 + 3.4;
+                    const dR = 21.5;
+                    const dTilt = -0.42;
+                    deimosMesh.position.set(
+                        marsCenter.x + Math.cos(dAngle) * dR,
+                        marsCenter.y + Math.sin(dAngle) * Math.sin(dTilt) * dR,
+                        marsCenter.z + Math.sin(dAngle) * Math.cos(dTilt) * dR
+                    );
+                    deimosMesh.rotation.y = -time * 0.35;
+                    deimosMesh.rotation.z = time * 0.2;
+                }
+                if (earthPivot) {
+                    earthPivot.rotation.y = time * 0.15;
+                    if (earthMoonMesh) {
+                        const mAngle = marsOrbitTime * 0.55;
+                        const mR = 12.5;
+                        const mTilt = 0.32;
+                        earthMoonMesh.position.set(
+                            earthPivot.position.x + Math.cos(mAngle) * mR,
+                            earthPivot.position.y + Math.sin(mAngle) * Math.sin(mTilt) * mR,
+                            earthPivot.position.z + Math.sin(mAngle) * Math.cos(mTilt) * mR
+                        );
+                        earthMoonMesh.rotation.y = time * 0.4;
+                    }
+                }
             }
             
             const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
@@ -2392,6 +2726,11 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 
                 astronaut.rotation.y = time * 0.5;
                 astronaut.rotation.z = -astroVelocity.x * 2;
+
+                if (slayerPivot && isMarsActive) {
+                    slayerPivot.position.copy(astronaut.position);
+                    slayerPivot.rotation.copy(astronaut.rotation);
+                }
                 
                 if (rope) {
                     const positions = rope.geometry.attributes.position.array;
@@ -2427,13 +2766,16 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         return () => {
             clearTimeout(safetyTimeout);
             cancelAnimationFrame(animationId);
+            document.body.style.cursor = '';
             window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('click', handleSceneClick);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('spet:chicken-toggle', handleChickenToggle);
             window.removeEventListener('spet:moon-chicken-toggle', handleMoonChickenToggle);
             window.removeEventListener('spet:delicia-toggle', handleDeliciaToggle);
+            window.removeEventListener('spet:mars-toggle', handleMarsToggle);
             if (containerRef.current && renderer.domElement && containerRef.current.contains(renderer.domElement)) {
                 containerRef.current.removeChild(renderer.domElement);
             }
@@ -2497,7 +2839,33 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         );
     }, [skyboxIndex]);
 
-    return <div ref={containerRef} className="fixed inset-0 z-0 bg-black pointer-events-none" />;
+    const hoverLabels = {
+        phobos: { title: 'UAC TELEMETRY // PHOBOS', sub: 'CLICK TO LAUNCH DOOM — E1M1: HANGAR' },
+        deimos: { title: 'UAC TELEMETRY // DEIMOS', sub: 'CLICK TO LAUNCH DOOM — E2M1: DEIMOS ANOMALY' },
+        earth: { title: 'UAC TELEMETRY // EARTH', sub: 'CLICK TO LAUNCH DOOM II: HELL ON EARTH' }
+    };
+
+    return (
+        <>
+            <div ref={containerRef} className="fixed inset-0 z-0 bg-black pointer-events-none" />
+            {marsHoverInfo && hoverLabels[marsHoverInfo.target] && (
+                <div
+                    style={{
+                        left: Math.min(window.innerWidth - 290, marsHoverInfo.x + 18) + 'px',
+                        top: Math.max(16, marsHoverInfo.y - 18) + 'px'
+                    }}
+                    className="fixed z-50 pointer-events-none bg-black/90 border border-red-700/80 px-3 py-1.5 font-mono text-[11px] shadow-lg"
+                >
+                    <div className="text-amber-300 font-bold tracking-wider">
+                        {hoverLabels[marsHoverInfo.target].title}
+                    </div>
+                    <div className="text-neutral-300 text-[10px]">
+                        {hoverLabels[marsHoverInfo.target].sub}
+                    </div>
+                </div>
+            )}
+        </>
+    );
 };
 
 
@@ -3762,6 +4130,7 @@ const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
         { id: 'para', name: 'Paratrooper', file: './3d/Paratrooper.glb' },
         { id: 'rocket', name: 'Rocket', file: './3d/rocket.glb' },
         { id: 'astro', name: 'Astronaut', file: './3d/Astronaut.glb' },
+        { id: 'slayer', name: 'Doom Slayer', file: './3d/slayer.glb' },
         { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: './3d/space_chicken!.glb' },
         { id: 'jailson', name: 'Jailson Mendes', file: './3d/jailson.glb' },
         { id: 'orange', name: lang === 'pt' ? 'Laranja Cósmica' : 'Cosmic Orange', file: './3d/orange.glb' },
@@ -4823,6 +5192,9 @@ const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigat
                     <p>Other Space Skyboxes by <a href="https://sketchfab.com/jungle_jim" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">Jungle Jim</a></p>
                     <p>Moon by Unknown <i className="opacity-70">(Downloaded from a mysterious Russian site)</i></p>
                     <p>Asteroids by <a href="https://sketchfab.com/gryaznov" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">gryaznov</a></p>
+                    <p>"Earth" (<a href="https://skfb.ly/6TwGG" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">https://skfb.ly/6TwGG</a>) by Akshat is licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">Creative Commons Attribution (CC BY 4.0)</a>.</p>
+                    <p>"Mars" (<a href="https://skfb.ly/6TwHo" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">https://skfb.ly/6TwHo</a>) by Akshat is licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-primary transition-colors underline decoration-primary/30 underline-offset-2">Creative Commons Attribution (CC BY 4.0)</a>.</p>
+                    <p>Doom Slayer 3D model by Eduardo Gelain <i className="opacity-70">(DOOM &amp; Doom Slayer character © id Software)</i></p>
                 </div>
             </div>
         
@@ -5094,6 +5466,13 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
     let iframeSrc = '';
     let gameTitle = '';
 
+    const persistDoomMode = (mode) => {
+        try {
+            sessionStorage.setItem('spet_doom_mode', mode);
+            localStorage.setItem('spet_doom_mode', mode);
+        } catch (e) {}
+    };
+
     if (activeGame === 'quake') {
         iframeSrc = 'https://www.netquake.io/quake';
         gameTitle = 'Quake 1 (NetQuake)';
@@ -5101,8 +5480,21 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
         iframeSrc = '/easter eggs/GSC VM/gsc_classic.html';
         gameTitle = 'COD Zombies Errius / GSC VM';
     } else if (activeGame === 'delicia_doom') {
-        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?v=3';
+        persistDoomMode('delicia');
+        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?mode=delicia#delicia';
         gameTitle = 'DELICIA DOOM (Jailson Mendes TC · UZDoom)';
+    } else if (activeGame === 'doom_e1m1') {
+        persistDoomMode('e1m1');
+        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?mode=e1m1#e1m1';
+        gameTitle = 'The Ultimate DOOM — E1M1: Hangar [Phobos] (UZDoom)';
+    } else if (activeGame === 'doom_e2m1') {
+        persistDoomMode('e2m1');
+        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?mode=e2m1#e2m1';
+        gameTitle = 'The Ultimate DOOM — E2M1: Deimos Anomaly [Deimos] (UZDoom)';
+    } else if (activeGame === 'doom_2') {
+        persistDoomMode('doom2');
+        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?mode=doom2#doom2';
+        gameTitle = 'DOOM II: Hell on Earth — MAP01: Entryway [Earth] (UZDoom)';
     }
 
     return (
@@ -5737,6 +6129,75 @@ O suco de laranja acabou! A lua e os asteroides retornaram à órbita natural. T
             return;
         }
 
+        // Secret MARS Easter Egg Command (NOT listed in 'help' command)
+        const isMarsCmd = (
+            cleanCmd === 'mars' ||
+            cleanCmd === 'mars!' ||
+            cleanCmd === 'marte' ||
+            cleanCmd === 'marte!' ||
+            cleanCmd === 'doom mars' ||
+            cleanCmd === 'uac mars'
+        );
+
+        if (isMarsCmd) {
+            const nextMarsState = !window.__spetMarsActive;
+            window.__spetMarsActive = nextMarsState;
+            window.dispatchEvent(new CustomEvent('spet:mars-toggle', { detail: { enabled: nextMarsState } }));
+
+            // E1M1-inspired low sawtooth power riff synth
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const now = ctx.currentTime;
+                    const notes = [82.41, 82.41, 164.81, 82.41, 82.41, 146.83]; // E2, E2, E3, E2, E2, D3
+                    notes.forEach((freq, idx) => {
+                        const offset = idx * 0.11;
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(freq, now + offset);
+                        gain.gain.setValueAtTime(0.22, now + offset);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.1);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + offset);
+                        osc.stop(now + offset + 0.105);
+                    });
+                }
+            } catch (err) {}
+
+            if (nextMarsState) {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🔴 UAC MARS TELEMETRY ONLINE — RIP AND TEAR! 🔴]
+============================================================
+• PLANETARY SHIFT : A Lua transformou-se em MARTE com Phobos e Deimos em órbita!
+• SECTOR EARTH    : A TERRA (com a Lua orbitando) surgiu no setor direito!
+• TETHER UNIT     : O astronauta do foguete transformou-se no DOOM SLAYER!
+
+[🎮 INTERACTIVE ORBITAL LAUNCHERS (UZDoom WebAssembly)]:
+• Clique em PHOBOS (lua de Marte) ➔ Inicia DOOM (E1M1: Hangar)
+• Clique em DEIMOS (lua de Marte) ➔ Inicia DOOM (E2M1: Deimos Anomaly)
+• Clique na TERRA (setor direito) ➔ Inicia DOOM II: Hell on Earth (MAP01)
+  (Os IWADs são baixados sob demanda e salvos no cache IndexedDB do navegador)
+
+Comandos extras:
+• Digite 'mars' novamente para desativar e restaurar a órbita lunar.
+• Digite 'preview slayer' para inspecionar o modelo 3D do Doom Slayer.`
+                });
+            } else {
+                newHistory.push({
+                    type: 'output',
+                    text: `[🌕 UAC Mars Telemetry Offline]
+Órbita lunar padrão e astronauta restaurados.`
+                });
+            }
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
         // Preview chicken / 3d models command
         const previewModelMatch = cleanCmd.match(/^(?:preview|model|3d)\s+([a-z0-9_!-]+)$/) || cleanCmd.match(/^([a-z0-9_!-]+)\s+(?:preview|model|3d)$/);
         if (previewModelMatch) {
@@ -5762,7 +6223,11 @@ O suco de laranja acabou! A lua e os asteroides retornaram à órbita natural. T
                 paratrooper: 'para',
                 rocket: 'rocket',
                 astro: 'astro',
-                astronaut: 'astro'
+                astronaut: 'astro',
+                slayer: 'slayer',
+                doomslayer: 'slayer',
+                doom_slayer: 'slayer',
+                doomguy: 'slayer'
             };
             const selectedModelId = modelMap[target] || 'jet';
             if (onOpen3DViewer) onOpen3DViewer(selectedModelId);
@@ -8769,6 +9234,16 @@ const App = () => {
         window.addEventListener('spet:delicia-toggle', handleDelicia);
         return () => window.removeEventListener('spet:delicia-toggle', handleDelicia);
     }, [isDeliciaActive, ffMusicState.isActive]);
+
+    useEffect(() => {
+        const handleOpenEasterGame = (e) => {
+            if (e.detail && e.detail.game) {
+                setEasterGame(e.detail.game);
+            }
+        };
+        window.addEventListener('spet:open-easter-game', handleOpenEasterGame);
+        return () => window.removeEventListener('spet:open-easter-game', handleOpenEasterGame);
+    }, []);
 
     const handleMusicCommand = (action, payload) => {
         const currentPl = ffMusicState.playlist === 'cod' ? 'cod' : 'ff';

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8 | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
+    <meta name="author" content="Eduardo Gelain">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+    <!-- Canonical URL & Alternate Discovery -->
+    <link rel="canonical" href="https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/">
+    <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/">
+    <meta property="og:title" content="What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8 | Eduardo Gelain">
+    <meta property="og:description" content="Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.">
+    <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1668">
+    <meta property="og:image:height" content="506">
+    <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+    <meta property="og:site_name" content="Eduardo Gelain Portfolio">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/">
+    <meta name="twitter:title" content="What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8 | Eduardo Gelain">
+    <meta name="twitter:description" content="Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.">
+    <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
+    <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
+  "description": "Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.",
+  "datePublished": "Oct 11, 2026",
+  "url": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
+  "mainEntityOfPage": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown & Sanitizer for Mascot Chat & Technical Journal -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#00aaff',
+                        primaryHover: '#0077b6',
+                        dark: '#050505',
+                        darkPanel: 'rgba(5, 5, 5, 0.85)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for base tweaks -->
+    <style>
+        html {
+            scroll-behavior: smooth !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            cursor: none !important;
+            overflow-x: hidden;
+        }
+
+        a,
+        button,
+        .clickable { cursor: none !important; }
+
+        .glass-panel {
+            background: rgba(5, 5, 5, 0.70);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Custom Scrollbar for Journal Entries */
+        .journal-entries-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.7);
+        }
+        .journal-entries-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+            margin: 4px 0;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+        }
+
+        .fade-in-section {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
+        /* Subtle Project Card Fade-In on Filter & Search */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .project-card-animate {
+            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+            will-change: opacity, transform;
+        }
+
+        /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
+        #projects article {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+            position: relative;
+        }
+
+        #projects article:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 170, 255, 0.6) !important;
+            box-shadow: 
+                inset 0 0 0 1px rgba(0, 170, 255, 0.45),
+                inset 0 0 22px rgba(0, 170, 255, 0.15),
+                0 16px 36px -8px rgba(0, 170, 255, 0.24),
+                0 12px 28px -6px rgba(0, 0, 0, 0.65) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-card-animate {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            #projects article:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Custom Cursor */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, background-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        #custom-cursor.hovering {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Mascot Companion styles */
+        @keyframes astroFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1.5deg); }
+        }
+        .astro-float {
+            animation: astroFloat 3.5s ease-in-out infinite;
+        }
+
+        /* Subtle bubble entrance animations and transitions */
+        @keyframes mascotBubbleIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes mascotAiGlow {
+            0% {
+                border-color: rgba(56, 189, 248, 0.75);
+                box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+            }
+            100% {
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        @keyframes typingCursorBlink {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0; transform: scaleY(0.7); }
+        }
+
+        .mascot-typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 15px;
+            background-color: #38bdf8;
+            margin-left: 3px;
+            vertical-align: -1px;
+            animation: typingCursorBlink 0.75s infinite ease-in-out;
+            border-radius: 1px;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+        }
+
+        .mascot-bubble-user {
+            animation: mascotBubbleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mascot-bubble-ai {
+            animation: mascotBubbleIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .mascot-bubble-ai.new-arrival {
+            animation: mascotBubbleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, mascotAiGlow 1.4s ease-out forwards;
+        }
+
+        @keyframes wavePulse {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .typing-dot-1 { animation: wavePulse 1.2s infinite ease-in-out 0s; }
+        .typing-dot-2 { animation: wavePulse 1.2s infinite ease-in-out 0.2s; }
+        .typing-dot-3 { animation: wavePulse 1.2s infinite ease-in-out 0.4s; }
+
+        .mascot-chat-content p { margin-bottom: 0.5rem; line-height: 1.5; }
+        .mascot-chat-content p:last-child { margin-bottom: 0; }
+        .mascot-chat-content ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content code { background: rgba(15, 23, 42, 0.85); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85em; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .mascot-chat-content pre { background: #080d1a; padding: 0.75rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mascot-chat-content pre code { background: transparent; padding: 0; color: #e2e8f0; border: none; }
+        .mascot-chat-content a { color: #38bdf8; text-decoration: underline; }
+        .mascot-chat-content strong { color: #fff; font-weight: 600; }
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        /* Journal Markdown Reader Styles */
+        .markdown-body h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff; }
+        .markdown-body h2 { font-size: 1.45rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .markdown-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e2e8f0; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+        .markdown-body a { color: #00aaff; text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-body a:hover { color: #38bdf8; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.35rem; }
+        .markdown-body blockquote { border-left: 4px solid #00aaff; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-bottom: 1.25rem; background: rgba(0, 170, 255, 0.05); padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body code { background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875em; color: #38bdf8; }
+        .markdown-body pre { background-color: rgba(5, 5, 5, 0.95); padding: 1.1rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .markdown-body pre code { background-color: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.85em; }
+        .markdown-body img { max-width: 100%; border-radius: 0.75rem; margin: 1.25rem 0; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .markdown-body hr { border-color: rgba(255, 255, 255, 0.08); margin: 2rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; text-align: left; }
+        .markdown-body th { background: rgba(255,255,255,0.05); color: #fff; }
+</style>
+
+    <!-- React & Three.js Libraries -->
+    <script>
+        // Fix Chromium bug on large internal blob: URLs in Three.js GLTFLoader (r128):
+        // ImageBitmapLoader fails with net::ERR_ABORTED ("TypeError: Failed to fetch") on large blobs (moon.glb & nebula0.glb).
+        // Forcing TextureLoader (HTMLImageElement) guarantees reliable loading across all browsers.
+        window.createImageBitmap = undefined;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style>
+        .text-glow {
+            text-shadow: 0px 2px 8px rgba(0,0,0,0.9), 0px 4px 20px rgba(0,0,0,0.8);
+        }
+        .text-glow-none {
+            text-shadow: none !important;
+        }
+    </style>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+
+<body class="antialiased selection:bg-primary selection:text-white">
+    <div id="custom-cursor"></div>
+    <!-- Pre-hydration initial loading overlay -->
+    <div id="initial-loading-screen" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+        <div class="flex items-center gap-2.5">
+            <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-xs text-slate-400">SpetDev</span>
+        </div>
+
+        <div class="max-w-xs w-full">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+                <span>Iniciando ambiente...</span>
+                <span>···</span>
+            </div>
+            <div class="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
+                <div class="h-full bg-primary/70 rounded-full w-1/3 animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.dismissInitialLoadingScreen = function() {
+            var el = document.getElementById('initial-loading-screen');
+            if (el && el.parentNode) {
+                el.style.transition = 'opacity 0.7s ease-out';
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    if (el && el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }, 700);
+            }
+        };
+    </script>
+    <div id="root">
+        <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
+        <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
+        <header class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
+                    <i class="fas fa-terminal text-primary"></i>
+                    <span>Spet<span class="text-primary">Dev</span></span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-book-open"></i> Technical Journal
+                    </a>
+                </div>
+            </div>
+        </header>
+
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
+            </div>
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <time class="text-xs font-mono text-slate-400 mb-2 block">Oct 11, 2026</time>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="What-Is-A-WAD-Modern-Games">
+<h1>What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs in Call of Duty &amp; id Tech 7/8</h1>
+<blockquote>
+<p><strong>Date:</strong> October 11, 2026<br><strong>Category:</strong> Reverse Engineering, Engine Architecture &amp; File Formats<br><strong>Author:</strong> Eduardo Gelain (SpetDev)</p>
+</blockquote>
+<p>If you have ever modded classic <em>DOOM</em>, inspected old <em>Quake</em> or <em>Half-Life</em> textures, or poked around the local cache folders of <em>Call of Duty</em> clients like <strong>Plutonium</strong>, you have inevitably run into the <code>.wad</code> file extension.</p>
+<p>Most developers know the famous trivia: <strong>WAD</strong> stands for <strong>&quot;Where&#39;s All the Data?&quot;</strong> — the legendary container format designed by John Carmack at id Software in 1993 for <em>DOOM</em> (id Tech 1).</p>
+<p>What almost <strong>no one</strong> knows — and what has <strong>zero public documentation on Google</strong> — is why <em>Call of Duty</em> titles (like <em>Black Ops 1</em> and <em>Black Ops 2</em>) still download <code>.wad</code> files (<code>online_tu14_mp_english.wad</code>, <code>online_tu17_mp.wad</code>, <code>online_tu17_zm.wad</code>) from <strong>Demonware&#39;s Publisher Storage</strong>, what binary format those mystery <code>.wad</code> files actually use, and how <strong>id Tech 7 &amp; id Tech 8</strong> (<em>DOOM Eternal</em> and <em>DOOM: The Dark Ages</em>) handle <code>.wad</code> files over 30 years later.</p>
+<p>In this deep dive, we will trace the entire architectural lineage of the WAD format, <strong>reverse-engineer Treyarch&#39;s undocumented <code>0x543377AB</code> Demonware <code>.wad</code> binary format byte-by-byte</strong>, unpack its hidden payloads, and examine how modern engines evolved the concept.</p>
+<hr>
+<h2>🧱 Part 1: Where&#39;s All the Data? (1993 id Tech 1 WAD Architecture)</h2>
+<p>Before <em>DOOM</em> (1993), early PC games (including <em>Wolfenstein 3D</em>) often hardcoded asset offsets or shipped rigid, monolithic data files that couldn&#39;t be patched without modifying the main executable or rebuilding the entire archive.</p>
+<p>For <em>DOOM</em>, John Carmack designed the <strong>WAD</strong> format as a flat, virtualized Lump Filesystem. Instead of a hierarchical folder tree, a WAD file is a flat array of named binary blobs called <strong>Lumps</strong> (textures, sprites, sound effects, MUS/MIDI tracks, BSP map nodes, and palette tables).</p>
+<h3>Binary Anatomy of a Classic DOOM WAD</h3>
+<p>A classic id Tech 1 <code>.wad</code> file consists of just three parts:</p>
+<ol>
+<li><strong>A 12-byte Header (<code>wadinfo_t</code>)</strong> at byte <code>0x00</code>.</li>
+<li><strong>The Raw Lump Data Region</strong> (uncompressed binary streams).</li>
+<li><strong>The Lump Directory (<code>filelump_t[]</code>)</strong>, typically located at the end of the file.</li>
+</ol>
+<pre><code class="language-c">// Classic id Tech 1 WAD Header (12 bytes, Little-Endian)
+struct wadinfo_t {
+    char     identification[4]; // &quot;IWAD&quot; (Internal WAD) or &quot;PWAD&quot; (Patch WAD)
+    int32_t  numlumps;          // Total number of lumps in the directory
+    int32_t  infotableofs;      // Byte offset to the filelump_t directory array
+};
+
+// Classic Lump Directory Entry (16 bytes per lump, Little-Endian)
+struct filelump_t {
+    int32_t  filepos;           // Byte offset to the start of the lump&#39;s data
+    int32_t  size;              // Lump size in bytes (0 for virtual marker lumps)
+    char     name[8];           // 8-byte null-padded uppercase ASCII name (e.g. &quot;E1M1\0\0\0\0&quot;)
+};
+</code></pre>
+<h3><code>IWAD</code> vs. <code>PWAD</code>: How DOOM Invented Non-Destructive Modding</h3>
+<p>The brilliance of the 1993 WAD specification lies in the first 4 magic bytes (<code>IWAD</code> vs. <code>PWAD</code>) and how the engine&#39;s <code>W_InitMultipleFiles()</code> loader merges them in RAM:</p>
+<ul>
+<li><strong><code>IWAD</code> (Internal WAD):</strong> Contains the complete base game (<code>DOOM.WAD</code>, <code>DOOM2.WAD</code>).</li>
+<li><strong><code>PWAD</code> (Patch WAD):</strong> Contains custom overrides (custom maps, custom sprites, custom sounds).</li>
+</ul>
+<p>When you launch DOOM or UZDoom with <code>-iwad doom2.wad -file mymod.wad</code>, the engine concatenates <code>mymod.wad</code>&#39;s directory entries <strong>after</strong> <code>doom2.wad</code>&#39;s directory entries in a single global array (<code>lumpinfo[]</code>).</p>
+<p>When the engine requests an asset by name (e.g., <code>W_CheckNumForName(&quot;TITLEPIC&quot;)</code> or <code>W_GetNumForName(&quot;D_RUNNIN&quot;)</code>), <strong>it scans the directory array backwards from the last index down to <code>0</code></strong> (or uses a hash chain built in reverse order). Because the <code>PWAD</code> was loaded last, its lumps are found first — automatically shadowing the original <code>IWAD</code> assets in memory without ever touching the base game file on disk!</p>
+<hr>
+<h2>🧬 Part 2: The Evolutionary Tree (Quake, GoldSrc &amp; IW Engine)</h2>
+<p>As 3D hardware accelerated and engines grew, the WAD format branched across the entire <strong>id Tech family tree</strong>:</p>
+<pre><code>id Tech 1 (DOOM, 1993) ──► IWAD / PWAD (Flat 8-char lump directory)
+  │
+  ├──► Quake (id Tech 2, 1996) ──► .PAK (Hierarchical VFS) + WAD2 (&quot;WAD2&quot; for mipmaps/HUD gfx)
+  │      │
+  │      └──► Half-Life (GoldSrc, 1998) ──► WAD3 (&quot;WAD3&quot; for 16-bit paletted world textures &amp; decals)
+  │
+  └──► Quake III Arena (id Tech 3, 1999) ──► .PK3 (ZIP VFS)
+         │
+         └──► Call of Duty (IW Engine &amp; Treyarch T-Engine)
+                ├──► .IWD (ZIP VFS) &amp; .FF (FastFiles - precompiled zone streams)
+                └──► Demonware Publisher Storage: online_tuXX_*.wad (Treyarch T3WAD!)
+</code></pre>
+<p>Wait — look at that last branch. Why on earth does <em>Call of Duty</em> have <code>.wad</code> files inside its <strong>Demonware</strong> networking cache?</p>
+<hr>
+<h2>🕵️‍♂️ Part 3: Reverse-Engineering Call of Duty&#39;s Undocumented Demonware <code>.wad</code> Files</h2>
+<p>If you inspect the local Demonware Publisher Storage cache dumped by <em>Call of Duty</em> clients such as <strong>Plutonium</strong> (<code>%LOCALAPPDATA%\Plutonium\storage\demonware\&lt;title_id&gt;\pub\</code>), you will find files with <code>.wad</code> extensions sitting right next to FastFiles (<code>.ff</code>):</p>
+<ul>
+<li><code>18301\pub\online_tu14_mp_english.wad</code> (<em>Call of Duty: Black Ops 1</em> — Multiplayer)</li>
+<li><code>18301\pub\online_tu14_sp_english.wad</code> (<em>Call of Duty: Black Ops 1</em> — Singleplayer / Zombies)</li>
+<li><code>18397\pub\online_tu17_mp.wad</code> (<em>Call of Duty: Black Ops 2</em> — Multiplayer, Title Update 17)</li>
+<li><code>18397\pub\online_tu17_zm.wad</code> (<em>Call of Duty: Black Ops 2</em> — Zombies, Title Update 17)</li>
+</ul>
+<p>If you search Google for <code>online_tu17_mp.wad</code> or its magic bytes, <strong>there are zero public results</strong>. Even AI search engines claim <em>&quot;WAD is not a component of Demonware&#39;s backend infrastructure for Call of Duty.&quot;</em></p>
+<p>Let&#39;s open a hex editor and prove otherwise.</p>
+<h3>1. Why Does Demonware Use <code>.wad</code> Files?</h3>
+<p>In <em>Call of Duty</em>, <strong>Demonware</strong> handles authentication, matchmaking, stats, and <strong>Publisher Storage (<code>/pub/</code>)</strong> — a cloud key-value file store that the game client queries on boot via <code>bdTitleUtilities</code> / <code>DWFileTask</code> to fetch live-service configurations without requiring a binary patch.</p>
+<p>During the 7th-generation console era (Xbox 360 / PS3 / PC), millions of concurrent players logging into <em>Black Ops 1</em> (T5) and <em>Black Ops 2</em> (T6) needed to download up to <strong>8 separate configuration files</strong> before entering a lobby (playlists, contracts, Message of the Day, COD TV menus, League Play divisions, voting polls, and DVAR restrictions).</p>
+<p>Issuing 8 separate Demonware LSP/HTTP file-transfer RPCs per player created massive transaction overhead on Demonware&#39;s backend.</p>
+<ul>
+<li><strong>Infinity Ward&#39;s solution</strong> (seen in <em>MW3</em> / <code>18409\pub\playlists_tu21.aggr</code>) was an aggregate <code>.aggr</code> blob.</li>
+<li><strong>Treyarch&#39;s solution</strong> (in <em>Black Ops 1</em> and <em>Black Ops 2</em>) was to build a custom <strong>zlib-compressed WAD container (<code>online_tuXX_&lt;mode&gt;.wad</code>)</strong>!</li>
+</ul>
+<p>Instead of 8 network requests, the game downloads <strong>one single <code>.wad</code> file</strong> into RAM and mounts its lumps in memory.</p>
+<h3>2. Binary Specification of Treyarch&#39;s <code>T3WAD</code> (<code>0x543377AB</code>)</h3>
+<p>Inspecting the first 64 bytes of <code>online_tu17_mp.wad</code> reveals the following raw hex header:</p>
+<pre><code class="language-hex">00000000: ab 77 33 54 e2 79 5f 55 08 00 00 00 01 00 00 00  |.w3T.y_U........|
+00000010: 70 6c 61 79 6c 69 73 74 73 5f 6d 70 2e 69 6e 66  |playlists_mp.inf|
+00000020: 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |o...............|
+00000030: 00 b5 9f 00 03 69 2e 00 00 01 70 63 6f 64 74 76  |.....i....pcodtv|
+</code></pre>
+<p>Look closely at the first 4 bytes: <code>AB 77 33 54</code>.
+When read as a 32-bit Little-Endian integer, that is <strong><code>0x543377AB</code></strong> — which in ASCII is <strong><code>&quot;T3w\xAB&quot;</code></strong> (<strong>Treyarch WAD</strong>)!</p>
+<p>Even more fascinating is a classic 7th-gen console engineering quirk inside this file: <strong>Hybrid Endianness</strong>. While the 16-byte file header is stored in <strong>Little-Endian (LE)</strong>, the integers inside each 44-byte directory entry (<code>compSize</code>, <code>decompSize</code>, <code>filePos</code>) are stored in <strong>Big-Endian (BE)</strong> (network byte order / Xbox 360 PowerPC &amp; PS3 Cell BE native byte order)!</p>
+<p>Here is the exact reverse-engineered C struct definition for Treyarch&#39;s Demonware WAD format:</p>
+<pre><code class="language-c">#include &lt;stdint.h&gt;
+
+// Magic constant: 0x543377AB (&quot;T3w\xAB&quot; in Little-Endian)
+#define T3WAD_MAGIC 0x543377AB
+
+// 16-Byte File Header (Little-Endian)
+struct T3WadHeader {
+    uint32_t magic;       // 0x543377AB (Bytes: AB 77 33 54)
+    uint32_t timestamp;   // Unix Epoch build timestamp (LE)
+    uint32_t lumpCount;   // Number of compressed lumps in directory (LE)
+    uint32_t version;     // 0 = Black Ops 1 (T5), 1 = Black Ops 2 (T6) (LE)
+};
+
+// 44-Byte Lump Directory Entry (Starts immediately at offset 0x10)
+struct T3WadLumpEntry {
+    char     name[32];    // Null-padded ASCII filename (32 bytes, e.g. &quot;playlists_mp.info&quot;)
+    uint32_t compSize;    // BIG-ENDIAN: Size of zlib-compressed payload in bytes
+    uint32_t decompSize;  // BIG-ENDIAN: Original uncompressed size in bytes
+    uint32_t filePos;     // BIG-ENDIAN: Absolute byte offset to zlib stream (0x78 0xDA / 0x78 0x9C)
+};
+</code></pre>
+<h3>3. What is Actually Inside Those Demonware <code>.wad</code> Files?</h3>
+<p>By writing a parser for <code>T3WadHeader</code> and inflating each <code>zlib</code> stream at <code>filePos</code>, we can extract every single lump from the <code>.wad</code> files in <code>/storage/demonware/</code>:</p>
+<h4>📦 <code>online_tu14_mp_english.wad</code> (<em>Black Ops 1</em> / T5 — Built Oct 1, 2015 / May 1, 2012)</h4>
+<table>
+<thead>
+<tr>
+<th align="left">Lump #</th>
+<th align="left">Lump Name</th>
+<th align="left">Compressed</th>
+<th align="left">Decompressed</th>
+<th align="left">Purpose in Engine</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>0</code></td>
+<td align="left"><code>contracts.dat</code></td>
+<td align="left">16,652 B</td>
+<td align="left">160,573 B</td>
+<td align="left">Full table of Multiplayer Mercenary Contracts, COD Points rewards, and timers.</td>
+</tr>
+<tr>
+<td align="left"><code>1</code></td>
+<td align="left"><code>geogroups.info</code></td>
+<td align="left">357 B</td>
+<td align="left">545 B</td>
+<td align="left">Matchmaking geographic routing table (<code>#Los Angeles, US LAX 1</code>, <code>#New Jersey, US EWR 1</code>, etc.).</td>
+</tr>
+<tr>
+<td align="left"><code>2</code></td>
+<td align="left"><code>motd-mp-english.txt</code></td>
+<td align="left">131 B</td>
+<td align="left">165 B</td>
+<td align="left">Message of the Day ticker text at the bottom of the Multiplayer screen.</td>
+</tr>
+<tr>
+<td align="left"><code>3</code></td>
+<td align="left"><code>playlists_mp.info</code></td>
+<td align="left">7,157 B</td>
+<td align="left">76,350 B</td>
+<td align="left">All MP &amp; Wager Match playlists, map rotations, rulesets, and live <code>setdvar</code> overrides.</td>
+</tr>
+<tr>
+<td align="left"><code>4</code></td>
+<td align="left"><code>restrict_access_wad_mp.csv</code></td>
+<td align="left">100 B</td>
+<td align="left">135 B</td>
+<td align="left">Remote DVAR ACL table (<code>dvarname,client,unranked,ranked action</code>) to remotely lock/unlock console DVARs.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Fun Historical Easter Egg Inside the WADs:</strong><br>Comparing the official 2012 Demonware dump (<code>18409</code>) against the modded T5M/Plutonium dump (<code>18301</code>) reveals a piece of <em>Call of Duty</em> history frozen in time:  </p>
+<ul>
+<li>In the untouched May 1, 2012 WAD (<code>18409</code>), <code>motd-mp-english.txt</code> reads:<br><code>&quot;Black Ops 2 officially revealed! Head to www.facebook.com/codblackops to watch the reveal trailer. Follow @pcdev on twitter...&quot;</code>  </li>
+<li>In the 2015 custom client WAD (<code>18301</code>), the old T5M developers repacked the WAD so <code>motd-mp-english.txt</code> reads <code>&quot;T5M got ^5REKT&quot;</code> and <code>motd-sp-english.txt</code> reads <code>&quot;^5Demynnfire ^7loves you ^1&lt;3^6&lt;3 This just in: Leaderboards! Zombies are fun!&quot;</code></li>
+</ul>
+</blockquote>
+<h4>📦 <code>online_tu17_mp.wad</code> &amp; <code>online_tu17_zm.wad</code> (<em>Black Ops 2</em> / T6 — Title Update 17)</h4>
+<table>
+<thead>
+<tr>
+<th align="left">Lump #</th>
+<th align="left">Lump Name</th>
+<th align="left">Compressed</th>
+<th align="left">Decompressed</th>
+<th align="left">Purpose in Engine</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>0</code></td>
+<td align="left"><code>playlists_mp.info</code></td>
+<td align="left">46,495 B</td>
+<td align="left">223,534 B</td>
+<td align="left">Complete BO2 Multiplayer playlists (Version 1736), map weights, and live <code>setdvar</code> hotfixes.</td>
+</tr>
+<tr>
+<td align="left"><code>1</code></td>
+<td align="left"><code>codtv-mp.json</code></td>
+<td align="left">1,496 B</td>
+<td align="left">9,618 B</td>
+<td align="left">Folder &amp; feed hierarchy for BO2&#39;s <strong>COD TV / Theater Mode</strong> community shares.</td>
+</tr>
+<tr>
+<td align="left"><code>2</code></td>
+<td align="left"><code>voting-mp.json</code></td>
+<td align="left">362 B</td>
+<td align="left">1,327 B</td>
+<td align="left">In-game community voting poll definitions and expiration timestamps.</td>
+</tr>
+<tr>
+<td align="left"><code>3</code></td>
+<td align="left"><code>motd-mp-english.json</code></td>
+<td align="left">496 B</td>
+<td align="left">808 B</td>
+<td align="left">Structured JSON Message of the Day popup banner.</td>
+</tr>
+<tr>
+<td align="left"><code>4</code></td>
+<td align="left"><code>leagues.info</code></td>
+<td align="left">6,481 B</td>
+<td align="left">40,232 B</td>
+<td align="left"><strong>League Play</strong> competitive divisions, ranks, skill subdivision icons, and rulesets.</td>
+</tr>
+<tr>
+<td align="left"><code>5</code></td>
+<td align="left"><code>message_encryption.dat</code></td>
+<td align="left">183 B</td>
+<td align="left">1,280 B</td>
+<td align="left">Key material blob for Demonware client-server telemetry encryption.</td>
+</tr>
+<tr>
+<td align="left"><code>6</code></td>
+<td align="left"><code>entitlements.info</code></td>
+<td align="left">308 B</td>
+<td align="left">941 B</td>
+<td align="left">Bitmask key definitions for Season Pass &amp; DLC ownership checks.</td>
+</tr>
+<tr>
+<td align="left"><code>7</code></td>
+<td align="left"><code>youtube.info</code></td>
+<td align="left">219 B</td>
+<td align="left">262 B</td>
+<td align="left">Hardcoded Google YouTube Data API v2 developer key used by BO2&#39;s built-in Livestreaming feature!</td>
+</tr>
+</tbody></table>
+<p><em>(And <code>online_tu17_zm.wad</code> carries the 4 equivalent lumps for Zombies: <code>codtv-zm.json</code>, <code>voting-zm.json</code>, <code>motd-zm-english.json</code>, and <code>playlists_zm.info</code>).</em></p>
+<h3>4. Write Your Own Demonware <code>.wad</code> Unpacker (Node.js)</h3>
+<p>Want to unpack and inspect these <code>.wad</code> files yourself? Here is a complete, zero-dependency Node.js script that parses the <code>0x543377AB</code> header and inflates every lump:</p>
+<pre><code class="language-javascript">const fs = require(&#39;fs&#39;);
+const zlib = require(&#39;zlib&#39;);
+
+function unpackTreyarchWad(wadPath) {
+    const buf = fs.readFileSync(wadPath);
+    const magic = buf.readUInt32LE(0);
+    if (magic !== 0x543377AB) {
+        throw new Error(`Invalid T3WAD magic: 0x${magic.toString(16)}`);
+    }
+
+    const timestamp = new Date(buf.readUInt32LE(4) * 1000).toISOString();
+    const lumpCount = buf.readUInt32LE(8);
+    const version = buf.readUInt32LE(12);
+
+    console.log(`[T3WAD] ${wadPath} | Built: ${timestamp} | Lumps: ${lumpCount} | Ver: ${version}`);
+
+    let dirOffset = 16;
+    for (let i = 0; i &lt; lumpCount; i++) {
+        const rawName = buf.subarray(dirOffset, dirOffset + 32);
+        const nullIdx = rawName.indexOf(0);
+        const name = rawName.subarray(0, nullIdx &gt;= 0 ? nullIdx : 32).toString(&#39;utf8&#39;);
+
+        // Directory integers are Big-Endian (Network / Console byte order)
+        const compSize = buf.readUInt32BE(dirOffset + 32);
+        const decompSize = buf.readUInt32BE(dirOffset + 36);
+        const filePos = buf.readUInt32BE(dirOffset + 40);
+
+        const compressedSlice = buf.subarray(filePos, filePos + compSize);
+        const decompressed = zlib.inflateSync(compressedSlice);
+
+        console.log(`  -&gt; [${i}] ${name} (${compSize}B -&gt; ${decompressed.length}B @ 0x${filePos.toString(16)})`);
+        dirOffset += 44;
+    }
+}
+</code></pre>
+<h3>5. Do Modern Call of Duty Games (BO3, MW19, Cold War, BO6) Still Use <code>.wad</code>?</h3>
+<p>Starting with <strong>Black Ops 3 (T7)</strong> and <strong>Black Ops 4 (T8)</strong>, and continuing into the unified <strong>IW8 / IW9</strong> engines (<em>Modern Warfare 2019</em>, <em>Black Ops Cold War</em>, <em>MWII</em>, <em>MWIII</em>, <em>Black Ops 6</em>):</p>
+<ol>
+<li><strong>Live Hotfixes Moved to <code>FFOTD</code> &amp; <code>.lpf</code>:</strong> Because T7+ introduced the <strong>Lua UI (LUI)</strong> virtual machine and hot-patchable <strong>GSC/CSC ScriptBundles</strong>, simple text playlists were no longer enough for live updates. Demonware Publisher Storage shifted to serving <strong><code>core_ffotd_tuXX_*.ff</code> (FastFile of the Day)</strong> and signed playlist/hotfix archives.</li>
+<li><strong>Heavy Assets Moved to <code>.xpak</code> &amp; CAS <code>.pak</code>:</strong> Streamed textures, audio, and geometry moved to LZ4/Oodle-compressed <code>.xpak</code> (T7/T8/T9) and Content-Addressable Storage (CAS) <code>.pak</code> containers (IW8/IW9).</li>
+<li><strong>Legacy Naming Survives in Engine Symbols:</strong> Even when the file extension changed, internal C++ symbols and DVAR tables inside the Demonware <code>bdTitleUtilities</code> wrapper still reference <em>&quot;online WAD&quot;</em> loading tasks (<code>LiveStorage_GetOnlineWad</code>, <code>restrict_access_wad</code>) as a fossilized holdover from the T5/T6 era!</li>
+</ol>
+<hr>
+<h2>🔥 Part 4: How id Tech 7 &amp; id Tech 8 Handle WADs Today</h2>
+<p>What about id Software itself — the birthplace of the WAD? How do modern <strong>id Tech 7</strong> (<em>DOOM Eternal</em>) and <strong>id Tech 8</strong> (<em>DOOM: The Dark Ages</em>) treat <code>.wad</code> files?</p>
+<p>There are two sides to the story: <strong>literal legacy <code>.wad</code> support</strong> and <strong>the modern <code>.resources</code> / <code>.streamdb</code> architecture</strong>.</p>
+<h3>1. Literal <code>.wad</code> Execution Inside id Tech 7 (<code>base/classicwads/</code>)</h3>
+<p>If you browse the installation directory of <em>DOOM Eternal</em> (id Tech 7), you will find a folder that looks straight out of 1994:</p>
+<pre><code class="language-text">DOOM Eternal/
+ └── base/
+      └── classicwads/
+           ├── doom.wad    (The Ultimate DOOM IWAD)
+           └── doom2.wad   (DOOM II: Hell on Earth IWAD)
+</code></pre>
+<p>Why are unmodified 1993/1994 <code>.wad</code> files sitting inside a cutting-edge Vulkan engine?
+Inside the <strong>Fortress of Doom</strong> (the Doom Slayer&#39;s orbital hub — located in the Mars/Earth system!), there is an old 1990s CRT computer on the Slayer&#39;s desk. When you interact with it, <strong>id Tech 7 boots a native, embedded classic DOOM engine instance</strong> that renders directly into a virtual CRT texture inside the 3D scene and reads <code>base/classicwads/doom.wad</code> and <code>doom2.wad</code> using the classic <code>wadinfo_t</code> / <code>filelump_t</code> lump loader!</p>
+<p>In fact, PC modders quickly discovered that because id Tech 7&#39;s embedded emulator uses standard <code>W_Init</code> lump parsing, you can replace or drop custom vanilla-compatible <code>.wad</code> files into <code>base/classicwads/</code> and play custom DOOM levels on the Doom Slayer&#39;s computer inside <em>DOOM Eternal</em>.</p>
+<h3>2. From <code>.wad</code> to <code>.resources</code> &amp; <code>.streamdb</code> (The 64-Bit Spiritual Successor)</h3>
+<p>For its own native assets, id Tech 7 and id Tech 8 no longer use <code>.wad</code> or <code>.pk4</code>. Instead, they split the archive system into two specialized container types:</p>
+<ol>
+<li><p><strong><code>.resources</code> Archives (Logic, Decls, Base Metadata &amp; Meshes):</strong></p>
+<ul>
+<li>Conceptually, an id Tech 7 <code>.resources</code> file (<code>IDCL</code> header) is the <strong>64-bit, Oodle-Kraken-compressed descendant of Carmack&#39;s 1993 WAD</strong>.</li>
+<li>Just like a WAD has a header pointing to a flat Lump Directory (<code>infotableofs</code>), a <code>.resources</code> container has a binary header pointing to a 64-bit <strong>Resource Directory Table</strong> (<code>filepos</code>, <code>compressedSize</code>, <code>uncompressedSize</code>, <code>resourceType</code>, <code>nameHash</code>, and dependency indices).</li>
+<li>Even classic DOOM&#39;s PWAD override philosophy lives on: id Tech 7 modding tools (<code>EternalModInjector</code> / <code>SAMUEL</code>) inject modded assets by patching the <code>.resources</code> offset directory and updating container hashes, echoing how PWADs shadowed IWAD lumps 30 years ago.</li>
+</ul>
+</li>
+<li><p><strong><code>.streamdb</code> Archives (GPU-Direct MegaTexture / Geometry Streaming):</strong></p>
+<ul>
+<li>Classic WADs loaded entire lumps into CPU RAM. In a modern 4K engine, decompressing gigabytes of textures and high-poly meshes on the CPU would cause severe frame-time spikes.</li>
+<li><code>.streamdb</code> files store pre-tiled texture mipmaps and geometry LOD pages indexed by 64-bit hash keys. At runtime, id Tech 7/8 streams compressed blocks directly from NVMe storage into Vulkan device-local VRAM (and via <strong>DirectStorage</strong> GPU decompression in id Tech 8), bypassing traditional filesystem overhead entirely.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>🏁 Conclusion</h2>
+<p>From a 12-byte header and 8-character lump names in 1993 <em>DOOM</em>, to Treyarch&#39;s undocumented <code>0x543377AB</code> (<code>T3w\xAB</code>) Demonware <code>.wad</code> containers powering <em>Call of Duty: Black Ops</em> live-service playlists, to <code>base/classicwads/</code> and 64-bit <code>.resources</code> tables in <em>DOOM Eternal</em> — the <strong>WAD</strong> is one of the longest-living architectural patterns in video game history.</p>
+<blockquote>
+<p><strong>Want to see classic <code>.wad</code> loading in action right now?</strong><br>Open the <strong>CLI Terminal</strong> on this portfolio and type <strong><code>mars</code></strong> (or <strong><code>delicia doom</code></strong>) to boot <strong>UZDoom (WebAssembly)</strong> directly in your browser, complete with on-demand <code>.wad</code> streaming and local IndexedDB caching!</p>
+</blockquote>
+
+                </div>
+            </article>
+        </main>
+
+        <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">
+            <p>Eduardo Gelain · SpetDev. All rights reserved.</p>
+            <p class="mt-1">
+                <a href="/sitemap.xml" class="hover:underline text-slate-400">Sitemap</a> · 
+                <a href="/llm.txt" class="hover:underline text-slate-400">LLM Context</a> · 
+                <a href="/privacy.html" class="hover:underline text-slate-400">Privacy Policy</a>
+            </p>
+        </footer>
+
+        <noscript>
+            <div class="p-6 bg-[#050505]/95 backdrop-blur-md border-t border-primary/40 text-center text-slate-300 text-sm">
+                <p><strong>Note:</strong> JavaScript is optional. All portfolio projects, technical skills, and research journal articles above are fully accessible without scripts.</p>
+            </div>
+        </noscript>
+    </div>
+
+    <script defer src="/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('custom-cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Adiciona classe hovering quando o mouse passa por algo clicável
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable')) {
+                    cursor.classList.add('hovering');
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable')) {
+                    cursor.classList.remove('hovering');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
