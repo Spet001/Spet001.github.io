@@ -4811,6 +4811,8 @@ const JournalSection = ({ onNavigateJournal }) => {
             const vA = getEntryViews(a) ?? -1;
             const vB = getEntryViews(b) ?? -1;
             if (vB !== vA) return vB - vA;
+        } else if (sortBy === 'alpha') {
+            return (a.title || '').localeCompare(b.title || '');
         }
         return 0;
     });
@@ -4830,31 +4832,23 @@ const JournalSection = ({ onNavigateJournal }) => {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
-                        <div className="inline-flex items-center p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono">
-                            <button
-                                type="button"
-                                onClick={() => { playSoftClick(); setSortBy('popular'); }}
-                                className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer clickable ${
-                                    sortBy === 'popular'
-                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
-                                        : 'text-slate-400 hover:text-white border border-transparent'
-                                }`}
+                        <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                            <span>{lang === 'pt' ? 'Filtrar por:' : 'Filter by:'}</span>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => { playSoftClick(); setSortBy(e.target.value); }}
+                                className="px-2.5 py-1 rounded-lg bg-black/60 border border-white/[0.1] text-xs text-white font-mono focus:outline-none focus:border-primary/60 transition-colors cursor-pointer clickable"
                             >
-                                <i className="far fa-eye text-[10px]"></i>
-                                <span>{lang === 'pt' ? 'Populares' : 'Popular'}</span>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => { playSoftClick(); setSortBy('date'); }}
-                                className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer clickable ${
-                                    sortBy === 'date'
-                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
-                                        : 'text-slate-400 hover:text-white border border-transparent'
-                                }`}
-                            >
-                                <i className="far fa-calendar-alt text-[10px]"></i>
-                                <span>{lang === 'pt' ? 'Data' : 'Date'}</span>
-                            </button>
+                                <option value="popular" className="bg-[#0a0f1d] text-white">
+                                    {lang === 'pt' ? 'Popularidade' : 'Popularity'}
+                                </option>
+                                <option value="date" className="bg-[#0a0f1d] text-white">
+                                    {lang === 'pt' ? 'Data' : 'Date'}
+                                </option>
+                                <option value="alpha" className="bg-[#0a0f1d] text-white">
+                                    {lang === 'pt' ? 'Ordem Alfabética' : 'Alphabetical'}
+                                </option>
+                            </select>
                         </div>
 
                         <a
@@ -8780,6 +8774,19 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         }
     }, [activePostId]);
 
+    const lastTrackedSlugRef = useRef(null);
+
+    const mergeViews = useCallback((incomingViews) => {
+        if (!incomingViews) return;
+        setViewsMap(prev => {
+            const next = { ...prev };
+            for (const [k, v] of Object.entries(incomingViews)) {
+                next[k] = Math.max(next[k] || 0, v);
+            }
+            return next;
+        });
+    }, []);
+
     useEffect(() => {
         fetch('/journal/entries.json')
             .then(res => res.json())
@@ -8794,11 +8801,11 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
             .then(res => res.json())
             .then(data => {
                 if (data && data.views) {
-                    setViewsMap(data.views);
+                    mergeViews(data.views);
                 }
             })
             .catch(() => {});
-    }, []);
+    }, [mergeViews]);
 
     const getEntrySlug = useCallback((entry) => {
         if (!entry) return '';
@@ -8839,11 +8846,8 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         const canonicalSlug = getEntrySlug(entry);
         if (!canonicalSlug) return;
 
-        const sessionKey = `spet_journal_viewed_${canonicalSlug}`;
-        try {
-            if (sessionStorage.getItem(sessionKey)) return;
-            sessionStorage.setItem(sessionKey, '1');
-        } catch (e) {}
+        if (lastTrackedSlugRef.current === canonicalSlug) return;
+        lastTrackedSlugRef.current = canonicalSlug;
 
         fetch('https://journal.gelain15mj.workers.dev/api/journal/view', {
             method: 'POST',
@@ -8853,11 +8857,13 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
             .then(res => res.json())
             .then(data => {
                 if (data && data.views) {
-                    setViewsMap(data.views);
+                    mergeViews(data.views);
                 }
             })
-            .catch(() => {});
-    }, [selectedId, entries, getEntrySlug]);
+            .catch(() => {
+                lastTrackedSlugRef.current = null;
+            });
+    }, [selectedId, entries, getEntrySlug, mergeViews]);
 
     useEffect(() => {
         if (!selectedId) return;
@@ -8968,6 +8974,8 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                 const vA = getEntryViews(a) ?? -1;
                 const vB = getEntryViews(b) ?? -1;
                 if (vB !== vA) return vB - vA;
+            } else if (sortBy === 'alpha') {
+                return (a.title || '').localeCompare(b.title || '');
             }
             return 0;
         });
@@ -9037,7 +9045,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                         </span>
                     </div>
 
-                    {/* Search filter & Sort toggle */}
+                    {/* Search filter & Sort dropdown */}
                     <div className="py-3 space-y-2.5">
                         <div className="relative">
                             <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
@@ -9050,31 +9058,23 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-black/40 border border-white/[0.08] text-[11px] font-mono">
-                            <button
-                                type="button"
-                                onClick={() => { playSoftClick(); setSortBy('popular'); }}
-                                className={`py-1 px-2 rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer clickable ${
-                                    sortBy === 'popular'
-                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
-                                        : 'text-slate-400 hover:text-white border border-transparent'
-                                }`}
+                        <div className="flex items-center justify-between gap-2 text-xs font-mono text-slate-400">
+                            <span className="shrink-0">{lang === 'pt' ? 'Filtrar por:' : 'Filter by:'}</span>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => { playSoftClick(); setSortBy(e.target.value); }}
+                                className="flex-1 px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.1] text-xs text-white font-mono focus:outline-none focus:border-primary/60 transition-colors cursor-pointer clickable"
                             >
-                                <i className="far fa-eye text-[10px]"></i>
-                                <span>{lang === 'pt' ? 'Popularidade' : 'Popularity'}</span>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => { playSoftClick(); setSortBy('date'); }}
-                                className={`py-1 px-2 rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer clickable ${
-                                    sortBy === 'date'
-                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
-                                        : 'text-slate-400 hover:text-white border border-transparent'
-                                }`}
-                            >
-                                <i className="far fa-calendar-alt text-[10px]"></i>
-                                <span>{lang === 'pt' ? 'Data' : 'Date'}</span>
-                            </button>
+                                <option value="popular" className="bg-[#0a0f1d] text-white">
+                                    {lang === 'pt' ? 'Popularidade' : 'Popularity'}
+                                </option>
+                                <option value="date" className="bg-[#0a0f1d] text-white">
+                                    {lang === 'pt' ? 'Data' : 'Date'}
+                                </option>
+                                <option value="alpha" className="bg-[#0a0f1d] text-white">
+                                    {lang === 'pt' ? 'Ordem Alfabética' : 'Alphabetical'}
+                                </option>
+                            </select>
                         </div>
                     </div>
 
