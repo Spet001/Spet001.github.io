@@ -424,7 +424,10 @@ const PORTFOLIO_DATA = {
             id: "outcaster_fps",
             category: "gamedev",
             categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
-            image: "/assets/outcaster img2.png",
+            image: "/assets/outcastertxt.jpg",
+            caseStudyImages: [
+                "/assets/outcaster img2.png"
+            ],
             title: "Outcaster - Retro FPS Templates",
             featured: true,
             live: "https://spet01.itch.io/",
@@ -448,11 +451,16 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
             id: "sparky_rush_qa",
             category: "qa",
             categoryLabel: { pt: "QA & Controle de Qualidade", en: "QA & Testing" },
             image: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/257185670/d0cf56f005af6f109edd9ee603dc2da75fa0aaf1/movie_232x130.jpg?t=1756993430",
+            caseStudyImages: [
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3592020/64b400a9793301cc6e9b8e99ea671c0fc4dc6da1/ss_64b400a9793301cc6e9b8e99ea671c0fc4dc6da1.1920x1080.jpg?t=1790620839",
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3592020/fcc031696d53baef2817eef8e9bd84fec9541b31/ss_fcc031696d53baef2817eef8e9bd84fec9541b31.1920x1080.jpg?t=1790620839",
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3592020/d41454008b3fc2ad5d2e700f60ad0e52f1f32893/ss_d41454008b3fc2ad5d2e700f60ad0e52f1f32893.1920x1080.jpg?t=1790620839"
+            ],
             title: "Sparky Rush: Purrils in Pawsville (Steam QA)",
             featured: true,
             live: "https://store.steampowered.com/app/3592020/Sparky_Rush_Purrils_in_Pawsville/",
@@ -476,11 +484,78 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
+            id: "portfolio_web",
+            title: "Portfólio Web (SpetDev)",
+            category: "tools",
+            categoryLabel: { pt: "Web & Ferramentas", en: "Web & Tools" },
+            image: "/assets/spet01.dev.gif",
+            caseStudyImages: [
+                "/assets/spet01.dev.gif"
+            ],
+            repo: "https://github.com/Spet001/Spet001.github.io",
+            live: "#top",
+            journalId: "Cloudflare-Workers-Backend",
+            featured: true,
+            tags: ["React", "Three.js / WebGL", "Cloudflare Workers", "WebAssembly", "TailwindCSS", "Technical Journal"],
+            description: {
+                pt: "O próprio site em que você está navegando: uma SPA interativa construída em React, Three.js (WebGL) e TailwindCSS. Conta com simulação espacial 3D (Tema Espaço 2.0), back-end serverless em Cloudflare Workers + KV, Journal técnico com SSG e tradução on-demand, emulação WebAssembly (DOOM / GSC VM), terminal CLI (Ctrl+K) e easter eggs.",
+                en: "The very website you are exploring: an interactive SPA built with React, Three.js (WebGL), and TailwindCSS. Features a full 3D space simulation (Space 2.0 theme), serverless Cloudflare Workers + KV backend, SSG Technical Journal with on-demand translation, WebAssembly emulation (DOOM / GSC VM), interactive CLI terminal (Ctrl+K), and easter eggs."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Construir uma plataforma autoral de engenharia e gamedev que una simulação 3D fluida no navegador, artigos técnicos indexáveis pelo Google (SEO estático), métricas reais e autenticação OAuth sem custos de servidor dedicado.",
+                    en: "Build an authentic engineering and gamedev platform combining smooth in-browser 3D simulation, Google-indexable technical articles (static SEO), real-time telemetry, and OAuth authentication with zero dedicated server costs."
+                },
+                solution: {
+                    pt: "Arquitetura híbrida em React + Three.js com pipeline SSG (Static Site Generation) para o Technical Journal, API serverless em Cloudflare Workers + KV para telemetria de views, autenticação Patreon OAuth2 e chatbot IA, além de port WebAssembly do UZDoom e interpretador GSC VM.",
+                    en: "Engineered a hybrid React + Three.js architecture with a custom SSG pipeline for the Technical Journal, a serverless Cloudflare Workers + KV API for view telemetry, Patreon OAuth2, and AI assistant, plus in-browser WebAssembly UZDoom and GSC VM execution."
+                },
+                impact: {
+                    pt: "Aplicação de altíssima performance hospedada gratuitamente no GitHub Pages + Cloudflare Workers, consolidando o portfólio e o Technical Journal com mais de 1.200 acessos.",
+                    en: "High-performance application hosted at zero cost on GitHub Pages + Cloudflare Workers, consolidating the portfolio and Technical Journal with over 1,200 real-time visits."
+                }
+            }
+        },
+        {
+            id: "technical_journal",
+            title: { pt: "Technical Journal (Artigos & Engenharia Reversa)", en: "Technical Journal (Research & Reverse Engineering)" },
+            category: "reverse",
+            categoryLabel: { pt: "Pesquisa & Engenharia Reversa", en: "Research & Reverse Engineering" },
+            image: "/assets/journal thumb.jpg",
+            caseStudyImages: [
+                "/assets/journal demo.jpg"
+            ],
+            live: "/journal/",
+            featured: true,
+            tags: ["Reverse Engineering", "Low-Level C++", "GSC VM", "GDK / UWP", "Architecture", "Technical Writing"],
+            description: {
+                pt: "Publicação técnica autoral documentando pesquisas de baixo nível, engenharia reversa de motores de jogos (Call of Duty T5/T6/T9, DOOM WADs), bypass de sandboxes UWP/GDK, injeção de bytecode GSC e arquitetura serverless. Inclui sistema de busca por tags, ordenação por popularidade e tradução automática on-demand.",
+                en: "Original technical publication documenting low-level systems research, game engine reverse engineering (Call of Duty T5/T6/T9, DOOM WADs), UWP/GDK sandbox bypassing, GSC bytecode injection, and serverless architecture. Features tag filtering, popularity sorting, and on-demand translation."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Compartilhar pesquisas densas de engenharia reversa, dumps de memória e análises de assembly/C++ em um formato acessível, indexável por mecanismos de busca (SEO estático) e com proteção de acesso para artigos confidenciais.",
+                    en: "Publish deep reverse engineering research, memory dumps, and assembly/C++ breakdowns in an accessible, search-engine-indexable format (static SEO) while gating confidential write-ups."
+                },
+                solution: {
+                    pt: "Desenvolvimento de um motor de blog técnico integrado ao portfólio com geração estática (SSG) para metadados OpenGraph/SEO, contador de visualizações em tempo real via Cloudflare Workers + KV, integração OAuth2 com Patreon para artigos exclusivos e tradução client-side preservando blocos de código e jargões técnicos.",
+                    en: "Engineered a custom technical blog engine with Static Site Generation (SSG) for OpenGraph/SEO metadata, real-time view telemetry via Cloudflare Workers + KV, Patreon OAuth2 gating for confidential research, and client-side translation preserving code blocks and technical terminology."
+                },
+                impact: {
+                    pt: "Mais de 12 artigos técnicos detalhados cobrindo desde injeção em VMs proprietárias até otimização de jogos clássicos (DXVK/LAA), somando centenas de leituras orgânicas da comunidade de modding e engenharia.",
+                    en: "Over 12 in-depth technical articles covering proprietary VM injection to classic game optimization (DXVK/LAA), gathering hundreds of organic reads from the modding and systems engineering community."
+                }
+            }
+        },
+        {
             id: "resurge_client",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & Sistemas", en: "Reverse Engineering & Systems" },
             image: "https://resurge.gamer.gd/RESURGE_600_x_240_px_1.gif",
+            caseStudyImages: [
+                "/assets/resurge.png"
+            ],
             title: "Resurge Client (BO3 Multi-Platform)",
             featured: true,
             live: "https://resurge.gamer.gd/",
@@ -510,6 +585,8 @@ const PORTFOLIO_DATA = {
             category: "gamedev",
             categoryLabel: { pt: "Recursos 3D & Arte", en: "3D Assets & Art" },
             image: "/assets/free_3d_assets_thumbnail.jpg",
+            caseStudyModel: "/3d/rocket.glb",
+            journalId: "Open-Source-3D-Assets",
             title: "Free to Use 3D Assets (Low Poly)",
             featured: true,
             github: "#", 
@@ -538,7 +615,10 @@ const PORTFOLIO_DATA = {
             id: "cw_gsc_injector",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa", en: "Reverse Engineering" },
-            image: "/assets/cwgsc.png",
+            image: "/assets/cold war gsc.jpg",
+            caseStudyImages: [
+                "/assets/cwgsc.png"
+            ],
             title: "CW GSC Injector (MS Store / Xbox PC)",
             featured: true,
             repo: "https://gitlab.com/Spet001/CW-UWP-GSC-Injector",
@@ -563,15 +643,15 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
             id: "bo2_bo1_msclients",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & GSC Modding", en: "Reverse Engineering & GSC Modding" },
-            image: "https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png",
-            images: [
-                'https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png',
-                'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo1gsc.png',
-                'https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo2.png'
+            image: "/assets/zpgdk thumb.jpg",
+            caseStudyImages: [
+                "https://gitlab.com/Spet001/msclients/-/raw/master/assets/s1s.png",
+                "https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo1gsc.png",
+                "https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo2.png"
             ],
             title: "BO1 & BO2 MS Store Clients & GSC Injector",
             featured: true,
@@ -597,11 +677,14 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
             id: "gsc_dumps_and_sources",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & GSC Dumps", en: "Reverse Engineering & GSC Dumps" },
-            image: "/assets/gscmodinaction.png",
+            image: "/assets/gsc dumps thumb.jpg",
+            caseStudyImages: [
+                "/assets/gscmodinaction.png"
+            ],
             title: "GSC Dumps and Pre-Compiled/Uncompiled Sources",
             featured: true,
             repo: "https://gitlab.com/Spet001/t5-gdk-gsc-dumps",
@@ -628,11 +711,16 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
             id: "pau_no_gato_game",
             category: "gamedev",
             categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
             image: "https://img.itch.zone/aW1nLzIzNjkzMTg4LnBuZw==/315x250%23c/eUMvyr.png",
+            caseStudyImages: [
+                "https://img.itch.zone/aW1hZ2UvMzk3MzA0MS8yNDk5MTc2OC5wbmc=/347x500/1M485B.png",
+                "https://img.itch.zone/aW1hZ2UvMzk3MzA0MS8yNDk5MTc4MS5wbmc=/347x500/qmwFiC.png",
+                "https://img.itch.zone/aW1hZ2UvMzk3MzA0MS8yNDk5MjExMC5qcGc=/347x500/ckW8Nw.jpg"
+            ],
             title: "Atirei o Pau no Gato",
             featured: false,
             live: "https://zodiacogames.itch.io/atirei-o-pau-no-gato-mas-o-gato-no-morreu-e-agora-ele-vai-se-vingar",
@@ -656,11 +744,14 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
             id: "ff13_fix_ms_store",
             category: "tools",
             categoryLabel: { pt: "Ferramentas & Otimização", en: "Tools & Optimization" },
             image: "https://staticdelivery.nexusmods.com/mods/2086/images/thumbnails/59/59-1754939857-517189306.png",
+            caseStudyImages: [
+                "/assets/ff13msdemo.png"
+            ],
             title: "FF13Fix for Microsoft Store",
             featured: false,
             live: "https://www.nexusmods.com/finalfantasy13/mods/59",
@@ -684,11 +775,14 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
+        {
             id: "autoparms_yakuza",
             category: "tools",
             categoryLabel: { pt: "Ferramentas & Automação", en: "Tools & Automation" },
             image: "https://staticdelivery.nexusmods.com/mods/7333/images/thumbnails/181/181-1754787442-12213008.png",
+            caseStudyImages: [
+                "https://staticdelivery.nexusmods.com/mods/7333/images/181/181-1754787420-1247728496.png"
+            ],
             title: "AutoParMS - Yakuza Mod Toolkit",
             featured: false,
             live: "https://www.nexusmods.com/likeadragonpirateyakuzainhawaii/mods/181",
@@ -712,11 +806,14 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-                {
+        {
             id: "t6_gsc_mods",
             category: "mods",
             categoryLabel: { pt: "Modificações GSC", en: "GSC Mods" },
             image: "/assets/opensourcet6gscs.jpg",
+            caseStudyImages: [
+                "/assets/t6gsc.png"
+            ],
             title: { pt: "Modos de Jogo Customizados Open Source T6 (GSC)", en: "Providing Open Source T6 Custom Game Modes GSC!" },
             description: {
                 pt: "Um repositório com scripts GSC abertos e documentados para mods complexos de Black Ops 2 como Zombieland, Deathrun e Counter-Strike.",
@@ -739,7 +836,7 @@ const PORTFOLIO_DATA = {
                 },
                 impact: {
                     pt: "Permitiu a preservação da história do modding do jogo.",
-                    en: "Allowed the preservation of the game's modding history)."
+                    en: "Allowed the preservation of the game's modding history."
                 }
             }
         },
@@ -801,35 +898,6 @@ const PORTFOLIO_DATA = {
                   }
             }
         },
-{
-            id: "portfolio_web",
-            title: "Portfólio Web (SpetDev)",
-            category: "tools",
-            categoryLabel: { pt: "Web & Ferramentas", en: "Web & Tools" },
-            image: "/assets/portweb.png",
-            repo: "https://github.com/Spet001/Spet001.github.io",
-            live: "#top",
-            featured: false,
-            tags: ["React", "TailwindCSS", "HTML5 Canvas Physics", "WebAssembly", "Express.js", "Technical Journal"],
-            description: {
-                pt: "O próprio site em que você está navegando: uma SPA interativa e de alta performance construída em React e TailwindCSS. Conta com simulação de física em Canvas (tether astronauta), Journal técnico em Markdown, easter egss interativos (jogos,musicas), terminal CLI interativo (Ctrl+K) e suporte bilíngue.",
-                en: "The very website you are currently exploring: an interactive, high-performance SPA crafted with React and TailwindCSS. Features custom Canvas tether physics, a technical Markdown Journal, easter eggs, interactive CLI terminal (Ctrl+K), and seamless bilingual support."
-            },
-            caseStudy: {
-                challenge: { 
-                    pt: "Criar uma presença online autêntica e imersiva para um desenvolvedor focado em sistemas de baixo nível e gamedev, fugindo de templates genéricos e integrando simulação física, terminal retro e emulação de jogos diretamente no navegador.",
-                    en: "Create an authentic, immersive web presence for a low-level systems & game developer, breaking away from cookie-cutter templates to integrate real physics simulations, a retro CLI console, and in-browser game emulation."
-                },
-                solution: { 
-                    pt: "Desenvolvimento de uma arquitetura modular em React com canvas de física tether 2D a 60 FPS, terminal CLI acessível via atalhos de teclado, motor de renderização de Journal para artigos técnicos em Markdown e back-end em Express para servir assets e newsletter.",
-                    en: "Engineered a modular React architecture featuring a 60 FPS 2D tether canvas physics loop, keyboard-accessible CLI console, Markdown rendering pipeline for technical journal articles, and an Express backend for asset delivery and newsletter subscription."
-                },
-                impact: {
-                      pt: "Uma aplicação leve, de alta performance e totalmente responsiva, consolidando a marca SpetDev com mais de 1200 acessos contabilizados em tempo real.",
-                      en: "A lightweight, high-performance, and fully responsive application, consolidating the SpetDev brand with over 1200 real-time visits."
-                  }
-            }
-        },
         {
             id: "fable3_fixer",
             title: "Fable 3 Fixer (App Electron)",
@@ -855,6 +923,40 @@ const PORTFOLIO_DATA = {
                 impact: {
                     pt: "Mais de 5.200 downloads totais (4.600+ downloads únicos) e 23.400+ visualizações no NexusMods com 54 Endorsements, proporcionando até 2x mais FPS, eliminando pop-in e stuttering, e revitalizando o jogo para a comunidade em PCs modernos.",
                     en: "Over 5,200 total downloads (4,600+ unique downloads) and 23,400+ views on NexusMods with 54 Endorsements, delivering up to 2× higher frame rates, eliminating stuttering, and revitalizing the game on modern PC hardware."
+                }
+            }
+        },
+        {
+            id: "delicia_mod_doom",
+            title: { pt: "Delícia Mod — DOOM (1993) Total Conversion", en: "Delícia Mod — DOOM (1993) Total Conversion" },
+            category: "gamedev",
+            categoryLabel: { pt: "Modding & Game Design", en: "Modding & Game Design" },
+            image: "/assets/delicia thumb.jpg",
+            caseStudyImages: [
+                "https://staticdelivery.nexusmods.com/mods/1839/images/22/22-1756907095-554372746.png",
+                "https://staticdelivery.nexusmods.com/mods/1839/images/22/22-1756907094-402904133.png"
+            ],
+            live: "https://www.nexusmods.com/doom1993/mods/22",
+            liveLabel: { pt: "NexusMods", en: "NexusMods" },
+            journalId: "What-Is-A-WAD-Modern-Games",
+            featured: true,
+            tags: ["DOOM (1993)", "WAD / Lump Modding", "ZScript / DECORATE", "Total Conversion", "NexusMods"],
+            description: {
+                pt: "Total Conversion bem-humorada para o clássico DOOM (1993) inspirada no lendário meme brasileiro de Jailson Mendes. Substitui sprites, texturas, efeitos sonoros e trilha sonora através de manipulação de lumps em arquivos WAD e scripts customizados.",
+                en: "Humorous Total Conversion mod for classic DOOM (1993) inspired by the legendary Brazilian Jailson Mendes meme. Replaces enemy sprites, level textures, sound effects, and soundtrack via custom WAD lump manipulation and actor scripts."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Adaptar assets visuais, sprites rotacionais e amostras de áudio para a paleta indexada e arquitetura de lumps da engine clássica sem descaracterizar o combate frenético — mantendo a verdadeira essência de um clássico 'DELICIA DOOM' mesmo sob restrições de 35 tics por segundo.",
+                    en: "Adapt custom rotational sprites, textures, and audio samples to the indexed palette and lump architecture of the classic id Tech 1 engine without breaking fast-paced combat — preserving the true 'DELICIA DOOM' experience under strict 35-tic frame timing."
+                },
+                solution: {
+                    pt: "Engenharia de um pacote WAD/PK3 modularizado com substituição de estados de atores, mapeamento de canais de áudio customizados e integração com portabilidades modernas (incluindo WebAssembly). Reza a lenda que apenas digitar o protocolo 'DELICIA' (ou a senha completa 'DELICIA DOOM') em um terminal de linha de comando é capaz de invocar essa anomalia diretamente no espaço...",
+                    en: "Engineered a modular WAD/PK3 archive with custom actor state overrides, sound channel remapping, and modern source-port compatibility (including WebAssembly). Rumor has it that typing the 'DELICIA' protocol (or the full passphrase 'DELICIA DOOM') into a command-line terminal can invoke this anomaly directly in deep space..."
+                },
+                impact: {
+                    pt: "Disponibilizado gratuitamente no NexusMods para entusiastas de modding retrô — e escondido nas profundezas deste próprio sistema para quem tiver coragem de responder à pergunta do terminal.",
+                    en: "Released on NexusMods for the retro modding community — and secretly embedded deep within this very system for anyone bold enough to answer the terminal's password prompt."
                 }
             }
         }
@@ -1856,6 +1958,36 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         }
         let oxIndex = 0;
 
+        const avoidCelestialCollision = (pos, cylindrical = true) => {
+            const bodies = isMarsActive
+                ? [
+                    { x: 12, y: 14, z: -30, r: 25 },
+                    { x: 44, y: -6, z: -32, r: 19 }
+                ]
+                : [
+                    {
+                        x: 25,
+                        y: 15,
+                        z: -30,
+                        r: isMoonChickenActive ? 27 : (isDeliciaActive ? 24 : 16)
+                    }
+                ];
+
+            for (const b of bodies) {
+                const dx = pos.x - b.x;
+                const dy = pos.y - b.y;
+                const dz = pos.z - b.z;
+                const distSq = cylindrical ? (dx * dx + dy * dy) : (dx * dx + dy * dy + dz * dz);
+                if (distSq < b.r * b.r) {
+                    const dist2D = Math.hypot(dx, dy);
+                    const angle = dist2D > 0.001 ? Math.atan2(dy, dx) : (Math.random() * Math.PI * 2);
+                    const targetR = b.r + (cylindrical ? (2 + Math.random() * 8) : 1.5);
+                    pos.x = b.x + Math.cos(angle) * targetR;
+                    pos.y = b.y + Math.sin(angle) * targetR;
+                }
+            }
+        };
+
         const performSwap = () => {
             for (let i = 0; i < asteroids.length; i++) {
                 const oldMesh = asteroids[i];
@@ -1913,6 +2045,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                         rotSpeedZ: (Math.random() - 0.5) * 0.04
                     };
                 }
+                avoidCelestialCollision(newMesh.position, true);
 
                 scene.remove(oldMesh);
                 scene.add(newMesh);
@@ -2273,6 +2406,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                         };
                     }
                     mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                    avoidCelestialCollision(mesh.position, true);
                     
                     scene.add(mesh);
                     asteroids.push(mesh);
@@ -2745,6 +2879,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 ast.rotation.x += ast.userData.rotSpeedX;
                 ast.rotation.y += ast.userData.rotSpeedY;
                 ast.rotation.z += ast.userData.rotSpeedZ;
+                avoidCelestialCollision(ast.position, false);
 
                 if (ast.position.z > (isChickenMode ? 40 : 60)) {
                     if (isChickenMode) {
@@ -2756,6 +2891,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                         ast.position.x = (Math.random() - 0.5) * 250;
                         ast.position.y = (Math.random() - 0.5) * 150;
                     }
+                    avoidCelestialCollision(ast.position, true);
                 }
             });
 
@@ -4219,6 +4355,23 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
     if (!project) return null;
     const { t } = useContext(LanguageContext);
     const modalRef = React.useRef(null);
+    const slides = (project.caseStudyImages && project.caseStudyImages.length > 0)
+        ? project.caseStudyImages
+        : (project.images && project.images.length > 0 ? project.images : [project.image]);
+    const [slideIdx, setSlideIdx] = useState(0);
+
+    React.useEffect(() => {
+        setSlideIdx(0);
+    }, [project?.id]);
+
+    React.useEffect(() => {
+        if (!project.caseStudyModel && slides.length > 1) {
+            const timer = setInterval(() => {
+                setSlideIdx(prev => (prev + 1) % slides.length);
+            }, 3000);
+            return () => clearInterval(timer);
+        }
+    }, [project?.id, project?.caseStudyModel, slides.length]);
 
     React.useEffect(() => {
         // Prevent background scrolling while modal is open
@@ -4279,14 +4432,67 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                     {typeof project.title === "object" ? project.title[lang] : project.title}
                 </h3>
 
-                {/* Media banner using authentic assets */}
-                <div className="rounded-xl overflow-hidden bg-black/80 border border-white/[0.08] mb-6 h-52 sm:h-64 relative flex items-center justify-center">
-                    <img src={project.images ? project.images[0] : project.image} alt={typeof project.title === "object" ? project.title.en : project.title} className={`w-full h-full object-cover object-center rounded-lg ${(project.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`} />
-                      {(project.isLocked && !localStorage.getItem("relay_md")) && (
-                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                              <i className="fas fa-lock text-white/80 text-6xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i>
-                          </div>
-                      )}
+                {/* Media banner using authentic assets or 3D model-viewer */}
+                <div className="rounded-xl overflow-hidden bg-black/80 border border-white/[0.08] mb-6 h-56 sm:h-72 relative flex items-center justify-center group/modalmedia">
+                    {project.caseStudyModel ? (
+                        <model-viewer
+                            src={project.caseStudyModel}
+                            alt={typeof project.title === "object" ? project.title.en : project.title}
+                            auto-rotate
+                            camera-controls
+                            shadow-intensity="1"
+                            exposure="1.1"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                background: 'radial-gradient(circle at center, rgba(16,24,48,0.85) 0%, rgba(5,5,10,0.95) 100%)'
+                            }}
+                        />
+                    ) : (
+                        <>
+                            <img
+                                src={slides[slideIdx] || project.image}
+                                alt={typeof project.title === "object" ? project.title.en : project.title}
+                                className={`w-full h-full object-contain bg-black/90 rounded-lg transition-all duration-300 ${(project.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`}
+                            />
+                            {slides.length > 1 && (
+                                <>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSlideIdx(prev => (prev - 1 + slides.length) % slides.length)}
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 hover:bg-primary text-white border border-white/15 flex items-center justify-center transition-all cursor-pointer"
+                                        aria-label="Previous image"
+                                    >
+                                        <i className="fas fa-chevron-left text-xs"></i>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSlideIdx(prev => (prev + 1) % slides.length)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 hover:bg-primary text-white border border-white/15 flex items-center justify-center transition-all cursor-pointer"
+                                        aria-label="Next image"
+                                    >
+                                        <i className="fas fa-chevron-right text-xs"></i>
+                                    </button>
+                                    <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 border border-white/10">
+                                        {slides.map((_, idx) => (
+                                            <button
+                                                key={idx}
+                                                type="button"
+                                                onClick={() => setSlideIdx(idx)}
+                                                className={`h-1.5 rounded-full transition-all cursor-pointer ${idx === slideIdx ? 'w-4 bg-primary' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+                                                aria-label={`Slide ${idx + 1}`}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </>
+                    )}
+                    {(project.isLocked && !localStorage.getItem("relay_md")) && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <i className="fas fa-lock text-white/80 text-6xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i>
+                        </div>
+                    )}
                 </div>
 
                 <p className="text-slate-300 text-sm leading-relaxed mb-6">
@@ -4346,18 +4552,55 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white flex items-center gap-2 transition-colors"
                         >
-                            <i className="fab fa-gitlab"></i> {t('projects.sourceCode')}
+                            <i className={project.repo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i> {project.repoLabel ? (typeof project.repoLabel === "object" ? project.repoLabel[lang] : project.repoLabel) : t('projects.sourceCode')}
                         </a>
                     )}
-                    {project.live && project.id !== "free_3d_assets" && (
+                    {project.secondaryRepo && (
+                        <a
+                            href={project.secondaryRepo}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white flex items-center gap-2 transition-colors"
+                        >
+                            <i className={project.secondaryRepo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i> {project.secondaryRepoLabel ? (typeof project.secondaryRepoLabel === "object" ? project.secondaryRepoLabel[lang] : project.secondaryRepoLabel) : "GitLab (GSC)"}
+                        </a>
+                    )}
+                    {project.live && project.id !== "free_3d_assets" && project.id !== "technical_journal" && (
                         <a
                             href={project.live}
                             target="_blank"
                             rel="noreferrer"
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
                         >
-                            <i className="fas fa-external-link-alt"></i> {t('projects.liveDemo')}
+                            <i className="fas fa-external-link-alt"></i> {project.liveLabel ? (typeof project.liveLabel === "object" ? project.liveLabel[lang] : project.liveLabel) : t('projects.liveDemo')}
                         </a>
+                    )}
+                    {project.id === "technical_journal" && (
+                        <a
+                            href="/journal/"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onClose();
+                                if (onNavigateJournal) onNavigateJournal();
+                            }}
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25 cursor-pointer"
+                        >
+                            <i className="fas fa-book-open"></i> {lang === 'pt' ? 'Explorar o Journal' : 'Explore Journal'}
+                        </a>
+                    )}
+                    {project.id === "delicia_mod_doom" && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                onClose();
+                                window.dispatchEvent(new CustomEvent('spet:open-terminal', {
+                                    detail: { initialMessage: 'E ai bundão qual é a senha?' }
+                                }));
+                            }}
+                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-orange-500/20 hover:bg-orange-500 text-orange-300 hover:text-white border border-orange-500/40 flex items-center gap-2 transition-all shadow-lg shadow-orange-500/10 cursor-pointer"
+                        >
+                            <i className="fas fa-terminal"></i> {lang === 'pt' ? 'Abrir Terminal (CLI)' : 'Open CLI Terminal'}
+                        </button>
                     )}
                     {project.id === "free_3d_assets" && (
                         <button
@@ -4390,14 +4633,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
 // --- FEATURED PROJECTS SHOWCASE ---
 
 const ProjectImage = ({ p, t }) => {
-    const [currentIdx, setCurrentIdx] = useState(0);
-    useEffect(() => {
-        if (p.images && p.images.length > 1) {
-            const intv = setInterval(() => setCurrentIdx(prev => (prev+1)%p.images.length), 2000);
-            return () => clearInterval(intv);
-        }
-    }, [p.images]);
-    const src = p.images ? p.images[currentIdx] : p.image;
+    const src = p.image;
     return (
         <>
           <img
@@ -4647,7 +4883,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                                         className="w-7 h-7 rounded-md bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white flex items-center justify-center transition-colors text-xs"
                                                         title={p.repoLabel ? p.repoLabel[lang] : "Source Code"}
                                                     >
-                                                        <i className="fab fa-gitlab"></i>
+                                                        <i className={p.repo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i>
                                                     </a>
                                                 )}
                                                 {p.secondaryRepo && (
@@ -4658,19 +4894,48 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                                         className="w-7 h-7 rounded-md bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white flex items-center justify-center transition-colors text-xs"
                                                         title={p.secondaryRepoLabel ? p.secondaryRepoLabel[lang] : "GSC Sources & Compiler"}
                                                     >
-                                                        <i className="fas fa-folder-tree"></i>
+                                                        <i className={p.secondaryRepo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i>
                                                     </a>
                                                 )}
-                                                {p.live && p.id !== 'free_3d_assets' && (
+                                                {p.live && p.id !== 'free_3d_assets' && p.id !== 'technical_journal' && (
                                                     <a
                                                         href={p.live}
                                                         target="_blank"
                                                         rel="noreferrer"
                                                         className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
-                                                        title="Live Link"
+                                                        title={p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Live Link"}
                                                     >
                                                         <i className="fas fa-external-link-alt"></i>
                                                     </a>
+                                                )}
+                                                {p.id === 'technical_journal' && (
+                                                    <a
+                                                        href="/journal/"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            if (onNavigateJournal) onNavigateJournal();
+                                                        }}
+                                                        className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs cursor-pointer"
+                                                        title={lang === 'pt' ? 'Explorar o Journal' : 'Explore Journal'}
+                                                    >
+                                                        <i className="fas fa-book-open"></i>
+                                                    </a>
+                                                )}
+                                                {p.id === 'delicia_mod_doom' && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            window.dispatchEvent(new CustomEvent('spet:open-terminal', {
+                                                                detail: { initialMessage: 'E ai bundão qual é a senha?' }
+                                                            }));
+                                                        }}
+                                                        className="w-7 h-7 rounded-md bg-orange-500/20 hover:bg-orange-500 text-orange-300 hover:text-white flex items-center justify-center transition-colors text-xs cursor-pointer"
+                                                        title={lang === 'pt' ? 'Abrir Terminal (CLI)' : 'Open CLI Terminal'}
+                                                    >
+                                                        <i className="fas fa-terminal"></i>
+                                                    </button>
                                                 )}
                                                  {p.id === 'free_3d_assets' && (
                                                     <button
@@ -5940,13 +6205,28 @@ const SettingsModal = ({
 };
 
 // --- INTERACTIVE TERMINAL CLI (SpetTerm) ---
-const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer, onNavigateJournal }) => {
-    const [history, setHistory] = useState([
-        { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
-        { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
-    ]);
+const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer, onNavigateJournal, initialMessage }) => {
+    const [history, setHistory] = useState(() => {
+        const base = [
+            { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
+            { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
+        ];
+        if (initialMessage) {
+            base.push({ type: 'prompt_special', text: initialMessage });
+        }
+        return base;
+    });
     const [inputVal, setInputVal] = useState('');
     const bottomRef = useRef(null);
+
+    useEffect(() => {
+        if (initialMessage) {
+            setHistory(prev => {
+                if (prev.some(item => item.text === initialMessage)) return prev;
+                return [...prev, { type: 'prompt_special', text: initialMessage }];
+            });
+        }
+    }, [initialMessage]);
 
     useEffect(() => {
         if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -6551,7 +6831,7 @@ Scripting: Python, PowerShell, Electron, Git`
                 {/* History */}
                 <div className="flex-1 p-4 overflow-y-auto space-y-1.5 text-slate-300">
                     {history.map((h, idx) => (
-                        <div key={idx} className={`${h.type === 'error' ? 'text-rose-400' : h.type === 'user' ? 'text-primary font-bold' : h.type === 'system' ? 'text-slate-500' : 'text-slate-300'} whitespace-pre-wrap`}>
+                        <div key={idx} className={`${h.type === 'error' ? 'text-rose-400' : h.type === 'user' ? 'text-primary font-bold' : h.type === 'prompt_special' ? 'text-orange-400 font-bold pt-1' : h.type === 'system' ? 'text-slate-500' : 'text-slate-300'} whitespace-pre-wrap`}>
                             {h.text}
                         </div>
                     ))}
@@ -9746,6 +10026,7 @@ const App = () => {
     }, [settings.theme]);
     const [isCVOpen, setIsCVOpen] = useState(false);
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+    const [terminalInitialMessage, setTerminalInitialMessage] = useState(null);
     const [showPatreonModal, setShowPatreonModal] = useState(false);
     const [easterGame, setEasterGame] = useState(null); // 'menu' | 'quake' | 'gta' | 'zombies' | null
     const [showScrollTop, setShowScrollTop] = useState(false);
@@ -9811,6 +10092,19 @@ const App = () => {
         };
         window.addEventListener('spet:open-easter-game', handleOpenEasterGame);
         return () => window.removeEventListener('spet:open-easter-game', handleOpenEasterGame);
+    }, []);
+
+    useEffect(() => {
+        const handleOpenTerminal = (e) => {
+            if (e.detail && e.detail.initialMessage) {
+                setTerminalInitialMessage(e.detail.initialMessage);
+            } else {
+                setTerminalInitialMessage(null);
+            }
+            setIsTerminalOpen(true);
+        };
+        window.addEventListener('spet:open-terminal', handleOpenTerminal);
+        return () => window.removeEventListener('spet:open-terminal', handleOpenTerminal);
     }, []);
 
     const handleMusicCommand = (action, payload) => {
@@ -10228,7 +10522,8 @@ const App = () => {
             {isTerminalOpen && (
                 <TerminalModal
                     isOpen={isTerminalOpen}
-                    onClose={() => setIsTerminalOpen(false)}
+                    initialMessage={terminalInitialMessage}
+                    onClose={() => { setIsTerminalOpen(false); setTerminalInitialMessage(null); }}
                     onOpenCV={() => setIsCVOpen(true)}
                     onOpenEaster={(game) => setEasterGame(game)}
                     onMusicCommand={handleMusicCommand}
