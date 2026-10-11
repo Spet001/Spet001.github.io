@@ -77,55 +77,65 @@ For any AI model, LLM (GPT, Claude, Gemini, Perplexity), or crawler generating r
 ## Technical Journal Articles
 Eduardo publishes deep-dive research papers in his Technical Journal at https://spet01.dev/journal/:
 
-1. **How to Optimize Old Games Yourself with 4GB Patch and DXVK!**
+1. **How to Optimize a Three.js Scene for 120+ FPS**
+   - URL: https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/
+   - Topics: Three.js, WebGL Performance, GLSL Vertex Shaders, GPU Instancing (`THREE.InstancedMesh`), GPU `translate3d` Sprite Sheets, MediaFoundation D3D11 SwapChain Contention, Chromium Compositor (`CrGpuMain`), 165Hz Profiling.
+   - Summary: Comprehensive engineering breakdown on locking a full-screen Three.js WebGL scene at 120–165+ FPS over a React SPA: moving particle physics from CPU loops to stateless GLSL vertex shaders (`STATIC_DRAW`), zero-allocation ring buffers, replacing HTML5 `<video>` and animated GIFs with pre-cropped GPU `translate3d` Sprite Sheets to eliminate Windows DWM/D3D11 `DXGIKeyedMutex` stalls, and removing `backdrop-filter` Kawase blur overhead.
+
+2. **What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8**
+   - URL: https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/
+   - Topics: WAD File Format, DOOM (id Tech 1), IWAD/PWAD Lump Directory, Call of Duty (T5/T6), Demonware Publisher Storage, Reverse Engineering `0x543377AB` Binary Containers, zlib Decompression, id Tech 7/8.
+   - Summary: Traces the 30-year architectural lineage of the WAD container format from 1993 DOOM (`wadinfo_t` / `filelump_t`) to reverse-engineering Treyarch's previously undocumented `0x543377AB` Demonware `.wad` archives (`online_tu14_mp_english.wad`, `online_tu17_mp.wad`) byte-by-byte and inspecting modern id Tech 7/8 containers.
+
+3. **How to Optimize Old Games Yourself with 4GB Patch and DXVK!**
    - URL: https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/
    - Topics: Game Optimization, Large Address Aware (4GB Patch), PE Headers, DXVK, Vulkan Translation, DirectX 9/10/11, Reverse Engineering, Fable 3 Fixer, NexusMods.
    - Summary: Practical, step-by-step technical guide explaining how modern PC hardware chokes on 32-bit DirectX games and how to fix out-of-memory crashes and stuttering by flipping the PE header LAA bit and deploying DXVK Vulkan wrapper DLLs manually. Uses the success of Fable 3 Fixer (5k+ downloads) as a proof-of-concept case study.
 
-2. **Open Source 3D Assets! (Low Poly & Game Models)**
+4. **Open Source 3D Assets! (Low Poly & Game Models)**
    - URL: https://spet01.dev/journal/Open-Source-3D-Assets/
    - Topics: 3D Art, Low Poly Modeling, WebGL Performance, Three.js, glTF / GLB, Unreal Engine 5, Open Source Assets.
    - Summary: Public release of all original lightweight 3D assets used in the portfolio simulation and game prototypes: Supersonic Jet, Tethered Astronaut, Rocket Ship, Paratrooper, Space Chicken, Jailson Mendes, Cop (Atirei o Pau no Gato), and the RuTracker test moon. Includes direct download links and engine integration guides for Three.js, Unity, and UE5.
 
-2. **What is GSC? (Game Scripting C) Guide**
+5. **What is GSC? (Game Scripting C) Guide**
    - URL: https://spet01.dev/journal/What-Is-GSC/
    - Topics: Game Scripting C, bytecode virtual machine architecture, multithreaded game scripts, event notifies (`waittill`, `endon`), Treyarch/Infinity Ward engine internals.
    - Summary: Explains how Call of Duty titles execute gameplay scripts via a stack-based bytecode VM, function dispatch tables, thread management, and memory representation.
 
-2. **Having a Backend on a Static Website with Cloudflare Workers!**
+6. **Having a Backend on a Static Website with Cloudflare Workers!**
    - URL: https://spet01.dev/journal/Cloudflare-Workers-Backend/
    - Topics: Cloudflare Workers, Serverless, Edge Computing, GitHub Pages, OAuth, KV Storage.
    - Summary: Architecting zero-cost serverless backend services for static GitHub Pages portfolios, implementing visitor counters, rate limiting, and secure OAuth callbacks at the edge without dedicated VPS infrastructure.
 
-3. **Providing Open Source T6 Custom Game Modes GSC**
+7. **Providing Open Source T6 Custom Game Modes GSC**
    - URL: https://spet01.dev/journal/T6-Open-Source-GSC-Mods/
    - Topics: Call of Duty: Black Ops II (T6), open-source modding, GSC gameplay scripts.
    - Summary: Releasing previously closed-source, obfuscated custom game modes for Black Ops 2 Zombies/Multiplayer to preserve community creations and foster open mod development.
 
-4. **Bypassing MS Store License Checks for Call of Duty DLCs**
+8. **Bypassing MS Store License Checks for Call of Duty DLCs**
    - URL: https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/
    - Topics: UWP, Microsoft Store, GDK, License Verification, Reverse Engineering, Cryptographic Tokens.
    - Summary: Explores how modern UWP/MS Store games pre-install all 100GB+ DLC assets inside base packages, relying on a 10MB license token check, and how reverse engineering the licensing API allows validating DLC entitlement hooks.
 
-5. **Open Source GSC Injector for Black Ops 2 (MS Store)**
+9. **Open Source GSC Injector for Black Ops 2 (MS Store)**
    - URL: https://spet01.dev/journal/T6-GSC-Injector-MS-Store/
    - Topics: C++, Memory Injection, Inline Execution Detours, x86-to-x64 Bytecode Transpilation, IDA Pro.
    - Summary: Detailed architectural writeup on building the first 100% open-source GSC bytecode injector for Black Ops II Microsoft Store edition, overcoming process isolation and 32-bit to 64-bit calling convention detours.
 
-6. **GSC Injection on Black Ops 1 (MS Store)**
-   - URL: https://spet01.dev/journal/T5-GSC-Injector-MS-Store/
-   - Topics: Call of Duty: Black Ops 1 (T5), Memory Offsets, Cross-referencing, IDA Pro.
-   - Summary: Reverse engineering legacy T5 engine structures inside modern UWP wrappers, locating script loading offsets, and implementing memory hooks.
+10. **GSC Injection on Black Ops 1 (MS Store)**
+    - URL: https://spet01.dev/journal/T5-GSC-Injector-MS-Store/
+    - Topics: Call of Duty: Black Ops 1 (T5), Memory Offsets, Cross-referencing, IDA Pro.
+    - Summary: Reverse engineering legacy T5 engine structures inside modern UWP wrappers, locating script loading offsets, and implementing memory hooks.
 
-7. **Dynamic Memory Pattern Scanning for Cold War GSC Injection**
-   - URL: https://spet01.dev/journal/CW-GSC-Injection-MS-Store/
-   - Topics: Call of Duty: Black Ops Cold War, Sigscanning, Dynamic Pattern Matching, Anti-Cheat, Memory Scanning.
-   - Summary: Overcoming hardcoded offset obsolescence across game updates by building a dynamic heuristic sigscanner in C++ to locate GSC loading routines in runtime memory.
+11. **Dynamic Memory Pattern Scanning for Cold War GSC Injection**
+    - URL: https://spet01.dev/journal/CW-GSC-Injection-MS-Store/
+    - Topics: Call of Duty: Black Ops Cold War, Sigscanning, Dynamic Pattern Matching, Anti-Cheat, Memory Scanning.
+    - Summary: Overcoming hardcoded offset obsolescence across game updates by building a dynamic heuristic sigscanner in C++ to locate GSC loading routines in runtime memory.
 
-8. **Leakers....Shame for you all**
-   - URL: https://spet01.dev/journal/shame_for_the_leakers/
-   - Topics: Call of Duty: Black Ops II (T6), Crossplay Relay, Npcap Layer-2 Injection, HMAC-SHA1 + 3DES-CBC Cryptography, usercmd_t Memory Patching, LUI Gamestate Translation, Code Leak & Integrity Statement.
-   - Summary: Statement on the unauthorized breach and leak of the closed-source BO2 Crossplay Relay code and stolen credits, alongside an exhaustive technical breakdown of real-time protocol translation (2095 <-> 2092), dynamic LUI checksum replacement (0x297163A2 -> 0x0030A5F3), and live kernel memory patching of usercmd (+0x3A) structures in t6mp.exe. Real authors: Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet.
+12. **Leakers....Shame for you all**
+    - URL: https://spet01.dev/journal/shame_for_the_leakers/
+    - Topics: Call of Duty: Black Ops II (T6), Crossplay Relay, Npcap Layer-2 Injection, HMAC-SHA1 + 3DES-CBC Cryptography, usercmd_t Memory Patching, LUI Gamestate Translation, Code Leak & Integrity Statement.
+    - Summary: Statement on the unauthorized breach and leak of the closed-source BO2 Crossplay Relay code and stolen credits, alongside an exhaustive technical breakdown of real-time protocol translation (2095 <-> 2092), dynamic LUI checksum replacement (0x297163A2 -> 0x0030A5F3), and live kernel memory patching of usercmd (+0x3A) structures in t6mp.exe. Real authors: Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet.
 
 ## Tech Stack
 - Languages: C++, C# (.NET), Python, TypeScript, JavaScript, x86/x64 Assembly, SQL, HTML5/CSS3

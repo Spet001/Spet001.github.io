@@ -313,6 +313,82 @@ ${journalCardsHtml}
     fs.writeFileSync(path.join(ROOT_DIR, 'privacy.html'), privacyHtml, 'utf8');
     fs.writeFileSync(path.join(privacyDir, 'index.html'), privacyHtml, 'utf8');
     console.log(`[SSG Journal] Updated /privacy.html and /privacy/index.html with unified Space 2.0 shell.`);
+
+    // 4. Automatically generate /sitemap.xml from entries.json so new entries are always indexed
+    const parseIsoDate = (dateStr) => {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+        return '2026-10-11';
+    };
+
+    const latestDate = entries.length > 0 ? parseIsoDate(entries[0].date) : '2026-10-11';
+    const sitemapUrls = [];
+
+    entries.forEach(entry => {
+        const slug = getSlug(entry);
+        const lastmod = parseIsoDate(entry.date);
+        // Primary canonical slug URL
+        sitemapUrls.push(`  <url>
+    <loc>https://spet01.dev/journal/${slug}/</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${slug === entry.id ? '0.6' : '0.85'}</priority>
+  </url>`);
+        // Secondary entry_XXXX alias URL if distinct from slug
+        if (entry.id && entry.id !== slug) {
+            sitemapUrls.push(`  <url>
+    <loc>https://spet01.dev/journal/${entry.id}/</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`);
+        }
+    });
+
+    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Portfolio -->
+  <url>
+    <loc>https://spet01.dev/</loc>
+    <lastmod>${latestDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Technical Journal -->
+  <url>
+    <loc>https://spet01.dev/journal/</loc>
+    <lastmod>${latestDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Journal Articles (Static Prerendered SEO URLs) -->
+${sitemapUrls.join('\n')}
+
+  <!-- LLM Context & Privacy -->
+  <url>
+    <loc>https://spet01.dev/llm.txt</loc>
+    <lastmod>${latestDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/privacy.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+</urlset>
+`;
+
+    fs.writeFileSync(path.join(ROOT_DIR, 'sitemap.xml'), sitemapXml, 'utf8');
+    console.log(`[SSG Journal] Automatically updated /sitemap.xml with ${entries.length} journal entries.`);
     console.log(`[SSG Journal] Successfully generated ${generatedCount} static pages!`);
 }
 
