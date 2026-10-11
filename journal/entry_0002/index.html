@@ -47,6 +47,7 @@
   "headline": "CW GSC Injection Findings",
   "description": "Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.",
   "datePublished": "Sep 18, 2026",
+  "articleSection": "Reverse Engineering",
   "url": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/",
   "mainEntityOfPage": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/",
   "author": {
@@ -462,12 +463,15 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 18, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Sep 18, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Reverse Engineering</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">CW GSC Injection Findings</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="CW-GSC-Injection-MS-Store">
-<h1>Dynamic Memory Pattern Scanning for Cold War GSC Injection (MS Store / UWP)</h1>
 <p>A deep-dive into the architectural differences between Steam/BNet and Microsoft Store builds of <em>Call of Duty: Black Ops Cold War</em>, and how to implement a lightweight, zero-dependency C++ injector using dynamic heuristic memory scanning for GSC (Game Script Code) injection.</p>
 <h2>1. The Hardcoded Offset Bottleneck</h2>
 <p>Traditional GSC injection tools rely heavily on statically hardcoded offsets to resolve Treyarch&#39;s global asset pool pointers, specifically <code>s_assetPool:ScriptParseTree</code>. </p>

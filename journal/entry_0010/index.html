@@ -47,6 +47,7 @@
   "headline": "What is GSC? (Game Scripting C) Guide",
   "description": "Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.",
   "datePublished": "Sep 30, 2026",
+  "articleSection": "GSC Engine Internals",
   "url": "https://spet01.dev/journal/What-Is-GSC/",
   "mainEntityOfPage": "https://spet01.dev/journal/What-Is-GSC/",
   "author": {
@@ -462,12 +463,15 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 30, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Sep 30, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> GSC Engine Internals</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is GSC? (Game Scripting C) Guide</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="What-Is-GSC">
-<h1>What is GSC?</h1>
 <p>Game Script Code/Game Scripting C, commonly known as <strong>GSC</strong>, is the proprietary, server-side scripting language used across almost all major <em>Call of Duty</em> titles powered by the IW engine and Treyarch&#39;s derivatives. Its syntax is heavily inspired by C and C++, but it behaves like a dynamically-typed scripting language with built-in multithreading, event-driven execution, and game-specific data structures.</p>
 <p>Developed initially by Infinity Ward, GSC is the invisible backbone that dictates the flow of single-player campaigns, orchestrates multiplayer game logic, and drives the intricate state machines of the iconic Zombies mode.</p>
 <p>This guide provides a universal overview of GSC concepts, applicable (with engine-specific variations) across <strong>T4 (World at War)</strong>, <strong>T5 (Black Ops 1)</strong>, <strong>T6 (Black Ops 2)</strong>, <strong>T7 (Black Ops 3)</strong>, <strong>T8 (Black Ops 4)</strong>, and <strong>T9 (Black Ops Cold War)</strong>.</p>

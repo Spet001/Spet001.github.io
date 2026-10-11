@@ -424,7 +424,7 @@ const PORTFOLIO_DATA = {
             id: "outcaster_fps",
             category: "gamedev",
             categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
-            image: "assets/outcaster img2.png",
+            image: "/assets/outcaster img2.png",
             title: "Outcaster - Retro FPS Templates",
             featured: true,
             live: "https://spet01.itch.io/",
@@ -509,7 +509,7 @@ const PORTFOLIO_DATA = {
             id: "free_3d_assets",
             category: "gamedev",
             categoryLabel: { pt: "Recursos 3D & Arte", en: "3D Assets & Art" },
-            image: "assets/free_3d_assets_thumbnail.jpg",
+            image: "/assets/free_3d_assets_thumbnail.jpg",
             title: "Free to Use 3D Assets (Low Poly)",
             featured: true,
             github: "#", 
@@ -538,7 +538,7 @@ const PORTFOLIO_DATA = {
             id: "cw_gsc_injector",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa", en: "Reverse Engineering" },
-            image: "assets/cwgsc.png",
+            image: "/assets/cwgsc.png",
             title: "CW GSC Injector (MS Store / Xbox PC)",
             featured: true,
             repo: "https://gitlab.com/Spet001/CW-UWP-GSC-Injector",
@@ -601,7 +601,7 @@ const PORTFOLIO_DATA = {
             id: "gsc_dumps_and_sources",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & GSC Dumps", en: "Reverse Engineering & GSC Dumps" },
-            image: "assets/gscmodinaction.png",
+            image: "/assets/gscmodinaction.png",
             title: "GSC Dumps and Pre-Compiled/Uncompiled Sources",
             featured: true,
             repo: "https://gitlab.com/Spet001/t5-gdk-gsc-dumps",
@@ -716,7 +716,7 @@ const PORTFOLIO_DATA = {
             id: "t6_gsc_mods",
             category: "mods",
             categoryLabel: { pt: "Modificações GSC", en: "GSC Mods" },
-            image: "assets/opensourcet6gscs.jpg",
+            image: "/assets/opensourcet6gscs.jpg",
             title: { pt: "Modos de Jogo Customizados Open Source T6 (GSC)", en: "Providing Open Source T6 Custom Game Modes GSC!" },
             description: {
                 pt: "Um repositório com scripts GSC abertos e documentados para mods complexos de Black Ops 2 como Zombieland, Deathrun e Counter-Strike.",
@@ -747,7 +747,7 @@ const PORTFOLIO_DATA = {
             id: "t9_mod_manager_re",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa / Criptografia", en: "Reverse Engineering / Cryptography" },
-            image: "assets/cwgsc.png",
+            image: "/assets/cwgsc.png",
             title: { pt: "Desbloqueie no Patreon!", en: "Unlock this Entry on Patreon!" },
             isLocked: true,
             featured: true,
@@ -776,7 +776,7 @@ const PORTFOLIO_DATA = {
             id: "bo2_crossplay_relay",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa / Net", en: "Reverse Engineering / Net" },
-            image: "assets/network_activity.gif",
+            image: "/assets/network_activity.gif",
             title: { pt: "Desbloqueie no Patreon!", en: "Unlock this Entry on Patreon!" },
             isLocked: true,
             featured: true,
@@ -806,7 +806,7 @@ const PORTFOLIO_DATA = {
             title: "Portfólio Web (SpetDev)",
             category: "tools",
             categoryLabel: { pt: "Web & Ferramentas", en: "Web & Tools" },
-            image: "assets/portweb.png",
+            image: "/assets/portweb.png",
             repo: "https://github.com/Spet001/Spet001.github.io",
             live: "#top",
             featured: false,
@@ -835,7 +835,7 @@ const PORTFOLIO_DATA = {
             title: "Fable 3 Fixer (App Electron)",
             category: "tools",
             categoryLabel: { pt: "Ferramentas & Otimização", en: "Tools & Optimization" },
-            image: "assets/fable3_fixer.png",
+            image: "/assets/fable3_fixer.png",
             live: "https://www.nexusmods.com/fableIII/mods/27",
             featured: false,
             tags: ["Electron", "DXVK", "Vulkan", "ReShade", "4GB Patch", "GFWL", "NexusMods"],
@@ -1421,7 +1421,7 @@ const SkyCanvasV2 = () => {
         scene.background = new THREE.Color('#87ceeb');
 
         // 1. Skybox
-        loadWithFallback('./3d/skyclouds.glb', (gltf) => {
+        loadWithFallback('/3d/skyclouds.glb', (gltf) => {
             skybox = gltf.scene;
             normalizeModel(skybox, 800, true);
             // DO NOT flip materials to BackSide, the model likely already points inwards!
@@ -1438,7 +1438,7 @@ const SkyCanvasV2 = () => {
         }, (err) => console.error("Skybox failed:", err));
 
         // 2. Jet
-        loadWithFallback('./3d/jet.glb', (gltf) => {
+        loadWithFallback('/3d/jet.glb', (gltf) => {
             jet = gltf.scene;
             normalizeModel(jet, 5); 
             
@@ -1466,7 +1466,7 @@ const SkyCanvasV2 = () => {
         });
 
         // 3. Paratrooper
-        loadWithFallback('./3d/Paratrooper.glb', (gltf) => {
+        loadWithFallback('/3d/Paratrooper.glb', (gltf) => {
             para = gltf.scene;
             normalizeModel(para, 2.0); 
             
@@ -1967,7 +1967,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
 
             if (toChicken && !chickenModel) {
-                loader.load('./3d/space_chicken!.glb', (gltf) => {
+                loader.load('/3d/space_chicken!.glb', (gltf) => {
                     chickenModel = gltf.scene;
                     normalizeModel(chickenModel, 18);
                     chickenModel.traverse((child) => {
@@ -2000,7 +2000,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
 
             if (isMoonChickenActive && !moonChicken) {
-                loader.load('./3d/space_chicken!.glb', (gltf) => {
+                loader.load('/3d/space_chicken!.glb', (gltf) => {
                     moonChicken = gltf.scene;
                     normalizeModel(moonChicken, 42);
                     moonChicken.position.set(25, 15, -30);
@@ -2036,7 +2036,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
             const ensureJailson = (cb) => {
                 if (isDeliciaActive && !moonJailson) {
-                    loader.load('./3d/jailson.glb', (gltf) => {
+                    loader.load('/3d/jailson.glb', (gltf) => {
                         moonJailson = gltf.scene;
                         normalizeModel(moonJailson, 35);
                         moonJailson.position.set(25, 15, -30);
@@ -2059,7 +2059,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
             const ensureOrange = (cb) => {
                 if (isDeliciaActive && !orangeModel) {
-                    loader.load('./3d/orange.glb', (gltf) => {
+                    loader.load('/3d/orange.glb', (gltf) => {
                         orangeModel = gltf.scene;
                         normalizeModel(orangeModel, 4.5);
                         orangeModel.traverse((child) => {
@@ -2089,7 +2089,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         const ensureMarsAssets = () => {
             // 1. Mars + Phobos + Deimos
             if (!marsPivot) {
-                loader.load('./3d/mars.glb', (gltf) => {
+                loader.load('/3d/mars.glb', (gltf) => {
                     marsPivot = createNormalizedPivot(gltf.scene, 21);
                     marsPivot.position.set(12, 14, -30);
                     scene.add(marsPivot);
@@ -2150,7 +2150,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
             // 2. Earth + Orbiting Moon on the right side
             if (!earthPivot) {
-                loader.load('./3d/earth.glb', (gltf) => {
+                loader.load('/3d/earth.glb', (gltf) => {
                     earthPivot = createNormalizedPivot(gltf.scene, 15);
                     earthPivot.position.set(44, -6, -32);
                     tagMarsTarget(earthPivot, 'earth', 8.5);
@@ -2180,13 +2180,13 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 if (moon) {
                     createEarthMoonFromScene(moon);
                 } else {
-                    loader.load('./3d/moon.glb', (gltf) => createEarthMoonFromScene(gltf.scene));
+                    loader.load('/3d/moon.glb', (gltf) => createEarthMoonFromScene(gltf.scene));
                 }
             }
 
             // 3. Doom Slayer replacing Astronaut on the rocket rope
             if (!slayerPivot) {
-                loader.load('./3d/slayer.glb', (gltf) => {
+                loader.load('/3d/slayer.glb', (gltf) => {
                     slayerPivot = createNormalizedPivot(gltf.scene, 2.3);
                     if (astronaut) {
                         slayerPivot.position.copy(astronaut.position);
@@ -2282,7 +2282,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
         // PARALLEL ASSET PIPELINE (Ensures non-blocking, fast concurrent model loading)
         const loadNebula = async () => {
-            const initialNebulaPath = `./3d/nebula${skyboxIndex}.glb`;
+            const initialNebulaPath = `/3d/nebula${skyboxIndex}.glb`;
             const nebulaGltf = await loadAsset(initialNebulaPath, 'nebula', 'Nebula Skybox Background');
             if (nebulaGltf) {
                 const nebula = nebulaGltf.scene;
@@ -2309,7 +2309,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         };
 
         const loadMoon = async () => {
-            const moonGltf = await loadAsset('./3d/moon.glb', 'moon', 'Moon / Lua');
+            const moonGltf = await loadAsset('/3d/moon.glb', 'moon', 'Moon / Lua');
             if (moonGltf) {
                 moon = moonGltf.scene;
                 normalizeModel(moon, 20); 
@@ -2326,7 +2326,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         };
 
         const loadRocket = async () => {
-            const rocketGltf = await loadAsset('./3d/rocket.glb', 'rocket', 'Rocket / Foguete');
+            const rocketGltf = await loadAsset('/3d/rocket.glb', 'rocket', 'Rocket / Foguete');
             if (rocketGltf) {
                 rocket = rocketGltf.scene;
                 normalizeModel(rocket, 4); 
@@ -2342,7 +2342,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         };
 
         const loadAstronaut = async () => {
-            const astroGltf = await loadAsset('./3d/Astronaut.glb', 'astronaut', 'Astronaut / Astronauta');
+            const astroGltf = await loadAsset('/3d/Astronaut.glb', 'astronaut', 'Astronaut / Astronauta');
             if (astroGltf) {
                 astronaut = astroGltf.scene;
                 normalizeModel(astronaut, 1.5); 
@@ -2354,8 +2354,8 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
         const loadAsteroids = async () => {
             const [ast1Gltf, ast2Gltf] = await Promise.all([
-                loadAsset('./3d/asteroid1.glb', 'asteroid1', 'Asteroid Field 1'),
-                loadAsset('./3d/asteroid2.glb', 'asteroid2', 'Asteroid Field 2')
+                loadAsset('/3d/asteroid1.glb', 'asteroid1', 'Asteroid Field 1'),
+                loadAsset('/3d/asteroid2.glb', 'asteroid2', 'Asteroid Field 2')
             ]);
             if (ast1Gltf) {
                 ast1 = ast1Gltf.scene;
@@ -2376,7 +2376,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             loadAsteroids()
         ]).then(() => {
             if (window.__spetChickenActive) {
-                loader.load('./3d/space_chicken!.glb', (gltf) => {
+                loader.load('/3d/space_chicken!.glb', (gltf) => {
                     chickenModel = gltf.scene;
                     normalizeModel(chickenModel, 18);
                     chickenModel.traverse((child) => {
@@ -2390,7 +2390,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
 
             if (window.__spetMoonChickenActive) {
-                loader.load('./3d/space_chicken!.glb', (gltf) => {
+                loader.load('/3d/space_chicken!.glb', (gltf) => {
                     moonChicken = gltf.scene;
                     normalizeModel(moonChicken, 42);
                     moonChicken.position.set(25, 15, -30);
@@ -2406,7 +2406,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             }
 
             if (window.__spetDeliciaActive) {
-                loader.load('./3d/jailson.glb', (gltf) => {
+                loader.load('/3d/jailson.glb', (gltf) => {
                     moonJailson = gltf.scene;
                     normalizeModel(moonJailson, 35);
                     moonJailson.position.set(25, 15, -30);
@@ -2419,7 +2419,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                     scene.add(moonJailson);
                     syncCelestialVisibility();
                 });
-                loader.load('./3d/orange.glb', (gltf) => {
+                loader.load('/3d/orange.glb', (gltf) => {
                     orangeModel = gltf.scene;
                     normalizeModel(orangeModel, 4.5);
                     orangeModel.traverse((child) => {
@@ -2802,7 +2802,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             skyboxRef.current = null;
         }
 
-        const nebulaPath = `./3d/nebula${skyboxIndex}.glb`;
+        const nebulaPath = `/3d/nebula${skyboxIndex}.glb`;
         const fileName = `nebula${skyboxIndex}.glb`;
         const githubUrl = `https://raw.githubusercontent.com/Spet001/Spet001.github.io/main/3d/${fileName}`;
 
@@ -4126,16 +4126,16 @@ const ExperienceSection = () => {
 
 const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
     const models = [
-        { id: 'jet', name: 'Jet', file: './3d/jet.glb' },
-        { id: 'para', name: 'Paratrooper', file: './3d/Paratrooper.glb' },
-        { id: 'rocket', name: 'Rocket', file: './3d/rocket.glb' },
-        { id: 'astro', name: 'Astronaut', file: './3d/Astronaut.glb' },
-        { id: 'slayer', name: 'Doom Slayer', file: './3d/slayer.glb' },
-        { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: './3d/space_chicken!.glb' },
-        { id: 'jailson', name: 'Jailson Mendes', file: './3d/jailson.glb' },
-        { id: 'orange', name: lang === 'pt' ? 'Laranja Cósmica' : 'Cosmic Orange', file: './3d/orange.glb' },
-        { id: 'cop', name: lang === 'pt' ? 'Policial (Atirei o Pau no Gato)' : 'Cop (Atirei o Pau no Gato)', file: './3d/cop.glb' },
-        { id: 'moon_test', name: lang === 'pt' ? 'Lua de Teste (RuTracker)' : 'Test Moon (RuTracker)', file: './3d/moon_test.glb' }
+        { id: 'jet', name: 'Jet', file: '/3d/jet.glb' },
+        { id: 'para', name: 'Paratrooper', file: '/3d/Paratrooper.glb' },
+        { id: 'rocket', name: 'Rocket', file: '/3d/rocket.glb' },
+        { id: 'astro', name: 'Astronaut', file: '/3d/Astronaut.glb' },
+        { id: 'slayer', name: 'Doom Slayer', file: '/3d/slayer.glb' },
+        { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: '/3d/space_chicken!.glb' },
+        { id: 'jailson', name: 'Jailson Mendes', file: '/3d/jailson.glb' },
+        { id: 'orange', name: lang === 'pt' ? 'Laranja Cósmica' : 'Cosmic Orange', file: '/3d/orange.glb' },
+        { id: 'cop', name: lang === 'pt' ? 'Policial (Atirei o Pau no Gato)' : 'Cop (Atirei o Pau no Gato)', file: '/3d/cop.glb' },
+        { id: 'moon_test', name: lang === 'pt' ? 'Lua de Teste (RuTracker)' : 'Test Moon (RuTracker)', file: '/3d/moon_test.glb' }
     ];
     const initial = models.find(m => m.id === initialModelId) || models[0];
     const [selected, setSelected] = React.useState(initial);
@@ -8534,6 +8534,164 @@ const DeliciaPlayer = ({ isActive, onClose, lang }) => {
     );
 };
 
+// --- GISCUS COMMENTS WIDGET FOR JOURNAL ENTRIES ---
+const JournalComments = ({ articleSlug, articleTitle, lang }) => {
+    const containerRef = useRef(null);
+    const [giscusState, setGiscusState] = useState({ status: 'loading', category: null });
+    const [retryTick, setRetryTick] = useState(0);
+
+    const REPO = 'Spet001/Spet001.github.io';
+    const REPO_ID = 'R_kgDOUFIsXQ';
+
+    useEffect(() => {
+        let cancelled = false;
+        setGiscusState({ status: 'loading', category: null });
+
+        fetch(`https://giscus.app/api/discussions/categories?repo=${encodeURIComponent(REPO)}`)
+            .then(async (res) => {
+                if (!res.ok) throw new Error('not_configured');
+                return res.json();
+            })
+            .then((data) => {
+                if (cancelled) return;
+                const cats = (data && Array.isArray(data.categories)) ? data.categories : [];
+                if (cats.length === 0) {
+                    setGiscusState({ status: 'setup_needed', category: null });
+                    return;
+                }
+                const preferred =
+                    cats.find(c => /comment|journal|blog/i.test(c.name)) ||
+                    cats.find(c => /general/i.test(c.name)) ||
+                    cats.find(c => /announcement/i.test(c.name)) ||
+                    cats[0];
+                setGiscusState({ status: 'ready', category: preferred });
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setGiscusState({ status: 'setup_needed', category: null });
+                }
+            });
+
+        return () => { cancelled = true; };
+    }, [retryTick]);
+
+    useEffect(() => {
+        if (giscusState.status !== 'ready' || !giscusState.category || !containerRef.current) return;
+
+        const container = containerRef.current;
+        container.innerHTML = '';
+
+        const script = document.createElement('script');
+        script.src = 'https://giscus.app/client.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('data-repo', REPO);
+        script.setAttribute('data-repo-id', REPO_ID);
+        script.setAttribute('data-category', giscusState.category.name);
+        script.setAttribute('data-category-id', giscusState.category.id);
+        script.setAttribute('data-mapping', 'specific');
+        script.setAttribute('data-term', `Journal: ${articleSlug}`);
+        script.setAttribute('data-strict', '0');
+        script.setAttribute('data-reactions-enabled', '1');
+        script.setAttribute('data-emit-metadata', '0');
+        script.setAttribute('data-input-position', 'top');
+        script.setAttribute('data-theme', 'transparent_dark');
+        script.setAttribute('data-lang', lang === 'pt' ? 'pt' : 'en');
+        container.appendChild(script);
+    }, [giscusState, articleSlug, lang]);
+
+    return (
+        <section className="mt-12 pt-8 border-t border-white/[0.08]" aria-label={lang === 'pt' ? 'Comentários' : 'Comments'}>
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center text-primary">
+                        <i className="far fa-comments text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 className="text-base font-bold text-white leading-tight">
+                            {lang === 'pt' ? 'Discussão & Comentários' : 'Discussion & Comments'}
+                        </h3>
+                        <p className="text-[11px] text-slate-400 font-mono">
+                            {lang === 'pt'
+                                ? 'Integrado via GitHub Discussions (Giscus)'
+                                : 'Powered by GitHub Discussions (Giscus)'}
+                        </p>
+                    </div>
+                </div>
+                <a
+                    href={`https://github.com/${REPO}/discussions`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white text-xs font-mono transition-colors"
+                >
+                    <i className="fab fa-github"></i>
+                    <span>{lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub'}</span>
+                </a>
+            </div>
+
+            {giscusState.status === 'loading' && (
+                <div className="py-10 text-center rounded-xl bg-black/30 border border-white/[0.06]">
+                    <i className="fas fa-circle-notch fa-spin text-primary text-xl mb-2"></i>
+                    <p className="text-xs text-slate-400 font-mono">
+                        {lang === 'pt' ? 'Carregando comentários do GitHub...' : 'Loading GitHub discussion...'}
+                    </p>
+                </div>
+            )}
+
+            {giscusState.status === 'ready' && (
+                <div ref={containerRef} className="giscus-wrapper min-h-[160px]" />
+            )}
+
+            {giscusState.status === 'setup_needed' && (
+                <div className="p-5 rounded-xl bg-black/40 border border-white/[0.08] text-slate-300 text-xs leading-relaxed">
+                    <div className="flex items-start gap-3">
+                        <i className="fab fa-github text-xl text-primary mt-0.5"></i>
+                        <div className="flex-1">
+                            <p className="font-semibold text-white mb-1">
+                                {lang === 'pt'
+                                    ? 'Comentários via GitHub Discussions aguardando ativação no repositório'
+                                    : 'GitHub Discussions comments awaiting repository activation'}
+                            </p>
+                            <p className="text-slate-400 mb-3">
+                                {lang === 'pt'
+                                    ? 'Para habilitar a caixa de comentários Giscus neste repositório (Spet001/Spet001.github.io), ative a opção "Discussions" nas configurações do repositório no GitHub e autorize o app oficial Giscus.'
+                                    : 'To enable the live Giscus comment box on Spet001/Spet001.github.io, check "Discussions" in the GitHub repository settings and authorize the Giscus GitHub App.'}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-2.5">
+                                <a
+                                    href={`https://github.com/${REPO}/settings`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/15 hover:bg-primary/25 border border-primary/30 text-primary font-semibold transition-colors"
+                                >
+                                    <i className="fas fa-cog text-[11px]"></i>
+                                    <span>{lang === 'pt' ? '1. Ativar Discussions no Repo' : '1. Enable Repo Discussions'}</span>
+                                </a>
+                                <a
+                                    href="https://github.com/apps/giscus"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white font-semibold transition-colors"
+                                >
+                                    <i className="fas fa-plug text-[11px]"></i>
+                                    <span>{lang === 'pt' ? '2. Instalar App Giscus' : '2. Install Giscus App'}</span>
+                                </a>
+                                <button
+                                    onClick={() => setRetryTick(t => t + 1)}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white font-mono transition-colors cursor-pointer"
+                                >
+                                    <i className="fas fa-sync-alt text-[10px]"></i>
+                                    <span>{lang === 'pt' ? 'Verificar novamente' : 'Check again'}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </section>
+    );
+};
+
 // --- FULL INTEGRATED TECHNICAL JOURNAL VIEW (SPA) ---
 const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }) => {
     const { t, lang } = useContext(LanguageContext);
@@ -8673,6 +8831,14 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const normalizedMarkdown = postContent
+        ? postContent.replace(/^\s*#\s+[^\r\n]+[\r\n]*/, '')
+        : '';
+
+    const activeArticleSlug = activeEntry
+        ? (activeEntry.file ? activeEntry.file.replace(/\.md$/, '') : activeEntry.id)
+        : selectedId;
+
     return (
         <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto relative z-10 animate-fade-in">
             {/* Top Navigation Bar inside Journal */}
@@ -8760,7 +8926,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                     >
                                         <div className="flex items-center justify-between text-[11px] font-mono">
                                             <span className={isSelected ? 'text-primary font-bold' : 'text-slate-400'}>
-                                                {e.category || (isEntryLocked ? 'Classified' : 'Article')}
+                                                {e.category || (isEntryLocked ? 'Classified Research' : 'Article')}
                                             </span>
                                             <span className="text-slate-500 text-[10px]">{e.date}</span>
                                         </div>
@@ -8784,6 +8950,9 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                 <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
                                     <span><i className="far fa-calendar-alt mr-1"></i> {activeEntry.date}</span>
                                     <span><i className="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                                    {(activeEntry.category || isLocked) && (
+                                        <span><i className="far fa-folder mr-1"></i> {activeEntry.category || 'Classified Research'}</span>
+                                    )}
                                 </div>
                                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
                                     {activeEntry.title}
@@ -8839,19 +9008,26 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                             </div>
                         )}
 
-                        {!loading && !error && !isLocked && postContent && (
-                            <div
-                                id="journal-reader"
-                                className="markdown-body leading-relaxed text-slate-300 selection:bg-primary selection:text-white"
-                                dangerouslySetInnerHTML={{
-                                    __html: window.DOMPurify 
-                                        ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(postContent) : postContent, {
-                                            ADD_TAGS: ['model-viewer', 'iframe'],
-                                            ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick']
-                                        })
-                                        : (window.marked ? window.marked.parse(postContent) : postContent)
-                                }}
-                            />
+                        {!loading && !error && !isLocked && normalizedMarkdown && (
+                            <>
+                                <div
+                                    id="journal-reader"
+                                    className="markdown-body leading-relaxed text-slate-300 selection:bg-primary selection:text-white"
+                                    dangerouslySetInnerHTML={{
+                                        __html: window.DOMPurify 
+                                            ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(normalizedMarkdown) : normalizedMarkdown, {
+                                                ADD_TAGS: ['model-viewer', 'iframe'],
+                                                ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick']
+                                            })
+                                            : (window.marked ? window.marked.parse(normalizedMarkdown) : normalizedMarkdown)
+                                    }}
+                                />
+                                <JournalComments
+                                    articleSlug={activeArticleSlug}
+                                    articleTitle={activeEntry?.title || activeArticleSlug}
+                                    lang={lang}
+                                />
+                            </>
                         )}
                     </div>
 

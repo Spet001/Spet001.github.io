@@ -3,72 +3,84 @@
         "id": "entry_0013",
         "title": "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
         "date": "Oct 11, 2026",
+        "category": "Reverse Engineering & File Formats",
         "file": "What-Is-A-WAD-Modern-Games.md"
     },
     {
         "id": "entry_0012",
         "title": "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
         "date": "Oct 9, 2026",
+        "category": "Game Optimization & Modding",
         "file": "Optimize-Old-Games-4GB-Patch-DXVK.md"
     },
     {
         "id": "entry_0011",
         "title": "Open Source 3D Assets! (Low Poly & Game Models)",
         "date": "Oct 8, 2026",
+        "category": "3D Art & Assets",
         "file": "Open-Source-3D-Assets.md"
     },
     {
         "id": "entry_0010",
         "title": "What is GSC? (Game Scripting C) Guide",
         "date": "Sep 30, 2026",
+        "category": "GSC Engine Internals",
         "file": "What-Is-GSC.md"
     },
     {
         "id": "entry_0009",
         "title": "Quick Entry: Having a Backend on a Static Website with Cloudflare workers!",
         "date": "Sep 28, 2026",
+        "category": "Serverless & Edge",
         "file": "Cloudflare-Workers-Backend.md"
     },
     {
         "id": "entry_0008",
         "title": "Providing Open Source T6 Custom Game Modes GSC!",
         "date": "Sep 27, 2026",
+        "category": "Open Source Modding",
         "file": "T6-Open-Source-GSC-Mods.md"
     },
     {
         "id": "entry_0007",
         "title": "Unlock This Entry With Patreon!",
         "date": "Sep 27, 2026",
+        "category": "Classified Research",
         "file": "T9-Mod-Manager-RE.md"
     },
     {
         "id": "entry_0006",
         "title": "Bypassing MS Store License Checks for Call of Duty DLCs",
         "date": "Sep 21, 2026",
+        "category": "Security & GDK",
         "file": "UWPCOD-GDK-DLC-Unlocker.md"
     },
     {
         "id": "entry_0005",
         "title": "Open Source GSC Injector for Black Ops 2 (MS Store)",
         "date": "Sep 20, 2026",
+        "category": "Reverse Engineering",
         "file": "T6-GSC-Injector-MS-Store.md"
     },
     {
         "id": "entry_0004",
         "title": "GSC Injection on Black Ops 1 (MS Store)",
         "date": "Sep 19, 2026",
+        "category": "Game Modding",
         "file": "T5-GSC-Injector-MS-Store.md"
     },
     {
         "id": "entry_0003",
         "title": "Leakers....Shame for you all",
         "date": "Sep 19, 2026",
+        "category": "Network Engineering & Security",
         "file": "shame_for_the_leakers.md"
     },
     {
         "id": "entry_0002",
         "title": "CW GSC Injection Findings",
         "date": "Sep 18, 2026",
+        "category": "Reverse Engineering",
         "file": "CW-GSC-Injection-MS-Store.md"
     }
 ]

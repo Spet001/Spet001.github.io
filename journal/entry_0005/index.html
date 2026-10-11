@@ -47,6 +47,7 @@
   "headline": "Open Source GSC Injector for Black Ops 2 (MS Store)",
   "description": "Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.",
   "datePublished": "Sep 20, 2026",
+  "articleSection": "Reverse Engineering",
   "url": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
   "mainEntityOfPage": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
   "author": {
@@ -462,12 +463,15 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 20, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Sep 20, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Reverse Engineering</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Open Source GSC Injector for Black Ops 2 (MS Store)</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="T6-GSC-Injector-MS-Store">
-<h1>Engineering the First Open Source GSC Injector for Black Ops 2 (MS Store)</h1>
 <p>Writing a custom GSC (Game Script Code) injector for <em>Call of Duty: Black Ops II</em> (T6) on PC is a notoriously difficult challenge. For years, the community has relied on closed-source tools like <em>GSC Studio</em>, which makes learning and porting mods to new environments—like the modern UWP / Microsoft Store release of the game—virtually impossible.</p>
 <p>Determined to break this barrier, I set out to build a <strong>100% open-source GSC Injector</strong> specifically tailored for the Black Ops 2 Microsoft Store version (as no BO2 GSC PC Injectors are open source lol). Here&#39;s the deep-dive story of how it evolved from a simple database hook to a full-blown inline execution detour and x86-to-x64 bytecode transpiler.</p>
 <hr>

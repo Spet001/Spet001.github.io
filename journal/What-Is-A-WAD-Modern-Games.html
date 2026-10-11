@@ -47,6 +47,7 @@
   "headline": "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
   "description": "Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.",
   "datePublished": "Oct 11, 2026",
+  "articleSection": "Reverse Engineering & File Formats",
   "url": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
   "mainEntityOfPage": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
   "author": {
@@ -462,21 +463,21 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Oct 11, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 11, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Reverse Engineering & File Formats</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="What-Is-A-WAD-Modern-Games">
-<h1>What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs in Call of Duty &amp; id Tech 7/8</h1>
-<blockquote>
-<p><strong>Date:</strong> October 11, 2026<br><strong>Category:</strong> Reverse Engineering, Engine Architecture &amp; File Formats<br><strong>Author:</strong> Eduardo Gelain (SpetDev)</p>
-</blockquote>
 <p>If you have ever modded classic <em>DOOM</em>, inspected old <em>Quake</em> or <em>Half-Life</em> textures, or poked around the local cache folders of <em>Call of Duty</em> clients like <strong>Plutonium</strong>, you have inevitably run into the <code>.wad</code> file extension.</p>
 <p>Most developers know the famous trivia: <strong>WAD</strong> stands for <strong>&quot;Where&#39;s All the Data?&quot;</strong> — the legendary container format designed by John Carmack at id Software in 1993 for <em>DOOM</em> (id Tech 1).</p>
 <p>What almost <strong>no one</strong> knows — and what has <strong>zero public documentation on Google</strong> — is why <em>Call of Duty</em> titles (like <em>Black Ops 1</em> and <em>Black Ops 2</em>) still download <code>.wad</code> files (<code>online_tu14_mp_english.wad</code>, <code>online_tu17_mp.wad</code>, <code>online_tu17_zm.wad</code>) from <strong>Demonware&#39;s Publisher Storage</strong>, what binary format those mystery <code>.wad</code> files actually use, and how <strong>id Tech 7 &amp; id Tech 8</strong> (<em>DOOM Eternal</em> and <em>DOOM: The Dark Ages</em>) handle <code>.wad</code> files over 30 years later.</p>
 <p>In this deep dive, we will trace the entire architectural lineage of the WAD format, <strong>reverse-engineer Treyarch&#39;s undocumented <code>0x543377AB</code> Demonware <code>.wad</code> binary format byte-by-byte</strong>, unpack its hidden payloads, and examine how modern engines evolved the concept.</p>
 <hr>
-<h2>🧱 Part 1: Where&#39;s All the Data? (1993 id Tech 1 WAD Architecture)</h2>
+<h2>Part 1: Where&#39;s All the Data? (1993 id Tech 1 WAD Architecture)</h2>
 <p>Before <em>DOOM</em> (1993), early PC games (including <em>Wolfenstein 3D</em>) often hardcoded asset offsets or shipped rigid, monolithic data files that couldn&#39;t be patched without modifying the main executable or rebuilding the entire archive.</p>
 <p>For <em>DOOM</em>, John Carmack designed the <strong>WAD</strong> format as a flat, virtualized Lump Filesystem. Instead of a hierarchical folder tree, a WAD file is a flat array of named binary blobs called <strong>Lumps</strong> (textures, sprites, sound effects, MUS/MIDI tracks, BSP map nodes, and palette tables).</p>
 <h3>Binary Anatomy of a Classic DOOM WAD</h3>
@@ -509,7 +510,7 @@ struct filelump_t {
 <p>When you launch DOOM or UZDoom with <code>-iwad doom2.wad -file mymod.wad</code>, the engine concatenates <code>mymod.wad</code>&#39;s directory entries <strong>after</strong> <code>doom2.wad</code>&#39;s directory entries in a single global array (<code>lumpinfo[]</code>).</p>
 <p>When the engine requests an asset by name (e.g., <code>W_CheckNumForName(&quot;TITLEPIC&quot;)</code> or <code>W_GetNumForName(&quot;D_RUNNIN&quot;)</code>), <strong>it scans the directory array backwards from the last index down to <code>0</code></strong> (or uses a hash chain built in reverse order). Because the <code>PWAD</code> was loaded last, its lumps are found first — automatically shadowing the original <code>IWAD</code> assets in memory without ever touching the base game file on disk!</p>
 <hr>
-<h2>🧬 Part 2: The Evolutionary Tree (Quake, GoldSrc &amp; IW Engine)</h2>
+<h2>Part 2: The Evolutionary Tree (Quake, GoldSrc &amp; IW Engine)</h2>
 <p>As 3D hardware accelerated and engines grew, the WAD format branched across the entire <strong>id Tech family tree</strong>:</p>
 <pre><code>id Tech 1 (DOOM, 1993) ──► IWAD / PWAD (Flat 8-char lump directory)
   │
@@ -525,7 +526,7 @@ struct filelump_t {
 </code></pre>
 <p>Wait — look at that last branch. Why on earth does <em>Call of Duty</em> have <code>.wad</code> files inside its <strong>Demonware</strong> networking cache?</p>
 <hr>
-<h2>🕵️‍♂️ Part 3: Reverse-Engineering Call of Duty&#39;s Undocumented Demonware <code>.wad</code> Files</h2>
+<h2>Part 3: Reverse-Engineering Call of Duty&#39;s Undocumented Demonware <code>.wad</code> Files</h2>
 <p>If you inspect the local Demonware Publisher Storage cache dumped by <em>Call of Duty</em> clients such as <strong>Plutonium</strong> (<code>%LOCALAPPDATA%\Plutonium\storage\demonware\&lt;title_id&gt;\pub\</code>), you will find files with <code>.wad</code> extensions sitting right next to FastFiles (<code>.ff</code>):</p>
 <ul>
 <li><code>18301\pub\online_tu14_mp_english.wad</code> (<em>Call of Duty: Black Ops 1</em> — Multiplayer)</li>
@@ -578,7 +579,7 @@ struct T3WadLumpEntry {
 </code></pre>
 <h3>3. What is Actually Inside Those Demonware <code>.wad</code> Files?</h3>
 <p>By writing a parser for <code>T3WadHeader</code> and inflating each <code>zlib</code> stream at <code>filePos</code>, we can extract every single lump from the <code>.wad</code> files in <code>/storage/demonware/</code>:</p>
-<h4>📦 <code>online_tu14_mp_english.wad</code> (<em>Black Ops 1</em> / T5 — Built Oct 1, 2015 / May 1, 2012)</h4>
+<h4><code>online_tu14_mp_english.wad</code> (<em>Black Ops 1</em> / T5 — Built Oct 1, 2015 / May 1, 2012)</h4>
 <table>
 <thead>
 <tr>
@@ -626,13 +627,13 @@ struct T3WadLumpEntry {
 </tr>
 </tbody></table>
 <blockquote>
-<p><strong>Fun Historical Easter Egg Inside the WADs:</strong><br>Comparing the official 2012 Demonware dump (<code>18409</code>) against the modded T5M/Plutonium dump (<code>18301</code>) reveals a piece of <em>Call of Duty</em> history frozen in time:  </p>
+<p><strong>Historical Easter Egg Inside the WADs:</strong><br>Comparing the official 2012 Demonware dump (<code>18409</code>) against the modded T5M/Plutonium dump (<code>18301</code>) reveals a piece of <em>Call of Duty</em> history frozen in time:  </p>
 <ul>
 <li>In the untouched May 1, 2012 WAD (<code>18409</code>), <code>motd-mp-english.txt</code> reads:<br><code>&quot;Black Ops 2 officially revealed! Head to www.facebook.com/codblackops to watch the reveal trailer. Follow @pcdev on twitter...&quot;</code>  </li>
 <li>In the 2015 custom client WAD (<code>18301</code>), the old T5M developers repacked the WAD so <code>motd-mp-english.txt</code> reads <code>&quot;T5M got ^5REKT&quot;</code> and <code>motd-sp-english.txt</code> reads <code>&quot;^5Demynnfire ^7loves you ^1&lt;3^6&lt;3 This just in: Leaderboards! Zombies are fun!&quot;</code></li>
 </ul>
 </blockquote>
-<h4>📦 <code>online_tu17_mp.wad</code> &amp; <code>online_tu17_zm.wad</code> (<em>Black Ops 2</em> / T6 — Title Update 17)</h4>
+<h4><code>online_tu17_mp.wad</code> &amp; <code>online_tu17_zm.wad</code> (<em>Black Ops 2</em> / T6 — Title Update 17)</h4>
 <table>
 <thead>
 <tr>
@@ -746,7 +747,7 @@ function unpackTreyarchWad(wadPath) {
 <li><strong>Legacy Naming Survives in Engine Symbols:</strong> Even when the file extension changed, internal C++ symbols and DVAR tables inside the Demonware <code>bdTitleUtilities</code> wrapper still reference <em>&quot;online WAD&quot;</em> loading tasks (<code>LiveStorage_GetOnlineWad</code>, <code>restrict_access_wad</code>) as a fossilized holdover from the T5/T6 era!</li>
 </ol>
 <hr>
-<h2>🔥 Part 4: How id Tech 7 &amp; id Tech 8 Handle WADs Today</h2>
+<h2>Part 4: How id Tech 7 &amp; id Tech 8 Handle WADs Today</h2>
 <p>What about id Software itself — the birthplace of the WAD? How do modern <strong>id Tech 7</strong> (<em>DOOM Eternal</em>) and <strong>id Tech 8</strong> (<em>DOOM: The Dark Ages</em>) treat <code>.wad</code> files?</p>
 <p>There are two sides to the story: <strong>literal legacy <code>.wad</code> support</strong> and <strong>the modern <code>.resources</code> / <code>.streamdb</code> architecture</strong>.</p>
 <h3>1. Literal <code>.wad</code> Execution Inside id Tech 7 (<code>base/classicwads/</code>)</h3>
@@ -778,7 +779,7 @@ Inside the <strong>Fortress of Doom</strong> (the Doom Slayer&#39;s orbital hub 
 </li>
 </ol>
 <hr>
-<h2>🏁 Conclusion</h2>
+<h2>Conclusion</h2>
 <p>From a 12-byte header and 8-character lump names in 1993 <em>DOOM</em>, to Treyarch&#39;s undocumented <code>0x543377AB</code> (<code>T3w\xAB</code>) Demonware <code>.wad</code> containers powering <em>Call of Duty: Black Ops</em> live-service playlists, to <code>base/classicwads/</code> and 64-bit <code>.resources</code> tables in <em>DOOM Eternal</em> — the <strong>WAD</strong> is one of the longest-living architectural patterns in video game history.</p>
 <blockquote>
 <p><strong>Want to see classic <code>.wad</code> loading in action right now?</strong><br>Open the <strong>CLI Terminal</strong> on this portfolio and type <strong><code>mars</code></strong> (or <strong><code>delicia doom</code></strong>) to boot <strong>UZDoom (WebAssembly)</strong> directly in your browser, complete with on-demand <code>.wad</code> streaming and local IndexedDB caching!</p>

@@ -68,7 +68,7 @@ function build() {
         const description = ENTRY_DESCRIPTIONS[slug] || ENTRY_DESCRIPTIONS[entry.id] || `${entry.title} - Technical research paper by Eduardo Gelain (SpetDev).`;
 
         if (fs.existsSync(mdPath)) {
-            const mdContent = fs.readFileSync(mdPath, 'utf8');
+            const mdContent = fs.readFileSync(mdPath, 'utf8').replace(/^\s*#\s+[^\r\n]+[\r\n]*/, '');
             articleHtml = marked.parse(mdContent);
         } else {
             // Locked / Patreon entry fallback representation
@@ -140,6 +140,7 @@ function build() {
             "headline": entry.title,
             "description": description,
             "datePublished": entry.date,
+            "articleSection": entry.category || "Reverse Engineering",
             "url": `https://spet01.dev/journal/${slug}/`,
             "mainEntityOfPage": `https://spet01.dev/journal/${slug}/`,
             "author": {
@@ -161,6 +162,9 @@ function build() {
         );
 
         // 7. Replace <main id="main-content">...</main> with article content
+        const categoryMetaHtml = entry.category
+            ? `<span><i class="far fa-folder mr-1"></i> ${entry.category}</span>`
+            : '';
         const articleMainHtml = `        <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
             <div class="mb-8 flex items-center justify-between text-xs">
                 <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
@@ -168,7 +172,11 @@ function build() {
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">${entry.date}</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> ${entry.date}</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        ${categoryMetaHtml}
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">${entry.title}</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">${description}</p>
                 </header>
@@ -261,6 +269,48 @@ ${journalCardsHtml}
 
     fs.writeFileSync(MASTER_JOURNAL_INDEX, masterJournalHtml, 'utf8');
     console.log(`[SSG Journal] Updated master /journal/index.html with modern unified shell.`);
+
+    // 3. Generate unified /privacy.html and /privacy/index.html with Space 2.0 3D shell
+    let privacyHtml = templateHtml;
+    privacyHtml = privacyHtml.replace(
+        /<title>[^<]+<\/title>/,
+        `<title>Privacy Statement | Eduardo Gelain – SpetDev</title>`
+    );
+    privacyHtml = privacyHtml.replace(
+        /<meta\s+name="description"\s+content="[^"]*">/,
+        `<meta name="description" content="Privacy Policy and Cookie Statement for Eduardo Gelain (SpetDev) portfolio and Technical Journal.">`
+    );
+    privacyHtml = privacyHtml.replace(
+        /<link\s+rel="canonical"\s+href="[^"]*">/,
+        `<link rel="canonical" href="https://spet01.dev/privacy.html">`
+    );
+
+    const privacyMainHtml = `        <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8">
+                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+            </div>
+            <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <h1 class="text-2xl sm:text-4xl font-bold text-white mb-2">Privacy Policy &amp; Cookie Statement</h1>
+                <p class="text-xs text-slate-400 font-mono mb-6">Last updated: September 2026</p>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>This portfolio is hosted as a static website on GitHub Pages and leverages Cloudflare Workers at the edge for backend functionality.</p>
+                    <p>This website does not use third-party tracking cookies and does not store personally identifiable information (PII) on your device without explicit consent.</p>
+                </div>
+            </section>
+        </main>`;
+
+    privacyHtml = privacyHtml.replace(
+        /<main id="main-content"[^>]*>[\s\S]*?<\/main>/,
+        privacyMainHtml
+    );
+
+    const privacyDir = path.join(ROOT_DIR, 'privacy');
+    if (!fs.existsSync(privacyDir)) {
+        fs.mkdirSync(privacyDir, { recursive: true });
+    }
+    fs.writeFileSync(path.join(ROOT_DIR, 'privacy.html'), privacyHtml, 'utf8');
+    fs.writeFileSync(path.join(privacyDir, 'index.html'), privacyHtml, 'utf8');
+    console.log(`[SSG Journal] Updated /privacy.html and /privacy/index.html with unified Space 2.0 shell.`);
     console.log(`[SSG Journal] Successfully generated ${generatedCount} static pages!`);
 }
 

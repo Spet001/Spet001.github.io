@@ -1,9 +1,5 @@
 # What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs in Call of Duty & id Tech 7/8
 
-> **Date:** October 11, 2026  
-> **Category:** Reverse Engineering, Engine Architecture & File Formats  
-> **Author:** Eduardo Gelain (SpetDev)
-
 If you have ever modded classic *DOOM*, inspected old *Quake* or *Half-Life* textures, or poked around the local cache folders of *Call of Duty* clients like **Plutonium**, you have inevitably run into the `.wad` file extension.
 
 Most developers know the famous trivia: **WAD** stands for **"Where's All the Data?"** — the legendary container format designed by John Carmack at id Software in 1993 for *DOOM* (id Tech 1).
@@ -14,7 +10,7 @@ In this deep dive, we will trace the entire architectural lineage of the WAD for
 
 ---
 
-## 🧱 Part 1: Where's All the Data? (1993 id Tech 1 WAD Architecture)
+## Part 1: Where's All the Data? (1993 id Tech 1 WAD Architecture)
 
 Before *DOOM* (1993), early PC games (including *Wolfenstein 3D*) often hardcoded asset offsets or shipped rigid, monolithic data files that couldn't be patched without modifying the main executable or rebuilding the entire archive.
 
@@ -56,7 +52,7 @@ When the engine requests an asset by name (e.g., `W_CheckNumForName("TITLEPIC")`
 
 ---
 
-## 🧬 Part 2: The Evolutionary Tree (Quake, GoldSrc & IW Engine)
+## Part 2: The Evolutionary Tree (Quake, GoldSrc & IW Engine)
 
 As 3D hardware accelerated and engines grew, the WAD format branched across the entire **id Tech family tree**:
 
@@ -78,7 +74,7 @@ Wait — look at that last branch. Why on earth does *Call of Duty* have `.wad` 
 
 ---
 
-## 🕵️‍♂️ Part 3: Reverse-Engineering Call of Duty's Undocumented Demonware `.wad` Files
+## Part 3: Reverse-Engineering Call of Duty's Undocumented Demonware `.wad` Files
 
 If you inspect the local Demonware Publisher Storage cache dumped by *Call of Duty* clients such as **Plutonium** (`%LOCALAPPDATA%\Plutonium\storage\demonware\<title_id>\pub\`), you will find files with `.wad` extensions sitting right next to FastFiles (`.ff`):
 
@@ -148,7 +144,7 @@ struct T3WadLumpEntry {
 
 By writing a parser for `T3WadHeader` and inflating each `zlib` stream at `filePos`, we can extract every single lump from the `.wad` files in `/storage/demonware/`:
 
-#### 📦 `online_tu14_mp_english.wad` (*Black Ops 1* / T5 — Built Oct 1, 2015 / May 1, 2012)
+#### `online_tu14_mp_english.wad` (*Black Ops 1* / T5 — Built Oct 1, 2015 / May 1, 2012)
 | Lump # | Lump Name | Compressed | Decompressed | Purpose in Engine |
 | :--- | :--- | :--- | :--- | :--- |
 | `0` | `contracts.dat` | 16,652 B | 160,573 B | Full table of Multiplayer Mercenary Contracts, COD Points rewards, and timers. |
@@ -157,13 +153,13 @@ By writing a parser for `T3WadHeader` and inflating each `zlib` stream at `fileP
 | `3` | `playlists_mp.info` | 7,157 B | 76,350 B | All MP & Wager Match playlists, map rotations, rulesets, and live `setdvar` overrides. |
 | `4` | `restrict_access_wad_mp.csv` | 100 B | 135 B | Remote DVAR ACL table (`dvarname,client,unranked,ranked action`) to remotely lock/unlock console DVARs. |
 
-> **Fun Historical Easter Egg Inside the WADs:**  
+> **Historical Easter Egg Inside the WADs:**  
 > Comparing the official 2012 Demonware dump (`18409`) against the modded T5M/Plutonium dump (`18301`) reveals a piece of *Call of Duty* history frozen in time:  
 > - In the untouched May 1, 2012 WAD (`18409`), `motd-mp-english.txt` reads:  
 >   `"Black Ops 2 officially revealed! Head to www.facebook.com/codblackops to watch the reveal trailer. Follow @pcdev on twitter..."`  
 > - In the 2015 custom client WAD (`18301`), the old T5M developers repacked the WAD so `motd-mp-english.txt` reads `"T5M got ^5REKT"` and `motd-sp-english.txt` reads `"^5Demynnfire ^7loves you ^1<3^6<3 This just in: Leaderboards! Zombies are fun!"`
 
-#### 📦 `online_tu17_mp.wad` & `online_tu17_zm.wad` (*Black Ops 2* / T6 — Title Update 17)
+#### `online_tu17_mp.wad` & `online_tu17_zm.wad` (*Black Ops 2* / T6 — Title Update 17)
 | Lump # | Lump Name | Compressed | Decompressed | Purpose in Engine |
 | :--- | :--- | :--- | :--- | :--- |
 | `0` | `playlists_mp.info` | 46,495 B | 223,534 B | Complete BO2 Multiplayer playlists (Version 1736), map weights, and live `setdvar` hotfixes. |
@@ -227,7 +223,7 @@ Starting with **Black Ops 3 (T7)** and **Black Ops 4 (T8)**, and continuing into
 
 ---
 
-## 🔥 Part 4: How id Tech 7 & id Tech 8 Handle WADs Today
+## Part 4: How id Tech 7 & id Tech 8 Handle WADs Today
 
 What about id Software itself — the birthplace of the WAD? How do modern **id Tech 7** (*DOOM Eternal*) and **id Tech 8** (*DOOM: The Dark Ages*) treat `.wad` files?
 
@@ -265,7 +261,7 @@ For its own native assets, id Tech 7 and id Tech 8 no longer use `.wad` or `.pk4
 
 ---
 
-## 🏁 Conclusion
+## Conclusion
 
 From a 12-byte header and 8-character lump names in 1993 *DOOM*, to Treyarch's undocumented `0x543377AB` (`T3w\xAB`) Demonware `.wad` containers powering *Call of Duty: Black Ops* live-service playlists, to `base/classicwads/` and 64-bit `.resources` tables in *DOOM Eternal* — the **WAD** is one of the longest-living architectural patterns in video game history.
 

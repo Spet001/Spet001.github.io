@@ -47,6 +47,7 @@
   "headline": "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
   "description": "A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.",
   "datePublished": "Oct 9, 2026",
+  "articleSection": "Game Optimization & Modding",
   "url": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
   "mainEntityOfPage": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
   "author": {
@@ -462,21 +463,21 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Oct 9, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 9, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Game Optimization & Modding</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="Optimize-Old-Games-4GB-Patch-DXVK">
-<h1>Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!</h1>
-<blockquote>
-<p><strong>Date:</strong> October 9, 2026<br><strong>Category:</strong> Game Optimization, Low-Level Systems &amp; Modding<br><strong>Author:</strong> Eduardo Gelain (SpetDev)</p>
-</blockquote>
 <p>Modern PC hardware is a beast — multicore CPUs, fast NVMe drives, and GPUs with 16GB+ of VRAM that can push hundreds of frames in modern ray-traced engines. Yet, when you install a classic PC title from the 2000s/2010s era (like <em>Fable III</em>, <em>Fallout: New Vegas</em>, <em>The Elder Scrolls IV: Oblivion</em>, <em>Dragon Age: Origins</em>, <em>The Sims 2</em>, <em>Mafia II</em>, or <em>Saints Row 2</em>), you often face a bizarre reality: <strong>stuttering, micro-freezes, abysmal frame pacing, and random crashes to desktop (CTDs)</strong>.</p>
 <p>Earlier, I released <a href="https://www.nexusmods.com/fableIII/mods/27"><strong>Fable 3 Fixer</strong></a> on NexusMods — an automated Electron desktop app that packages a 4GB Large Address Aware patch, a custom Vulkan-based DXVK renderer, a hand-tuned ReShade preset, and Games for Windows Live (GFWL) compatibility. With <strong>over 5,200 downloads (4,600+ unique)</strong>, 23,000+ views, and dozens of endorsements, it proved just how hungry PC gamers are for modern fixes on abandoned classics.</p>
 <p>Here&#39;s the secret: <strong>you don&#39;t need a dedicated installer for every old game.</strong></p>
 <p>The exact core combo that powers Fable 3 Fixer — the <strong>4GB Memory Patch (Large Address Aware)</strong> and <strong>DXVK (DirectX-to-Vulkan)</strong> — can be applied manually to almost <strong>any 32-bit DirectX 9, 10, or 11 game</strong> in less than 3 minutes. Here is the complete breakdown of why it works and how you can do it yourself!</p>
 <hr>
-<h2>🧠 Part 1: The 4GB Patch (Large Address Aware)</h2>
+<h2>Part 1: The 4GB Patch (Large Address Aware)</h2>
 <h3>The Problem: The 2GB 32-Bit Memory Wall</h3>
 <p>Back in the 32-bit Windows era (Windows XP/Vista 32-bit), Microsoft limited user-mode applications to a <strong>2GB Virtual Address Space (VAS)</strong> by default, reserving the remaining 2GB for the Windows NT kernel.</p>
 <p>Even though you are running a 64-bit OS today with 16GB, 32GB, or 64GB of physical RAM, <strong>32-bit game executables still adhere to this 2GB limit unless specifically flagged otherwise</strong>.</p>
@@ -490,11 +491,11 @@
 <h3>How to Apply It Manually:</h3>
 <h4>Option A: Standalone 4GB Patch Utility (Easiest)</h4>
 <ol>
-<li>Download Daniel Pistelli’s classic standalone <strong>4GB Patch tool</strong> (from NTCore or mod repositories).</li>
+<li>Download Daniel Pistelli&#39;s classic standalone <strong>4GB Patch tool</strong> (from NTCore or mod repositories).</li>
 <li><strong>Make a backup</strong> of your game&#39;s original <code>.exe</code> (e.g., copy <code>Game.exe</code> to <code>Game.exe.bak</code>).</li>
 <li>Run <code>4gb_patch.exe</code>.</li>
 <li>In the file picker dialog, navigate to your game&#39;s root directory and select the main game binary (e.g., <code>Fable3.exe</code>, <code>FalloutNV.exe</code>, <code>Oblivion.exe</code>).</li>
-<li>Click <strong>Open</strong>. A dialog box will immediately confirm:<br><code>✅ &quot;Executable successfully patched!&quot;</code></li>
+<li>Click <strong>Open</strong>. A dialog box will immediately confirm:<br><code>&quot;Executable successfully patched!&quot;</code></li>
 <li>That&#39;s it! The tool automatically flips the PE header bit and creates a <code>.Backup</code> file.</li>
 </ol>
 <h4>Option B: Developer Command Line (Visual Studio <code>editbin</code>)</h4>
@@ -506,22 +507,21 @@ editbin.exe /LARGEADDRESSAWARE &quot;C:\Games\YourGame\Game.exe&quot;
 dumpbin.exe /headers &quot;C:\Games\YourGame\Game.exe&quot; | Select-String &quot;Application can handle large (&gt;2GB) addresses&quot;
 </code></pre>
 <hr>
-<h2>⚡ Part 2: DXVK (Vulkan Translation Layer)</h2>
+<h2>Part 2: DXVK (Vulkan Translation Layer)</h2>
 <h3>The Problem: Modern GPUs Choke on Legacy DirectX 9/10/11</h3>
 <p>Modern GPUs (NVIDIA RTX 30/40/50 series, AMD Radeon RDNA2/3, and Intel Arc) are designed around low-overhead, explicit APIs like DirectX 12 and Vulkan.</p>
 <p>Legacy DirectX 9 and 10 rely on single-threaded command buffers and heavy CPU driver overhead. Intel and AMD have even deprecated native legacy DirectX 9 hardware pipelines, relying on software emulation or translation layers like D3D9On12 which frequently introduce stutter and micro-freezes.</p>
 <h3>The Fix: Translating Direct3D into Vulkan</h3>
 <p><a href="https://github.com/doitsujin/dxvk"><strong>DXVK</strong></a> (created by Philip Rebohle / doitsujin and the open-source community) is a high-performance translation layer that translates Direct3D 9, 10, and 11 calls into Vulkan in real-time.</p>
-<p>By placing DXVK’s wrapper DLL next to your game binary, Windows loads DXVK instead of the system&#39;s <code>d3d9.dll</code>. The benefits are immediate:</p>
+<p>By placing DXVK&#39;s wrapper DLL next to your game binary, Windows loads DXVK instead of the system&#39;s <code>d3d9.dll</code>. The benefits are immediate:</p>
 <ul>
-<li><strong>Massive FPS Boosts</strong>: Often 1.5× to 2× higher frame rates in CPU-bottlenecked scenes.</li>
+<li><strong>Massive FPS Boosts</strong>: Often 1.5x to 2x higher frame rates in CPU-bottlenecked scenes.</li>
 <li><strong>Buttery Smooth Frame Pacing</strong>: Eliminates pipeline stalls and draw call bottlenecks.</li>
 <li><strong>Asynchronous Shader Compilation</strong>: Vastly reduces in-game shader compilation stuttering.</li>
 </ul>
 <h3>How to Install DXVK Manually:</h3>
 <h4>Step 1: Download DXVK</h4>
-<p>Head over to the official GitHub releases page:
-👉 <strong><a href="https://github.com/doitsujin/dxvk/releases">https://github.com/doitsujin/dxvk/releases</a></strong><br>Download the latest <code>dxvk-x.x.x.tar.gz</code> release asset.</p>
+<p>Head over to the official GitHub releases page:<br><strong><a href="https://github.com/doitsujin/dxvk/releases">https://github.com/doitsujin/dxvk/releases</a></strong><br>Download the latest <code>dxvk-x.x.x.tar.gz</code> release asset.</p>
 <h4>Step 2: Understand <code>x32</code> vs <code>x64</code></h4>
 <p>Extract the downloaded <code>.tar.gz</code> using 7-Zip or WinRAR. You will see two folders:</p>
 <ul>
@@ -529,8 +529,7 @@ dumpbin.exe /headers &quot;C:\Games\YourGame\Game.exe&quot; | Select-String &quo
 <li><strong><code>x64</code></strong> (64-bit binaries)</li>
 </ul>
 <blockquote>
-<p>[!IMPORTANT]
-<strong>Match the bitness of the game binary, NOT your operating system!</strong><br>Virtually all classic DirectX 9 games (including <em>Fable III</em>, <em>Fallout: New Vegas</em>, <em>Oblivion</em>, <em>Dragon Age: Origins</em>, <em>The Sims 2</em>, <em>Mafia II</em>, <em>Saints Row 2</em>, <em>Dead Space</em>, <em>GTA IV</em>) are <strong>32-bit executables</strong>. Therefore, you <strong>MUST</strong> use the DLLs from the <strong><code>x32</code></strong> folder! If you put 64-bit DLLs into a 32-bit game, the game will fail to launch with error code <code>0xc000007b</code>.</p>
+<p><strong>Important Note:</strong><br><strong>Match the bitness of the game binary, NOT your operating system!</strong><br>Virtually all classic DirectX 9 games (including <em>Fable III</em>, <em>Fallout: New Vegas</em>, <em>Oblivion</em>, <em>Dragon Age: Origins</em>, <em>The Sims 2</em>, <em>Mafia II</em>, <em>Saints Row 2</em>, <em>Dead Space</em>, <em>GTA IV</em>) are <strong>32-bit executables</strong>. Therefore, you <strong>MUST</strong> use the DLLs from the <strong><code>x32</code></strong> folder! If you put 64-bit DLLs into a 32-bit game, the game will fail to launch with error code <code>0xc000007b</code>.</p>
 </blockquote>
 <h4>Step 3: Copy the Wrapper DLLs</h4>
 <ol>
@@ -551,7 +550,7 @@ info:  Device: NVIDIA GeForce RTX ... (or AMD / Intel)
 </code></pre>
 <p>If you see your GPU listed and the log generated, DXVK is running and powering your game via Vulkan!</p>
 <hr>
-<h2>🛠️ Part 3: Pro Tips &amp; Tweaks</h2>
+<h2>Part 3: Pro Tips &amp; Tweaks</h2>
 <h3>1. Frame Rate Limiter (<code>dxvk.conf</code>)</h3>
 <p>Some physics engines in older games (like Havok or Gamebryo in Bethesda games) go crazy if your frame rate exceeds 60 FPS or 120 FPS. You can cap your frame rate cleanly at the Vulkan level without third-party software:</p>
 <ol>
@@ -570,13 +569,13 @@ info:  Device: NVIDIA GeForce RTX ... (or AMD / Intel)
 <li>Install ReShade using the <strong>Vulkan</strong> API mode, or install ReShade as <code>dxgi.dll</code> while DXVK runs as <code>d3d9.dll</code>.</li>
 </ul>
 <hr>
-<h2>⚠️ When NOT to Use This</h2>
+<h2>When NOT to Use This</h2>
 <ul>
 <li><strong>Multiplayer games with Kernel-Level Anti-Cheat:</strong> Games protected by <em>Easy Anti-Cheat (EAC)</em>, <em>BattlEye</em>, or <em>Vanguard</em> may flag local wrapper DLLs (<code>d3d9.dll</code>) as unauthorized DLL injection or third-party hooks. <strong>Do not use DXVK in competitive anti-cheat multiplayer games!</strong></li>
 <li><strong>Non-Vulkan GPUs:</strong> You need a GPU and driver that supports <strong>Vulkan 1.3</strong> (all NVIDIA GTX 900+ / RTX series, AMD GCN 4.0+ / RDNA series, and Intel Arc / Iris Xe).</li>
 </ul>
 <hr>
-<h2>🎯 Summary</h2>
+<h2>Summary</h2>
 <table>
 <thead>
 <tr>

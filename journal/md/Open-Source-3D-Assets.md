@@ -1,12 +1,12 @@
 # Open Source 3D Assets! (Low Poly & Game Models)
 
 > **License & Public Release Notice:**
-> All 3D assets showcased and used in this portfolio — from the low-poly space simulation to game prototypes like *Atirei o Pau no Gato* — are now **100% Open Source and Free to Use**.
+> All original 3D assets showcased and authored for this portfolio — from the low-poly space simulation to game prototypes like *Atirei o Pau no Gato* — are **100% Open Source and Free to Use**.
 > You can download the `.glb` / `.gltf` files directly, import them into **Blender, Unity, Unreal Engine 5, Godot, or Three.js**, and use them in your games, web experiments, or hobby projects with zero restrictions.
 
 ---
 
-## 🎮 Interactive 3D Model Gallery & Inspector
+## Interactive 3D Model Gallery & Inspector
 
 Use your mouse or touch to rotate, pan, and zoom any model below. You can inspect the geometry and download the raw `.glb` files directly.
 
@@ -15,24 +15,25 @@ Use your mouse or touch to rotate, pan, and zoom any model below. You can inspec
 <model-viewer id="journal-model-viewer" src="/3d/jet.glb" alt="3D Open Source Model Preview" auto-rotate camera-controls shadow-intensity="1.2" exposure="1.2" style="width: 100%; height: 100%; background: transparent;"></model-viewer>
 </div>
 <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;" id="journal-model-buttons">
-<button data-model-src="/3d/jet.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/jet.glb'; document.getElementById('journal-model-download').href='/3d/jet.glb'; document.getElementById('journal-model-download').setAttribute('download', 'jet.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(0,170,255,0.15); border: 1px solid rgba(0,170,255,0.4); color: #00aaff; cursor: pointer;">🚀 Jet</button>
-<button data-model-src="/3d/Astronaut.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/Astronaut.glb'; document.getElementById('journal-model-download').href='/3d/Astronaut.glb'; document.getElementById('journal-model-download').setAttribute('download', 'Astronaut.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">👨‍🚀 Astronaut</button>
-<button data-model-src="/3d/rocket.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/rocket.glb'; document.getElementById('journal-model-download').href='/3d/rocket.glb'; document.getElementById('journal-model-download').setAttribute('download', 'rocket.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">🛰️ Rocket</button>
-<button data-model-src="/3d/Paratrooper.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/Paratrooper.glb'; document.getElementById('journal-model-download').href='/3d/Paratrooper.glb'; document.getElementById('journal-model-download').setAttribute('download', 'Paratrooper.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">🪂 Paratrooper</button>
-<button data-model-src="/3d/space_chicken!.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/space_chicken!.glb'; document.getElementById('journal-model-download').href='/3d/space_chicken!.glb'; document.getElementById('journal-model-download').setAttribute('download', 'space_chicken.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">🐔 Space Chicken</button>
-<button data-model-src="/3d/jailson.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/jailson.glb'; document.getElementById('journal-model-download').href='/3d/jailson.glb'; document.getElementById('journal-model-download').setAttribute('download', 'jailson.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,165,0,0.15); border: 1px solid rgba(255,165,0,0.4); color: #ffa500; cursor: pointer;">🍊 Jailson Mendes</button>
-<button data-model-src="/3d/orange.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/orange.glb'; document.getElementById('journal-model-download').href='/3d/orange.glb'; document.getElementById('journal-model-download').setAttribute('download', 'orange.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,120,0,0.15); border: 1px solid rgba(255,120,0,0.4); color: #ff7800; cursor: pointer;">🍊 Cosmic Orange</button>
-<button data-model-src="/3d/cop.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/cop.glb'; document.getElementById('journal-model-download').href='/3d/cop.glb'; document.getElementById('journal-model-download').setAttribute('download', 'cop.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">👮 Cop (Pau no Gato)</button>
-<button data-model-src="/3d/moon_test.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/moon_test.glb'; document.getElementById('journal-model-download').href='/3d/moon_test.glb'; document.getElementById('journal-model-download').setAttribute('download', 'moon_test.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">🌕 Test Moon (RuTracker)</button>
+<button data-model-src="/3d/jet.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/jet.glb'; document.getElementById('journal-model-download').href='/3d/jet.glb'; document.getElementById('journal-model-download').setAttribute('download', 'jet.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(0,170,255,0.15); border: 1px solid rgba(0,170,255,0.4); color: #00aaff; cursor: pointer;">Jet</button>
+<button data-model-src="/3d/Astronaut.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/Astronaut.glb'; document.getElementById('journal-model-download').href='/3d/Astronaut.glb'; document.getElementById('journal-model-download').setAttribute('download', 'Astronaut.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Astronaut</button>
+<button data-model-src="/3d/slayer.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/slayer.glb'; document.getElementById('journal-model-download').href='/3d/slayer.glb'; document.getElementById('journal-model-download').setAttribute('download', 'slayer.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Doom Slayer</button>
+<button data-model-src="/3d/rocket.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/rocket.glb'; document.getElementById('journal-model-download').href='/3d/rocket.glb'; document.getElementById('journal-model-download').setAttribute('download', 'rocket.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Rocket</button>
+<button data-model-src="/3d/Paratrooper.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/Paratrooper.glb'; document.getElementById('journal-model-download').href='/3d/Paratrooper.glb'; document.getElementById('journal-model-download').setAttribute('download', 'Paratrooper.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Paratrooper</button>
+<button data-model-src="/3d/space_chicken!.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/space_chicken!.glb'; document.getElementById('journal-model-download').href='/3d/space_chicken!.glb'; document.getElementById('journal-model-download').setAttribute('download', 'space_chicken.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Space Chicken</button>
+<button data-model-src="/3d/jailson.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/jailson.glb'; document.getElementById('journal-model-download').href='/3d/jailson.glb'; document.getElementById('journal-model-download').setAttribute('download', 'jailson.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,165,0,0.15); border: 1px solid rgba(255,165,0,0.4); color: #ffa500; cursor: pointer;">Jailson Mendes</button>
+<button data-model-src="/3d/orange.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/orange.glb'; document.getElementById('journal-model-download').href='/3d/orange.glb'; document.getElementById('journal-model-download').setAttribute('download', 'orange.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,120,0,0.15); border: 1px solid rgba(255,120,0,0.4); color: #ff7800; cursor: pointer;">Cosmic Orange</button>
+<button data-model-src="/3d/cop.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/cop.glb'; document.getElementById('journal-model-download').href='/3d/cop.glb'; document.getElementById('journal-model-download').setAttribute('download', 'cop.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Cop (Pau no Gato)</button>
+<button data-model-src="/3d/moon_test.glb" onclick="document.getElementById('journal-model-viewer').src='/3d/moon_test.glb'; document.getElementById('journal-model-download').href='/3d/moon_test.glb'; document.getElementById('journal-model-download').setAttribute('download', 'moon_test.glb');" style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; cursor: pointer;">Test Moon (RuTracker)</button>
 </div>
 <div style="margin-top: 1rem; text-align: center;">
-<a id="journal-model-download" href="/3d/jet.glb" download="jet.glb" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.4rem; background: #059669; color: #ffffff; text-decoration: none; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 700; transition: background 0.2s;">📥 Download Selected .GLB Asset</a>
+<a id="journal-model-download" href="/3d/jet.glb" download="jet.glb" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.4rem; background: #059669; color: #ffffff; text-decoration: none; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 700; transition: background 0.2s;">Download Selected .GLB Asset</a>
 </div>
 </div>
 
 ---
 
-## 🛠️ The Story Behind the Assets
+## The Story Behind the Assets
 
 When building custom browser engines, interactive portfolios, and experimental physics prototypes, commercial 3D assets are often **over-engineered, excessively high-poly, or bogged down by restrictive licensing**. 
 
@@ -40,7 +41,7 @@ WebGL in particular is notoriously sensitive to heavy geometries and multiple PB
 
 Here is the origin story of each asset in the collection:
 
-### 1. 🌕 The Test Moon (`moon_test.glb`) vs. The Weird Russian Site (RuTracker)
+### 1. The Test Moon (`moon_test.glb`) vs. The Weird Russian Site (RuTracker)
 Before the current high-detail lunar surface model was added to the *Space 2.0* theme, I needed a lightweight celestial sphere to test orbital mechanics, lighting reflection vectors, and camera depth.
 
 That first test model is **`moon_test.glb`** — an unpretentious, clean low-poly lunar sphere.
@@ -49,7 +50,7 @@ Later on, while hunting for a more realistic lunar topology map that wouldn't cr
 
 ---
 
-### 2. 🍊 The Legendary Jailson Mendes (`jailson.glb`)
+### 2. The Legendary Jailson Mendes (`jailson.glb`)
 An unmistakable icon of Brazilian internet meme culture. Immortalized in low-poly 3D geometry:
 
 - **Origin**: Created as a funny experimental model and now featured as the central character in the hidden **`DELICIA`** CLI Easter Egg!
@@ -58,7 +59,7 @@ An unmistakable icon of Brazilian internet meme culture. Immortalized in low-pol
 
 ---
 
-### 3. 👮 The Cop (`cop.glb`) from *Atirei o Pau no Gato*
+### 3. The Cop (`cop.glb`) from *Atirei o Pau no Gato*
 This character model was used in my Unreal Engine 5 FPS (First-Person Shooter) game, ***Atirei o Pau no Gato***, created for **GameJam+ 25/26**:
 
 - **Context**: An intentionally generic low-poly policeman model (not Brazilian — just the classic archetypal arcade cop) featured as one of the humorous adversaries in the chaotic jam shooter.
@@ -66,7 +67,7 @@ This character model was used in my Unreal Engine 5 FPS (First-Person Shooter) g
 
 ---
 
-### 4. 🐔 The Celestial Space Chicken (`space_chicken!.glb`)
+### 4. The Celestial Space Chicken (`space_chicken!.glb`)
 What happens when cosmic asteroid fields get too boring? You turn them into chickens.
 
 - **Origin**: Modeled for the **`chicken!`** Easter Egg command in SpetTerm.
@@ -75,17 +76,18 @@ What happens when cosmic asteroid fields get too boring? You turn them into chic
 
 ---
 
-### 5. 🚀 Supersonic Jet, Astronaut, Rocket & Paratrooper
+### 5. Supersonic Jet, Astronaut, Doom Slayer, Rocket & Paratrooper
 The core fleet powering the interactive hero simulation:
 
 - **Jet (`jet.glb`)**: A sleek aerodynamic fighter jet with twin engine exhaust ports that emit particle physics trails following your cursor. Its texture map is intentionally composed of simple shades of gray (grayscale) to keep file size and GPU texture memory usage microscopic while looking sharp under dynamic Three.js lighting.
 - **Astronaut (`Astronaut.glb`)**: The iconic explorer tethered by a spring physics rope, piloted in real-time via `Arrow Keys` or `W/A/S/D`.
+- **Doom Slayer (`slayer.glb`)**: Authored for the **`mars`** CLI Easter Egg, replacing the tethered astronaut in orbit around Mars while Phobos, Deimos, and Earth act as interactive UZDoom launchers (*DOOM & Doom Slayer character © id Software*).
 - **Rocket (`rocket.glb`)**: A standard, classic rocket ship. Just like the jet, its texture is composed purely of shades of gray (grayscale) to keep memory overhead to an absolute minimum and prevent WebGL shader stalls.
 - **Paratrooper (`Paratrooper.glb`)**: Lightweight character model with deployed canopy, used in the *Sky 2.0* interactive physics simulation.
 
 ---
 
-## 📦 Direct Asset Download Directory
+## Direct Asset Download Directory
 
 All models are exported in the standard **glTF 2.0 Binary (`.glb`)** container format, containing embedded geometries, materials, and vertex colors:
 
@@ -93,6 +95,7 @@ All models are exported in the standard **glTF 2.0 Binary (`.glb`)** container f
 | :--- | :--- | :--- | :--- | :--- |
 | **Supersonic Jet** | `jet.glb` | 8.04 MB | Vehicle, Dogfight Sim (Grayscale) | [Download `.glb`](/3d/jet.glb) |
 | **Tethered Astronaut** | `Astronaut.glb` | 10.38 MB | Character, Space Sim | [Download `.glb`](/3d/Astronaut.glb) |
+| **Doom Slayer** | `slayer.glb` | 9.55 MB | Character, MARS Easter Egg | [Download `.glb`](/3d/slayer.glb) |
 | **Rocket** | `rocket.glb` | 6.76 MB | Standard Rocket (Grayscale) | [Download `.glb`](/3d/rocket.glb) |
 | **Paratrooper** | `Paratrooper.glb` | 12.63 MB | Character, Physics Tether | [Download `.glb`](/3d/Paratrooper.glb) |
 | **Space Chicken** | `space_chicken!.glb` | 11.65 MB | Mascot, Humor, Easter Egg | [Download `.glb`](/3d/space_chicken!.glb) |
@@ -103,7 +106,7 @@ All models are exported in the standard **glTF 2.0 Binary (`.glb`)** container f
 
 ---
 
-## 💡 How to Import Into Your Projects
+## How to Import Into Your Projects
 
 ### Three.js (Web):
 ```javascript

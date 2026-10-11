@@ -47,6 +47,7 @@
   "headline": "GSC Injection on Black Ops 1 (MS Store)",
   "description": "Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.",
   "datePublished": "Sep 19, 2026",
+  "articleSection": "Game Modding",
   "url": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/",
   "mainEntityOfPage": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/",
   "author": {
@@ -462,12 +463,15 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 19, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Sep 19, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Game Modding</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">GSC Injection on Black Ops 1 (MS Store)</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="T5-GSC-Injector-MS-Store">
-<h1>Black Ops 1 (T5) MS Store GSC Injector</h1>
 <p>Continuing our reverse engineering adventures on legacy titles, today I&#39;ll talk about building a GSC (Game Script Code) Injector for <strong>Call of Duty: Black Ops 1 (T5) - MS Store/Xbox App Edition</strong>.</p>
 <p>This implementation was heavily inspired by the amazing <a href="https://journal.lunar.sh/2023/gsctool.html">findings over at lunar.sh</a>, but adapted and converted specifically for the Windows UWP/MS Store binaries using custom offsets found via IDA Pro cross-references.</p>
 <h2>The Challenge</h2>

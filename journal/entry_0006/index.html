@@ -47,6 +47,7 @@
   "headline": "Bypassing MS Store License Checks for Call of Duty DLCs",
   "description": "Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.",
   "datePublished": "Sep 21, 2026",
+  "articleSection": "Security & GDK",
   "url": "https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/",
   "mainEntityOfPage": "https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/",
   "author": {
@@ -462,12 +463,15 @@
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
-                    <time class="text-xs font-mono text-slate-400 mb-2 block">Sep 21, 2026</time>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Sep 21, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Security & GDK</span>
+                    </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Bypassing MS Store License Checks for Call of Duty DLCs</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="UWPCOD-GDK-DLC-Unlocker">
-<h1>Bypassing MS Store / UWP License Checks for Call of Duty DLCs</h1>
 <p>When the <em>Call of Duty</em> titles started appearing on the Microsoft Store (such as <em>Advanced Warfare</em> and <em>WWII</em>), the community quickly noticed a major shift in how DLCs were handled. In the Steam era, buying a DLC meant downloading gigabytes of new maps and assets. On the UWP / Microsoft Store ecosystem, the reality is entirely different.</p>
 <p>The &quot;DLC&quot; you purchase on the MS Store is nothing more than a 10MB dummy package. All the actual DLC assets—maps, zombie modes, weapons—are <strong>already pre-installed natively</strong> inside the massive 100GB+ base game download. The 10MB package simply acts as a cryptographic &quot;Activator&quot; or license token for the Windows to validate.</p>
 <p>I developed a module that dynamically emulates the Microsoft GDK (Game Development Kit) API. This allows custom clients, offline users, or anyone with the base game files to unlock all DLCs without tampering with the game&#39;s executable.</p>
