@@ -8914,14 +8914,180 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
 
     }, [selectedId, entries, lang]);
 
+    const [articleLang, setArticleLang] = useState('en');
+    const [translatedData, setTranslatedData] = useState(null);
+    const [translating, setTranslating] = useState(false);
+    const [translateError, setTranslateError] = useState(null);
+
+    const computeContentHash = useCallback((text) => {
+        let h = 2166136261 >>> 0;
+        for (let i = 0; i < text.length; i++) {
+            h ^= text.charCodeAt(i);
+            h = Math.imul(h, 16777619) >>> 0;
+        }
+        return `${text.length}_${h.toString(16)}`;
+    }, []);
+
+    const activeEntry = entries.find(e => 
+        e.id === selectedId || 
+        e.file === selectedId || 
+        (e.file && e.file.replace(/\.md$/, '') === selectedId)
+    );
+
+    const normalizedMarkdown = postContent
+        ? postContent.replace(/^\s*#\s+[^\r\n]+[\r\n]*/, '')
+        : '';
+
+    const activeArticleSlug = activeEntry
+        ? (activeEntry.file ? activeEntry.file.replace(/\.md$/, '') : activeEntry.id)
+        : selectedId;
+
+    const activeEntryViews = getEntryViews(activeEntry);
+
     useEffect(() => {
+        if (articleLang !== 'pt' || !normalizedMarkdown || loading || isLocked || !activeArticleSlug) {
+            setTranslating(false);
+            setTranslateError(null);
+            return;
+        }
+
+        const rawTitle = activeEntry?.title || '';
+        const contentHash = computeContentHash(`${rawTitle}\n${normalizedMarkdown}`);
+        const cacheKey = `journal_translation_${activeArticleSlug}_pt`;
+
+        if (translatedData && translatedData.slug === activeArticleSlug && translatedData.hash === contentHash) {
+            return;
+        }
+
+        try {
+            const localCached = localStorage.getItem(cacheKey);
+            if (localCached) {
+                const parsed = JSON.parse(localCached);
+                if (parsed && parsed.hash === contentHash && parsed.markdownPt) {
+                    setTranslatedData({
+                        slug: activeArticleSlug,
+                        hash: contentHash,
+                        titlePt: parsed.titlePt || rawTitle,
+                        markdownPt: parsed.markdownPt
+                    });
+                    setTranslating(false);
+                    setTranslateError(null);
+                    return;
+                }
+            }
+        } catch (e) {}
+
+        let cancelled = false;
+        setTranslating(true);
+        setTranslateError(null);
+
+        const translateMarkdownViaGtx = async (rawMd, titleStr) => {
+            const protectedTokens = [];
+            const maskToken = (match) => {
+                const idx = protectedTokens.length;
+                protectedTokens.push(match);
+                return `ZXQ_${idx}_ZXQ`;
+            };
+
+            // 1. Protect fenced code blocks, math blocks, HTML blocks, inline code, link targets, and technical acronyms
+            let masked = rawMd
+                .replace(/(```[\s\S]*?```|\$\$[\s\S]*?\$\$|<div[\s\S]*?<\/div>)/g, maskToken)
+                .replace(/(`[^`\n]+`|\$\S[^$\n]*\$|\]\([^)\n]+\))/g, maskToken)
+                .replace(/\b(IWAD|PWAD|DXVK|LAA|GSC|UWP|GDK|FastFile|Demonware|Netchan|4GB Patch|d3d9\.dll|dxgi\.dll)\b/g, maskToken);
+
+            const translateChunk = async (chunkText) => {
+                if (!chunkText.trim()) return chunkText;
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=pt&dt=t&q=${encodeURIComponent(chunkText)}`;
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error(lang === 'pt' ? 'Falha ao consultar API do Google Translate.' : 'Failed to query Google Translate API.');
+                }
+                const data = await res.json();
+                return Array.isArray(data?.[0])
+                    ? data[0].map(part => part?.[0] || '').join('')
+                    : chunkText;
+            };
+
+            const paragraphs = masked.split(/\n\n/);
+            const chunks = [];
+            let current = '';
+            for (const p of paragraphs) {
+                if ((current + '\n\n' + p).length > 2400 && current.length > 0) {
+                    chunks.push(current);
+                    current = p;
+                } else {
+                    current = current ? `${current}\n\n${p}` : p;
+                }
+            }
+            if (current) chunks.push(current);
+
+            const [titlePtRaw, ...translatedChunks] = await Promise.all([
+                titleStr ? translateChunk(titleStr.replace(/\b(IWAD|PWAD|DXVK|LAA|GSC|UWP|GDK|FastFile|Demonware|Netchan|4GB Patch)\b/g, maskToken)) : Promise.resolve(''),
+                ...chunks.map(c => translateChunk(c))
+            ]);
+
+            const restoreTokens = (str) =>
+                str.replace(/ZXQ_\s*(\d+)\s*_ZXQ/gi, (_, i) => {
+                    const idx = parseInt(i, 10);
+                    return protectedTokens[idx] !== undefined ? protectedTokens[idx] : _;
+                });
+
+            return {
+                titlePt: restoreTokens(titlePtRaw || titleStr),
+                markdownPt: restoreTokens(translatedChunks.join('\n\n'))
+            };
+        };
+
+        translateMarkdownViaGtx(normalizedMarkdown, rawTitle)
+            .then(data => {
+                if (cancelled) return;
+                const resultObj = {
+                    slug: activeArticleSlug,
+                    hash: contentHash,
+                    titlePt: data.titlePt || rawTitle,
+                    markdownPt: data.markdownPt
+                };
+                setTranslatedData(resultObj);
+                setTranslating(false);
+                try {
+                    localStorage.setItem(cacheKey, JSON.stringify(resultObj));
+                } catch (e) {}
+            })
+            .catch(err => {
+                if (cancelled) return;
+                setTranslateError(err.message);
+                setTranslating(false);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [articleLang, normalizedMarkdown, loading, isLocked, activeArticleSlug, activeEntry, computeContentHash, translatedData, lang]);
+
+    const displayedMarkdown = (articleLang === 'pt' && translatedData && translatedData.slug === activeArticleSlug && translatedData.markdownPt)
+        ? translatedData.markdownPt
+        : normalizedMarkdown;
+
+    const displayedTitle = (articleLang === 'pt' && translatedData && translatedData.slug === activeArticleSlug && translatedData.titlePt)
+        ? translatedData.titlePt
+        : (activeEntry ? activeEntry.title : '');
+
+    useEffect(() => {
+        const container = document.getElementById('journal-reader');
+        if (container) {
+            container.querySelectorAll('pre, code').forEach((el) => {
+                el.classList.add('notranslate');
+                el.setAttribute('translate', 'no');
+            });
+        }
+
         if (window.hljs) {
             document.querySelectorAll('#journal-reader pre code').forEach((block) => {
+                delete block.dataset.highlighted;
                 window.hljs.highlightElement(block);
             });
         }
 
-        const container = document.getElementById('journal-reader');
         if (!container) return;
 
         const handleGalleryClicks = (e) => {
@@ -8953,13 +9119,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
 
         container.addEventListener('click', handleGalleryClicks);
         return () => container.removeEventListener('click', handleGalleryClicks);
-    }, [postContent, loading]);
-
-    const activeEntry = entries.find(e => 
-        e.id === selectedId || 
-        e.file === selectedId || 
-        (e.file && e.file.replace(/\.md$/, '') === selectedId)
-    );
+    }, [displayedMarkdown, loading, translating]);
 
     const filteredEntries = entries
         .filter(e => {
@@ -8987,16 +9147,6 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         if (onSelectPost) onSelectPost(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-
-    const normalizedMarkdown = postContent
-        ? postContent.replace(/^\s*#\s+[^\r\n]+[\r\n]*/, '')
-        : '';
-
-    const activeArticleSlug = activeEntry
-        ? (activeEntry.file ? activeEntry.file.replace(/\.md$/, '') : activeEntry.id)
-        : selectedId;
-
-    const activeEntryViews = getEntryViews(activeEntry);
 
     return (
         <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto relative z-10 animate-fade-in">
@@ -9133,31 +9283,84 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                         {/* Header Details */}
                         {activeEntry && (
                             <div className="pb-6 mb-6 border-b border-white/[0.08]">
-                                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
-                                    <span><i className="far fa-calendar-alt mr-1"></i> {activeEntry.date}</span>
-                                    <span><i className="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
-                                    {(activeEntry.category || isLocked) && (
-                                        <span><i className="far fa-folder mr-1"></i> {activeEntry.category || 'Classified Research'}</span>
-                                    )}
-                                    {activeEntryViews !== null && (
-                                        <span><i className="far fa-eye mr-1"></i> {activeEntryViews} {lang === 'pt' ? 'visualizações' : 'views'}</span>
+                                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                                    <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400">
+                                        <span><i className="far fa-calendar-alt mr-1"></i> {activeEntry.date}</span>
+                                        <span><i className="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                                        {(activeEntry.category || isLocked) && (
+                                            <span><i className="far fa-folder mr-1"></i> {activeEntry.category || 'Classified Research'}</span>
+                                        )}
+                                        {activeEntryViews !== null && (
+                                            <span><i className="far fa-eye mr-1"></i> {activeEntryViews} {lang === 'pt' ? 'visualizações' : 'views'}</span>
+                                        )}
+                                    </div>
+
+                                    {!isLocked && (
+                                        <div className="inline-flex items-center rounded-xl bg-black/40 border border-white/[0.1] p-1 text-[11px] font-mono">
+                                            <button
+                                                type="button"
+                                                onClick={() => { playSoftClick(); setArticleLang('en'); }}
+                                                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer clickable ${
+                                                    articleLang === 'en'
+                                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
+                                                        : 'text-slate-400 hover:text-white border border-transparent'
+                                                }`}
+                                            >
+                                                Original Text - Texto Original
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => { playSoftClick(); setArticleLang('pt'); }}
+                                                disabled={translating}
+                                                className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer clickable ${
+                                                    articleLang === 'pt'
+                                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
+                                                        : 'text-slate-400 hover:text-white border border-transparent'
+                                                }`}
+                                            >
+                                                {translating ? (
+                                                    <i className="fas fa-circle-notch fa-spin text-[10px]"></i>
+                                                ) : (
+                                                    <i className="fas fa-language text-xs"></i>
+                                                )}
+                                                <span>Traduzir via Google Translate</span>
+                                            </button>
+                                        </div>
                                     )}
                                 </div>
+
                                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
-                                    {activeEntry.title}
+                                    {displayedTitle}
                                 </h1>
+
+                                {translateError && articleLang === 'pt' && (
+                                    <div className="mt-3 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono flex items-center justify-between gap-2">
+                                        <span><i className="fas fa-exclamation-circle mr-1.5"></i>{translateError}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setArticleLang('en')}
+                                            className="underline hover:text-white cursor-pointer"
+                                        >
+                                            {lang === 'pt' ? 'Voltar ao original' : 'Back to original'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 
                         {/* Article Content / State */}
-                        {loading && (
+                        {(loading || translating) && (
                             <div className="flex flex-col items-center justify-center py-24 text-center">
                                 <i className="fas fa-circle-notch fa-spin text-4xl text-primary mb-4"></i>
-                                <p className="text-slate-400 text-sm font-medium">{lang === 'pt' ? 'Carregando análise técnica...' : 'Loading technical analysis...'}</p>
+                                <p className="text-slate-400 text-sm font-medium">
+                                    {translating
+                                        ? (lang === 'pt' ? 'Traduzindo artigo técnico para Português (preservando blocos de código)...' : 'Translating technical article to Portuguese (preserving code blocks)...')
+                                        : (lang === 'pt' ? 'Carregando análise técnica...' : 'Loading technical analysis...')}
+                                </p>
                             </div>
                         )}
 
-                        {error && !loading && (
+                        {error && !loading && !translating && (
                             <div className="text-center py-16">
                                 <i className="fas fa-exclamation-triangle text-4xl text-red-400 mb-4"></i>
                                 <h3 className="text-lg font-bold text-white mb-2">{lang === 'pt' ? 'Erro ao carregar artigo' : 'Error loading article'}</h3>
@@ -9197,18 +9400,18 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                             </div>
                         )}
 
-                        {!loading && !error && !isLocked && normalizedMarkdown && (
+                        {!loading && !translating && !error && !isLocked && displayedMarkdown && (
                             <>
                                 <div
                                     id="journal-reader"
                                     className="markdown-body leading-relaxed text-slate-300 selection:bg-primary selection:text-white"
                                     dangerouslySetInnerHTML={{
                                         __html: window.DOMPurify 
-                                            ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(normalizedMarkdown) : normalizedMarkdown, {
+                                            ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(displayedMarkdown) : displayedMarkdown, {
                                                 ADD_TAGS: ['model-viewer', 'iframe'],
-                                                ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick']
+                                                ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick', 'translate']
                                             })
-                                            : (window.marked ? window.marked.parse(normalizedMarkdown) : normalizedMarkdown)
+                                            : (window.marked ? window.marked.parse(displayedMarkdown) : displayedMarkdown)
                                     }}
                                 />
                                 <JournalComments

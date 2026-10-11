@@ -472,29 +472,121 @@
                     <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="T5-GSC-Injector-MS-Store">
-<p>Continuing our reverse engineering adventures on legacy titles, today I&#39;ll talk about building a GSC (Game Script Code) Injector for <strong>Call of Duty: Black Ops 1 (T5) - MS Store/Xbox App Edition</strong>.</p>
-<p>This implementation was heavily inspired by the amazing <a href="https://journal.lunar.sh/2023/gsctool.html">findings over at lunar.sh</a>, but adapted and converted specifically for the Windows UWP/MS Store binaries using custom offsets found via IDA Pro cross-references.</p>
-<h2>The Challenge</h2>
-<p>Unlike newer titles, Black Ops 1 handles script files differently. The game engine loads scripts as <code>RawFile</code> assets.
-If you simply try to hook <code>Scr_LoadScript</code> or replace the text in memory, the game will crash or ignore the payload. Why? Because the Black Ops 1 engine explicitly expects these <code>RawFile</code> assets to be <strong>zlib-compressed</strong>.</p>
-<h2>The Solution</h2>
-<p>By analyzing the UWP binaries in IDA Pro, i located the exact offsets for <code>DB_FindXAssetHeader</code>. This function acts as the central hub for the game&#39;s asset pipeline. By installing a detour hook on this function, we can intercept the game&#39;s requests for specific <code>.gsc</code> scripts.</p>
-<p>Here is how the injection pipeline works:</p>
-<ol>
-<li><strong>Hook <code>DB_FindXAssetHeader</code>:</strong> We intercept asset queries. When the game requests <code>maps/mp/gametypes/_clientids</code> (for Multiplayer) or <code>maps/_zombiemode_ffotd</code> (for Zombies), we step in.</li>
-<li><strong>On-the-fly Zlib Compression:</strong> We take our custom plain-text <code>.gsc</code> file, strip any UTF-8 BOMs, and pass it through standard <code>zlib</code> compression (<code>compress()</code>).</li>
-<li><strong>Struct Forging:</strong> We wrap the compressed buffer inside a custom <code>RawFileData</code> struct:<pre><code class="language-cpp">struct RawFileData {
-    int32_t deflatedSize;
-    int32_t compressedSize;
-    // ... byte buffer ...
-};
+<p>Continuing our reverse engineering work across legacy Call of Duty titles ported to the modern Microsoft Store / Xbox App (GDK) ecosystem, this entry covers the architecture and implementation of the <strong>ZPGDK GSC Injector &amp; FastFile Script Dumper</strong> for <strong>Call of Duty: Black Ops 1 (T5)</strong>.</p>
+<p>While our initial research was inspired by the classic 32-bit findings documented on <a href="https://journal.lunar.sh/2023/gsctool.html">lunar.sh</a>, bringing a reliable script injector and asset dumper to the Microsoft Store release required reverse engineering the newly compiled <strong>64-bit UWP/GDK binaries</strong> (<code>BlackOps.exe</code> and <code>BlackOpsMP.exe</code>) in IDA Pro, reconstructing widened x64 engine structures, and solving subtle lifecycle traps unique to Treyarch&#39;s T5 engine.</p>
+<hr>
+<h2>1. Runtime Plain-Text Compilation vs. Bytecode Trees</h2>
+<p>Unlike <em>Black Ops II</em> (T6)—which pre-compiles scripts offline into binary bytecode blobs (<code>ASSET_TYPE_SCRIPT_PARSETREE</code>, Type <code>48</code>)—<em>Black Ops 1</em> (T5) stores <code>.gsc</code> scripts inside FastFiles (<code>.ff</code>) as plain-text source code wrapped inside <strong><code>ASSET_TYPE_RAWFILE</code> (Type <code>36</code> / <code>0x24</code>)</strong> assets.</p>
+<p>When a level initializes, the engine queries <code>DB_FindXAssetHeader</code> for the target script, decompresses its payload in memory, and passes the raw text buffer directly to the internal runtime compiler (<code>Scr_CompileText</code> at <code>base + 0x4B43F0</code> and <code>Scr_PostCompileScripts</code> at <code>base + 0x4B8290</code>).</p>
+<p>However, if you simply hook <code>DB_FindXAssetHeader</code> and point a <code>RawFile</code> buffer to an uncompressed <code>.gsc</code> string on disk, the game will immediately fault. T5&#39;s asset pipeline strictly expects <code>RawFile</code> script buffers to carry an 8-byte size header followed by a <strong>zlib-compressed (<code>DEFLATE</code>) stream</strong>, and the 64-bit MS Store port widened the outer <code>RawFile</code> structure fields for x64 alignment.</p>
+<hr>
+<h2>2. Reconstructing the 64-bit GDK Engine Structures &amp; Offsets</h2>
+<p>Using IDA Pro cross-references and BinDiff against the legacy 32-bit Steam executables, we mapped out both the Multiplayer (<code>BlackOpsMP.exe</code>) and Singleplayer/Zombies (<code>BlackOps.exe</code>) binaries relative to the 64-bit image base (<code>0x140000000</code>).</p>
+<p>In the x64 GDK build, <code>game::RawFile</code> widens its length field to <code>std::int64_t</code>, while the inner payload pointed to by <code>buffer</code> begins with a packed 8-byte <code>RawFileData</code> header containing <code>deflatedSize</code> and <code>compressedSize</code>:</p>
+<pre><code class="language-cpp">namespace game {
+    struct RawFileData {
+        std::int32_t deflatedSize;   // Uncompressed length (including null terminator)
+        std::int32_t compressedSize; // Size of the zlib payload immediately following this struct
+    };
+
+    struct RawFile {
+        const char* name;
+        std::int64_t len;
+        const char* buffer;
+    };
+
+    enum XAssetType { ASSET_TYPE_RAWFILE = 36 }; // 0x24
+
+    // Exact IDA Verified Offsets for MS Store (Relative to base 0x140000000)
+    constexpr std::uintptr_t OFFSET_MP_DB_FINDXASSETHEADER = 0x542770; // BlackOpsMP.exe
+    constexpr std::uintptr_t OFFSET_MP_G_INITGAME           = 0x5C99E0;
+    constexpr std::uintptr_t OFFSET_SP_DB_FINDXASSETHEADER = 0x411DD0; // BlackOps.exe
+    constexpr std::uintptr_t OFFSET_SP_G_INITGAME           = 0x52E4C0;
+}
 </code></pre>
-</li>
-<li><strong>Injection:</strong> We return the pointer to our forged <code>RawFile</code> struct. The engine happily decompresses it natively and executes our custom script.</li>
+<p>Because Black Ops 1 splits Singleplayer/Zombies (<code>BlackOps.exe</code>) and Multiplayer (<code>BlackOpsMP.exe</code>) into two distinct binaries, our injector dynamically detects the active executable at startup (<code>game::is_mp()</code>) and installs the appropriate inline detours.</p>
+<hr>
+<h2>3. Forging Zlib-Compressed <code>RawFile</code> Assets in Memory</h2>
+<p>Two subtle quirks in T5&#39;s asset loader must be handled before compressing a custom script:</p>
+<ol>
+<li><strong>Extension Stripping:</strong> Unlike later engines, T5 strips <code>.gsc</code> when querying <code>ASSET_TYPE_RAWFILE</code> (for example, querying <code>&quot;maps/mp/gametypes/_clientids&quot;</code> or <code>&quot;maps/_zombiemode_ffotd&quot;</code>).</li>
+<li><strong>UTF-8 BOM Stripping:</strong> If a <code>.gsc</code> file is saved with a 3-byte UTF-8 BOM (<code>0xEF, 0xBB, 0xBF</code>), T5&#39;s legacy lexer (<code>Scr_CompileText</code>) fails on line 1.</li>
 </ol>
-<h3>Bonus: Asset Dumping</h3>
-<p>Since we&#39;re already hooking the core asset loader, the injector also features a built-in &quot;GSC Dumper&quot;. It intercepts the original <code>RawFile</code> structs, decompresses them using <code>uncompress()</code>, and saves the raw vanilla game scripts to disk for study and modding reference!</p>
-<p>A fascinating exercise in memory manipulation, compression algorithms, and legacy engine architecture!</p>
+<p><code>RegisterCustomScript</code> normalizes the target asset path, strips any UTF-8 BOM, compresses the null-terminated payload via <code>zlib</code>&#39;s <code>compress()</code>, prefixes it with <code>game::RawFileData</code>, and registers the forged <code>game::RawFile</code> descriptor:</p>
+<pre><code class="language-cpp">bool RegisterCustomScript(const std::wstring&amp; filePath, const std::string&amp; targetAssetName) {
+    // ... read plain-text .gsc from disk and strip 3-byte UTF-8 BOM (0xEF 0xBB 0xBF) ...
+    const char* src_ptr = buffer.data() + offset;
+    size_t uncompressed_len = strlen(src_ptr) + 1;
+    std::string normTarget = NormalizeAssetName(targetAssetName);
+    uLongf destLen = compressBound(static_cast&lt;uLong&gt;(uncompressed_len));
+
+    CustomRawAsset asset;
+    asset.targetName = normTarget;
+    asset.compressedData.resize(sizeof(game::RawFileData) + destLen);
+
+    auto* raw_header = reinterpret_cast&lt;game::RawFileData*&gt;(asset.compressedData.data());
+    char* compress_dest = asset.compressedData.data() + sizeof(game::RawFileData);
+
+    if (compress(reinterpret_cast&lt;Bytef*&gt;(compress_dest), &amp;destLen,
+                 reinterpret_cast&lt;const Bytef*&gt;(src_ptr), static_cast&lt;uLong&gt;(uncompressed_len)) == Z_OK) {
+        raw_header-&gt;deflatedSize = static_cast&lt;std::int32_t&gt;(uncompressed_len);
+        raw_header-&gt;compressedSize = static_cast&lt;std::int32_t&gt;(destLen);
+
+        size_t total_size = sizeof(game::RawFileData) + destLen;
+        asset.compressedData.resize(total_size);
+        asset.rawFile.len = static_cast&lt;std::int64_t&gt;(total_size);
+        asset.rawFile.buffer = asset.compressedData.data();
+
+        g_CustomAssets[normTarget] = std::move(asset);
+        g_CustomAssets[normTarget].rawFile.name = g_CustomAssets[normTarget].targetName.c_str();
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<hr>
+<h2>4. Solving the <code>frontend.d3dbsp</code> Trap in Singleplayer &amp; Zombies</h2>
+<p>During testing on <code>BlackOps.exe</code>, we encountered a classic T5 engine quirk: <strong>the main menu in Black Ops 1 is not a static 2D UI—it is an actual 3D level (<code>frontend.d3dbsp</code>)</strong> where Mason is strapped to the interrogation chair in the room of televisions.</p>
+<p>Because <code>frontend</code> boots the full scripting VM, the engine queries <code>DB_FindXAssetHeader</code> for shared scripts while still in the main menu. If the injector prematurely swaps in a Zombies mod script during the <code>frontend</code> load, the script references Zombies-specific functions that do not exist in <code>frontend.ff</code>, crashing the game before the menu even renders.</p>
+<p>To prevent this, <code>db_find_xasset_header_stub</code> monitors <strong>Asset Type <code>12</code> (<code>.d3dbsp</code>)</strong> queries to track <code>g_CurrentMapName</code> in real time. Whenever <code>!game::is_mp()</code> and the active level is <code>frontend</code>, the hook returns the vanilla asset untouched until an actual Zombies or Campaign map is loaded:</p>
+<pre><code class="language-cpp">void* __fastcall db_find_xasset_header_stub(int type, const char* name, int allowDefault, int a4) {
+    if (name != nullptr &amp;&amp; IsValidPointer(name)) {
+        if (type == 12 || strstr(name, &quot;.d3dbsp&quot;) != nullptr) {
+            g_CurrentMapName = name; // Track active BSP level
+        }
+    }
+
+    if (type == game::ASSET_TYPE_RAWFILE &amp;&amp; name != nullptr &amp;&amp; IsValidPointer(name)) {
+        void* origAsset = db_find_xasset_header_hook.invoke&lt;void*&gt;(type, name, allowDefault, a4);
+        if (origAsset != nullptr &amp;&amp; g_GscDumpEnabled) {
+            DumpOriginalRawFile(name, reinterpret_cast&lt;game::RawFile*&gt;(origAsset));
+        }
+
+        // Skip injection while on the interactive 3D main menu (frontend.d3dbsp)
+        bool isFrontend = (g_CurrentMapName.empty() ||
+                           g_CurrentMapName.find(&quot;frontend&quot;) != std::string::npos ||
+                           strstr(name, &quot;frontend&quot;) != nullptr);
+        if (!game::is_mp() &amp;&amp; isFrontend) return origAsset;
+
+        if (g_GscInjectorEnabled) {
+            auto it = g_CustomAssets.find(NormalizeAssetName(name));
+            if (it != g_CustomAssets.end() &amp;&amp; it-&gt;second.rawFile.buffer != nullptr) {
+                return &amp;it-&gt;second.rawFile;
+            }
+        }
+        return origAsset;
+    }
+    return db_find_xasset_header_hook.invoke&lt;void*&gt;(type, name, allowDefault, a4);
+}
+</code></pre>
+<hr>
+<h2>5. Multi-Mode Autoloader &amp; Vanilla FastFile GSC Dumper</h2>
+<p>Rather than restricting modders to a single hardcoded script, <code>AutoLoadModScripts()</code> manages a <code>zeroproxy.ini</code> configuration file and scans <code>/mods</code> recursively based on the active mode:</p>
+<ul>
+<li><strong>Multiplayer (<code>BlackOpsMP.exe</code>):</strong> Maps <code>mods/_clientids.gsc</code> -&gt; <code>maps/mp/gametypes/_clientids</code> and <code>mods/mp/**</code> -&gt; <code>maps/mp/**</code>, while hooking <code>G_InitGame</code> (<code>base + 0x5C99E0</code>) to dispatch <code>set developer 1; set developer_script 1;</code> via <code>Cbuf_AddText</code>.</li>
+<li><strong>Zombies &amp; Campaign (<code>BlackOps.exe</code>):</strong> Hooks <code>mods/_zombiemode_ffotd.gsc</code> -&gt; <code>maps/_zombiemode_ffotd</code> (the FastFile-Of-The-Day hotfix entry point), <code>mods/_ambientpackage.gsc</code> -&gt; <code>maps/_ambientpackage</code>, and <code>mods/zm/**</code> -&gt; <code>maps/**</code>, while hooking <code>Com_PrintMessage</code> (<code>base + 0x531400</code>) to pipe internal engine logs to the ZPGDK console.</li>
+</ul>
+<p>Finally, because our detour sits directly on <code>DB_FindXAssetHeader</code>, setting <code>gsc_dump = 1</code> in <code>zeroproxy.ini</code> turns the injector into a <strong>FastFile Script Extractor</strong>. Before overriding any <code>RawFile</code>, <code>DumpOriginalRawFile</code> inspects <code>RawFileData::deflatedSize</code>, calls <code>zlib</code>&#39;s <code>uncompress()</code>, and writes the clean vanilla <code>.gsc</code> source tree to <code>/dumped_gsc/&lt;asset_path&gt;.gsc</code> for study and modding reference.</p>
 
                 </div>
             </article>

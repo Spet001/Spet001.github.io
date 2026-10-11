@@ -132,7 +132,7 @@ Developers can now organize their scripts in standard directory structures and d
 
 ```json
 {
-  "name": "ZeroProxy Debug Menu",
+  "name": "ZPGDK Debug Menu",
   "entry_asset": "maps/mp/_development_dvars",
   "entry_export": "init",
   "assets": [
