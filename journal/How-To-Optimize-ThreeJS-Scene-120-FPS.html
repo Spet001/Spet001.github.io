@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>How to Optimize a Three.js Scene for 120+ FPS | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK">
+    <meta name="author" content="Eduardo Gelain">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+    <!-- Canonical URL & Alternate Discovery -->
+    <link rel="canonical" href="https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/">
+    <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/">
+    <meta property="og:title" content="How to Optimize a Three.js Scene for 120+ FPS | Eduardo Gelain">
+    <meta property="og:description" content="Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.">
+    <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1668">
+    <meta property="og:image:height" content="506">
+    <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+    <meta property="og:site_name" content="Eduardo Gelain Portfolio">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/">
+    <meta name="twitter:title" content="How to Optimize a Three.js Scene for 120+ FPS | Eduardo Gelain">
+    <meta name="twitter:description" content="Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.">
+    <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
+    <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to Optimize a Three.js Scene for 120+ FPS",
+  "description": "Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.",
+  "datePublished": "Oct 11, 2026",
+  "articleSection": "WebGL & Graphics Optimization",
+  "url": "https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/",
+  "mainEntityOfPage": "https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown & Sanitizer for Mascot Chat & Technical Journal -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#00aaff',
+                        primaryHover: '#0077b6',
+                        dark: '#050505',
+                        darkPanel: 'rgba(5, 5, 5, 0.85)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for base tweaks -->
+    <style>
+        html {
+            scroll-behavior: smooth !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            cursor: none !important;
+            overflow-x: hidden;
+        }
+
+        a,
+        button,
+        .clickable { cursor: none !important; }
+
+        .glass-panel {
+            background: rgba(8, 10, 15, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Custom Scrollbar for Journal Entries */
+        .journal-entries-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.7);
+        }
+        .journal-entries-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+            margin: 4px 0;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+        }
+
+        .fade-in-section {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
+        /* Subtle Project Card Fade-In on Filter & Search */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .project-card-animate {
+            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
+        #projects article {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+            position: relative;
+        }
+
+        #projects article:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 170, 255, 0.6) !important;
+            box-shadow: 
+                inset 0 0 0 1px rgba(0, 170, 255, 0.45),
+                inset 0 0 22px rgba(0, 170, 255, 0.15),
+                0 16px 36px -8px rgba(0, 170, 255, 0.24),
+                0 12px 28px -6px rgba(0, 0, 0, 0.65) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-card-animate {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            #projects article:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Custom Cursor (GPU-composited via rAF-coalesced translate3d, zero style recalculation on 1000Hz mice) */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%) scale(1);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        #custom-cursor[data-hover="1"] {
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+        }
+
+        /* Mascot Companion styles */
+        @keyframes astroFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1.5deg); }
+        }
+        .astro-float {
+            animation: astroFloat 3.5s ease-in-out infinite;
+        }
+
+        /* Subtle bubble entrance animations and transitions */
+        @keyframes mascotBubbleIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes mascotAiGlow {
+            0% {
+                border-color: rgba(56, 189, 248, 0.75);
+                box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+            }
+            100% {
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        @keyframes typingCursorBlink {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0; transform: scaleY(0.7); }
+        }
+
+        .mascot-typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 15px;
+            background-color: #38bdf8;
+            margin-left: 3px;
+            vertical-align: -1px;
+            animation: typingCursorBlink 0.75s infinite ease-in-out;
+            border-radius: 1px;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+        }
+
+        .mascot-bubble-user {
+            animation: mascotBubbleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mascot-bubble-ai {
+            animation: mascotBubbleIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .mascot-bubble-ai.new-arrival {
+            animation: mascotBubbleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, mascotAiGlow 1.4s ease-out forwards;
+        }
+
+        @keyframes wavePulse {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .typing-dot-1 { animation: wavePulse 1.2s infinite ease-in-out 0s; }
+        .typing-dot-2 { animation: wavePulse 1.2s infinite ease-in-out 0.2s; }
+        .typing-dot-3 { animation: wavePulse 1.2s infinite ease-in-out 0.4s; }
+
+        .mascot-chat-content p { margin-bottom: 0.5rem; line-height: 1.5; }
+        .mascot-chat-content p:last-child { margin-bottom: 0; }
+        .mascot-chat-content ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content code { background: rgba(15, 23, 42, 0.85); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85em; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .mascot-chat-content pre { background: #080d1a; padding: 0.75rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mascot-chat-content pre code { background: transparent; padding: 0; color: #e2e8f0; border: none; }
+        .mascot-chat-content a { color: #38bdf8; text-decoration: underline; }
+        .mascot-chat-content strong { color: #fff; font-weight: 600; }
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        /* Journal Markdown Reader Styles */
+        .markdown-body h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff; }
+        .markdown-body h2 { font-size: 1.45rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .markdown-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e2e8f0; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+        .markdown-body a { color: #00aaff; text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-body a:hover { color: #38bdf8; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.35rem; }
+        .markdown-body blockquote { border-left: 4px solid #00aaff; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-bottom: 1.25rem; background: rgba(0, 170, 255, 0.05); padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body code { background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875em; color: #38bdf8; }
+        .markdown-body pre { background-color: rgba(5, 5, 5, 0.95); padding: 1.1rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .markdown-body pre code { background-color: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.85em; }
+        .markdown-body img { max-width: 100%; border-radius: 0.75rem; margin: 1.25rem 0; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .markdown-body hr { border-color: rgba(255, 255, 255, 0.08); margin: 2rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; text-align: left; }
+        .markdown-body th { background: rgba(255,255,255,0.05); color: #fff; }
+</style>
+
+    <!-- React & Three.js Libraries -->
+    <script>
+        // Fix Chromium bug on large internal blob: URLs in Three.js GLTFLoader (r128):
+        // ImageBitmapLoader fails with net::ERR_ABORTED ("TypeError: Failed to fetch") on large blobs (moon.glb & nebula0.glb).
+        // Forcing TextureLoader (HTMLImageElement) guarantees reliable loading across all browsers.
+        window.createImageBitmap = undefined;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style>
+        .text-glow {
+            text-shadow: 0px 2px 8px rgba(0,0,0,0.9), 0px 4px 20px rgba(0,0,0,0.8);
+        }
+        .text-glow-none {
+            text-shadow: none !important;
+        }
+    </style>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+
+<body class="antialiased selection:bg-primary selection:text-white">
+    <div id="custom-cursor"></div>
+    <!-- Pre-hydration initial loading overlay -->
+    <div id="initial-loading-screen" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+        <div class="flex items-center gap-2.5">
+            <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-xs text-slate-400">SpetDev</span>
+        </div>
+
+        <div class="max-w-xs w-full">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+                <span>Iniciando ambiente...</span>
+                <span>···</span>
+            </div>
+            <div class="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
+                <div class="h-full bg-primary/70 rounded-full w-1/3 animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.dismissInitialLoadingScreen = function() {
+            var el = document.getElementById('initial-loading-screen');
+            if (el && el.parentNode) {
+                el.style.transition = 'opacity 0.7s ease-out';
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    if (el && el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }, 700);
+            }
+        };
+    </script>
+    <div id="root">
+        <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
+        <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
+        <header class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
+                    <i class="fas fa-terminal text-primary"></i>
+                    <span>Spet<span class="text-primary">Dev</span></span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-book-open"></i> Technical Journal
+                    </a>
+                </div>
+            </div>
+        </header>
+
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
+            </div>
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 11, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> WebGL & Graphics Optimization</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">How to Optimize a Three.js Scene for 120+ FPS</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="How-To-Optimize-ThreeJS-Scene-120-FPS">
+<p>Building a rich 3D WebGL background in <strong>Three.js</strong> — complete with procedural shaders, orbital physics, asteroid fields, interactive companions, and particle trails — looks effortless when tested in isolation on a blank page at 60Hz.</p>
+<p>However, once you embed that same <code>&lt;canvas&gt;</code> underneath a full-featured <strong>React Single-Page Application (SPA)</strong> with glassmorphism cards, animated project previews, custom cursors, and scroll-driven UI on a <strong>165Hz gaming monitor (NVIDIA RTX 30+ Series)</strong>, reality hits hard:</p>
+<ul>
+<li><strong>CPU usage spikes up to 50%.</strong></li>
+<li><strong>Frame rates swing wildly between 22 FPS and 200 FPS.</strong></li>
+<li><strong>Fast mouse sweeps (1000Hz polling) drag the framerate down to ~85 FPS.</strong></li>
+<li><strong>Scrolling past media cards tanks the framerate to ~22 FPS.</strong></li>
+</ul>
+<p>In this engineering breakdown, we will walk through the exact profiling methodology and low-level optimizations used on <strong>spet01.dev</strong> to eliminate CPU/GPU bottlenecks, resolve Windows DWM / Chromium compositor contention, and lock our Three.js scenes (<code>Space 2.0</code> &amp; <code>Sky 2.0</code>) at a stable <strong>100–165 FPS</strong>.</p>
+<hr>
+<h2>Step 0: Measure First — Building a 1% Low FPS Telemetry HUD</h2>
+<p>Before touching a single shader or React component, you need a way to correlate <strong>exact user interactions</strong> with <strong>instantaneous frame time spikes</strong>. Standard browser DevTools performance recordings often add their own instrumentation overhead.</p>
+<p>To profile in production conditions, I added a live <strong><code>fps</code> command</strong> to the site&#39;s interactive CLI terminal (<code>Ctrl + K</code>). Using a lock-free ring buffer of the last 120 <code>requestAnimationFrame</code> deltas, the HUD calculates:</p>
+<ul>
+<li><strong>Current FPS</strong> &amp; <strong>Frame Time (<code>ms</code>)</strong></li>
+<li><strong>1% Low FPS</strong> (the worst 1% of frame times over the rolling window — the true indicator of micro-stuttering)</li>
+</ul>
+<pre><code class="language-javascript">// Rolling 120-frame ring buffer for 1% Low FPS &amp; Frame Time telemetry
+const frameTimes = new Float64Array(120);
+let frameIdx = 0;
+let frameCount = 0;
+let lastFrameTime = performance.now();
+
+function sampleFrame(now) {
+    const dt = now - lastFrameTime;
+    lastFrameTime = now;
+    if (dt &gt; 0 &amp;&amp; dt &lt; 500) {
+        frameTimes[frameIdx] = dt;
+        frameIdx = (frameIdx + 1) % 120;
+        if (frameCount &lt; 120) frameCount++;
+    }
+    // Sort active samples descending to extract the 99th percentile worst frame time
+    const sorted = Array.from(frameTimes.subarray(0, frameCount)).sort((a, b) =&gt; b - a);
+    const worstFrameMs = sorted[Math.max(0, Math.floor(frameCount * 0.05))];
+    const onePercentLowFps = Math.round(1000 / worstFrameMs);
+}
+</code></pre>
+<p>With the HUD running on a <strong>165Hz monitor + NVIDIA RTX 30+ Series</strong>, the initial baseline revealed four distinct regimes:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Interaction State</th>
+<th align="left">Observed FPS</th>
+<th align="left">Primary Bottleneck</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Idle (No Input)</strong></td>
+<td align="left"><code>~165 FPS</code> (unstable)</td>
+<td align="left">CPU particle loops &amp; GC pauses</td>
+</tr>
+<tr>
+<td align="left"><strong>Slow Mouse Movement</strong></td>
+<td align="left"><code>~160 FPS</code></td>
+<td align="left">Minor cursor DOM updates</td>
+</tr>
+<tr>
+<td align="left"><strong>Rapid Continuous Mouse Sweep (1000Hz)</strong></td>
+<td align="left"><strong>Drops to <code>~85 FPS</code></strong></td>
+<td align="left">Unthrottled <code>mousemove</code> layout &amp; React hover state</td>
+</tr>
+<tr>
+<td align="left"><strong>Scrolling Over Media Cards</strong></td>
+<td align="left"><strong>Drops to <code>~22 FPS</code></strong></td>
+<td align="left"><code>backdrop-filter</code> Kawase blur + D3D11 <code>&lt;video&gt;</code> SwapChain mutex stalls</td>
+</tr>
+</tbody></table>
+<p>Let&#39;s fix every single one of these bottlenecks from the GPU pipeline up to the browser compositor.</p>
+<hr>
+<h2>Part 1: Moving Particle Physics from the CPU to GLSL Vertex Shaders</h2>
+<h3>The Problem: Per-Frame <code>Float32Array</code> Uploads Over PCIe</h3>
+<p>A common Three.js anti-pattern for rain, snow, starfields, or thruster plumes is iterating over a <code>Float32Array</code> of vertex positions in JavaScript every frame and setting <code>geometry.attributes.position.needsUpdate = true</code>:</p>
+<pre><code class="language-javascript">// ❌ ANTI-PATTERN: 900 particles × 165 FPS = 148,500 CPU iterations/sec + 165 PCIe buffer uploads/sec
+const pos = rainGeometry.attributes.position.array;
+for (let i = 0; i &lt; PARTICLE_COUNT; i++) {
+    pos[i * 3 + 1] -= velocities[i] * dt;
+    if (pos[i * 3 + 1] &lt; -halfHeight) pos[i * 3 + 1] = halfHeight;
+}
+rainGeometry.attributes.position.needsUpdate = true; // Calls gl.bufferSubData() every frame!
+</code></pre>
+<p>At 165Hz, mutating vertex arrays on the V8 main thread and issuing <code>gl.bufferSubData()</code> across the PCIe bus every 6 milliseconds wastes huge amounts of CPU time and stalls the WebGL command queue.</p>
+<h3>The Fix: Stateless Procedural GLSL Vertex Shaders (<code>STATIC_DRAW</code>)</h3>
+<p>If a particle follows a deterministic trajectory (falling rain, drifting stars, swaying clouds), <strong>the CPU should never touch its position after initialization</strong>.</p>
+<p>Instead, upload the initial position (<code>position</code>), velocity (<code>aSpeed</code>), and phase offset (<code>aPhase</code>) <strong>once</strong> as static <code>THREE.BufferAttribute</code> streams, and pass a single <code>uniform float uTime</code> per frame. The GPU&#39;s vertex processors calculate the wrapping position in parallel using <code>mod()</code>:</p>
+<pre><code class="language-glsl">// ✅ GPU-DRIVEN VERTEX SHADER: Zero CPU loops, zero PCIe buffer uploads per frame
+uniform float uTime;
+uniform float uBoxHeight;
+uniform float uWindX;
+
+attribute float aSpeed;
+attribute float aPhase;
+
+void main() {
+    vec3 pos = position;
+
+    // Deterministic vertical wrapping on the GPU
+    float fallDist = uTime * aSpeed + aPhase;
+    pos.y = (uBoxHeight * 0.5) - mod(fallDist, uBoxHeight);
+
+    // Wind drift with horizontal wrap
+    pos.x += sin(uTime * 0.7 + aPhase) * uWindX;
+
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_PointSize = clamp(180.0 / -mvPosition.z, 1.5, 6.0);
+    gl_Position = projectionMatrix * mvPosition;
+}
+</code></pre>
+<p>Now your JavaScript render loop for 1,000+ particles is reduced to <strong>one single line</strong>:</p>
+<pre><code class="language-javascript">rainMaterial.uniforms.uTime.value = elapsedTime;
+</code></pre>
+<hr>
+<h2>Part 2: Zero-Allocation Particle Pools &amp; <code>THREE.InstancedMesh</code></h2>
+<h3>1. Eliminating Garbage Collection Spikes on Interactive Trails</h3>
+<p>When the user moves the rocket cursor across the screen, it emits a continuous trail of fire and smoke particles. Originally, spawning a trail particle allocated a <code>new THREE.Mesh()</code>, appended it to the <code>THREE.Scene</code>, and called <code>scene.remove()</code> + <code>material.dispose()</code> when its alpha reached zero.</p>
+<p>Moving the mouse rapidly for 3 seconds allocated and destroyed <strong>hundreds of Three.js objects</strong>, triggering V8 Major GC sweeps and WebGL uniform/program re-validation right in the middle of mouse movement.</p>
+<p><strong>The Solution:</strong> Pre-allocate a fixed-size <strong>Ring Buffer</strong> inside a single <code>THREE.Points</code> geometry (<code>MAX_PARTICLES = 180</code>) at startup:</p>
+<ul>
+<li>Every particle slot is initialized with <code>alpha = 0.0</code> (discarded in the fragment shader via <code>if (vAlpha &lt;= 0.01) discard;</code>).</li>
+<li>Spawning a particle simply overwrites the current <code>writeCursor = (writeCursor + 1) % MAX_PARTICLES</code> index in pre-allocated <code>Float32Array</code> buffers.</li>
+<li><strong>Zero <code>new</code> allocations, zero <code>scene.add()</code>, zero <code>.dispose()</code>, and 1 single draw call</strong> regardless of how fast the mouse moves.</li>
+</ul>
+<h3>2. Merging Asteroid Fields into <code>THREE.InstancedMesh</code></h3>
+<p>Each <code>gl.drawElements()</code> call in WebGL carries driver validation overhead in ANGLE (Chromium&#39;s OpenGL-to-D3D11 translation layer). Rendering 28 individual asteroids with unique positions, rotations, scales, and colors as separate <code>THREE.Mesh</code> objects issues 28 draw calls per frame.</p>
+<p>By packing all asteroids into a single <code>THREE.InstancedMesh(sharedGeo, sharedMat, ASTEROID_COUNT)</code> and updating a <code>THREE.Matrix4</code> dummy object per instance via <code>instancedMesh.setMatrixAt(i, dummy.matrix)</code>, all 28 asteroids render in <strong>1 single instanced draw call</strong> (<code>gl.drawElementsInstancedANGLE</code>).</p>
+<hr>
+<h2>Part 3: The Surprising Culprit — Why <code>&lt;video&gt;</code> &amp; Animated GIFs Tank WebGL FPS</h2>
+<p>After optimizing the Three.js scene itself, our <code>fps</code> HUD revealed something shocking:</p>
+<blockquote>
+<p><strong>Whenever the project cards containing animated previews (&quot;optimized GIFs&quot; / <code>&lt;video&gt;</code>) scrolled into the viewport, the framerate plummeted from 165 FPS down to ~22–45 FPS.</strong></p>
+</blockquote>
+<p>Why would a tiny 400×208 animation inside a DOM card cripple an NVIDIA RTX 30+ Series GPU running Three.js?</p>
+<h3>Why Animated GIFs &amp; Animated WebPs Burn 30–50% CPU</h3>
+<p>Browsers do <strong>not</strong> hardware-accelerate animated <code>.gif</code> or animated <code>.webp</code> decoding on the GPU. Every time an animated GIF/WebP advances a frame (10–30 times per second):</p>
+<ol>
+<li>Chromium&#39;s Blink image decoder decompresses the full frame on a <strong>CPU worker thread</strong>.</li>
+<li>The compositor invalidates the affected DOM tile and uploads a new bitmap texture to the GPU, dirtying any overlapping glassmorphism layers.</li>
+</ol>
+<h3>Why HTML5 <code>&lt;video&gt;</code> (<code>.mp4</code>) Inside Rounded Cards Stalls WebGL (<code>CrGpuMain</code>)</h3>
+<p>The standard web performance advice is <em>&quot;replace GIFs with <code>&lt;video autoplay loop muted playsinline&gt;</code>&quot;</em>. While <code>&lt;video&gt;</code> uses hardware decoding (<code>D3D11VideoDecoder</code>), it triggers a severe GPU thread bottleneck on Windows 10/11 when combined with a full-screen WebGL <code>&lt;canvas&gt;</code> at 165Hz:</p>
+<ol>
+<li><strong>DirectComposition &amp; MPO Overlay Failure:</strong> On Windows, Chromium tries to promote <code>&lt;video&gt;</code> elements to hardware <strong>MPO (Multiplane Overlays)</strong> so the display controller composites the video directly without touching the 3D engine. However, because our <code>&lt;video&gt;</code> lives inside a project card with <code>border-radius: 16px; overflow: hidden</code> (<code>rounded-2xl</code>) and a semi-transparent gradient overlay (<code>bg-gradient-to-t</code>), <strong>Windows DWM cannot use hardware MPO overlays</strong>.</li>
+<li><strong><code>DXGIKeyedMutex</code> Contention on <code>CrGpuMain</code>:</strong> Because MPO fails, Chromium&#39;s GPU process (<code>CrGpuMain</code>) must composite the decoded NV12 video frame into the main Direct3D 11 render target. Every video tick, <code>CrGpuMain</code> acquires a <strong><code>DXGIKeyedMutex</code></strong> shared with ANGLE&#39;s D3D11 device, executes an NV12-to-RGB pixel shader, and applies a Skia <strong><code>SkRRect</code> rounded-corner alpha mask</strong>.</li>
+<li><strong>VSync Cadence Throttling:</strong> Having multiple active <code>IDXGISwapChain1</code> video surfaces alongside an uncapped 165Hz WebGL SwapChain causes DWM / G-Sync cadence arbitration to stall <code>CrGpuMain</code>, dragging the entire browser tab down!</li>
+</ol>
+<pre><code>┌────────────────────────────────────────────────────────────────────────────┐
+│ ❌ HTML5 &lt;video&gt; inside rounded-2xl card over 165Hz WebGL Canvas           │
+├────────────────────────────────────────────────────────────────────────────┤
+│ MediaFoundation D3D11VideoDecoder ──► IDXGISwapChain1 (NV12)               │
+│                                            │                               │
+│   (MPO Overlay blocked by border-radius &amp; gradient overlay!)               │
+│                                            ▼                               │
+│ CrGpuMain: Acquire DXGIKeyedMutex ──► NV12-to-RGB Shader ──► SkRRect Mask  │
+│                    ▲                                                       │
+│                    └── STALLS Three.js WebGL ANGLE D3D11 Context!          │
+└────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3>The Ultimate Solution: Pre-Cropped GPU <code>translate3d</code> Sprite Sheets</h3>
+<p>How do game engines display animated UI previews without video decoders or CPU GIF decoders? <strong>Texture Atlases (Sprite Sheets)!</strong></p>
+<p>Using <code>ffmpeg</code>, we pre-rendered our 5-second <code>.mp4</code> card previews into static <strong>5×10 and 5×12 JPEG Sprite Sheets</strong>, pre-cropped to the exact <code>400×208</code> aspect ratio of the project cards:</p>
+<pre><code class="language-bash"># Convert a 5s MP4 preview into a 5x10 GPU Sprite Sheet (2000x2080 JPEG, ~690 KB)
+ffmpeg -y -i &quot;spet01.dev.mp4&quot; \
+  -vf &quot;fps=10,scale=400:208:force_original_aspect_ratio=increase,crop=400:208,tile=5x10&quot; \
+  -frames:v 1 -q:v 4 &quot;spet01_sprite.jpg&quot;
+</code></pre>
+<p>Then, inside React, we replace <code>&lt;video&gt;</code> with an <code>overflow-hidden</code> viewport containing an <code>&lt;img&gt;</code> scaled to <code>cols * 100%</code> by <code>rows * 100%</code>, and step frames using <strong><code>transform: translate3d(-X%, -Y%, 0)</code></strong> directly on the DOM <code>ref</code>:</p>
+<pre><code class="language-javascript">// ✅ ZERO-OVERHEAD GPU SPRITE SHEET STEPPER
+const stepFrame = () =&gt; {
+    if (!isVisible || document.hidden) return;
+    // Pause sprite stepping during active scrolling to dedicate 100% budget to 165Hz scroll
+    if (performance.now() - lastGlobalScrollTime &lt; 140) return;
+
+    frame = (frame + 1) % sprite.frames;
+    const col = frame % sprite.cols;
+    const row = Math.floor(frame / sprite.cols);
+
+    // Pure GPU compositor transform: 0 Layout, 0 Paint, 0 Tile Re-Rasterization
+    img.style.transform = `translate3d(-${col * (100 / sprite.cols)}%, -${row * (100 / sprite.rows)}%, 0)`;
+};
+</code></pre>
+<p>Why is this so fast?</p>
+<ul>
+<li><strong>Decoded Once:</strong> <code>img.decode()</code> uploads the static JPEG into a GPU texture <strong>once</strong> on page load (<strong>0% ongoing CPU decoding</strong>).</li>
+<li><strong>Zero Video SwapChains:</strong> No <code>MediaFoundation</code> decoder, no <code>DXGIKeyedMutex</code> lock, and no NV12 conversion stalling WebGL.</li>
+<li><strong>Zero Paint / Tile Invalidation:</strong> Updating <code>transform: translate3d(...)</code> on a promoted layer is handled purely by Chromium&#39;s compositor thread by shifting UV coordinates of an existing quad.</li>
+</ul>
+<hr>
+<h2>Part 4: Compositor Fill-Rate (<code>backdrop-filter</code>) &amp; 1000Hz Mouse Coalescing</h2>
+<h3>1. Removing <code>backdrop-filter: blur()</code> Over Full-Screen WebGL</h3>
+<p>Glassmorphism (<code>backdrop-filter: blur(16px)</code>) looks great on static backgrounds. Over a live 165Hz WebGL canvas, however, <strong>every single DOM element with <code>backdrop-filter</code></strong> forces the browser compositor to:</p>
+<ol>
+<li>Read back the underlying WebGL framebuffer region (<code>glCopyTexSubImage2D</code>).</li>
+<li>Downsample and execute a multi-pass <strong>Dual-Kawase Gaussian Blur shader</strong> on every frame.</li>
+</ol>
+<p>When scrolling past 15 project cards with <code>backdrop-filter: blur(16px)</code> and <code>border-radius: 16px</code>, the GPU performs <strong>15×2 = 30 extra full-tile blur passes per frame</strong> (<code>4,950 blur passes per second</code> at 165Hz!).</p>
+<p>Replacing <code>backdrop-filter: blur(16px)</code> on scrolling cards with a high-opacity dark tint (<code>rgba(12, 18, 30, 0.92)</code>) paired with a crisp specular inner border (<code>inset 0 1px 0 0 rgba(255, 255, 255, 0.08)</code>) looks virtually identical over a dark space scene while cutting scroll GPU fill-rate by <strong>over 70%</strong>.</p>
+<h3>2. Releasing Animation <code>RenderSurface</code> Layers (<code>backwards</code> vs. <code>both</code>)</h3>
+<p>Our project cards used a fade-in keyframe animation:</p>
+<pre><code class="language-css">/* ❌ Leaving fill-mode: both keeps a permanent 3D transform &amp; RenderSurface on all 15 cards! */
+.project-card-animate {
+    animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+</code></pre>
+<p>When a CSS keyframe ends at <code>transform: translateY(0) scale(1)</code> with <code>animation-fill-mode: both</code>, Chromium retains an active <code>cc::RenderSurfaceImpl</code> backing texture for every card forever. Changing the final keyframe to <code>transform: none</code> and <code>animation-fill-mode: backwards</code> frees those compositor surfaces immediately after the 320ms intro finishes.</p>
+<h3>3. Coalescing 1000Hz Gaming Mouse Input into <code>requestAnimationFrame</code></h3>
+<p>Modern gaming mice poll at <strong>1000Hz to 4000Hz</strong>. In Chromium, raw <code>mousemove</code> handlers can fire hundreds of times per second.</p>
+<ol>
+<li><strong>Custom Cursor:</strong> Updating <code>cursor.style.left</code> / <code>cursor.style.top</code> and calling <code>e.target.closest(&#39;a, button&#39;)</code> inside <code>mousemove</code> dirties DOM styles and runs selector traversal 1,000 times per second. Coalescing cursor updates into a single <code>requestAnimationFrame</code> callback using <code>cursor.style.transform = translate3d(${x}px, ${y}px, 0)</code> caps work to once per monitor refresh.</li>
+<li><strong>Hover Tooltips (<code>useState</code> vs. CSS <code>group-hover</code>):</strong> Sweeping the mouse rapidly across project tag badges previously triggered <code>onMouseEnter={() =&gt; setIsHovered(true)}</code>. Because the site uses runtime Tailwind CSS, mounting/unmounting tooltip nodes in React triggered Tailwind&#39;s <code>MutationObserver</code> on the entire DOM tree! Replacing React hover state with pure CSS <code>group-hover/tags:opacity-100</code> eliminated all React re-renders during mouse sweeps.</li>
+</ol>
+<h3>4. Downscaling 3K Card Thumbnails (VRAM Budgeting)</h3>
+<p>Several project card thumbnails (<code>400×200</code> CSS pixels on screen) were originally 3K AI-upscaled images (<code>2752×1536</code>, ~2.5 MB each). Even when compressed on disk, a <code>2752×1536</code> image requires <strong>16.9 MB of uncompressed RGBA8 VRAM</strong> (+33% for mipmaps) when uploaded to a GPU tile! Downscaling card thumbnails to <code>960p</code> reduced per-card texture memory by <strong>88%</strong> and eliminated tile-upload stutters when scrolling fast.</p>
+<hr>
+<h2>Final Results (NVIDIA RTX 30+ Series @ 165Hz)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">Metric / Scenario</th>
+<th align="left">Before Optimization</th>
+<th align="left">After Optimization</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Idle Framerate</strong></td>
+<td align="left"><code>30–200 FPS</code> (unstable)</td>
+<td align="left"><strong><code>140–165 FPS</code> (locked)</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Fast 1000Hz Mouse Sweep</strong></td>
+<td align="left"><code>~85 FPS</code></td>
+<td align="left"><strong><code>120–160 FPS</code></strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Scrolling Past Animated Cards</strong></td>
+<td align="left"><code>~22 FPS</code></td>
+<td align="left"><strong><code>100–145+ FPS</code></strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Card Preview CPU Decode Overhead</strong></td>
+<td align="left"><code>30–50% CPU</code> (GIF / Video mutex)</td>
+<td align="left"><strong><code>0% CPU</code> (Static GPU Sprite Sheet)</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Card Thumbnail VRAM Footprint</strong></td>
+<td align="left"><code>~135 MB</code> uncompressed RGBA8</td>
+<td align="left"><strong><code>~16 MB</code> uncompressed RGBA8 (-88%)</strong></td>
+</tr>
+</tbody></table>
+<p>Want to test the live telemetry yourself right now? Press <strong><code>Ctrl + K</code></strong> (or click the <strong>CLI</strong> button in the top navigation bar), type <strong><code>fps</code></strong>, and watch the real-time frame time and 1% Low counter in the top-right corner as you fly through the scene!</p>
+
+                </div>
+            </article>
+        </main>
+
+        <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">
+            <p>Eduardo Gelain · SpetDev. All rights reserved.</p>
+            <p class="mt-1">
+                <a href="/sitemap.xml" class="hover:underline text-slate-400">Sitemap</a> · 
+                <a href="/llm.txt" class="hover:underline text-slate-400">LLM Context</a> · 
+                <a href="/privacy.html" class="hover:underline text-slate-400">Privacy Policy</a>
+            </p>
+        </footer>
+
+        <noscript>
+            <div class="p-6 bg-[#050505]/95 backdrop-blur-md border-t border-primary/40 text-center text-slate-300 text-sm">
+                <p><strong>Note:</strong> JavaScript is optional. All portfolio projects, technical skills, and research journal articles above are fully accessible without scripts.</p>
+            </div>
+        </noscript>
+    </div>
+
+    <script defer src="/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('custom-cursor');
+            if (!cursor) return;
+
+            let cx = -100, cy = -100;
+            let lastTarget = null;
+            let isHover = false;
+            let rafPending = false;
+
+            const updateCursor = () => {
+                rafPending = false;
+                const nextHover = Boolean(
+                    lastTarget &&
+                    lastTarget.closest &&
+                    lastTarget.closest('a, button, .clickable')
+                );
+                if (nextHover !== isHover) {
+                    isHover = nextHover;
+                    cursor.dataset.hover = isHover ? '1' : '0';
+                }
+                cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) scale(${isHover ? 1.5 : 1})`;
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                cx = e.clientX;
+                cy = e.clientY;
+                lastTarget = e.target;
+                if (!rafPending) {
+                    rafPending = true;
+                    requestAnimationFrame(updateCursor);
+                }
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>

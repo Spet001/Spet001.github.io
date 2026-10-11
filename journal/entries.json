@@ -1,5 +1,12 @@
 [
     {
+        "id": "entry_0014",
+        "title": "How to Optimize a Three.js Scene for 120+ FPS",
+        "date": "Oct 11, 2026",
+        "category": "WebGL & Graphics Optimization",
+        "file": "How-To-Optimize-ThreeJS-Scene-120-FPS.md"
+    },
+    {
         "id": "entry_0013",
         "title": "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
         "date": "Oct 11, 2026",

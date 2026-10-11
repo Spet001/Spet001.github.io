@@ -489,9 +489,9 @@ const PORTFOLIO_DATA = {
             title: "Portfólio Web (SpetDev)",
             category: "tools",
             categoryLabel: { pt: "Web & Ferramentas", en: "Web & Tools" },
-            image: "/assets/spet01.dev.gif",
+            image: "/assets/spet01.dev.mp4",
             caseStudyImages: [
-                "/assets/spet01.dev.gif"
+                "/assets/spet01.dev.mp4"
             ],
             repo: "https://github.com/Spet001/Spet001.github.io",
             live: "#top",
@@ -552,7 +552,7 @@ const PORTFOLIO_DATA = {
             id: "resurge_client",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa & Sistemas", en: "Reverse Engineering & Systems" },
-            image: "https://resurge.gamer.gd/RESURGE_600_x_240_px_1.gif",
+            image: "/assets/resurge_thumb.mp4",
             caseStudyImages: [
                 "/assets/resurge.png"
             ],
@@ -845,6 +845,7 @@ const PORTFOLIO_DATA = {
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa / Criptografia", en: "Reverse Engineering / Cryptography" },
             image: "/assets/cwgsc.png",
+            lockedImage: "/assets/cwgsc_locked.jpg",
             title: { pt: "Desbloqueie no Patreon!", en: "Unlock this Entry on Patreon!" },
             isLocked: true,
             featured: true,
@@ -873,7 +874,8 @@ const PORTFOLIO_DATA = {
             id: "bo2_crossplay_relay",
             category: "reverse",
             categoryLabel: { pt: "Engenharia Reversa / Net", en: "Reverse Engineering / Net" },
-            image: "/assets/network_activity.gif",
+            image: "/assets/network_activity.mp4",
+            lockedImage: "/assets/network_activity_locked.jpg",
             title: { pt: "Desbloqueie no Patreon!", en: "Unlock this Entry on Patreon!" },
             isLocked: true,
             featured: true,
@@ -1045,6 +1047,14 @@ const PORTFOLIO_DATA = {
 
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
+        {
+            id: "How-To-Optimize-ThreeJS-Scene-120-FPS",
+            title: "How to Optimize a Three.js Scene for 120+ FPS",
+            date: "Oct 11, 2026",
+            file: "How-To-Optimize-ThreeJS-Scene-120-FPS.md",
+            category: "WebGL & Graphics Optimization",
+            excerpt: "Deep dive into locking a Three.js WebGL scene at 120–165+ FPS: offloading particle physics to stateless GLSL vertex shaders, InstancedMesh pooling, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor tuning."
+        },
         {
             id: "What-Is-A-WAD-Modern-Games",
             title: "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
@@ -1485,9 +1495,16 @@ const SkyCanvasV2 = () => {
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
         camera.position.z = 50;
 
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        const renderer = new THREE.WebGLRenderer({
+            powerPreference: 'high-performance',
+            alpha: false,
+            antialias: true,
+            stencil: false,
+            depth: true
+        });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+        window.__spetRenderer = renderer;
         containerRef.current.appendChild(renderer.domElement);
 
         // Stronger lighting for Sky theme
@@ -1590,27 +1607,38 @@ const SkyCanvasV2 = () => {
         const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
         const ropeMat = new THREE.LineBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.6 });
         rope = new THREE.Line(ropeGeo, ropeMat);
+        rope.frustumCulled = false;
         scene.add(rope);
 
-        // Jet Contrail (Smoke)
+        const _zeroMatrix = new THREE.Matrix4().makeScale(0, 0, 0);
+        const _instMatrix = new THREE.Matrix4();
+        const _instQuat = new THREE.Quaternion();
+        const _instScale = new THREE.Vector3();
+
+        // Jet Contrail (Smoke) — GPU Hardware InstancedMesh (1 draw call for all 80 particles)
         const particleCount = 80;
         const particles = [];
         const partGeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
-        for(let i=0; i<particleCount; i++) {
-            const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
-            const p = new THREE.Mesh(partGeo, mat);
-            p.visible = false;
-            scene.add(p);
-            particles.push({ mesh: p, life: 0, maxLife: 0, velocity: new THREE.Vector3() });
+        const smokeInstMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.45, depthWrite: false });
+        const smokeInstMesh = new THREE.InstancedMesh(partGeo, smokeInstMat, particleCount);
+        smokeInstMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        smokeInstMesh.frustumCulled = false;
+        for (let i = 0; i < particleCount; i++) {
+            smokeInstMesh.setMatrixAt(i, _zeroMatrix);
+            particles.push({ pos: new THREE.Vector3(), life: 0, maxLife: 1, velocity: new THREE.Vector3() });
         }
+        smokeInstMesh.instanceMatrix.needsUpdate = true;
+        scene.add(smokeInstMesh);
         let pIndex = 0;
 
         const mouse = new THREE.Vector2(0, 0);
         const paraVelocity = new THREE.Vector3();
+        let viewW = window.innerWidth || 1;
+        let viewH = window.innerHeight || 1;
 
         const handleMouseMove = (e) => {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouse.x = (e.clientX / viewW) * 2 - 1;
+            mouse.y = -(e.clientY / viewH) * 2 + 1;
         };
         const handleKeyDown = (e) => { 
             keysRef.current[e.key] = true; 
@@ -1623,105 +1651,140 @@ const SkyCanvasV2 = () => {
         };
         const handleKeyUp = (e) => { keysRef.current[e.key] = false; };
         
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
         const handleResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            viewW = window.innerWidth || 1;
+            viewH = window.innerHeight || 1;
+            camera.aspect = viewW / viewH;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(viewW, viewH);
         };
         window.addEventListener('resize', handleResize);
 
+        const _mouseVec = new THREE.Vector3();
+        const _dirVec = new THREE.Vector3();
+        const _finalTarget = new THREE.Vector3();
+        const _tailPos = new THREE.Vector3();
+        const _moveDelta = new THREE.Vector3();
+        const _tailOffset = new THREE.Vector3();
+        const _tailDir = new THREE.Vector3();
+        const _diff = new THREE.Vector3();
+        const _pullBack = new THREE.Vector3();
+
         let animationId;
         let time = 0;
-        const animate = () => {
+        let lastFrameTime = performance.now();
+        let smokeSpawnAccum = 0;
+
+        const animate = (now = performance.now()) => {
             animationId = requestAnimationFrame(animate);
-            if (document.hidden) return; // VRAM & CPU Saver: Pause rendering when tab is hidden/inactive
-            time += 0.01;
+            if (document.hidden) {
+                lastFrameTime = now;
+                return;
+            }
+            const rawDt = Math.max(0.001, Math.min((now - lastFrameTime) * 0.001, 0.05));
+            lastFrameTime = now;
+            const dtScale = rawDt * 60.0;
+            time += 0.01 * dtScale;
 
             if (skybox) {
                 skybox.rotation.y = time * 0.01; 
             }
             
-            const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-            vector.unproject(camera);
-            const dir = vector.sub(camera.position).normalize();
-            const distance = (10 - camera.position.z) / dir.z; 
-            const finalTarget = camera.position.clone().add(dir.multiplyScalar(distance));
+            _mouseVec.set(mouse.x, mouse.y, 0.5).unproject(camera);
+            _dirVec.copy(_mouseVec).sub(camera.position).normalize();
+            const distance = (10 - camera.position.z) / _dirVec.z; 
+            _finalTarget.copy(camera.position).addScaledVector(_dirVec, distance);
 
-            let tailPos = new THREE.Vector3();
+            let smokeDirty = false;
 
             if (jet) {
-                jet.position.lerp(finalTarget, 0.06);
+                jet.position.lerp(_finalTarget, 1 - Math.pow(1 - 0.06, dtScale));
                 
-                const moveDelta = finalTarget.clone().sub(jet.position);
-                if (moveDelta.lengthSq() > 0.1) {
-                    const angle = Math.atan2(moveDelta.y, moveDelta.x);
+                _moveDelta.copy(_finalTarget).sub(jet.position);
+                if (_moveDelta.lengthSq() > 0.1) {
+                    const angle = Math.atan2(_moveDelta.y, _moveDelta.x);
                     let targetRot = angle - Math.PI / 2;
                     let diff = targetRot - jet.rotation.z;
                     while (diff < -Math.PI) diff += Math.PI * 2;
                     while (diff > Math.PI) diff -= Math.PI * 2;
-                    jet.rotation.z += diff * 0.1;
+                    jet.rotation.z += diff * (1 - Math.pow(1 - 0.1, dtScale));
                     
                     jet.children[0].rotation.y = -diff * 0.5;
                 }
                 
                 jet.children[0].position.y = Math.sin(time * 6) * 0.1;
                 
-                // Tail offset (adjust based on orientation, assume -Y is back)
-                const tailOffset = new THREE.Vector3(0, -2.5, 0).applyEuler(jet.rotation);
-                tailPos.copy(jet.position).add(tailOffset);
-                tailPos.y += jet.children[0].position.y; 
+                _tailOffset.set(0, -2.5, 0).applyEuler(jet.rotation);
+                _tailPos.copy(jet.position).add(_tailOffset);
+                _tailPos.y += jet.children[0].position.y; 
 
-                const p = particles[pIndex];
-                p.life = Math.random() * 20 + 10;
-                p.maxLife = p.life;
-                p.mesh.position.copy(tailPos);
-                p.mesh.position.x += (Math.random()-0.5)*0.5;
-                p.mesh.position.y += (Math.random()-0.5)*0.5;
-                p.mesh.visible = true;
-                
-                const tailDir = new THREE.Vector3(0, -1, 0).applyEuler(jet.rotation).normalize();
-                p.velocity.copy(tailDir).multiplyScalar(0.15).add(new THREE.Vector3((Math.random()-0.5)*0.02, (Math.random()-0.5)*0.02, 0));
-                pIndex = (pIndex + 1) % particleCount;
+                smokeSpawnAccum += dtScale;
+                if (smokeSpawnAccum >= 0.85) {
+                    smokeSpawnAccum = 0;
+                    const p = particles[pIndex];
+                    p.life = Math.random() * 20 + 10;
+                    p.maxLife = p.life;
+                    p.pos.set(
+                        _tailPos.x + (Math.random() - 0.5) * 0.5,
+                        _tailPos.y + (Math.random() - 0.5) * 0.5,
+                        _tailPos.z
+                    );
+                    _tailDir.set(0, -1, 0).applyEuler(jet.rotation).normalize();
+                    p.velocity.set(
+                        _tailDir.x * 0.15 + (Math.random() - 0.5) * 0.02,
+                        _tailDir.y * 0.15 + (Math.random() - 0.5) * 0.02,
+                        _tailDir.z * 0.15
+                    );
+                    pIndex = (pIndex + 1) % particleCount;
+                }
             }
 
-            particles.forEach(p => {
+            for (let i = 0; i < particleCount; i++) {
+                const p = particles[i];
                 if (p.life > 0) {
-                    p.life--;
-                    p.mesh.position.add(p.velocity);
-                    const scale = p.life / p.maxLife * 1.5;
-                    p.mesh.scale.setScalar(scale);
-                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.3;
-                    if (p.life <= 0) p.mesh.visible = false;
+                    p.life -= dtScale;
+                    smokeDirty = true;
+                    if (p.life <= 0) {
+                        p.life = 0;
+                        smokeInstMesh.setMatrixAt(i, _zeroMatrix);
+                    } else {
+                        p.pos.addScaledVector(p.velocity, dtScale);
+                        const scale = (p.life / p.maxLife) * 1.5;
+                        _instScale.set(scale, scale, scale);
+                        _instMatrix.compose(p.pos, _instQuat, _instScale);
+                        smokeInstMesh.setMatrixAt(i, _instMatrix);
+                    }
                 }
-            });
+            }
+            if (smokeDirty) smokeInstMesh.instanceMatrix.needsUpdate = true;
 
             if (para && jet) {
-                const diff = tailPos.clone().sub(para.position);
-                const dist = diff.length();
+                _diff.copy(_tailPos).sub(para.position);
+                const dist = _diff.length();
                 const restingLength = 8.0; 
                 
-                if (dist > 0) {
-                    const force = (dist - restingLength) * 0.005; 
-                    const springForce = diff.normalize().multiplyScalar(force);
-                    paraVelocity.add(springForce);
+                if (dist > 0.0001) {
+                    const force = (dist - restingLength) * 0.005 * dtScale; 
+                    paraVelocity.addScaledVector(_diff, force / dist);
                 }
 
-                paraVelocity.y -= 0.015;
+                paraVelocity.y -= 0.015 * dtScale;
 
-                const speed = 0.01;
+                const speed = 0.01 * dtScale;
                 if (keysRef.current['ArrowLeft'] || keysRef.current['a']) { paraVelocity.x -= speed; }
                 if (keysRef.current['ArrowRight'] || keysRef.current['d']) { paraVelocity.x += speed; }
 
-                paraVelocity.multiplyScalar(0.92); 
-                para.position.add(paraVelocity);
+                paraVelocity.multiplyScalar(Math.pow(0.92, dtScale)); 
+                para.position.addScaledVector(paraVelocity, dtScale);
                 
                 if (dist > 16) {
-                    const pullBack = diff.clone().normalize().multiplyScalar((dist - 16) * 0.1);
-                    para.position.add(pullBack);
+                    const pullAlpha = (dist - 16) * (1 - Math.pow(1 - 0.1, dtScale)) / dist;
+                    _pullBack.copy(_diff).multiplyScalar(pullAlpha);
+                    para.position.add(_pullBack);
                 }
                 
                 para.rotation.y = Math.sin(time) * 0.2; 
@@ -1729,7 +1792,7 @@ const SkyCanvasV2 = () => {
                 
                 if (rope) {
                     const positions = rope.geometry.attributes.position.array;
-                    positions[0] = tailPos.x; positions[1] = tailPos.y; positions[2] = tailPos.z;
+                    positions[0] = _tailPos.x; positions[1] = _tailPos.y; positions[2] = _tailPos.z;
                     positions[3] = para.position.x; positions[4] = para.position.y + 1.0; positions[5] = para.position.z;
                     rope.geometry.attributes.position.needsUpdate = true;
                 }
@@ -1852,10 +1915,18 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         camera.position.z = 50;
         cameraRef.current = camera;
 
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        const renderer = new THREE.WebGLRenderer({
+            powerPreference: 'high-performance',
+            alpha: false,
+            antialias: true,
+            stencil: false,
+            depth: true
+        });
+        renderer.setClearColor(0x000000, 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
         rendererRef.current = renderer;
+        window.__spetRenderer = renderer;
         containerRef.current.appendChild(renderer.domElement);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -1930,61 +2001,72 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
         const ropeMat = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.5 });
         rope = new THREE.Line(ropeGeo, ropeMat);
+        rope.frustumCulled = false;
         scene.add(rope);
 
-        // Fire Particles
+        const _zeroMatrix = new THREE.Matrix4().makeScale(0, 0, 0);
+        const _instMatrix = new THREE.Matrix4();
+        const _instQuat = new THREE.Quaternion();
+        const _instScale = new THREE.Vector3();
+        const _colorFire1 = new THREE.Color(0xff4400);
+        const _colorFire2 = new THREE.Color(0xffaa00);
+
+        // Fire Particles — Hardware GPU InstancedMesh (1 draw call for all 60 particles)
         const particleCount = 60;
         const particles = [];
         const partGeo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
-        for(let i=0; i<particleCount; i++) {
-            const mat = new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.8 });
-            const p = new THREE.Mesh(partGeo, mat);
-            p.visible = false;
-            scene.add(p);
-            particles.push({ mesh: p, life: 0, maxLife: 0, velocity: new THREE.Vector3() });
+        const fireInstMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, depthWrite: false });
+        const fireInstMesh = new THREE.InstancedMesh(partGeo, fireInstMat, particleCount);
+        fireInstMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        fireInstMesh.frustumCulled = false;
+        for (let i = 0; i < particleCount; i++) {
+            fireInstMesh.setMatrixAt(i, _zeroMatrix);
+            fireInstMesh.setColorAt(i, _colorFire1);
+            particles.push({ pos: new THREE.Vector3(), life: 0, maxLife: 1, velocity: new THREE.Vector3() });
         }
+        fireInstMesh.instanceMatrix.needsUpdate = true;
+        if (fireInstMesh.instanceColor) fireInstMesh.instanceColor.needsUpdate = true;
+        scene.add(fireInstMesh);
         let pIndex = 0;
 
-        // Oxygen Particles (Thruster)
+        // Oxygen Particles (Thruster) — Hardware GPU InstancedMesh (1 draw call for all 50 particles)
         const oxCount = 50;
         const oxParticles = [];
         const oxGeo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
-        for(let i=0; i<oxCount; i++) {
-            const mat = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, transparent: true, opacity: 0.6 });
-            const p = new THREE.Mesh(oxGeo, mat);
-            p.visible = false;
-            scene.add(p);
-            oxParticles.push({ mesh: p, life: 0, maxLife: 0, velocity: new THREE.Vector3() });
+        const oxInstMat = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, transparent: true, opacity: 0.6, depthWrite: false });
+        const oxInstMesh = new THREE.InstancedMesh(oxGeo, oxInstMat, oxCount);
+        oxInstMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        oxInstMesh.frustumCulled = false;
+        for (let i = 0; i < oxCount; i++) {
+            oxInstMesh.setMatrixAt(i, _zeroMatrix);
+            oxParticles.push({ pos: new THREE.Vector3(), life: 0, maxLife: 1, velocity: new THREE.Vector3() });
         }
+        oxInstMesh.instanceMatrix.needsUpdate = true;
+        scene.add(oxInstMesh);
         let oxIndex = 0;
 
-        const avoidCelestialCollision = (pos, cylindrical = true) => {
-            const bodies = isMarsActive
-                ? [
-                    { x: 12, y: 14, z: -30, r: 25 },
-                    { x: 44, y: -6, z: -32, r: 19 }
-                ]
-                : [
-                    {
-                        x: 25,
-                        y: 15,
-                        z: -30,
-                        r: isMoonChickenActive ? 27 : (isDeliciaActive ? 24 : 16)
-                    }
-                ];
+        // Zero-allocation celestial collision avoidance (eliminates 4,800+ array/object allocations per second)
+        const avoidSingleBody = (pos, bx, by, bz, br, cylindrical) => {
+            const dx = pos.x - bx;
+            const dy = pos.y - by;
+            const dz = pos.z - bz;
+            const distSq = cylindrical ? (dx * dx + dy * dy) : (dx * dx + dy * dy + dz * dz);
+            if (distSq < br * br) {
+                const dist2D = Math.hypot(dx, dy);
+                const angle = dist2D > 0.001 ? Math.atan2(dy, dx) : (Math.random() * Math.PI * 2);
+                const targetR = br + (cylindrical ? (2 + Math.random() * 8) : 1.5);
+                pos.x = bx + Math.cos(angle) * targetR;
+                pos.y = by + Math.sin(angle) * targetR;
+            }
+        };
 
-            for (const b of bodies) {
-                const dx = pos.x - b.x;
-                const dy = pos.y - b.y;
-                const dz = pos.z - b.z;
-                const distSq = cylindrical ? (dx * dx + dy * dy) : (dx * dx + dy * dy + dz * dz);
-                if (distSq < b.r * b.r) {
-                    const dist2D = Math.hypot(dx, dy);
-                    const angle = dist2D > 0.001 ? Math.atan2(dy, dx) : (Math.random() * Math.PI * 2);
-                    const targetR = b.r + (cylindrical ? (2 + Math.random() * 8) : 1.5);
-                    pos.x = b.x + Math.cos(angle) * targetR;
-                    pos.y = b.y + Math.sin(angle) * targetR;
-                }
+        const avoidCelestialCollision = (pos, cylindrical = true) => {
+            if (isMarsActive) {
+                avoidSingleBody(pos, 12, 14, -30, 25, cylindrical);
+                avoidSingleBody(pos, 44, -6, -32, 19, cylindrical);
+            } else {
+                const r = isMoonChickenActive ? 27 : (isDeliciaActive ? 24 : 16);
+                avoidSingleBody(pos, 25, 15, -30, r, cylindrical);
             }
         };
 
@@ -2585,8 +2667,11 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
         // Interactivity & Raycasting for Mars Mode
         const mouse = new THREE.Vector2(0, 0);
+        const _marsPickNdc = new THREE.Vector2(0, 0);
         const raycaster = new THREE.Raycaster();
         const astroVelocity = new THREE.Vector3();
+        let viewW = window.innerWidth || 1;
+        let viewH = window.innerHeight || 1;
 
         const isOverInteractiveUI = (target) => {
             if (!target || !(target instanceof Element)) return false;
@@ -2597,11 +2682,11 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
             if (!isMarsActive) return null;
             const targets = [phobosMesh, deimosMesh, earthPivot].filter(Boolean);
             if (targets.length === 0) return null;
-            const ndc = new THREE.Vector2(
-                (clientX / window.innerWidth) * 2 - 1,
-                -(clientY / window.innerHeight) * 2 + 1
+            _marsPickNdc.set(
+                (clientX / viewW) * 2 - 1,
+                -(clientY / viewH) * 2 + 1
             );
-            raycaster.setFromCamera(ndc, camera);
+            raycaster.setFromCamera(_marsPickNdc, camera);
             const hits = raycaster.intersectObjects(targets, true);
             for (const hit of hits) {
                 let obj = hit.object;
@@ -2616,8 +2701,8 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         };
 
         const handleMouseMove = (e) => {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouse.x = (e.clientX / viewW) * 2 - 1;
+            mouse.y = -(e.clientY / viewH) * 2 + 1;
 
             if (!isMarsActive) return;
             if (isOverInteractiveUI(e.target)) {
@@ -2672,50 +2757,79 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         };
         const handleKeyUp = (e) => { keysRef.current[e.key] = false; };
         
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
         window.addEventListener('click', handleSceneClick);
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
         const handleResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            viewW = window.innerWidth || 1;
+            viewH = window.innerHeight || 1;
+            camera.aspect = viewW / viewH;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(viewW, viewH);
         };
         window.addEventListener('resize', handleResize);
+
+        // Pre-allocated scratch vectors to eliminate V8 Garbage Collection spikes at 120-240 FPS
+        const _mouseVec = new THREE.Vector3();
+        const _dirVec = new THREE.Vector3();
+        const _finalTarget = new THREE.Vector3();
+        const _tailPos = new THREE.Vector3();
+        const _moveDelta = new THREE.Vector3();
+        const _tailOffset = new THREE.Vector3();
+        const _tailDir = new THREE.Vector3();
+        const _diff = new THREE.Vector3();
+        const _pullBack = new THREE.Vector3();
+        const _velStep = new THREE.Vector3();
+        const _defaultMarsCenter = { x: 12, y: 14, z: -30 };
 
         let animationId;
         let time = 0;
         let marsOrbitTime = 0;
-        const animate = () => {
+        let lastFrameTime = performance.now();
+        let fireSpawnAccum = 0;
+        let oxSpawnAccum = 0;
+
+        const animate = (now = performance.now()) => {
             animationId = requestAnimationFrame(animate);
-            if (document.hidden) return; // VRAM & CPU Saver: Pause rendering when tab is hidden/inactive
-            time += 0.01;
+            if (document.hidden) {
+                lastFrameTime = now;
+                return;
+            }
+
+            // Frame-rate independent delta time normalized to 60Hz reference (smooth 120Hz / 144Hz / 240Hz)
+            const rawDt = Math.max(0.001, Math.min((now - lastFrameTime) * 0.001, 0.05));
+            lastFrameTime = now;
+            const dtScale = rawDt * 60.0;
+            const stepTime = 0.01 * dtScale;
+
+            time += stepTime;
             if (!hoveredMarsTargetRef.current) {
-                marsOrbitTime += 0.01;
+                marsOrbitTime += stepTime;
             }
 
             if (skyboxRef.current) {
                 skyboxRef.current.rotation.y = time * 0.02; 
                 skyboxRef.current.rotation.x = Math.sin(time * 0.01) * 0.1;
             }
-            if (moon) {
+            if (moon && moon.visible) {
                 moon.rotation.y = time * 0.1; 
             }
             if (moonChicken && isMoonChickenActive) {
-                moonChicken.rotation.y += 0.06; // Fast spinning mega chicken!
+                moonChicken.rotation.y += 0.06 * dtScale; // Fast spinning mega chicken!
                 moonChicken.rotation.x = Math.sin(time * 3) * 0.12; 
                 moonChicken.rotation.z = Math.cos(time * 2.5) * 0.08;
             }
             if (moonJailson && isDeliciaActive) {
-                moonJailson.rotation.y += 0.035;
+                moonJailson.rotation.y += 0.035 * dtScale;
                 moonJailson.rotation.x = Math.sin(time * 2) * 0.08;
             }
             if (isMarsActive) {
                 if (marsPivot) {
                     marsPivot.rotation.y = time * 0.12;
                 }
-                const marsCenter = marsPivot ? marsPivot.position : { x: 12, y: 14, z: -30 };
+                const marsCenter = marsPivot ? marsPivot.position : _defaultMarsCenter;
                 if (phobosMesh) {
                     const pAngle = marsOrbitTime * 0.45 + 0.5;
                     const pR = 16.0;
@@ -2756,82 +2870,108 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 }
             }
             
-            const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-            vector.unproject(camera);
-            const dir = vector.sub(camera.position).normalize();
-            const distance = (10 - camera.position.z) / dir.z; 
-            const finalTarget = camera.position.clone().add(dir.multiplyScalar(distance));
+            _mouseVec.set(mouse.x, mouse.y, 0.5).unproject(camera);
+            _dirVec.copy(_mouseVec).sub(camera.position).normalize();
+            const distance = (10 - camera.position.z) / _dirVec.z; 
+            _finalTarget.copy(camera.position).addScaledVector(_dirVec, distance);
 
-            let tailPos = new THREE.Vector3();
+            let fireColorDirty = false;
+            let fireMatrixDirty = false;
+            let oxMatrixDirty = false;
 
             if (rocket) {
-                rocket.position.lerp(finalTarget, 0.08);
+                const lerpAlpha = 1 - Math.pow(1 - 0.08, dtScale);
+                rocket.position.lerp(_finalTarget, lerpAlpha);
                 
-                const moveDelta = finalTarget.clone().sub(rocket.position);
-                if (moveDelta.lengthSq() > 0.1) {
-                    const angle = Math.atan2(moveDelta.y, moveDelta.x);
+                _moveDelta.copy(_finalTarget).sub(rocket.position);
+                if (_moveDelta.lengthSq() > 0.1) {
+                    const angle = Math.atan2(_moveDelta.y, _moveDelta.x);
                     let targetRot = angle - Math.PI / 2;
                     let diff = targetRot - rocket.rotation.z;
                     while (diff < -Math.PI) diff += Math.PI * 2;
                     while (diff > Math.PI) diff -= Math.PI * 2;
-                    rocket.rotation.z += diff * 0.1;
+                    rocket.rotation.z += diff * (1 - Math.pow(1 - 0.1, dtScale));
                 }
                 
                 rocket.children[0].position.y = Math.sin(time * 5) * 0.2;
                 
-                const tailOffset = new THREE.Vector3(0, -2.2, 0).applyEuler(rocket.rotation);
-                tailPos.copy(rocket.position).add(tailOffset);
-                tailPos.y += rocket.children[0].position.y; 
+                _tailOffset.set(0, -2.2, 0).applyEuler(rocket.rotation);
+                _tailPos.copy(rocket.position).add(_tailOffset);
+                _tailPos.y += rocket.children[0].position.y; 
 
-
-                const p = particles[pIndex];
-                p.life = Math.random() * 15 + 10;
-                p.maxLife = p.life;
-                p.mesh.position.copy(tailPos);
-                p.mesh.position.x += (Math.random()-0.5)*0.3;
-                p.mesh.position.y += (Math.random()-0.5)*0.3;
-                p.mesh.visible = true;
-                p.mesh.material.color.setHex(Math.random() > 0.5 ? 0xff4400 : 0xffaa00);
-                
-                const tailDir = new THREE.Vector3(0, -1, 0).applyEuler(rocket.rotation).normalize();
-                p.velocity.copy(tailDir).multiplyScalar(0.2).add(new THREE.Vector3((Math.random()-0.5)*0.05, (Math.random()-0.5)*0.05, 0));
-                pIndex = (pIndex + 1) % particleCount;
+                fireSpawnAccum += dtScale;
+                if (fireSpawnAccum >= 0.85) {
+                    fireSpawnAccum = 0;
+                    const p = particles[pIndex];
+                    p.life = Math.random() * 15 + 10;
+                    p.maxLife = p.life;
+                    p.pos.set(
+                        _tailPos.x + (Math.random() - 0.5) * 0.3,
+                        _tailPos.y + (Math.random() - 0.5) * 0.3,
+                        _tailPos.z
+                    );
+                    fireInstMesh.setColorAt(pIndex, Math.random() > 0.5 ? _colorFire1 : _colorFire2);
+                    fireColorDirty = true;
+                    
+                    _tailDir.set(0, -1, 0).applyEuler(rocket.rotation).normalize();
+                    p.velocity.set(
+                        _tailDir.x * 0.2 + (Math.random() - 0.5) * 0.05,
+                        _tailDir.y * 0.2 + (Math.random() - 0.5) * 0.05,
+                        _tailDir.z * 0.2
+                    );
+                    pIndex = (pIndex + 1) % particleCount;
+                }
             }
 
-            particles.forEach(p => {
+            for (let i = 0; i < particleCount; i++) {
+                const p = particles[i];
                 if (p.life > 0) {
-                    p.life--;
-                    p.mesh.position.add(p.velocity);
-                    const scale = p.life / p.maxLife * 1.5;
-                    p.mesh.scale.setScalar(scale);
-                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.8;
-                    if (p.life <= 0) p.mesh.visible = false;
+                    p.life -= dtScale;
+                    fireMatrixDirty = true;
+                    if (p.life <= 0) {
+                        p.life = 0;
+                        fireInstMesh.setMatrixAt(i, _zeroMatrix);
+                    } else {
+                        p.pos.addScaledVector(p.velocity, dtScale);
+                        const scale = (p.life / p.maxLife) * 1.5;
+                        _instScale.set(scale, scale, scale);
+                        _instMatrix.compose(p.pos, _instQuat, _instScale);
+                        fireInstMesh.setMatrixAt(i, _instMatrix);
+                    }
                 }
-            });
+            }
+            if (fireMatrixDirty) fireInstMesh.instanceMatrix.needsUpdate = true;
+            if (fireColorDirty && fireInstMesh.instanceColor) fireInstMesh.instanceColor.needsUpdate = true;
 
-            oxParticles.forEach(p => {
+            for (let i = 0; i < oxCount; i++) {
+                const p = oxParticles[i];
                 if (p.life > 0) {
-                    p.life--;
-                    p.mesh.position.add(p.velocity);
-                    const scale = p.life / p.maxLife * 1.2;
-                    p.mesh.scale.setScalar(scale);
-                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.5;
-                    if (p.life <= 0) p.mesh.visible = false;
+                    p.life -= dtScale;
+                    oxMatrixDirty = true;
+                    if (p.life <= 0) {
+                        p.life = 0;
+                        oxInstMesh.setMatrixAt(i, _zeroMatrix);
+                    } else {
+                        p.pos.addScaledVector(p.velocity, dtScale);
+                        const scale = (p.life / p.maxLife) * 1.2;
+                        _instScale.set(scale, scale, scale);
+                        _instMatrix.compose(p.pos, _instQuat, _instScale);
+                        oxInstMesh.setMatrixAt(i, _instMatrix);
+                    }
                 }
-            });
+            }
 
             if (astronaut && rocket) {
-                const diff = tailPos.clone().sub(astronaut.position);
-                const dist = diff.length();
+                _diff.copy(_tailPos).sub(astronaut.position);
+                const dist = _diff.length();
                 const restingLength = 6.0; 
                 
-                if (dist > 0) {
-                    const force = (dist - restingLength) * 0.002; 
-                    const springForce = diff.normalize().multiplyScalar(force);
-                    astroVelocity.add(springForce);
+                if (dist > 0.0001) {
+                    const force = (dist - restingLength) * 0.002 * dtScale; 
+                    astroVelocity.addScaledVector(_diff, force / dist);
                 }
 
-                const speed = 0.015;
+                const speed = 0.015 * dtScale;
                 let isThrusting = false;
                 if (keysRef.current['ArrowUp'] || keysRef.current['w'] || keysRef.current['W']) { astroVelocity.y += speed; isThrusting = true; }
                 if (keysRef.current['ArrowDown'] || keysRef.current['s'] || keysRef.current['S']) { astroVelocity.y -= speed; isThrusting = true; }
@@ -2839,23 +2979,29 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 if (keysRef.current['ArrowRight'] || keysRef.current['d'] || keysRef.current['D']) { astroVelocity.x += speed; isThrusting = true; }
 
                 if (isThrusting) {
-                    const p = oxParticles[oxIndex];
-                    p.life = Math.random() * 20 + 10;
-                    p.maxLife = p.life;
-                    p.mesh.position.copy(astronaut.position);
-                    p.mesh.position.y -= 0.3; 
-                    p.mesh.visible = true;
-                    p.mesh.scale.setScalar(1);
-                    p.velocity.set((Math.random()-0.5)*0.04, -0.04 - Math.random()*0.04, (Math.random()-0.5)*0.04);
-                    oxIndex = (oxIndex + 1) % oxCount;
+                    oxSpawnAccum += dtScale;
+                    if (oxSpawnAccum >= 0.85) {
+                        oxSpawnAccum = 0;
+                        const p = oxParticles[oxIndex];
+                        p.life = Math.random() * 20 + 10;
+                        p.maxLife = p.life;
+                        p.pos.set(astronaut.position.x, astronaut.position.y - 0.3, astronaut.position.z);
+                        p.velocity.set((Math.random() - 0.5) * 0.04, -0.04 - Math.random() * 0.04, (Math.random() - 0.5) * 0.04);
+                        _instScale.set(1, 1, 1);
+                        _instMatrix.compose(p.pos, _instQuat, _instScale);
+                        oxInstMesh.setMatrixAt(oxIndex, _instMatrix);
+                        oxMatrixDirty = true;
+                        oxIndex = (oxIndex + 1) % oxCount;
+                    }
                 }
 
-                astroVelocity.multiplyScalar(0.98); 
-                astronaut.position.add(astroVelocity);
+                astroVelocity.multiplyScalar(Math.pow(0.98, dtScale)); 
+                astronaut.position.addScaledVector(astroVelocity, dtScale);
                 
                 if (dist > 12) {
-                    const pullBack = diff.clone().normalize().multiplyScalar((dist - 12) * 0.1);
-                    astronaut.position.add(pullBack);
+                    const pullAlpha = (dist - 12) * (1 - Math.pow(1 - 0.1, dtScale)) / dist;
+                    _pullBack.copy(_diff).multiplyScalar(pullAlpha);
+                    astronaut.position.add(_pullBack);
                 }
                 
                 astronaut.rotation.y = time * 0.5;
@@ -2868,17 +3014,19 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                 
                 if (rope) {
                     const positions = rope.geometry.attributes.position.array;
-                    positions[0] = tailPos.x; positions[1] = tailPos.y; positions[2] = tailPos.z;
+                    positions[0] = _tailPos.x; positions[1] = _tailPos.y; positions[2] = _tailPos.z;
                     positions[3] = astronaut.position.x; positions[4] = astronaut.position.y + 0.5; positions[5] = astronaut.position.z;
                     rope.geometry.attributes.position.needsUpdate = true;
                 }
             }
+            if (oxMatrixDirty) oxInstMesh.instanceMatrix.needsUpdate = true;
 
-            asteroids.forEach(ast => {
-                ast.position.z += ast.userData.speed;
-                ast.rotation.x += ast.userData.rotSpeedX;
-                ast.rotation.y += ast.userData.rotSpeedY;
-                ast.rotation.z += ast.userData.rotSpeedZ;
+            for (let i = 0; i < asteroids.length; i++) {
+                const ast = asteroids[i];
+                ast.position.z += ast.userData.speed * dtScale;
+                ast.rotation.x += ast.userData.rotSpeedX * dtScale;
+                ast.rotation.y += ast.userData.rotSpeedY * dtScale;
+                ast.rotation.z += ast.userData.rotSpeedZ * dtScale;
                 avoidCelestialCollision(ast.position, false);
 
                 if (ast.position.z > (isChickenMode ? 40 : 60)) {
@@ -2893,7 +3041,7 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
                     }
                     avoidCelestialCollision(ast.position, true);
                 }
-            });
+            }
 
             renderer.render(scene, camera);
         };
@@ -3691,13 +3839,16 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
 
     
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll);
+        const handleScroll = () => {
+            const next = window.scrollY > 20;
+            setScrolled(prev => (prev === next ? prev : next));
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
-        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#050505]/77 backdrop-blur-md border-b border-white/[0.08] py-3' : 'bg-transparent py-5'}`}>
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${scrolled ? 'bg-[#05070c]/95 border-b border-white/[0.08] py-3' : 'bg-transparent py-5'}`}>
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between gap-4 lg:gap-8">
                 
                 {/* Brand: SpetDev with Terminal Icon */}
@@ -4448,13 +4599,32 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                                 background: 'radial-gradient(circle at center, rgba(16,24,48,0.85) 0%, rgba(5,5,10,0.95) 100%)'
                             }}
                         />
-                    ) : (
+                    ) : (() => {
+                        const isLockedState = Boolean(project.isLocked && !localStorage.getItem("relay_md"));
+                        const activeMediaSrc = (isLockedState && project.lockedImage) ? project.lockedImage : (slides[slideIdx] || project.image);
+                        const isVideoMedia = /\.(mp4|webm)(\?.*)?$/i.test(activeMediaSrc || '');
+                        const lockClasses = isLockedState
+                            ? (project.lockedImage ? "scale-110 opacity-40" : "blur-xl scale-125 opacity-40 grayscale")
+                            : "";
+                        return (
                         <>
-                            <img
-                                src={slides[slideIdx] || project.image}
-                                alt={typeof project.title === "object" ? project.title.en : project.title}
-                                className={`w-full h-full object-contain bg-black/90 rounded-lg transition-all duration-300 ${(project.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`}
-                            />
+                            {isVideoMedia ? (
+                                <video
+                                    key={activeMediaSrc}
+                                    src={activeMediaSrc}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    className={`w-full h-full object-contain bg-black/90 rounded-lg transition-all duration-300 ${lockClasses}`}
+                                />
+                            ) : (
+                                <img
+                                    src={activeMediaSrc}
+                                    alt={typeof project.title === "object" ? project.title.en : project.title}
+                                    className={`w-full h-full object-contain bg-black/90 rounded-lg transition-all duration-300 ${lockClasses}`}
+                                />
+                            )}
                             {slides.length > 1 && (
                                 <>
                                     <button
@@ -4487,7 +4657,8 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                                 </>
                             )}
                         </>
-                    )}
+                        );
+                    })()}
                     {(project.isLocked && !localStorage.getItem("relay_md")) && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <i className="fas fa-lock text-white/80 text-6xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i>
@@ -4632,17 +4803,100 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
 
 // --- FEATURED PROJECTS SHOWCASE ---
 
+const SPRITE_SHEETS = {
+    '/assets/spet01.dev.mp4': { src: '/assets/spet01_sprite.jpg', cols: 5, rows: 10, frames: 50, fps: 10 },
+    '/assets/resurge_thumb.mp4': { src: '/assets/resurge_sprite.jpg', cols: 5, rows: 12, frames: 60, fps: 12 },
+    '/assets/network_activity.mp4': { src: '/assets/network_sprite.jpg', cols: 5, rows: 10, frames: 50, fps: 10 }
+};
+
+let lastGlobalScrollTime = 0;
+if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', () => {
+        lastGlobalScrollTime = performance.now();
+    }, { passive: true });
+}
+
 const ProjectImage = ({ p, t }) => {
-    const src = p.image;
+    const isLockedState = Boolean(p.isLocked && !localStorage.getItem(p.id === "t9_mod_manager_re" ? "t9_md" : "relay_md"));
+    const src = (isLockedState && p.lockedImage) ? p.lockedImage : p.image;
+    const sprite = SPRITE_SHEETS[src];
+    const spriteImgRef = useRef(null);
+    const spriteWrapRef = useRef(null);
+
+    useEffect(() => {
+        if (!sprite || !spriteImgRef.current || !spriteWrapRef.current) return;
+        const img = spriteImgRef.current;
+        const wrap = spriteWrapRef.current;
+        let isVisible = false;
+        let frame = 0;
+
+        if (img.decode) {
+            img.decode().catch(() => {});
+        }
+
+        const stepFrame = () => {
+            if (!isVisible || document.hidden) return;
+            if (performance.now() - lastGlobalScrollTime < 140) return;
+            frame = (frame + 1) % sprite.frames;
+            const col = frame % sprite.cols;
+            const row = Math.floor(frame / sprite.cols);
+            img.style.transform = `translate3d(-${col * (100 / sprite.cols)}%, -${row * (100 / sprite.rows)}%, 0)`;
+        };
+
+        const obs = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    isVisible = entry.isIntersecting;
+                });
+            },
+            { threshold: 0.05 }
+        );
+        obs.observe(wrap);
+        const timerId = setInterval(stepFrame, Math.round(1000 / sprite.fps));
+
+        return () => {
+            obs.disconnect();
+            clearInterval(timerId);
+        };
+    }, [sprite]);
+
+    const lockClasses = isLockedState
+        ? (p.lockedImage ? "scale-110 opacity-40" : "blur-xl scale-125 opacity-40 grayscale")
+        : "";
+
     return (
         <>
-          <img
-              src={src}
-              alt={typeof p.title === "object" ? p.title.en : p.title}
-              className={`w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105 ${(p.isLocked && !localStorage.getItem("relay_md")) ? "blur-xl scale-125 opacity-40 grayscale" : ""}`}
-              loading="lazy"
-          />
-          {(p.isLocked && !localStorage.getItem("relay_md")) && (
+          {sprite ? (
+              <div
+                  ref={spriteWrapRef}
+                  className={`w-full h-full overflow-hidden relative transition-transform duration-500 group-hover:scale-105 ${lockClasses}`}
+              >
+                  <img
+                      ref={spriteImgRef}
+                      src={sprite.src}
+                      alt={typeof p.title === "object" ? p.title.en : p.title}
+                      decoding="async"
+                      style={{
+                          width: `${sprite.cols * 100}%`,
+                          height: `${sprite.rows * 100}%`,
+                          maxWidth: 'none',
+                          transform: 'translate3d(0%, 0%, 0)',
+                          willChange: 'transform',
+                          backfaceVisibility: 'hidden'
+                      }}
+                      className="block select-none pointer-events-none"
+                  />
+              </div>
+          ) : (
+              <img
+                  src={src}
+                  alt={typeof p.title === "object" ? p.title.en : p.title}
+                  className={`w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105 ${lockClasses}`}
+                  loading="lazy"
+                  decoding="async"
+              />
+          )}
+          {isLockedState && (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white/80 pointer-events-none z-10">
                   <i className="fas fa-lock text-4xl mb-2 drop-shadow-lg"></i>
                   <span className="text-[10px] font-bold tracking-wider uppercase drop-shadow-md">Classified</span>
@@ -4652,16 +4906,10 @@ const ProjectImage = ({ p, t }) => {
     );
 };
 
-// Tag badge with tooltip or expanded view on hover for full tag visibility
+// Tag badge with tooltip or expanded view on hover for full tag visibility (Pure CSS group-hover, zero React re-renders)
 const ProjectTags = ({ tags, lang }) => {
-    const [showTooltip, setShowTooltip] = useState(false);
-
     return (
-        <div 
-            className="relative mb-3 group/tags"
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-        >
+        <div className="relative mb-3 group/tags">
             {/* Tag preview line with unboxed metadata styling */}
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-400 select-none">
                 {tags.slice(0, 3).map((tag, tIdx) => (
@@ -4689,9 +4937,7 @@ const ProjectTags = ({ tags, lang }) => {
 
             {/* Hover Tooltip / Expanded Tag View showing full unclipped tag names */}
             <div 
-                className={`absolute bottom-full left-0 mb-2 w-max max-w-[280px] sm:max-w-xs p-3 rounded-xl bg-[#050505]/95 border border-white/[0.12] shadow-2xl backdrop-blur-xl z-30 transition-all duration-200 pointer-events-none ${
-                    showTooltip ? 'opacity-100 translate-y-0 visible scale-100' : 'opacity-0 translate-y-1 invisible scale-95'
-                }`}
+                className="absolute bottom-full left-0 mb-2 w-max max-w-[280px] sm:max-w-xs p-3 rounded-xl bg-[#050505]/95 border border-white/[0.12] shadow-2xl z-30 transition-all duration-150 pointer-events-none opacity-0 translate-y-1 invisible scale-95 group-hover/tags:opacity-100 group-hover/tags:translate-y-0 group-hover/tags:visible group-hover/tags:scale-100"
             >
                 <div className="text-[10px] font-mono text-primary font-semibold mb-1.5 uppercase tracking-wider flex items-center justify-between gap-2 border-b border-white/[0.08] pb-1">
                     <span className="flex items-center gap-1.5">
@@ -4825,7 +5071,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                             <article
                                 key={`${p.id}-${selectedCategory}-${searchQuery}`}
                                 style={{ animationDelay: `${Math.min(idx * 40, 240)}ms` }}
-                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group transition-all duration-300 project-card-animate"
+                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group transition-transform duration-200 project-card-animate"
                             >
                                 {/* Authentic Project Image - Cleanly cropped border-to-border */}
                                 <div 
@@ -4835,7 +5081,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                     <ProjectImage p={p} t={t} />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent opacity-60 pointer-events-none" />
                                     <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-20">
-                                        <span className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-black/85 text-white border border-primary/50 backdrop-blur-md shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-transform">
+                                        <span className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-black/90 text-white border border-primary/50 shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-transform">
                                             {t('projects.viewDetails')}
                                         </span>
                                     </div>
@@ -6704,6 +6950,21 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
             return;
         }
 
+        if (cleanCmd === 'fps' || cleanCmd === 'fps on' || cleanCmd === 'fps off' || cleanCmd === 'showfps' || cleanCmd === 'telemetry') {
+            const nextFpsState = cleanCmd === 'fps on' ? true : (cleanCmd === 'fps off' ? false : !window.__spetFpsActive);
+            window.__spetFpsActive = nextFpsState;
+            window.dispatchEvent(new CustomEvent('spet:fps-toggle', { detail: { enabled: nextFpsState } }));
+            newHistory.push({
+                type: 'output',
+                text: nextFpsState
+                    ? `[⚡ FPS & GPU TELEMETRY HUD: ENABLED]\nOverlay fixado no canto superior direito (FPS atual, 1% Low / Min 2s, Frame Time ms, Draw Calls WebGL e Seção ativa no scroll).\nDigite 'fps' novamente para ocultar.`
+                    : `[⚡ FPS & GPU TELEMETRY HUD: DISABLED]`
+            });
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
         switch (cleanCmd) {
             case 'help':
                 newHistory.push({
@@ -6714,6 +6975,7 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
   projects   - Output featured engineering repositories
   skills     - List low-level tech stack
   journal    - Read research papers in Technical Journal
+  fps        - Toggle real-time FPS & GPU telemetry HUD (top-right)
   music      - Play OST Jukebox ('music ff' or 'music cod')
   chicken!   - Easter Egg: Transform asteroids into Space Chickens!
   MORE       - (While chicken! active) Turn the Moon into a giant spinning Chicken!
@@ -7110,7 +7372,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
             {/* Mascot Floating Toggle Button & Welcome Teaser */}
             <div className="fixed bottom-6 right-6 z-50 flex items-end flex-col gap-2">
                 {!isOpen && welcomeEnabled && showTeaser && (
-                    <div className="relative max-w-xs p-3.5 bg-[#050505]/95 border border-cyan-500/40 text-slate-200 text-xs rounded-2xl shadow-xl shadow-cyan-950/50 backdrop-blur-xl animate-fade-in">
+                    <div className="relative max-w-xs p-3.5 bg-[#050505]/95 border border-cyan-500/40 text-slate-200 text-xs rounded-2xl shadow-xl shadow-cyan-950/50 animate-fade-in">
                         <button
                             onClick={(e) => { e.stopPropagation(); setShowTeaser(false); }}
                             className="absolute top-2 right-2 text-slate-400 hover:text-white transition-colors"
@@ -9821,6 +10083,131 @@ const PrivacyView = ({ onBackToHome }) => {
     );
 };
 
+// --- REAL-TIME FPS & GPU TELEMETRY HUD (Triggered via CLI 'fps' command) ---
+const FpsTelemetryHud = ({ isActive, onClose }) => {
+    const fpsValRef = useRef(null);
+    const minValRef = useRef(null);
+    const msValRef = useRef(null);
+    const gpuValRef = useRef(null);
+    const secValRef = useRef(null);
+
+    useEffect(() => {
+        if (!isActive) return;
+        let rafId;
+        let lastTime = performance.now();
+        let lastUiUpdate = lastTime;
+        let frameCount = 0;
+        // Ring buffer of frame times (ms) over the last ~120 frames to track 1% low / max frame spike
+        const ringSize = 120;
+        const frameTimes = new Float32Array(ringSize);
+        let ringIdx = 0;
+        let ringFilled = 0;
+
+        const detectActiveSection = (scrollYVal) => {
+            const ids = ['top', 'about', 'projects', 'skills', 'journal', 'contact'];
+            const midY = window.innerHeight * 0.45;
+            for (let i = 0; i < ids.length; i++) {
+                const el = document.getElementById(ids[i]);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= midY && rect.bottom >= midY) {
+                        return `#${ids[i]}`;
+                    }
+                }
+            }
+            return `Y:${scrollYVal}`;
+        };
+
+        const tick = (now) => {
+            rafId = requestAnimationFrame(tick);
+            const dt = now - lastTime;
+            lastTime = now;
+            if (dt <= 0 || dt > 1000) return;
+
+            frameCount++;
+            frameTimes[ringIdx] = dt;
+            ringIdx = (ringIdx + 1) % ringSize;
+            if (ringFilled < ringSize) ringFilled++;
+
+            if (now - lastUiUpdate >= 200) {
+                const elapsed = now - lastUiUpdate;
+                const avgFps = Math.round((frameCount * 1000) / elapsed);
+                const avgMs = (elapsed / frameCount).toFixed(1);
+
+                let maxDt = 0;
+                for (let i = 0; i < ringFilled; i++) {
+                    if (frameTimes[i] > maxDt) maxDt = frameTimes[i];
+                }
+                const minFps = maxDt > 0 ? Math.round(1000 / maxDt) : avgFps;
+
+                // Perform all layout reads BEFORE any DOM mutations to avoid Forced Synchronous Reflow
+                const scrollYVal = Math.round(window.scrollY);
+                const activeSecLabel = secValRef.current ? detectActiveSection(scrollYVal) : '';
+
+                if (fpsValRef.current) {
+                    fpsValRef.current.textContent = `${avgFps} FPS`;
+                    fpsValRef.current.style.color = avgFps >= 90 ? '#34d399' : (avgFps >= 50 ? '#fbbf24' : '#f87171');
+                }
+                if (minValRef.current) {
+                    minValRef.current.textContent = `Min: ${minFps} | Max: ${maxDt.toFixed(1)}ms`;
+                    minValRef.current.style.color = minFps >= 60 ? '#94a3b8' : (minFps >= 40 ? '#fbbf24' : '#f87171');
+                }
+                if (msValRef.current) {
+                    msValRef.current.textContent = `Avg: ${avgMs} ms`;
+                }
+                if (gpuValRef.current) {
+                    const rInfo = window.__spetRenderer && window.__spetRenderer.info && window.__spetRenderer.info.render;
+                    if (rInfo) {
+                        const tris = rInfo.triangles >= 1000 ? `${(rInfo.triangles / 1000).toFixed(1)}k` : rInfo.triangles;
+                        gpuValRef.current.textContent = `Draws: ${rInfo.calls} | Tris: ${tris}`;
+                    } else {
+                        gpuValRef.current.textContent = `WebGL: 2D/Idle`;
+                    }
+                }
+                if (secValRef.current) {
+                    secValRef.current.textContent = `Scroll: ${scrollYVal}px (${activeSecLabel})`;
+                }
+
+                frameCount = 0;
+                lastUiUpdate = now;
+            }
+        };
+
+        rafId = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(rafId);
+    }, [isActive]);
+
+    if (!isActive) return null;
+
+    return (
+        <div
+            className="fixed top-16 right-4 z-[99990] bg-black/90 border border-primary/40 rounded-xl px-3.5 py-2.5 font-mono text-[11px] shadow-2xl select-none pointer-events-auto"
+            style={{ transform: 'translateZ(0)', minWidth: '195px' }}
+        >
+            <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-1 mb-1.5">
+                <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span ref={fpsValRef} className="text-sm font-bold text-emerald-400">-- FPS</span>
+                </div>
+                <button
+                    type="button"
+                    onClick={onClose}
+                    title="Close FPS HUD (or type 'fps' in CLI)"
+                    className="text-slate-400 hover:text-white text-xs px-1 cursor-pointer clickable"
+                >
+                    ✕
+                </button>
+            </div>
+            <div className="space-y-0.5 text-[10px] leading-tight">
+                <div ref={msValRef} className="text-slate-300">Avg: -- ms</div>
+                <div ref={minValRef} className="text-slate-400">Min: -- | Max: --ms</div>
+                <div ref={gpuValRef} className="text-sky-400">Draws: -- | Tris: --</div>
+                <div ref={secValRef} className="text-amber-300/90 pt-0.5 border-t border-white/[0.06]">Scroll: 0px (#top)</div>
+            </div>
+        </div>
+    );
+};
+
 // --- ROOT APPLICATION COMPONENT ---
 const App = () => {
     const STORAGE_KEY = 'spet_portfolio_settings';
@@ -10093,6 +10480,16 @@ const App = () => {
         window.addEventListener('spet:open-easter-game', handleOpenEasterGame);
         return () => window.removeEventListener('spet:open-easter-game', handleOpenEasterGame);
     }, []);
+
+    const [isFpsOpen, setIsFpsOpen] = useState(() => Boolean(typeof window !== 'undefined' && window.__spetFpsActive));
+    useEffect(() => {
+        const handleFpsToggle = (e) => {
+            const nextState = (typeof e.detail?.enabled === 'boolean') ? e.detail.enabled : !isFpsOpen;
+            setIsFpsOpen(nextState);
+        };
+        window.addEventListener('spet:fps-toggle', handleFpsToggle);
+        return () => window.removeEventListener('spet:fps-toggle', handleFpsToggle);
+    }, [isFpsOpen]);
 
     useEffect(() => {
         const handleOpenTerminal = (e) => {
@@ -10592,6 +10989,14 @@ const App = () => {
                     window.__spetDeliciaActive = false;
                     window.dispatchEvent(new CustomEvent('spet:delicia-toggle', { detail: { enabled: false } }));
                 }} 
+            />
+
+            <FpsTelemetryHud
+                isActive={isFpsOpen}
+                onClose={() => {
+                    window.__spetFpsActive = false;
+                    setIsFpsOpen(false);
+                }}
             />
 
             {showPatreonModal && (

@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'How-To-Optimize-ThreeJS-Scene-120-FPS': 'Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.',
+    'entry_0014': 'Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.',
     'What-Is-A-WAD-Modern-Games': 'Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.',
     'entry_0013': 'Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs in Call of Duty and modern id Tech 7/8 containers.',
     'Optimize-Old-Games-4GB-Patch-DXVK': 'A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.',

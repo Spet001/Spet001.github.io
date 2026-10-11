@@ -122,11 +122,9 @@
         .clickable { cursor: none !important; }
 
         .glass-panel {
-            background: rgba(5, 5, 5, 0.70);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(8, 10, 15, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.45);
         }
 
         .glass-panel:hover {
@@ -192,18 +190,17 @@
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: none;
             }
         }
 
         .project-card-animate {
-            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
-            will-change: opacity, transform;
+            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         }
 
         /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
         #projects article {
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
             position: relative;
         }
 
@@ -228,7 +225,7 @@
             }
         }
 
-        /* Custom Cursor */
+        /* Custom Cursor (GPU-composited via rAF-coalesced translate3d, zero style recalculation on 1000Hz mice) */
         #custom-cursor {
             position: fixed;
             top: 0;
@@ -239,17 +236,15 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out, background-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%) scale(1);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
             box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
         }
 
-        #custom-cursor.hovering {
-            width: 30px;
-            height: 30px;
+        #custom-cursor[data-hover="1"] {
             background-color: rgba(0, 170, 255, 0.2);
             border-color: #fff;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
         /* Mascot Companion styles */
@@ -507,24 +502,36 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cursor = document.getElementById('custom-cursor');
-            
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
+            if (!cursor) return;
 
-            // Adiciona classe hovering quando o mouse passa por algo clicável
-            document.addEventListener('mouseover', (e) => {
-                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable')) {
-                    cursor.classList.add('hovering');
-                }
-            });
+            let cx = -100, cy = -100;
+            let lastTarget = null;
+            let isHover = false;
+            let rafPending = false;
 
-            document.addEventListener('mouseout', (e) => {
-                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.clickable')) {
-                    cursor.classList.remove('hovering');
+            const updateCursor = () => {
+                rafPending = false;
+                const nextHover = Boolean(
+                    lastTarget &&
+                    lastTarget.closest &&
+                    lastTarget.closest('a, button, .clickable')
+                );
+                if (nextHover !== isHover) {
+                    isHover = nextHover;
+                    cursor.dataset.hover = isHover ? '1' : '0';
                 }
-            });
+                cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) scale(${isHover ? 1.5 : 1})`;
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                cx = e.clientX;
+                cy = e.clientY;
+                lastTarget = e.target;
+                if (!rafPending) {
+                    rafPending = true;
+                    requestAnimationFrame(updateCursor);
+                }
+            }, { passive: true });
         });
     </script>
 </body>
