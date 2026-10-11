@@ -4784,6 +4784,36 @@ const SkillsSection = () => {
 const JournalSection = ({ onNavigateJournal }) => {
     const { t, lang } = useContext(LanguageContext);
     const entries = PORTFOLIO_DATA.journalEntries;
+    const [viewsMap, setViewsMap] = useState({});
+    const [sortBy, setSortBy] = useState('popular');
+
+    useEffect(() => {
+        fetch('https://journal.gelain15mj.workers.dev/api/journal/views')
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.views) {
+                    setViewsMap(data.views);
+                }
+            })
+            .catch(() => {});
+    }, []);
+
+    const getEntryViews = (entry) => {
+        if (!entry) return null;
+        const slug = entry.file ? entry.file.replace(/\.md$/, '') : entry.id;
+        if (viewsMap[slug] !== undefined) return viewsMap[slug];
+        if (viewsMap[entry.id] !== undefined) return viewsMap[entry.id];
+        return Object.keys(viewsMap).length > 0 ? 0 : null;
+    };
+
+    const sortedEntries = [...entries].sort((a, b) => {
+        if (sortBy === 'popular') {
+            const vA = getEntryViews(a) ?? -1;
+            const vB = getEntryViews(b) ?? -1;
+            if (vB !== vA) return vB - vA;
+        }
+        return 0;
+    });
 
     return (
         <section id="journal" className="py-8 relative border-t border-white/[0.08]">
@@ -4799,51 +4829,88 @@ const JournalSection = ({ onNavigateJournal }) => {
                         </p>
                     </div>
 
-                    <a
-                        href="/journal"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            if (onNavigateJournal) onNavigateJournal();
-                        }}
-                        className="text-xs font-semibold text-primary hover:text-white flex items-center gap-1.5 transition-colors self-start sm:self-auto cursor-pointer"
-                    >
-                        <span>{t('journal.viewAll')}</span>
-                        <i className="fas fa-arrow-right text-[10px]"></i>
-                    </a>
+                    <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
+                        <div className="inline-flex items-center p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono">
+                            <button
+                                type="button"
+                                onClick={() => { playSoftClick(); setSortBy('popular'); }}
+                                className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer clickable ${
+                                    sortBy === 'popular'
+                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
+                                        : 'text-slate-400 hover:text-white border border-transparent'
+                                }`}
+                            >
+                                <i className="far fa-eye text-[10px]"></i>
+                                <span>{lang === 'pt' ? 'Populares' : 'Popular'}</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { playSoftClick(); setSortBy('date'); }}
+                                className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer clickable ${
+                                    sortBy === 'date'
+                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
+                                        : 'text-slate-400 hover:text-white border border-transparent'
+                                }`}
+                            >
+                                <i className="far fa-calendar-alt text-[10px]"></i>
+                                <span>{lang === 'pt' ? 'Data' : 'Date'}</span>
+                            </button>
+                        </div>
+
+                        <a
+                            href="/journal"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (onNavigateJournal) onNavigateJournal();
+                            }}
+                            className="text-xs font-semibold text-primary hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                            <span>{t('journal.viewAll')}</span>
+                            <i className="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
                 </div>
 
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x journal-entries-scroll" style={{ scrollbarGutter: 'stable' }}>
-                    {entries.map((entry) => (
-                        <a
-                            key={entry.id}
-                            href={`/journal/${entry.id}/`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                if (onNavigateJournal) onNavigateJournal(entry.id);
-                            }}
-                            className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start cursor-pointer"
-                        >
-                            <div>
-                                <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2">
-                                    <span className="text-primary font-semibold">{entry.category}</span>
-                                    <span>{entry.date}</span>
+                    {sortedEntries.map((entry) => {
+                        const views = getEntryViews(entry);
+                        return (
+                            <a
+                                key={entry.id}
+                                href={`/journal/${entry.id}/`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (onNavigateJournal) onNavigateJournal(entry.id);
+                                }}
+                                className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start cursor-pointer"
+                            >
+                                <div>
+                                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2 gap-2">
+                                        <span className="text-primary font-semibold truncate">{entry.category}</span>
+                                        <div className="flex items-center gap-2 shrink-0 text-[10px] text-slate-400">
+                                            {views !== null && (
+                                                <span><i className="far fa-eye mr-0.5"></i> {views}</span>
+                                            )}
+                                            <span>{entry.date}</span>
+                                        </div>
+                                    </div>
+
+                                    <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors line-clamp-2">
+                                        {entry.title}
+                                    </h3>
+
+                                    <p className="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">
+                                        {entry.excerpt}
+                                    </p>
                                 </div>
 
-                                <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors line-clamp-2">
-                                    {entry.title}
-                                </h3>
-
-                                <p className="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">
-                                    {entry.excerpt}
-                                </p>
-                            </div>
-
-                            <div className="mt-4 pt-3 border-t border-white/[0.04] text-[11px] font-semibold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                                <span>{t('journal.readArticle')}</span>
-                                <i className="fas fa-chevron-right text-[9px]"></i>
-                            </div>
-                        </a>
-                    ))}
+                                <div className="mt-4 pt-3 border-t border-white/[0.04] text-[11px] font-semibold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                    <span>{t('journal.readArticle')}</span>
+                                    <i className="fas fa-chevron-right text-[9px]"></i>
+                                </div>
+                            </a>
+                        );
+                    })}
                 </div>
 
             </div>
@@ -8702,9 +8769,13 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
     const [error, setError] = useState(null);
     const [isLocked, setIsLocked] = useState(false);
     const [searchFilter, setSearchFilter] = useState('');
+    const [sortBy, setSortBy] = useState('popular');
+    const [viewsMap, setViewsMap] = useState({});
+    const hasManualSelectRef = useRef(Boolean(activePostId));
 
     useEffect(() => {
         if (activePostId) {
+            hasManualSelectRef.current = true;
             setSelectedId(activePostId);
         }
     }, [activePostId]);
@@ -8718,7 +8789,75 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                 }
             })
             .catch(() => {});
+
+        fetch('https://journal.gelain15mj.workers.dev/api/journal/views')
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.views) {
+                    setViewsMap(data.views);
+                }
+            })
+            .catch(() => {});
     }, []);
+
+    const getEntrySlug = useCallback((entry) => {
+        if (!entry) return '';
+        return entry.file ? entry.file.replace(/\.md$/, '') : entry.id;
+    }, []);
+
+    const getEntryViews = useCallback((entry) => {
+        if (!entry) return null;
+        const slug = getEntrySlug(entry);
+        if (viewsMap[slug] !== undefined) return viewsMap[slug];
+        if (viewsMap[entry.id] !== undefined) return viewsMap[entry.id];
+        return Object.keys(viewsMap).length > 0 ? 0 : null;
+    }, [viewsMap, getEntrySlug]);
+
+    // When opening /journal/ without a specific post ID, select the #1 most popular entry once views load
+    useEffect(() => {
+        if (hasManualSelectRef.current || activePostId) return;
+        if (Object.keys(viewsMap).length === 0 || entries.length === 0) return;
+        const sortedByPop = [...entries].sort((a, b) => (getEntryViews(b) ?? -1) - (getEntryViews(a) ?? -1));
+        if (sortedByPop[0]) {
+            const topEntry = sortedByPop[0];
+            const isTopLocked = topEntry.file === 'T9-Mod-Manager-RE.md' || topEntry.id === 'entry_0007';
+            const topSlug = isTopLocked ? topEntry.id : getEntrySlug(topEntry);
+            hasManualSelectRef.current = true;
+            setSelectedId(topSlug);
+        }
+    }, [viewsMap, entries, activePostId, getEntryViews, getEntrySlug]);
+
+    // Track view in Cloudflare Worker when an article is opened
+    useEffect(() => {
+        if (!selectedId || entries.length === 0) return;
+        const entry = entries.find(e =>
+            e.id === selectedId ||
+            e.file === selectedId ||
+            (e.file && e.file.replace(/\.md$/, '') === selectedId)
+        );
+        if (!entry) return;
+        const canonicalSlug = getEntrySlug(entry);
+        if (!canonicalSlug) return;
+
+        const sessionKey = `spet_journal_viewed_${canonicalSlug}`;
+        try {
+            if (sessionStorage.getItem(sessionKey)) return;
+            sessionStorage.setItem(sessionKey, '1');
+        } catch (e) {}
+
+        fetch('https://journal.gelain15mj.workers.dev/api/journal/view', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug: canonicalSlug })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.views) {
+                    setViewsMap(data.views);
+                }
+            })
+            .catch(() => {});
+    }, [selectedId, entries, getEntrySlug]);
 
     useEffect(() => {
         if (!selectedId) return;
@@ -8816,16 +8955,26 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         (e.file && e.file.replace(/\.md$/, '') === selectedId)
     );
 
-    const filteredEntries = entries.filter(e => {
-        if (!searchFilter.trim()) return true;
-        const q = searchFilter.toLowerCase();
-        return (e.title && e.title.toLowerCase().includes(q)) || 
-               (e.category && e.category.toLowerCase().includes(q)) || 
-               (e.date && e.date.toLowerCase().includes(q));
-    });
+    const filteredEntries = entries
+        .filter(e => {
+            if (!searchFilter.trim()) return true;
+            const q = searchFilter.toLowerCase();
+            return (e.title && e.title.toLowerCase().includes(q)) || 
+                   (e.category && e.category.toLowerCase().includes(q)) || 
+                   (e.date && e.date.toLowerCase().includes(q));
+        })
+        .sort((a, b) => {
+            if (sortBy === 'popular') {
+                const vA = getEntryViews(a) ?? -1;
+                const vB = getEntryViews(b) ?? -1;
+                if (vB !== vA) return vB - vA;
+            }
+            return 0;
+        });
 
     const handleSelectPost = (id) => {
         playSoftClick();
+        hasManualSelectRef.current = true;
         setSelectedId(id);
         if (onSelectPost) onSelectPost(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -8838,6 +8987,8 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
     const activeArticleSlug = activeEntry
         ? (activeEntry.file ? activeEntry.file.replace(/\.md$/, '') : activeEntry.id)
         : selectedId;
+
+    const activeEntryViews = getEntryViews(activeEntry);
 
     return (
         <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto relative z-10 animate-fade-in">
@@ -8886,8 +9037,8 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                         </span>
                     </div>
 
-                    {/* Search filter */}
-                    <div className="py-3">
+                    {/* Search filter & Sort toggle */}
+                    <div className="py-3 space-y-2.5">
                         <div className="relative">
                             <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
                             <input
@@ -8897,6 +9048,33 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                 placeholder={lang === 'pt' ? 'Filtrar artigos...' : 'Filter articles...'}
                                 className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/50 border border-white/[0.1] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-primary/60 transition-colors"
                             />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-black/40 border border-white/[0.08] text-[11px] font-mono">
+                            <button
+                                type="button"
+                                onClick={() => { playSoftClick(); setSortBy('popular'); }}
+                                className={`py-1 px-2 rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer clickable ${
+                                    sortBy === 'popular'
+                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
+                                        : 'text-slate-400 hover:text-white border border-transparent'
+                                }`}
+                            >
+                                <i className="far fa-eye text-[10px]"></i>
+                                <span>{lang === 'pt' ? 'Popularidade' : 'Popularity'}</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { playSoftClick(); setSortBy('date'); }}
+                                className={`py-1 px-2 rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer clickable ${
+                                    sortBy === 'date'
+                                        ? 'bg-primary/20 text-primary border border-primary/40 font-bold'
+                                        : 'text-slate-400 hover:text-white border border-transparent'
+                                }`}
+                            >
+                                <i className="far fa-calendar-alt text-[10px]"></i>
+                                <span>{lang === 'pt' ? 'Data' : 'Date'}</span>
+                            </button>
                         </div>
                     </div>
 
@@ -8913,6 +9091,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                 e.id === 'entry_0007'
                             );
                             const slug = isEntryLocked ? e.id : (e.file ? e.file.replace(/\.md$/, '') : e.id);
+                            const itemViews = getEntryViews(e);
 
                             return (
                                 <li key={e.id || e.file}>
@@ -8924,11 +9103,18 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                                 : 'border-transparent hover:border-white/[0.12] hover:bg-white/[0.04] text-slate-300'
                                         }`}
                                     >
-                                        <div className="flex items-center justify-between text-[11px] font-mono">
-                                            <span className={isSelected ? 'text-primary font-bold' : 'text-slate-400'}>
+                                        <div className="flex items-center justify-between text-[11px] font-mono gap-2">
+                                            <span className={`truncate ${isSelected ? 'text-primary font-bold' : 'text-slate-400'}`}>
                                                 {e.category || (isEntryLocked ? 'Classified Research' : 'Article')}
                                             </span>
-                                            <span className="text-slate-500 text-[10px]">{e.date}</span>
+                                            <div className="flex items-center gap-2 shrink-0 text-[10px] text-slate-500">
+                                                {itemViews !== null && (
+                                                    <span className="text-slate-400">
+                                                        <i className="far fa-eye mr-0.5 text-[9px]"></i> {itemViews}
+                                                    </span>
+                                                )}
+                                                <span>{e.date}</span>
+                                            </div>
                                         </div>
                                         <div className={`text-xs font-semibold leading-snug line-clamp-2 ${isSelected ? 'text-white' : 'text-slate-200'}`}>
                                             {isEntryLocked && <i className="fas fa-lock text-[#FF424D] mr-1.5 text-[10px]"></i>}
@@ -8952,6 +9138,9 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                     <span><i className="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
                                     {(activeEntry.category || isLocked) && (
                                         <span><i className="far fa-folder mr-1"></i> {activeEntry.category || 'Classified Research'}</span>
+                                    )}
+                                    {activeEntryViews !== null && (
+                                        <span><i className="far fa-eye mr-1"></i> {activeEntryViews} {lang === 'pt' ? 'visualizações' : 'views'}</span>
                                     )}
                                 </div>
                                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
