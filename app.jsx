@@ -9249,50 +9249,17 @@ const DeliciaPlayer = ({ isActive, onClose, lang }) => {
 // --- GISCUS COMMENTS WIDGET FOR JOURNAL ENTRIES ---
 const JournalComments = ({ articleSlug, articleTitle, lang }) => {
     const containerRef = useRef(null);
-    const [giscusState, setGiscusState] = useState({ status: 'loading', category: null });
-    const [retryTick, setRetryTick] = useState(0);
 
     const REPO = 'Spet001/Spet001.github.io';
     const REPO_ID = 'R_kgDOUFIsXQ';
+    const CATEGORY_NAME = 'General';
+    const CATEGORY_ID = 'DIC_kwDOUFIsXc4DHkDp';
+
+    const isBot = typeof navigator !== 'undefined' &&
+        /bot|googlebot|crawler|spider|robot|crawling|bingbot|gptbot|claudebot|perplexitybot|applebot/i.test(navigator.userAgent || '');
 
     useEffect(() => {
-        if (typeof navigator !== 'undefined' && /bot|googlebot|crawler|spider|robot|crawling|bingbot|gptbot|claudebot|perplexitybot|applebot/i.test(navigator.userAgent || '')) {
-            setGiscusState({ status: 'setup_needed', category: null });
-            return;
-        }
-        let cancelled = false;
-        setGiscusState({ status: 'loading', category: null });
-
-        fetch(`https://giscus.app/api/discussions/categories?repo=${encodeURIComponent(REPO)}`)
-            .then(async (res) => {
-                if (!res.ok) throw new Error('not_configured');
-                return res.json();
-            })
-            .then((data) => {
-                if (cancelled) return;
-                const cats = (data && Array.isArray(data.categories)) ? data.categories : [];
-                if (cats.length === 0) {
-                    setGiscusState({ status: 'setup_needed', category: null });
-                    return;
-                }
-                const preferred =
-                    cats.find(c => /comment|journal|blog/i.test(c.name)) ||
-                    cats.find(c => /general/i.test(c.name)) ||
-                    cats.find(c => /announcement/i.test(c.name)) ||
-                    cats[0];
-                setGiscusState({ status: 'ready', category: preferred });
-            })
-            .catch(() => {
-                if (!cancelled) {
-                    setGiscusState({ status: 'setup_needed', category: null });
-                }
-            });
-
-        return () => { cancelled = true; };
-    }, [retryTick]);
-
-    useEffect(() => {
-        if (giscusState.status !== 'ready' || !giscusState.category || !containerRef.current) return;
+        if (isBot || !containerRef.current) return;
 
         const container = containerRef.current;
         container.innerHTML = '';
@@ -9303,8 +9270,8 @@ const JournalComments = ({ articleSlug, articleTitle, lang }) => {
         script.crossOrigin = 'anonymous';
         script.setAttribute('data-repo', REPO);
         script.setAttribute('data-repo-id', REPO_ID);
-        script.setAttribute('data-category', giscusState.category.name);
-        script.setAttribute('data-category-id', giscusState.category.id);
+        script.setAttribute('data-category', CATEGORY_NAME);
+        script.setAttribute('data-category-id', CATEGORY_ID);
         script.setAttribute('data-mapping', 'specific');
         script.setAttribute('data-term', `Journal: ${articleSlug}`);
         script.setAttribute('data-strict', '0');
@@ -9314,7 +9281,7 @@ const JournalComments = ({ articleSlug, articleTitle, lang }) => {
         script.setAttribute('data-theme', 'transparent_dark');
         script.setAttribute('data-lang', lang === 'pt' ? 'pt' : 'en');
         container.appendChild(script);
-    }, [giscusState, articleSlug, lang]);
+    }, [articleSlug, lang, isBot]);
 
     return (
         <section className="mt-12 pt-8 border-t border-white/[0.08]" aria-label={lang === 'pt' ? 'Comentários' : 'Comments'}>
@@ -9345,65 +9312,7 @@ const JournalComments = ({ articleSlug, articleTitle, lang }) => {
                 </a>
             </div>
 
-            {giscusState.status === 'loading' && (
-                <div className="py-10 text-center rounded-xl bg-black/30 border border-white/[0.06]">
-                    <i className="fas fa-circle-notch fa-spin text-primary text-xl mb-2"></i>
-                    <p className="text-xs text-slate-400 font-mono">
-                        {lang === 'pt' ? 'Carregando comentários do GitHub...' : 'Loading GitHub discussion...'}
-                    </p>
-                </div>
-            )}
-
-            {giscusState.status === 'ready' && (
-                <div ref={containerRef} className="giscus-wrapper min-h-[160px]" />
-            )}
-
-            {giscusState.status === 'setup_needed' && (
-                <div className="p-5 rounded-xl bg-black/40 border border-white/[0.08] text-slate-300 text-xs leading-relaxed">
-                    <div className="flex items-start gap-3">
-                        <i className="fab fa-github text-xl text-primary mt-0.5"></i>
-                        <div className="flex-1">
-                            <p className="font-semibold text-white mb-1">
-                                {lang === 'pt'
-                                    ? 'Comentários via GitHub Discussions aguardando ativação no repositório'
-                                    : 'GitHub Discussions comments awaiting repository activation'}
-                            </p>
-                            <p className="text-slate-400 mb-3">
-                                {lang === 'pt'
-                                    ? 'Para habilitar a caixa de comentários Giscus neste repositório (Spet001/Spet001.github.io), ative a opção "Discussions" nas configurações do repositório no GitHub e autorize o app oficial Giscus.'
-                                    : 'To enable the live Giscus comment box on Spet001/Spet001.github.io, check "Discussions" in the GitHub repository settings and authorize the Giscus GitHub App.'}
-                            </p>
-                            <div className="flex flex-wrap items-center gap-2.5">
-                                <a
-                                    href={`https://github.com/${REPO}/settings`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/15 hover:bg-primary/25 border border-primary/30 text-primary font-semibold transition-colors"
-                                >
-                                    <i className="fas fa-cog text-[11px]"></i>
-                                    <span>{lang === 'pt' ? '1. Ativar Discussions no Repo' : '1. Enable Repo Discussions'}</span>
-                                </a>
-                                <a
-                                    href="https://github.com/apps/giscus"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white font-semibold transition-colors"
-                                >
-                                    <i className="fas fa-plug text-[11px]"></i>
-                                    <span>{lang === 'pt' ? '2. Instalar App Giscus' : '2. Install Giscus App'}</span>
-                                </a>
-                                <button
-                                    onClick={() => setRetryTick(t => t + 1)}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white font-mono transition-colors cursor-pointer"
-                                >
-                                    <i className="fas fa-sync-alt text-[10px]"></i>
-                                    <span>{lang === 'pt' ? 'Verificar novamente' : 'Check again'}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <div ref={containerRef} className="giscus-wrapper min-h-[160px]" />
         </section>
     );
 };
