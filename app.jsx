@@ -901,6 +901,60 @@ const PORTFOLIO_DATA = {
             }
         },
         {
+            id: "projecty_mdpro_web",
+            title: "ProjectY - MDPro Web",
+            lockedTitle: { pt: "Desbloqueie com Login no Patreon! (Grátis)", en: "Unlock with Patreon Login! (Free)" },
+            category: "gamedev",
+            categoryLabel: { pt: "Game Dev & WebGL / WASM", en: "Game Dev & WebGL / WASM" },
+            image: "/assets/projecty.jpg",
+            lockedImage: "/assets/projecty_locked.jpg",
+            caseStudyImages: [
+                "/assets/projecty in game.png",
+                "/assets/projecty.jpg"
+            ],
+            repo: "https://github.com/Spet001/ProjectY",
+            isLocked: true,
+            freePatreonUnlock: true,
+            featured: true,
+            tags: ["TypeScript", "Three.js / WebGL", "WebAssembly (OCGCore)", "SQLite WASM", "Lua", "Yu-Gi-Oh!"],
+            description: {
+                pt: "Simulador 3D de Yu-Gi-Oh! para navegador inspirado no Master Duel / MDPro3, construído com Three.js e TypeScript. Executa o motor oficial C++/Lua libocgcore compilado para WebAssembly (Master Rule 5 completa), banco de cartas SQLite WASM (cards.cdb), oponente de IA heurística, editor de decks de 3 colunas (.ydk) e campo 3D interativo.",
+                en: "Browser-based 3D Yu-Gi-Oh! duel simulator inspired by Master Duel / MDPro3, built with Three.js and TypeScript. Runs the genuine C++/Lua libocgcore duel processor compiled to WebAssembly (full Master Rule 5 support), SQLite WASM card database (cards.cdb), heuristic AI opponent, 3-column deck editor (.ydk), and interactive 3D field."
+            },
+            lockedDescription: {
+                pt: "🔒 Este projeto fica oculto até que você faça login com o Patreon (somente login gratuito, não precisa de assinatura)! Clique no botão de Login no modal do Patreon para liberar o card completo e o repositório!",
+                en: "🔒 This project is hidden until you log in with Patreon (free login only, no paid subscription required)! Click the Log In button in the Patreon modal to unlock the full card and repository!"
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Trazer a experiência completa de simulação de Yu-Gi-Oh! (MDPro3 / Master Duel) com mais de 13.000 scripts de cartas em Lua, resolução de Chains complexas e tabuleiro 3D interativo diretamente para o navegador sem exigir instalação desktop.",
+                    en: "Bring the full Yu-Gi-Oh! duel simulation experience (MDPro3 / Master Duel) with 13,000+ Lua card scripts, complex Chain resolution, and an interactive 3D board directly into the browser with zero desktop installation."
+                },
+                solution: {
+                    pt: "Integração do processador de duelos C++/Lua libocgcore em WebAssembly com leitura de banco SQLite (sql-wasm) e script.zip em memória, embaralhamento criptográfico Fisher-Yates (crypto.getRandomValues), proteção estrita contra vazamento de cartas ocultas na GPU/DOM, IA heurística integrada e campo 3D em Three.js com suporte a Mates .glb e customização via IndexedDB.",
+                    en: "Integrated the WebAssembly libocgcore C++/Lua duel processor with in-memory SQLite (sql-wasm) and script.zip loading, cryptographic Fisher-Yates shuffling (crypto.getRandomValues), strict hidden-card masking across 3D textures and DOM inspector, built-in heuristic AI, and a Three.js 3D board supporting .glb Mates and IndexedDB customization."
+                },
+                impact: {
+                    pt: "Simulador 100% client-side rodando a 120+ FPS no navegador com suporte completo à Master Rule 5 (Normal, Tribute, Ritual, Fusion, Synchro, Xyz com Overlay Units 3D, Pendulum e Link), 40+ Structure Decks integrados e código aberto no GitHub.",
+                    en: "100% client-side browser simulator running at 120+ FPS with full Master Rule 5 support (Normal, Tribute, Ritual, Fusion, Synchro, Xyz with 3D Overlay Units, Pendulum, and Link), 40+ built-in Structure Decks, and open-source repository on GitHub."
+                }
+            },
+            lockedCaseStudy: {
+                challenge: {
+                    pt: "[CONTEÚDO OCULTO] Faça login gratuito pelo modal do Patreon (não requer assinatura paga) para liberar o Desafio Técnico.",
+                    en: "[HIDDEN CONTENT] Log in for free via the Patreon modal (no paid subscription required) to unlock the Technical Challenge."
+                },
+                solution: {
+                    pt: "[CONTEÚDO OCULTO] Faça login gratuito pelo modal do Patreon para liberar a Arquitetura, Screenshots e o Repositório no GitHub.",
+                    en: "[HIDDEN CONTENT] Log in for free via the Patreon modal to unlock the Architecture, Screenshots, and GitHub Repository."
+                },
+                impact: {
+                    pt: "[CONTEÚDO OCULTO] Faça login gratuito pelo modal do Patreon para liberar os Resultados do projeto.",
+                    en: "[HIDDEN CONTENT] Log in for free via the Patreon modal to unlock the project Results."
+                }
+            }
+        },
+        {
             id: "fable3_fixer",
             title: "Fable 3 Fixer (App Electron)",
             category: "tools",
@@ -4502,10 +4556,22 @@ const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
     );
 };
 
+const isProjectLocked = (p) => {
+    if (!p || !p.isLocked) return false;
+    if (p.freePatreonUnlock) {
+        return !localStorage.getItem("patreon_free_unlocked") && !localStorage.getItem("relay_md") && !localStorage.getItem("t9_md");
+    }
+    if (p.id === "t9_mod_manager_re") {
+        return !localStorage.getItem("t9_md");
+    }
+    return !localStorage.getItem("relay_md");
+};
+
 const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJournal }) => {
     if (!project) return null;
     const { t } = useContext(LanguageContext);
     const modalRef = React.useRef(null);
+    const isLockedState = isProjectLocked(project);
     const slides = (project.caseStudyImages && project.caseStudyImages.length > 0)
         ? project.caseStudyImages
         : (project.images && project.images.length > 0 ? project.images : [project.image]);
@@ -4516,13 +4582,13 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
     }, [project?.id]);
 
     React.useEffect(() => {
-        if (!project.caseStudyModel && slides.length > 1) {
+        if (!project.caseStudyModel && !isLockedState && slides.length > 1) {
             const timer = setInterval(() => {
                 setSlideIdx(prev => (prev + 1) % slides.length);
             }, 3000);
             return () => clearInterval(timer);
         }
-    }, [project?.id, project?.caseStudyModel, slides.length]);
+    }, [project?.id, project?.caseStudyModel, isLockedState, slides.length]);
 
     React.useEffect(() => {
         // Prevent background scrolling while modal is open
@@ -4549,6 +4615,16 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
+
+    const activeTitle = (isLockedState && project.lockedTitle)
+        ? project.lockedTitle[lang]
+        : (typeof project.title === "object" ? project.title[lang] : project.title);
+    const activeDesc = (isLockedState && project.lockedDescription)
+        ? project.lockedDescription[lang]
+        : project.description[lang];
+    const activeCaseStudy = (isLockedState && project.lockedCaseStudy)
+        ? project.lockedCaseStudy
+        : project.caseStudy;
 
     return (
         <div 
@@ -4580,7 +4656,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                     {project.categoryLabel[lang]}
                 </div>
                 <h3 id="modal-title" className="text-2xl font-bold text-white mb-4">
-                    {typeof project.title === "object" ? project.title[lang] : project.title}
+                    {activeTitle}
                 </h3>
 
                 {/* Media banner using authentic assets or 3D model-viewer */}
@@ -4600,7 +4676,6 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             }}
                         />
                     ) : (() => {
-                        const isLockedState = Boolean(project.isLocked && !localStorage.getItem("relay_md"));
                         const activeMediaSrc = (isLockedState && project.lockedImage) ? project.lockedImage : (slides[slideIdx] || project.image);
                         const isVideoMedia = /\.(mp4|webm)(\?.*)?$/i.test(activeMediaSrc || '');
                         const lockClasses = isLockedState
@@ -4625,7 +4700,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                                     className={`w-full h-full object-contain bg-black/90 rounded-lg transition-all duration-300 ${lockClasses}`}
                                 />
                             )}
-                            {slides.length > 1 && (
+                            {slides.length > 1 && !isLockedState && (
                                 <>
                                     <button
                                         type="button"
@@ -4659,7 +4734,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                         </>
                         );
                     })()}
-                    {(project.isLocked && !localStorage.getItem("relay_md")) && (
+                    {isLockedState && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <i className="fas fa-lock text-white/80 text-6xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i>
                         </div>
@@ -4667,18 +4742,18 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                 </div>
 
                 <p className="text-slate-300 text-sm leading-relaxed mb-6">
-                    {project.description[lang]}
+                    {activeDesc}
                 </p>
 
                 {/* Case Study Breakdown */}
-                {project.caseStudy && (
+                {activeCaseStudy && (
                     <div className="space-y-4 mb-6 bg-black/35 p-5 rounded-xl border border-white/[0.06]">
                         <div>
                             <h4 className="text-xs font-bold uppercase tracking-wider text-rose-400 mb-1 flex items-center gap-1.5">
                                 <i className="fas fa-exclamation-circle"></i> {lang === 'pt' ? 'O Desafio Técnico' : 'The Challenge'}
                             </h4>
                             <p className="text-xs text-slate-300 leading-relaxed">
-                                {project.caseStudy.challenge[lang]}
+                                {activeCaseStudy.challenge[lang]}
                             </p>
                         </div>
 
@@ -4687,7 +4762,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                                 <i className="fas fa-lightbulb"></i> {lang === 'pt' ? 'A Solução Implementada' : 'Engineering Solution'}
                             </h4>
                             <p className="text-xs text-slate-300 leading-relaxed">
-                                {project.caseStudy.solution[lang]}
+                                {activeCaseStudy.solution[lang]}
                             </p>
                         </div>
 
@@ -4696,7 +4771,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                                 <i className="fas fa-chart-line"></i> {lang === 'pt' ? 'Impacto & Resultados' : 'Impact & Results'}
                             </h4>
                             <p className="text-xs text-slate-300 leading-relaxed">
-                                {project.caseStudy.impact[lang]}
+                                {activeCaseStudy.impact[lang]}
                             </p>
                         </div>
                     </div>
@@ -4715,7 +4790,21 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 pt-4 border-t border-white/[0.08]">
-                    {project.repo && (
+                    {isLockedState && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                onClose();
+                                window.dispatchEvent(new CustomEvent('spet:open-patreon-modal'));
+                            }}
+                            className="px-4 py-2 text-xs font-bold rounded-lg bg-[#FF424D] hover:bg-[#e03640] text-white flex items-center gap-2 transition-colors shadow-lg shadow-[#FF424D]/25 cursor-pointer"
+                        >
+                            <i className="fab fa-patreon"></i> {project.freePatreonUnlock
+                                ? (lang === 'pt' ? 'Fazer Login no Patreon (Grátis)' : 'Log In with Patreon (Free)')
+                                : (lang === 'pt' ? 'Desbloquear via Patreon' : 'Unlock via Patreon')}
+                        </button>
+                    )}
+                    {project.repo && !isLockedState && (
                         <a
                             href={project.repo}
                             target={project.id === 'bo2_crossplay_relay' ? "_self" : "_blank"}
@@ -4726,7 +4815,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             <i className={project.repo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i> {project.repoLabel ? (typeof project.repoLabel === "object" ? project.repoLabel[lang] : project.repoLabel) : t('projects.sourceCode')}
                         </a>
                     )}
-                    {project.secondaryRepo && (
+                    {project.secondaryRepo && !isLockedState && (
                         <a
                             href={project.secondaryRepo}
                             target="_blank"
@@ -4736,7 +4825,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             <i className={project.secondaryRepo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i> {project.secondaryRepoLabel ? (typeof project.secondaryRepoLabel === "object" ? project.secondaryRepoLabel[lang] : project.secondaryRepoLabel) : "GitLab (GSC)"}
                         </a>
                     )}
-                    {project.live && project.id !== "free_3d_assets" && project.id !== "technical_journal" && (
+                    {project.live && !isLockedState && project.id !== "free_3d_assets" && project.id !== "technical_journal" && (
                         <a
                             href={project.live}
                             target="_blank"
@@ -4817,7 +4906,7 @@ if (typeof window !== 'undefined') {
 }
 
 const ProjectImage = ({ p, t }) => {
-    const isLockedState = Boolean(p.isLocked && !localStorage.getItem(p.id === "t9_mod_manager_re" ? "t9_md" : "relay_md"));
+    const isLockedState = isProjectLocked(p);
     const src = (isLockedState && p.lockedImage) ? p.lockedImage : p.image;
     const sprite = SPRITE_SHEETS[src];
     const spriteImgRef = useRef(null);
@@ -4970,14 +5059,20 @@ const ProjectsSection = ({ onNavigateJournal }) => {
     const [activeModalProject, setActiveModalProject] = useState(null);
     const [show3DViewer, setShow3DViewer] = useState(false);
     const [viewerModelId, setViewerModelId] = useState('jet');
+    const [patreonUnlockTick, setPatreonUnlockTick] = useState(0);
 
     useEffect(() => {
         const handleOpenViewer = (e) => {
             setViewerModelId(e.detail?.modelId || 'chicken');
             setShow3DViewer(true);
         };
+        const handlePatreonUnlock = () => setPatreonUnlockTick(prev => prev + 1);
         window.addEventListener('spet:open-3d-viewer', handleOpenViewer);
-        return () => window.removeEventListener('spet:open-3d-viewer', handleOpenViewer);
+        window.addEventListener('spet:patreon-unlock', handlePatreonUnlock);
+        return () => {
+            window.removeEventListener('spet:open-3d-viewer', handleOpenViewer);
+            window.removeEventListener('spet:patreon-unlock', handlePatreonUnlock);
+        };
     }, []);
 
     const allProjects = PORTFOLIO_DATA.projectsData;
@@ -5064,10 +5159,12 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                     </div>
                 ) : (
                     <div 
-                        key={`projects-grid-${selectedCategory}-${searchQuery ? 'search' : 'all'}`}
+                        key={`projects-grid-${selectedCategory}-${searchQuery ? 'search' : 'all'}-${patreonUnlockTick}`}
                         className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
                     >
-                        {filteredProjects.map((p, idx) => (
+                        {filteredProjects.map((p, idx) => {
+                            const isLockedState = isProjectLocked(p);
+                            return (
                             <article
                                 key={`${p.id}-${selectedCategory}-${searchQuery}`}
                                 style={{ animationDelay: `${Math.min(idx * 40, 240)}ms` }}
@@ -5099,11 +5196,11 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                             onClick={() => { playSoftClick(); setActiveModalProject(p); }}
                                             className="text-base font-bold text-white group-hover:text-primary transition-colors cursor-pointer line-clamp-1"
                                         >
-                                            {typeof p.title === "object" ? p.title[lang] : p.title}
+                                            {(isLockedState && p.lockedTitle) ? p.lockedTitle[lang] : (typeof p.title === "object" ? p.title[lang] : p.title)}
                                         </h3>
 
                                         <p className="text-slate-300 text-xs mt-2 line-clamp-3 leading-relaxed">
-                                            {p.description[lang]}
+                                            {(isLockedState && p.lockedDescription) ? p.lockedDescription[lang] : p.description[lang]}
                                         </p>
                                     </div>
 
@@ -5120,7 +5217,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                             </button>
 
                                             <div className="flex items-center gap-2">
-                                                {p.repo && (
+                                                {p.repo && !isLockedState && (
                                                     <a
                                                         href={p.repo}
                                                         target={p.id === 'bo2_crossplay_relay' ? "_self" : "_blank"}
@@ -5198,7 +5295,8 @@ const ProjectsSection = ({ onNavigateJournal }) => {
 
                                 </div>
                             </article>
-                        ))}
+                        );
+                        })}
                     </div>
                 )}
 
@@ -10500,8 +10598,13 @@ const App = () => {
             }
             setIsTerminalOpen(true);
         };
+        const handleOpenPatreonModal = () => setShowPatreonModal(true);
         window.addEventListener('spet:open-terminal', handleOpenTerminal);
-        return () => window.removeEventListener('spet:open-terminal', handleOpenTerminal);
+        window.addEventListener('spet:open-patreon-modal', handleOpenPatreonModal);
+        return () => {
+            window.removeEventListener('spet:open-terminal', handleOpenTerminal);
+            window.removeEventListener('spet:open-patreon-modal', handleOpenPatreonModal);
+        };
     }, []);
 
     const handleMusicCommand = (action, payload) => {
@@ -11022,17 +11125,25 @@ const App = () => {
                               </a>
 
                               <button onClick={async (e) => {
+                                  try {
+                                      localStorage.setItem('patreon_free_unlocked', 'true');
+                                      window.dispatchEvent(new Event('spet:patreon-unlock'));
+                                  } catch (err) {}
                                   e.currentTarget.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
                                   try {
                                       const r = await fetch('https://journal.gelain15mj.workers.dev/api/patreon/auth-url');
                                       const d = await r.json();
                                       window.location.href = d.url;
                                   } catch(err) {
-                                      alert(lang === 'pt' ? "Backend de autenticação está offline!" : "Auth backend is offline!");
-                                      e.currentTarget.innerHTML = '<i class="fab fa-patreon"></i> ' + (lang === 'pt' ? 'Entrar com Patreon' : 'Log in with Patreon');
+                                      setShowPatreonModal(false);
                                   }
-                              }} className="w-full py-3 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
-                                  <i className="fab fa-patreon"></i> {lang === 'pt' ? 'Já sou membro (Log in)' : 'Log in with Patreon'}
+                              }} className="w-full py-3 px-4 bg-[#FF424D] hover:bg-[#e03640] text-white font-bold rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2 text-sm text-center leading-tight cursor-pointer">
+                                  <i className="fab fa-patreon shrink-0"></i>
+                                  <span>
+                                      {lang === 'pt'
+                                          ? 'Quero Liberar Entries Exclusivas para quem está logado! (Fazer Log In e liberar entries gratuitas)'
+                                          : 'Unlock Exclusive Entries for Logged-In Users! (Log In & unlock free entries)'}
+                                  </span>
                               </button>
                           </div>
                     </div>
