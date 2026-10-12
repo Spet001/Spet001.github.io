@@ -203,15 +203,19 @@ ${articleHtml}
         // Also write journal/<slug>.html
         fs.writeFileSync(path.join(JOURNAL_DIR, `${slug}.html`), pageHtml, 'utf8');
 
-        // If entry.id is distinct from slug, also generate alias
+        // If entry.id is distinct from slug, also generate alias with noindex,follow
         if (entry.id && entry.id !== slug) {
             const aliasDir = path.join(JOURNAL_DIR, entry.id);
             if (!fs.existsSync(aliasDir)) {
                 fs.mkdirSync(aliasDir, { recursive: true });
             }
-            fs.writeFileSync(path.join(aliasDir, 'index.html'), pageHtml, 'utf8');
-            fs.writeFileSync(path.join(JOURNAL_DIR, `${entry.id}.html`), pageHtml, 'utf8');
-            console.log(`[SSG Journal] Generated alias: /journal/${entry.id}/index.html`);
+            const aliasHtml = pageHtml.replace(
+                /<meta\s+name="robots"\s+content="[^"]*">/,
+                `<meta name="robots" content="noindex, follow">`
+            );
+            fs.writeFileSync(path.join(aliasDir, 'index.html'), aliasHtml, 'utf8');
+            fs.writeFileSync(path.join(JOURNAL_DIR, `${entry.id}.html`), aliasHtml, 'utf8');
+            console.log(`[SSG Journal] Generated alias (noindex -> canonical): /journal/${entry.id}/index.html`);
         }
 
         generatedCount++;
@@ -332,22 +336,13 @@ ${journalCardsHtml}
     entries.forEach(entry => {
         const slug = getSlug(entry);
         const lastmod = parseIsoDate(entry.date);
-        // Primary canonical slug URL
+        // Primary canonical slug URL only (never include duplicate entry_XXXX aliases in sitemap.xml)
         sitemapUrls.push(`  <url>
     <loc>https://spet01.dev/journal/${slug}/</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>${slug === entry.id ? '0.6' : '0.85'}</priority>
   </url>`);
-        // Secondary entry_XXXX alias URL if distinct from slug
-        if (entry.id && entry.id !== slug) {
-            sitemapUrls.push(`  <url>
-    <loc>https://spet01.dev/journal/${entry.id}/</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>`);
-        }
     });
 
     const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -368,16 +363,10 @@ ${journalCardsHtml}
     <priority>0.9</priority>
   </url>
 
-  <!-- Journal Articles (Static Prerendered SEO URLs) -->
+  <!-- Journal Articles (Canonical Static Prerendered SEO URLs Only) -->
 ${sitemapUrls.join('\n')}
 
-  <!-- LLM Context & Privacy -->
-  <url>
-    <loc>https://spet01.dev/llm.txt</loc>
-    <lastmod>${latestDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
+  <!-- Privacy Policy -->
   <url>
     <loc>https://spet01.dev/privacy.html</loc>
     <lastmod>2026-09-30</lastmod>
@@ -388,7 +377,7 @@ ${sitemapUrls.join('\n')}
 `;
 
     fs.writeFileSync(path.join(ROOT_DIR, 'sitemap.xml'), sitemapXml, 'utf8');
-    console.log(`[SSG Journal] Automatically updated /sitemap.xml with ${entries.length} journal entries.`);
+    console.log(`[SSG Journal] Automatically updated /sitemap.xml with ${entries.length} canonical journal entries.`);
     console.log(`[SSG Journal] Successfully generated ${generatedCount} static pages!`);
 }
 
