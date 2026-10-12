@@ -1115,7 +1115,7 @@ const PORTFOLIO_DATA = {
             date: "Oct 11, 2026",
             file: "What-Is-A-WAD-Modern-Games.md",
             category: "Reverse Engineering & File Formats",
-            excerpt: "Tracing the WAD lump filesystem from 1993 DOOM to reverse-engineering Treyarch's undocumented 0x543377AB Demonware WAD containers in Call of Duty and modern id Tech 7/8 resources."
+            excerpt: "Tracing the WAD lump filesystem from 1993 DOOM to reverse-engineering Treyarch's undocumented 0x543377AB Demonware WAD containers (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 resources."
         },
         {
             id: "Optimize-Old-Games-4GB-Patch-DXVK",
@@ -1960,7 +1960,10 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
     // Effect 1: Monolithic Setup & Initial Assets Loading
     useEffect(() => {
-        if (!containerRef.current || !window.THREE) return;
+        if (!containerRef.current || !window.THREE) {
+            if (onLoadedRef.current) onLoadedRef.current();
+            return;
+        }
 
         const scene = new THREE.Scene();
         sceneRef.current = scene;
@@ -1969,13 +1972,19 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
         camera.position.z = 50;
         cameraRef.current = camera;
 
-        const renderer = new THREE.WebGLRenderer({
-            powerPreference: 'high-performance',
-            alpha: false,
-            antialias: true,
-            stencil: false,
-            depth: true
-        });
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({
+                powerPreference: 'high-performance',
+                alpha: false,
+                antialias: true,
+                stencil: false,
+                depth: true
+            });
+        } catch (err) {
+            if (onLoadedRef.current) onLoadedRef.current();
+            return;
+        }
         renderer.setClearColor(0x000000, 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
@@ -5477,13 +5486,15 @@ const JournalSection = ({ onNavigateJournal }) => {
                 <div className="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x journal-entries-scroll" style={{ scrollbarGutter: 'stable' }}>
                     {sortedEntries.map((entry) => {
                         const views = getEntryViews(entry);
+                        const isEntryLocked = entry.file === 'T9-Mod-Manager-RE.md' || entry.id === 'entry_0007';
+                        const slug = isEntryLocked ? entry.id : (entry.file ? entry.file.replace(/\.md$/, '') : entry.id);
                         return (
                             <a
                                 key={entry.id}
-                                href={`/journal/${entry.id}/`}
+                                href={`/journal/${slug}/`}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    if (onNavigateJournal) onNavigateJournal(entry.id);
+                                    if (onNavigateJournal) onNavigateJournal(slug);
                                 }}
                                 className="glass-panel rounded-xl p-5 border border-white/[0.08] hover:border-primary/40 transition-all flex flex-col justify-between group min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start cursor-pointer"
                             >
@@ -9245,6 +9256,10 @@ const JournalComments = ({ articleSlug, articleTitle, lang }) => {
     const REPO_ID = 'R_kgDOUFIsXQ';
 
     useEffect(() => {
+        if (typeof navigator !== 'undefined' && /bot|googlebot|crawler|spider|robot|crawling|bingbot|gptbot|claudebot|perplexitybot|applebot/i.test(navigator.userAgent || '')) {
+            setGiscusState({ status: 'setup_needed', category: null });
+            return;
+        }
         let cancelled = false;
         setGiscusState({ status: 'loading', category: null });
 
@@ -9460,8 +9475,9 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         return Object.keys(viewsMap).length > 0 ? 0 : null;
     }, [viewsMap, getEntrySlug]);
 
-    // When opening /journal/ without a specific post ID, select the #1 most popular entry once views load
+    // When opening /journal/ without a specific post ID, select the #1 most popular entry once views load (for human visitors)
     useEffect(() => {
+        if (typeof navigator !== 'undefined' && /bot|googlebot|crawler|spider|robot|crawling|bingbot|gptbot|claudebot|perplexitybot|applebot/i.test(navigator.userAgent || '')) return;
         if (hasManualSelectRef.current || activePostId) return;
         if (Object.keys(viewsMap).length === 0 || entries.length === 0) return;
         const sortedByPop = [...entries].sort((a, b) => (getEntryViews(b) ?? -1) - (getEntryViews(a) ?? -1));
@@ -9476,6 +9492,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
 
     // Track view in Cloudflare Worker when an article is opened
     useEffect(() => {
+        if (typeof navigator !== 'undefined' && /bot|googlebot|crawler|spider|robot|crawling|bingbot|gptbot|claudebot|perplexitybot|applebot/i.test(navigator.userAgent || '')) return;
         if (!selectedId || entries.length === 0) return;
         const entry = entries.find(e =>
             e.id === selectedId ||
@@ -9885,8 +9902,12 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
 
                             return (
                                 <li key={e.id || e.file}>
-                                    <button
-                                        onClick={() => handleSelectPost(slug)}
+                                    <a
+                                        href={`/journal/${slug}/`}
+                                        onClick={(ev) => {
+                                            ev.preventDefault();
+                                            handleSelectPost(slug);
+                                        }}
                                         className={`w-full text-left p-3 rounded-xl transition-all border flex flex-col gap-1 cursor-pointer clickable ${
                                             isSelected
                                                 ? 'border-primary/60 bg-primary/10 text-white shadow-lg shadow-primary/10'
@@ -9910,7 +9931,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                                             {isEntryLocked && <i className="fas fa-lock text-[#FF424D] mr-1.5 text-[10px]"></i>}
                                             {e.title}
                                         </div>
-                                    </button>
+                                    </a>
                                 </li>
                             );
                         })}
@@ -10444,7 +10465,11 @@ const App = () => {
     }, []);
 
     // --- LOADING SCREEN STATE ---
-    const [isLoadingScreen, setIsLoadingScreen] = useState(true);
+    const isSearchBot = useMemo(() => (
+        typeof navigator !== 'undefined' &&
+        /bot|googlebot|crawler|spider|robot|crawling|bingbot|gptbot|claudebot|perplexitybot|applebot|lighthouse/i.test(navigator.userAgent || '')
+    ), []);
+    const [isLoadingScreen, setIsLoadingScreen] = useState(() => !isSearchBot && currentView !== 'journal');
     const [loadingProgress, setLoadingProgress] = useState(15);
     const [loadingAsset, setLoadingAsset] = useState(() =>
         lang === 'pt' ? 'Iniciando ambiente Espaço 2.0...' : 'Initializing Space 2.0 environment...'
@@ -10926,7 +10951,9 @@ const App = () => {
                 </div>
             )}
 
-            {settings.theme === 'space2' ? (
+            {isSearchBot ? (
+                <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none" />
+            ) : settings.theme === 'space2' ? (
                 <React.Fragment>
                     <SpaceCanvasV2 
                         skyboxIndex={settings.skyboxIndex || 0} 
@@ -10943,7 +10970,7 @@ const App = () => {
             ) : <SpaceCanvas theme={settings.theme} />}
 
             {/* Main Website Content - hidden while loading to prevent overlap */}
-            <div className={`transition-opacity duration-700 ${isLoadingScreen && !isFadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+            <div className={`transition-opacity duration-700 ${isLoadingScreen && !isFadeOut && !isSearchBot && currentView !== 'journal' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
                 <TopBar
                     onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
                     onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(prev => !prev); }}
