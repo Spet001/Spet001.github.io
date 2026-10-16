@@ -21,6 +21,19 @@
 > ### **The Theft of the ZPGDK GSC Injector:**
 > And the shameless behavior doesn't stop with the Relay: people have also been actively stealing and rebranding my **ZPGDK GSC Injector**.
 > Let this be etched into the record for the entire Call of Duty modding and reverse engineering ecosystem: **The first and only functional GSC injector for the Microsoft Store / Xbox PC (GDK) edition of Call of Duty was created by Spet. Anyone else claiming authorship of a Microsoft Store GSC injector is a fraud distributing stolen code.**
+>
+> ---
+>
+> ### **Update (October 15, 2026): Documenting Stolen Code Usage, Forum Takedowns & Opportunistic Bad Actors**
+> As time progresses, bad actors and opportunistic leechers continue to weaponize the compromised private repository. We are actively documenting each violation and enforcing authorship rights across platforms:
+>
+> 1. **UnknownCheats Post Takedown (Post #4821403):**  
+>    A thread discussing and attempting to redistribute the stolen repository was posted to the UnknownCheats forum ([Post #4821403](https://www.unknowncheats.me/forum/4821403-post1.html)). Following our formal complaint providing irrefutable proof of unauthorized source code theft from our private repository, the **UnknownCheats administrative team reviewed the evidence and officially took down / purged the post**. We commend the UnknownCheats moderation staff for upholding developer integrity and refusing to host stolen intellectual property.
+>
+> 2. **YouTube Exploitation & Rebranding — "B33 AI":**  
+>    A YouTuber and bad actor operating under the alias **B33 AI** has published multiple videos ([Watch Evidence Video](https://www.youtube.com/watch?v=e9-UFJnv6CY)) showcasing the Crossplay Relay.  
+>    **Every single one of their videos is running our original, stolen Relay code verbatim.** The only modification they made was slapping a generic Real-Time Modding (RTM) tool interface over our proprietary network translation pipeline and memory patches, claiming the achievement as their own while completely scrubbing the names of the real creators (**Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet**).  
+>    Wrapping someone else's stolen protocol translation engine and memory patcher in a basic RTM UI does **not** make you an engineer, and it does **not** grant you authorship.
 
 ---
 

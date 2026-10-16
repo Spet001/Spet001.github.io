@@ -1102,6 +1102,22 @@ const PORTFOLIO_DATA = {
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
         {
+            id: "DEVLOG-Outcaster-Unity-6",
+            title: "DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival",
+            date: "Oct 16, 2026",
+            file: "DEVLOG-Outcaster-Unity-6.md",
+            category: "Game Dev & Engine Tooling",
+            excerpt: "Rebuilding Outcaster from the ground up in Unity 6 (DX11): developing custom LIVE 3D HUD preview tools for the Inspector to calibrate 2.5D weapons without play mode, and engineering a Zombies-style Survival Mode."
+        },
+        {
+            id: "Sparky-Rush-Steam-Release",
+            title: "Sparky Rush: Purrils in Pawsville Launches on Steam! (Go Check It Out!)",
+            date: "Oct 16, 2026",
+            file: "Sparky-Rush-Steam-Release.md",
+            category: "Commercial Game Dev & QA",
+            excerpt: "Sparky Rush: Purrils in Pawsville is officially live on Steam by Converting Minds! QA breakdown: finding 100+ collider flaws, fixing ultrawide UI issues, solving 20+ softlocks, and 60 FPS profiling on a GT 710."
+        },
+        {
             id: "How-To-Optimize-ThreeJS-Scene-120-FPS",
             title: "How to Optimize a Three.js Scene for 120+ FPS",
             date: "Oct 11, 2026",

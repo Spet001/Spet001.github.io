@@ -1,5 +1,19 @@
 [
     {
+        "id": "entry_0016",
+        "title": "DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival",
+        "date": "Oct 16, 2026",
+        "category": "Game Dev & Engine Tooling",
+        "file": "DEVLOG-Outcaster-Unity-6.md"
+    },
+    {
+        "id": "entry_0015",
+        "title": "Sparky Rush: Purrils in Pawsville Launches on Steam! (Go Check It Out!)",
+        "date": "Oct 16, 2026",
+        "category": "Commercial Game Dev & QA",
+        "file": "Sparky-Rush-Steam-Release.md"
+    },
+    {
         "id": "entry_0014",
         "title": "How to Optimize a Three.js Scene for 120+ FPS",
         "date": "Oct 11, 2026",
