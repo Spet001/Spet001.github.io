@@ -168,10 +168,18 @@ const PORTFOLIO_DATA = {
                 themeSpace2: "Espaço 2.0 (Beta)",
                 themeSpaceSub: "Foguete & Astronauta",
                 themeSpace2Sub: "Modelos 3D Interativos",
+                themeSpace3: "Espaço 3.0 (Beta)",
+                themeSpace3Sub: "Motor Cósmico 3D & Mapa Galáctico",
                 themeSky: "Céu Terrestre",
                 themeSkySub: "Caças & Paraquedista",
                 themeSky2: "Céu Terrestre 2.0 (Beta)",
                 themeSky2Sub: "Jatos 3D & Paraquedista",
+                volumeMaster: "Volume Geral",
+                volumeMasterDesc: "Ganho master de saída de áudio (Música e SFX)",
+                volumeMusic: "Volume da Música",
+                volumeMusicDesc: "Trilha sonora ambiente e temas dos setores galácticos",
+                volumeSfx: "Volume dos Efeitos (SFX)",
+                volumeSfxDesc: "Efeitos de telemetria Mass Effect, dobra espacial e interface",
                 easterSign: "Placa secreta do Gant Bridge",
                 easterSignDesc: "Exibe a placa clássica do GTA na barra de navegação superior",
                 reset: "Restaurar padrões",
@@ -315,10 +323,18 @@ const PORTFOLIO_DATA = {
                 themeSpace2: "Space 2.0 (Beta)",
                 themeSpaceSub: "Rocket & Astronaut",
                 themeSpace2Sub: "Interactive 3D Models",
+                themeSpace3: "Space 3.0 (Beta)",
+                themeSpace3Sub: "3D Cosmic Engine & Galaxy Map",
                 themeSky: "Earth Sky",
                 themeSkySub: "Fighter Jets & Parachuter",
                 themeSky2: "Earth Sky 2.0 (Beta)",
                 themeSky2Sub: "3D Jets & Parachuter",
+                volumeMaster: "Master Volume",
+                volumeMasterDesc: "Master audio output gain (Music & SFX)",
+                volumeMusic: "Music Volume",
+                volumeMusicDesc: "Galactic soundtrack and sector-specific themes",
+                volumeSfx: "Sound Effects (SFX)",
+                volumeSfxDesc: "Mass Effect relay warp, telemetry and UI blips",
                 easterSign: "Gant Bridge Secret Sign",
                 easterSignDesc: "Display legacy Easter Egg sign in the top navigation bar",
                 reset: "Reset to defaults",
@@ -3235,6 +3251,1658 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
 
 
+// --- MASS EFFECT SOUND SYSTEM ---
+const playCosmicSfx = (sfxKey, settings = {}) => {
+    try {
+        const master = (settings?.masterVolume ?? 40) / 100;
+        const sfx = (settings?.sfxVolume ?? 40) / 100;
+        // User requested 40% real sound output at default (40% master, 40% sfx):
+        const realVol = Math.min(1.0, (master / 0.4) * (sfx / 0.4) * 0.4);
+        if (realVol <= 0.005) return;
+
+        const files = {
+            warp: '/audio/mass effect/ME - Ambient - Mass Relay Jump.m4a',
+            anomaly: '/audio/mass effect/ME - EDI - Anomally Detected.m4a',
+            scan: '/audio/mass effect/ME - EDI - Scans Found Something.m4a',
+            blip: '/audio/mass effect/ME - Interface - Triple Blip.m4a',
+            project: '/audio/mass effect/ME - Interface - War Asset.m4a',
+            terminal: '/audio/mass effect/ME - Glyph- Terminal Updated.m4a'
+        };
+        const src = files[sfxKey];
+        if (!src) return;
+        const audio = new Audio(src);
+        audio.volume = Math.max(0, Math.min(1, realVol));
+        audio.play().catch(() => {});
+    } catch (e) {}
+};
+
+// --- DYNAMIC SECTOR BACKGROUND MUSIC MANAGER ---
+const CosmicTrackPlayer = ({
+    activeSectorTrack,
+    settings,
+    isJukeboxActive,
+    lang
+}) => {
+    const iframeRef = useRef(null);
+    const [isMuted, setIsMuted] = useState(false);
+
+    const trackMap = {
+        galaxy: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme (Uncharted Worlds)' },
+        core: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme' },
+        gamedev: { id: 'KI58_0T07Vs', title: 'Starfield OST — Into the Starfield' },
+        lowlevel: { id: 'UBLOvSb56Vc', title: 'Mass Effect 2 OST — The Illusive Man' },
+        tools: { id: '6RO7K4W-c9g', title: 'Mass Effect Trilogy — Ambient Galaxy Map' },
+        solar: { id: 'q657rEkgfKs', title: 'DOOM OST — E1M1: At Doom\'s Gate' },
+        delicia: { id: '9wVmCLtuUx0', title: 'Jailson Mendes — Suco de Laranja (Delícia Theme)' },
+        chicken: { id: 'KI58_0T07Vs', title: 'Cosmic Poultry Flight' }
+    };
+
+    const trackInfo = trackMap[activeSectorTrack];
+    const targetVideoId = trackInfo ? trackInfo.id : null;
+
+    // Calculate effective volume: 40% master + 40% music = 40% real output (0-100 scale for YouTube)
+    const master = (settings?.masterVolume ?? 40) / 100;
+    const music = (settings?.musicVolume ?? 40) / 100;
+    const effectiveMusicVol = Math.min(100, Math.round(((master / 0.4) * (music / 0.4) * 0.4) * 100));
+
+    // Priority: If Jukebox is active or musicPlayer is disabled, target volume is 0 / muted
+    const shouldMute = isJukeboxActive || !settings?.musicPlayer || isMuted || effectiveMusicVol === 0 || !targetVideoId;
+
+    const sendCommand = useCallback((func, args = []) => {
+        if (iframeRef.current && iframeRef.current.contentWindow) {
+            try {
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: func,
+                    args: args
+                }), '*');
+            } catch (e) {}
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!targetVideoId) {
+            sendCommand('pauseVideo');
+            return;
+        }
+        if (shouldMute) {
+            sendCommand('setVolume', [0]);
+            sendCommand('mute');
+        } else {
+            sendCommand('unMute');
+            sendCommand('setVolume', [effectiveMusicVol]);
+            sendCommand('playVideo');
+        }
+    }, [shouldMute, effectiveMusicVol, targetVideoId, sendCommand]);
+
+    if (!targetVideoId) return null;
+
+    return (
+        <React.Fragment>
+            <div
+                id="cosmic-audio-container"
+                style={{ position: 'fixed', width: '1px', height: '1px', opacity: 0.01, pointerEvents: 'none', zIndex: -1, overflow: 'hidden', bottom: 0, left: 0 }}
+                aria-hidden="true"
+            >
+                <iframe
+                    ref={iframeRef}
+                    key={targetVideoId}
+                    width="100"
+                    height="100"
+                    src={`https://www.youtube-nocookie.com/embed/${targetVideoId}?autoplay=1&loop=1&playlist=${targetVideoId}&enablejsapi=1&playsinline=1&rel=0${typeof window !== 'undefined' && window.location.origin ? `&origin=${encodeURIComponent(window.location.origin)}` : ''}`}
+                    title={trackInfo?.title || 'Cosmic Track'}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    onLoad={() => {
+                        if (!shouldMute) {
+                            sendCommand('unMute');
+                            sendCommand('setVolume', [effectiveMusicVol]);
+                            sendCommand('playVideo');
+                        } else {
+                            sendCommand('setVolume', [0]);
+                            sendCommand('mute');
+                        }
+                    }}
+                />
+            </div>
+            {!isJukeboxActive && settings?.musicPlayer && targetVideoId && (
+                <div className="fixed bottom-4 left-4 z-40 hidden sm:flex items-center gap-2 px-3 py-1.5 bg-black/85 border border-white/10 rounded-full text-xs text-slate-300 backdrop-blur-md shadow-lg select-none">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span className="font-mono text-[10px] text-cyan-300 font-semibold truncate max-w-[200px]">
+                        {trackInfo?.title}
+                    </span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-200 font-mono">
+                        {effectiveMusicVol}%
+                    </span>
+                    <button
+                        type="button"
+                        onClick={() => setIsMuted(prev => !prev)}
+                        className="text-slate-400 hover:text-white ml-1"
+                        title={isMuted ? (lang === 'pt' ? 'Ativar som' : 'Unmute') : (lang === 'pt' ? 'Mutar' : 'Mute')}
+                    >
+                        <i className={`fas ${isMuted ? 'fa-volume-mute text-rose-400' : 'fa-volume-low text-cyan-400'} text-[10px]`}></i>
+                    </button>
+                </div>
+            )}
+        </React.Fragment>
+    );
+};
+// Full Space 3.0 Cosmic Engine & Galaxy Map implementation
+// Three.js r128 + React component with Mass Effect audio, GLB orbital docking, and procedural planetary shaders
+
+const SpaceCanvasV3 = ({
+    skyboxIndex = 0,
+    onLoadingProgress,
+    onLoaded,
+    settings,
+    lang = 'pt',
+    isJukeboxPlaying = false
+}) => {
+    const containerRef = useRef(null);
+    const overlayRef = useRef(null);
+    const [viewMode, setViewMode] = useState('GALAXY_MAP'); // 'GALAXY_MAP' | 'SECTOR_FLIGHT'
+    const [activeClusterId, setActiveClusterId] = useState('core');
+    const [activeTrack, setActiveTrack] = useState('galaxy');
+    const [unlockedSectors, setUnlockedSectors] = useState(() => {
+        try {
+            const saved = localStorage.getItem('spet_space3_unlocked');
+            if (saved) return JSON.parse(saved);
+        } catch (e) {}
+        return { delicia: false, chicken: false };
+    });
+    const [showAttributions, setShowAttributions] = useState(false);
+
+    const onProgressRef = useRef(onLoadingProgress);
+    const onLoadedRef = useRef(onLoaded);
+    useEffect(() => {
+        onProgressRef.current = onLoadingProgress;
+        onLoadedRef.current = onLoaded;
+    });
+
+    const unlockSector = useCallback((sectorId) => {
+        setUnlockedSectors(prev => {
+            if (prev[sectorId]) return prev;
+            const next = { ...prev, [sectorId]: true };
+            try {
+                localStorage.setItem('spet_space3_unlocked', JSON.stringify(next));
+            } catch (e) {}
+            return next;
+        });
+    }, []);
+
+    // Configuration for sectors and orbital planets
+    const CLUSTERS = useMemo(() => [
+        {
+            id: 'core',
+            name: { pt: 'Setor Central (Hub SpetDev)', en: 'Core Sector (SpetDev Hub)' },
+            subtitle: { pt: 'Portfólio Web & Journal Técnico', en: 'Web Portfolio & Technical Journal' },
+            track: 'core',
+            pos: new THREE.Vector3(0, 0, 0),
+            color: 0x38bdf8,
+            gold: true,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.04, 0.62, 0.56),
+                c2: new THREE.Vector3(0.08, 0.52, 0.88),
+                c3: new THREE.Vector3(0.32, 0.12, 0.65),
+                c4: new THREE.Vector3(0.95, 0.45, 0.12)
+            },
+            planets: [
+                {
+                    id: 'portfolio_web',
+                    projectId: 'portfolio_web',
+                    name: 'SpetDev Prime',
+                    palette: 'terran',
+                    radius: 4.6,
+                    pos: new THREE.Vector3(18, -4, -15),
+                    modelPath: '/3d/spetdev_logo.glb',
+                    modelScale: 3.2,
+                    rotSpeed: 0.008,
+                    hasRings: false,
+                    desc: { pt: 'Portfólio Web Fullstack & Engine 3D Three.js', en: 'Fullstack Web Portfolio & Three.js 3D Engine' },
+                    tags: ['React', 'Three.js', 'SSG', 'Tailwind', 'Audio']
+                },
+                {
+                    id: 'technical_journal',
+                    projectId: 'technical_journal',
+                    name: 'Codex Reversum',
+                    palette: 'gas_cyan',
+                    radius: 5.2,
+                    pos: new THREE.Vector3(-18, 7, -65),
+                    modelPath: '/3d/journal.glb',
+                    modelScale: 3.5,
+                    rotSpeed: 0.006,
+                    hasRings: true,
+                    desc: { pt: 'Technical Journal — Engenharia Reversa & Research', en: 'Technical Journal — Reverse Engineering & Research' },
+                    tags: ['Reverse Engineering', 'IDA Pro', 'C++', 'Bytecode VM'],
+                    attribution: '"Journal" (https://skfb.ly/66z8C) by FlukierJupiter (CC-BY 4.0)'
+                }
+            ]
+        },
+        {
+            id: 'gamedev',
+            name: { pt: 'Setor de Game Dev & Engines', en: 'Game Dev & Engines Sector' },
+            subtitle: { pt: 'Sistemas em C#, Unity 6 & Shaders', en: 'C# Game Systems, Unity 6 & Shaders' },
+            track: 'gamedev',
+            pos: new THREE.Vector3(-14.5, 0.4, 6.2),
+            color: 0xa855f7,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.45, 0.08, 0.72),
+                c2: new THREE.Vector3(0.68, 0.12, 0.88),
+                c3: new THREE.Vector3(0.12, 0.35, 0.75),
+                c4: new THREE.Vector3(0.95, 0.25, 0.58)
+            },
+            planets: [
+                {
+                    id: 'sparky_rush_qa',
+                    projectId: 'sparky_rush_qa',
+                    name: 'Pawsville',
+                    palette: 'lava',
+                    radius: 4.5,
+                    pos: new THREE.Vector3(20, -5, -20),
+                    modelPath: '/3d/sparky_rush_3d_logo.glb',
+                    modelScale: 3.0,
+                    rotSpeed: 0.009,
+                    desc: { pt: 'Sparky Rush: Purrils in Pawsville (Steam QA)', en: 'Sparky Rush: Purrils in Pawsville (Steam QA)' },
+                    tags: ['QA Testing', 'Unity', 'C#', 'Steam', 'Physics']
+                },
+                {
+                    id: 'outcaster_fps',
+                    projectId: 'outcaster_fps',
+                    name: 'Outcast Forge',
+                    palette: 'desert',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(-19, 6, -65),
+                    modelPath: '/3d/pistol_overheat_1.glb',
+                    modelScale: 3.6,
+                    rotSpeed: 0.007,
+                    desc: { pt: 'Outcaster / Ou2caster (Retro Boomer Shooter Engine)', en: 'Outcaster / Ou2caster (Retro Boomer Shooter Engine)' },
+                    tags: ['Unity 6', 'C#', 'Retro FPS', 'AI State Machine']
+                },
+                {
+                    id: 'pau_no_gato_game',
+                    projectId: 'pau_no_gato_game',
+                    name: 'Cop Enclave',
+                    palette: 'moon',
+                    radius: 4.0,
+                    pos: new THREE.Vector3(18, -4, -110),
+                    modelPath: '/3d/cop.glb',
+                    modelScale: 3.2,
+                    rotSpeed: 0.008,
+                    desc: { pt: 'Pau no Gato (Retro FPS Comédia)', en: 'Pau no Gato (Retro Comedy FPS)' },
+                    tags: ['Unity', 'C#', 'Retro Shooter', 'Game Design']
+                },
+                {
+                    id: 'free_3d_assets',
+                    projectId: 'free_3d_assets',
+                    name: 'Asset Vault',
+                    palette: 'ice',
+                    radius: 4.3,
+                    pos: new THREE.Vector3(-18, 6, -155),
+                    modelPath: '/3d/Paratrooper.glb',
+                    modelScale: 3.4,
+                    rotSpeed: 0.006,
+                    desc: { pt: 'Assets 3D Open Source para Desenvolvedores', en: 'Open Source 3D Assets for Game Developers' },
+                    tags: ['3D Modeling', 'Blender', 'GLB', 'Open Source']
+                },
+                {
+                    id: 'projecty_mdpro_web',
+                    projectId: 'projecty_mdpro_web',
+                    name: 'Ryzeal Station',
+                    palette: 'gas_cyan',
+                    radius: 5.4,
+                    pos: new THREE.Vector3(19, -5, -200),
+                    modelPath: '/3d/ryzealdetonator_YGO.glb',
+                    modelScale: 3.5,
+                    rotSpeed: 0.005,
+                    hasRings: true,
+                    desc: { pt: 'ProjectY / MDPro3 Web Client (Yu-Gi-Oh! Simulator)', en: 'ProjectY / MDPro3 Web Client (Yu-Gi-Oh! Simulator)' },
+                    tags: ['WebAssembly', 'C++', 'Networking', 'Emscripten']
+                }
+            ]
+        },
+        {
+            id: 'lowlevel',
+            name: { pt: 'Setor de Baixo Nível & Reversing', en: 'Low-Level & Reversing Sector' },
+            subtitle: { pt: 'GSC VM, Memory Hooking & UWP/GDK', en: 'GSC VM, Memory Hooking & UWP/GDK' },
+            track: 'lowlevel',
+            pos: new THREE.Vector3(15.2, -0.6, -7.8),
+            color: 0xf59e0b,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.55, 0.18, 0.04),
+                c2: new THREE.Vector3(0.85, 0.35, 0.08),
+                c3: new THREE.Vector3(0.12, 0.45, 0.65),
+                c4: new THREE.Vector3(0.95, 0.72, 0.15)
+            },
+            planets: [
+                {
+                    id: 'resurge_client',
+                    projectId: 'resurge_client',
+                    name: 'Resurge Citadel',
+                    palette: 'lava',
+                    radius: 4.6,
+                    pos: new THREE.Vector3(21, -6, -20),
+                    modelPath: '/3d/ray_gun.glb',
+                    modelScale: 3.2,
+                    rotSpeed: 0.009,
+                    desc: { pt: 'Resurge Client (BOCW Reversing & UWP GDK)', en: 'Resurge Client (BOCW Reversing & UWP GDK)' },
+                    tags: ['C++', 'Assembly x64', 'UWP Bypass', 'MinHook'],
+                    attribution: '"RaY Gun" (https://skfb.ly/oHYqX) by SovietCream (CC-BY 4.0)'
+                },
+                {
+                    id: 'cw_gsc_injector',
+                    projectId: 'cw_gsc_injector',
+                    name: 'Mystery Outpost',
+                    palette: 'desert',
+                    radius: 4.4,
+                    pos: new THREE.Vector3(-19, 7, -60),
+                    modelPath: '/3d/mystery_box.glb',
+                    modelScale: 3.2,
+                    rotSpeed: 0.007,
+                    desc: { pt: 'CW GSC Injector (MS Store & Battle.net)', en: 'CW GSC Injector (MS Store & Battle.net)' },
+                    tags: ['C++', 'DLL Injection', 'GSC Bytecode', 'Black Ops Cold War'],
+                    attribution: '"Mystery Box" (https://skfb.ly/oQNrK) by MDTOWERZ (CC-BY 4.0)'
+                },
+                {
+                    id: 'bo2_bo1_msclients',
+                    projectId: 'bo2_bo1_msclients',
+                    name: 'ZPGDK Core',
+                    palette: 'ice',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(20, -5, -100),
+                    modelPath: '/3d/ram_stick.glb',
+                    modelScale: 3.4,
+                    rotSpeed: 0.006,
+                    desc: { pt: 'ZPGDK (BO2 & BO1 MS Store Clients & Hooking)', en: 'ZPGDK (BO2 & BO1 MS Store Clients & Hooking)' },
+                    tags: ['C++', 'Memory Patching', 'UWP/GDK', 'Demonware']
+                },
+                {
+                    id: 'gsc_dumps_and_sources',
+                    projectId: 'gsc_dumps_and_sources',
+                    name: 'GSC Vault',
+                    palette: 'terran',
+                    radius: 4.2,
+                    pos: new THREE.Vector3(-18, 6, -140),
+                    modelPath: '/3d/lock_and_key.glb',
+                    modelScale: 3.2,
+                    rotSpeed: 0.008,
+                    desc: { pt: 'GSC Dumps & VM Analysis (Opcode Decompiler)', en: 'GSC Dumps & VM Analysis (Opcode Decompiler)' },
+                    tags: ['Bytecode VM', 'Decompiler', 'Reverse Engineering'],
+                    attribution: '"Lock And Key" (https://skfb.ly/oTpNS) by Mehdi Shahsavan (CC-BY 4.0)'
+                },
+                {
+                    id: 't6_gsc_mods',
+                    projectId: 't6_gsc_mods',
+                    name: 'Atomic Array',
+                    palette: 'lava',
+                    radius: 4.5,
+                    pos: new THREE.Vector3(19, -4, -180),
+                    modelPath: '/3d/spet_t6_nuke.glb',
+                    modelScale: 3.3,
+                    rotSpeed: 0.009,
+                    desc: { pt: 'T6 Open Source GSC Mods (Zombies & MP)', en: 'T6 Open Source GSC Mods (Zombies & MP)' },
+                    tags: ['GSC', 'Modding', 'Black Ops II', 'Game Logic']
+                },
+                {
+                    id: 't9_mod_manager_re',
+                    projectId: 't9_mod_manager_re',
+                    name: 'Black Ops Terminal',
+                    palette: 'moon',
+                    radius: 4.1,
+                    pos: new THREE.Vector3(-17, 6, -220),
+                    modelPath: '/3d/logo_bo3.glb',
+                    modelScale: 3.2,
+                    rotSpeed: 0.007,
+                    desc: { pt: 'T9 Mod Manager RE (Reverse Engineering)', en: 'T9 Mod Manager RE (Reverse Engineering)' },
+                    tags: ['C#', '.NET', 'Reverse Engineering', 'Process Memory']
+                },
+                {
+                    id: 'bo2_crossplay_relay',
+                    projectId: 'bo2_crossplay_relay',
+                    name: 'Relay Satellite',
+                    palette: 'gas_cyan',
+                    radius: 5.4,
+                    pos: new THREE.Vector3(18, -5, -260),
+                    modelPath: '/3d/space_satellite.glb',
+                    modelScale: 3.5,
+                    rotSpeed: 0.005,
+                    hasRings: true,
+                    desc: { pt: 'BO2 Crossplay Relay (Dedicated Gateway)', en: 'BO2 Crossplay Relay (Dedicated Gateway)' },
+                    tags: ['Go / Node.js', 'UDP Socket', 'Networking', 'Reverse Engineering']
+                }
+            ]
+        },
+        {
+            id: 'tools',
+            name: { pt: 'Setor de Ferramentas & Modding', en: 'Tools & Modding Sector' },
+            subtitle: { pt: 'Patches de Memória, GDK & Utilidades', en: 'Memory Patches, GDK & Utilities' },
+            track: 'tools',
+            pos: new THREE.Vector3(-9.8, -0.5, -16.4),
+            color: 0x10b981,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.04, 0.45, 0.28),
+                c2: new THREE.Vector3(0.12, 0.65, 0.42),
+                c3: new THREE.Vector3(0.05, 0.32, 0.65),
+                c4: new THREE.Vector3(0.25, 0.88, 0.55)
+            },
+            planets: [
+                {
+                    id: 'fable3_fixer',
+                    projectId: 'fable3_fixer',
+                    name: 'Albion Sanctuary',
+                    palette: 'moon',
+                    radius: 4.5,
+                    pos: new THREE.Vector3(19, -5, -20),
+                    modelPath: '/3d/guild_seal.glb',
+                    modelScale: 3.4,
+                    rotSpeed: 0.008,
+                    desc: { pt: 'Fable 3 GFWL & DLC Fixer (Auto-Patcher)', en: 'Fable 3 GFWL & DLC Fixer (Auto-Patcher)' },
+                    tags: ['C#', 'GFWL Bypass', 'Memory Patching']
+                },
+                {
+                    id: 'ff13_fix_ms_store',
+                    projectId: 'ff13_fix_ms_store',
+                    name: 'Cocoon Expanse',
+                    palette: 'ice',
+                    radius: 4.4,
+                    pos: new THREE.Vector3(-18, 6, -65),
+                    modelPath: '/3d/cactuar_final_fantasy.glb',
+                    modelScale: 3.6,
+                    rotSpeed: 0.007,
+                    desc: { pt: 'FFXIII MS Store Fix (DirectX & Frame Pacing)', en: 'FFXIII MS Store Fix (DirectX & Frame Pacing)' },
+                    tags: ['DirectX', 'Framerate Optimization', 'Hex Editing'],
+                    attribution: '"Cactuar (Final Fantasy)" (https://skfb.ly/oFy9t) by mescri (CC-BY 4.0)'
+                },
+                {
+                    id: 'autoparms_yakuza',
+                    projectId: 'autoparms_yakuza',
+                    name: 'Kamurocho Neon',
+                    palette: 'desert',
+                    radius: 4.6,
+                    pos: new THREE.Vector3(18, -4, -110),
+                    modelPath: '/3d/kamuro_sign.glb',
+                    modelScale: 3.5,
+                    rotSpeed: 0.008,
+                    desc: { pt: 'AutoParms Yakuza (Dragon Engine Modder)', en: 'AutoParms Yakuza (Dragon Engine Modder)' },
+                    tags: ['Python', 'File Parser', 'Dragon Engine']
+                }
+            ]
+        },
+        {
+            id: 'solar',
+            name: { pt: 'Sistema Solar (UAC Telemetry)', en: 'Solar System (UAC Telemetry)' },
+            subtitle: { pt: 'Terra, Marte, Fobos, Deimos & DOOM', en: 'Earth, Mars, Phobos, Deimos & DOOM' },
+            track: 'solar',
+            pos: new THREE.Vector3(18.0, 0.5, 12.0),
+            color: 0xef4444,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.65, 0.08, 0.04),
+                c2: new THREE.Vector3(0.88, 0.22, 0.06),
+                c3: new THREE.Vector3(0.22, 0.12, 0.35),
+                c4: new THREE.Vector3(1.00, 0.45, 0.12)
+            },
+            planets: [
+                {
+                    id: 'solar_earth',
+                    specialType: 'DOOM_EARTH',
+                    name: 'Terra (Hell on Earth)',
+                    palette: 'terran',
+                    radius: 5.0,
+                    pos: new THREE.Vector3(21, -5, -20),
+                    modelPath: '/3d/earth.glb',
+                    modelScale: 4.2,
+                    rotSpeed: 0.005,
+                    desc: { pt: 'Clique na Terra para iniciar DOOM II (MAP01)', en: 'Click Earth to launch DOOM II (MAP01)' },
+                    tags: ['UZDoom', 'WebAssembly', 'DOOM II', 'MAP01']
+                },
+                {
+                    id: 'solar_mars',
+                    specialType: 'DOOM_MARS',
+                    name: 'Marte (Phobos & Deimos)',
+                    palette: 'lava',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(-18, 6, -65),
+                    modelPath: '/3d/mars.glb',
+                    modelScale: 4.4,
+                    rotSpeed: 0.006,
+                    desc: { pt: 'Clique em Phobos (E1M1) ou Deimos (E2M1) para jogar DOOM', en: 'Click Phobos (E1M1) or Deimos (E2M1) to play DOOM' },
+                    tags: ['UZDoom', 'WebAssembly', 'The Ultimate DOOM']
+                }
+            ]
+        },
+        {
+            id: 'delicia',
+            isSecret: true,
+            name: { pt: 'Setor Secreto Delícia', en: 'Secret Delícia Sector' },
+            subtitle: { pt: 'Jailson Mendes & Laranjas Espaciais', en: 'Jailson Mendes & Space Oranges' },
+            track: 'delicia',
+            pos: new THREE.Vector3(12.0, 2.5, -22.0),
+            color: 0xf97316,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.75, 0.32, 0.02),
+                c2: new THREE.Vector3(0.95, 0.52, 0.08),
+                c3: new THREE.Vector3(0.35, 0.12, 0.02),
+                c4: new THREE.Vector3(1.00, 0.75, 0.15)
+            },
+            planets: [
+                {
+                    id: 'jailson_prime',
+                    specialType: 'DELICIA_JAILSON',
+                    name: 'Planeta Jailson',
+                    palette: 'desert',
+                    radius: 5.2,
+                    pos: new THREE.Vector3(18, -4, -30),
+                    modelPath: '/3d/jailson.glb',
+                    modelScale: 4.2,
+                    rotSpeed: 0.008,
+                    desc: { pt: 'Ai que delícia, cara! O lendário suco de laranja cósmico.', en: 'The legendary cosmic orange juice.' },
+                    tags: ['Easter Egg', 'Jailson Mendes', 'Suco de Laranja']
+                }
+            ]
+        },
+        {
+            id: 'chicken',
+            isSecret: true,
+            name: { pt: 'Setor Secreto das Galinhas', en: 'Secret Poultry Sector' },
+            subtitle: { pt: 'Mega Chicken & Asteroides Cósmicos', en: 'Mega Chicken & Cosmic Asteroids' },
+            track: 'chicken',
+            pos: new THREE.Vector3(-22.0, 1.8, -8.0),
+            color: 0x38bdf8,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.12, 0.45, 0.88),
+                c2: new THREE.Vector3(0.35, 0.75, 1.00),
+                c3: new THREE.Vector3(0.65, 0.32, 0.85),
+                c4: new THREE.Vector3(0.95, 0.85, 0.25)
+            },
+            planets: [
+                {
+                    id: 'chicken_prime',
+                    specialType: 'CHICKEN_PRIME',
+                    name: 'Celestial Mega-Chicken',
+                    palette: 'moon',
+                    radius: 5.4,
+                    pos: new THREE.Vector3(-18, 6, -30),
+                    modelPath: '/3d/space_chicken!.glb',
+                    modelScale: 4.5,
+                    rotSpeed: 0.012,
+                    desc: { pt: 'BWAAAWK! O epicentro avícola do universo observável.', en: 'BWAAAWK! The poultry epicenter of deep space.' },
+                    tags: ['Easter Egg', 'Space Chicken', 'Poultry Protocol'],
+                    attribution: '"Egg" (https://skfb.ly/6uALr) by joe_carrot (CC-BY 4.0)'
+                }
+            ]
+        }
+    ], [lang]);
+
+    // Canvas & Three.js Mount Hook
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 2500);
+        camera.position.set(0, 18, 55);
+        camera.lookAt(0, 0, 0);
+
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({
+                powerPreference: 'high-performance',
+                antialias: true,
+                alpha: false
+            });
+            renderer.setClearColor(0x030407, 1);
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.15;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            containerRef.current.appendChild(renderer.domElement);
+        } catch (e) {
+            console.warn('[Space 3.0] WebGL init fallback:', e);
+            if (onLoadedRef.current) onLoadedRef.current();
+            return;
+        }
+
+        const maxAnisotropy = renderer.capabilities ? renderer.capabilities.getMaxAnisotropy() : 4;
+        const loader = new THREE.GLTFLoader();
+        const modelCache = new Map();
+
+        const loadGlb = (path) => {
+            if (!path) return Promise.resolve(null);
+            if (modelCache.has(path)) return Promise.resolve(modelCache.get(path).clone());
+            return new Promise((resolve) => {
+                loader.load(
+                    path,
+                    (gltf) => {
+                        modelCache.set(path, gltf.scene);
+                        resolve(gltf.scene.clone());
+                    },
+                    undefined,
+                    () => resolve(null)
+                );
+            });
+        };
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xdbeafe, 0.7);
+        scene.add(ambientLight);
+        const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.8);
+        sunLight.position.set(-90, 55, 75);
+        scene.add(sunLight);
+
+        // --- 1. NEBULA CELESTIAL DOME (360° ACES FILMIC SHADER) ---
+        const skyGeo = new THREE.SphereGeometry(1200, 48, 48);
+        const skyMat = new THREE.ShaderMaterial({
+            side: THREE.BackSide,
+            depthWrite: false,
+            uniforms: {
+                uTime: { value: 0 },
+                uCamZ: { value: 50.0 },
+                uCol1: { value: new THREE.Vector3(0.04, 0.62, 0.56) },
+                uCol2: { value: new THREE.Vector3(0.08, 0.52, 0.88) },
+                uCol3: { value: new THREE.Vector3(0.32, 0.12, 0.65) },
+                uCol4: { value: new THREE.Vector3(0.95, 0.45, 0.12) }
+            },
+            vertexShader: `
+                varying vec3 vDir;
+                void main() {
+                    vDir = normalize(position);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                uniform float uCamZ;
+                uniform vec3 uCol1;
+                uniform vec3 uCol2;
+                uniform vec3 uCol3;
+                uniform vec3 uCol4;
+                varying vec3 vDir;
+
+                float hash13(vec3 p3) {
+                    p3 = fract(p3 * 0.1031);
+                    p3 += dot(p3, p3.zyx + 31.32);
+                    return fract((p3.x + p3.y) * p3.z);
+                }
+                float noise3(vec3 x) {
+                    vec3 i = floor(x);
+                    vec3 f = fract(x);
+                    f = f * f * (3.0 - 2.0 * f);
+                    return mix(
+                        mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),
+                            mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),
+                        mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),
+                            mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y), f.z
+                    );
+                }
+                float fbm4(vec3 p) {
+                    float v = 0.0, a = 0.5;
+                    for (int i = 0; i < 4; i++) {
+                        v += a * noise3(p);
+                        p = p * 2.03 + vec3(1.7, 9.2, 3.4);
+                        a *= 0.5;
+                    }
+                    return v;
+                }
+                vec3 acesToneMap(vec3 x) {
+                    return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
+                }
+                void main() {
+                    vec3 rd = normalize(vDir);
+                    vec3 bg = vec3(0.005, 0.008, 0.016);
+                    float rightMask = smoothstep(-0.38, 0.48, rd.x * 0.85 + rd.y * 0.28);
+                    if (rightMask > 0.005) {
+                        vec3 p = rd * 2.6 + vec3(0.0, uTime * 0.008, -uCamZ * 0.0015);
+                        float n1 = fbm4(p);
+                        float n2 = fbm4(p * 1.85 + vec3(n1 * 1.6, -n1 * 1.2, 2.1));
+                        float ridge = clamp(1.0 - abs(n2 * 2.0 - 1.0), 0.0, 1.0);
+                        ridge = ridge * ridge;
+
+                        vec3 neb = mix(bg, uCol3, smoothstep(0.25, 0.72, n1) * rightMask * 0.75);
+                        neb = mix(neb, uCol1, smoothstep(0.35, 0.78, n2) * rightMask * 0.82);
+                        neb += uCol2 * pow(n2, 2.4) * rightMask * 0.65;
+                        neb += uCol4 * pow(ridge, 3.0) * rightMask * 0.78;
+
+                        float dust = smoothstep(0.52, 0.78, noise3(p * 4.2 - n2));
+                        neb *= (1.0 - dust * 0.68 * rightMask);
+                        bg = neb;
+                    }
+                    gl_FragColor = vec4(acesToneMap(bg), 1.0);
+                }
+            `
+        });
+        const skyMesh = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(skyMesh);
+
+        // --- 2. 9,000 WARP STARS WITH RELAY STREAK SHADER ---
+        const starCount = 9000;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        const starCol = new Float32Array(starCount * 3);
+        const starSizes = new Float32Array(starCount);
+        const starPalette = [
+            new THREE.Color(0x9bb8ff),
+            new THREE.Color(0xcad8ff),
+            new THREE.Color(0xfff4ea),
+            new THREE.Color(0xffd2a1),
+            new THREE.Color(0x38bdf8)
+        ];
+        for (let i = 0; i < starCount; i++) {
+            const r = 120 + Math.random() * 820;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            starPos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+            starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            starPos[i * 3 + 2] = r * Math.cos(phi) - 80;
+            const c = starPalette[i % starPalette.length];
+            starCol[i * 3]     = c.r;
+            starCol[i * 3 + 1] = c.g;
+            starCol[i * 3 + 2] = c.b;
+            starSizes[i] = Math.pow(Math.random(), 3.0) * 4.2 + 0.9;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        starGeo.setAttribute('color', new THREE.BufferAttribute(starCol, 3));
+        starGeo.setAttribute('aSize', new THREE.BufferAttribute(starSizes, 1));
+
+        const starMat = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexColors: true,
+            uniforms: { uWarp: { value: 0.0 } },
+            vertexShader: `
+                attribute float aSize;
+                varying vec3 vColor;
+                varying float vWarp;
+                uniform float uWarp;
+                void main() {
+                    vColor = color;
+                    vWarp = uWarp;
+                    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = clamp(aSize * (220.0 / max(1.0, -mvPos.z)) * (1.0 + uWarp * 2.2), 1.0, 26.0);
+                    gl_Position = projectionMatrix * mvPos;
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                varying float vWarp;
+                void main() {
+                    vec2 uv = gl_PointCoord - 0.5;
+                    uv.x /= (1.0 + vWarp * 3.0);
+                    float d = length(uv);
+                    if (d > 0.5) discard;
+                    float core = exp(-d * d * 26.0);
+                    vec3 col = mix(vColor, vec3(0.55, 0.88, 1.0), vWarp * 0.65);
+                    gl_FragColor = vec4(col * (1.0 + core * 0.8), core);
+                }
+            `
+        });
+        const starPoints = new THREE.Points(starGeo, starMat);
+        scene.add(starPoints);
+
+        // --- 3. 55,000 STAR SPIRAL GALAXY WITH MASS EFFECT TACTICAL GRID ---
+        const galaxyRoot = new THREE.Group();
+        galaxyRoot.position.set(11.5, -1.5, -14.0);
+        galaxyRoot.rotation.set(0.66, -0.18, -0.12);
+        scene.add(galaxyRoot);
+
+        const galCount = 55000;
+        const galGeo = new THREE.BufferGeometry();
+        const galOrbit = new Float32Array(galCount * 4);
+        const galCol = new Float32Array(galCount * 3);
+        const galDummy = new Float32Array(galCount * 3);
+        const cGalCore = new THREE.Color(0xfff1d0);
+        const cGalWarm = new THREE.Color(0xfbbf24);
+        const cGalBlue = new THREE.Color(0x38bdf8);
+        const cGalDeep = new THREE.Color(0x3b82f6);
+        const cGalPink = new THREE.Color(0xf43f5e);
+
+        for (let i = 0; i < galCount; i++) {
+            const arm = i % 4;
+            const u = Math.pow(Math.random(), 1.38);
+            const r = 0.4 + u * 29.5;
+            const logAngle = r * 0.31 + (arm * Math.PI * 0.5);
+            const armWidth = (0.28 + u * 0.95) * (Math.random() < 0.78 ? 0.65 : 1.65);
+            const angle = logAngle + (Math.random() - 0.5) * armWidth;
+            const thickness = (Math.random() - 0.5) * (2.2 * Math.exp(-r * 0.12) + 0.25);
+
+            galOrbit[i * 4]     = r;
+            galOrbit[i * 4 + 1] = angle;
+            galOrbit[i * 4 + 2] = thickness;
+            galOrbit[i * 4 + 3] = (r < 4.5 ? 3.2 : 1.6) * (0.6 + Math.random() * 0.9);
+
+            const col = cGalCore.clone();
+            if (u > 0.08) col.lerp(cGalWarm, Math.min(1, (u - 0.08) * 3.5));
+            if (u > 0.22) col.lerp(cGalBlue, Math.min(1, (u - 0.22) * 2.0));
+            if (u > 0.58) col.lerp(cGalDeep, Math.min(1, (u - 0.58) * 2.2));
+            if (u > 0.25 && Math.random() < 0.07) col.lerp(cGalPink, 0.8);
+
+            galCol[i * 3]     = col.r;
+            galCol[i * 3 + 1] = col.g;
+            galCol[i * 3 + 2] = col.b;
+        }
+        galGeo.setAttribute('position', new THREE.BufferAttribute(galDummy, 3));
+        galGeo.setAttribute('aOrbit', new THREE.BufferAttribute(galOrbit, 4));
+        galGeo.setAttribute('color', new THREE.BufferAttribute(galCol, 3));
+
+        const galMat = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexColors: true,
+            uniforms: {
+                uTime: { value: 0 },
+                uRocketWorld: { value: new THREE.Vector3() }
+            },
+            vertexShader: `
+                attribute vec4 aOrbit;
+                varying vec3 vColor;
+                varying float vAlpha;
+                uniform float uTime;
+                uniform vec3 uRocketWorld;
+                void main() {
+                    float r = aOrbit.x;
+                    float theta0 = aOrbit.y;
+                    float yOff = aOrbit.z;
+                    float sz = aOrbit.w;
+                    float omega = 1.25 / pow(r + 1.4, 0.58);
+                    float theta = theta0 - uTime * omega * 0.18;
+                    vec3 localP = vec3(cos(theta) * r, yOff, sin(theta) * r);
+                    vec4 worldP = modelMatrix * vec4(localP, 1.0);
+                    vec3 diff = worldP.xyz - uRocketWorld;
+                    float d = length(diff);
+                    if (d < 9.5) {
+                        float push = pow(1.0 - d / 9.5, 2.0) * 1.6;
+                        worldP.xyz += normalize(diff + vec3(0.001)) * push;
+                    }
+                    vColor = color;
+                    vAlpha = smoothstep(30.5, 16.0, r) * 0.9;
+                    vec4 mvPos = viewMatrix * worldP;
+                    gl_PointSize = clamp(sz * (145.0 / max(1.0, -mvPos.z)), 1.0, 15.0);
+                    gl_Position = projectionMatrix * mvPos;
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                varying float vAlpha;
+                void main() {
+                    vec2 uv = gl_PointCoord - 0.5;
+                    float d2 = dot(uv, uv);
+                    if (d2 > 0.25) discard;
+                    float g = exp(-d2 * 18.0);
+                    gl_FragColor = vec4(vColor * (1.0 + g * 0.7), g * vAlpha);
+                }
+            `
+        });
+        const galaxyPoints = new THREE.Points(galGeo, galMat);
+        galaxyPoints.frustumCulled = false;
+        galaxyRoot.add(galaxyPoints);
+
+        // Tactical 1px Grid Plane
+        const gridPlaneGeo = new THREE.PlaneGeometry(66, 66);
+        gridPlaneGeo.rotateX(-Math.PI / 2);
+        const gridPlaneMat = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            uniforms: { uTime: { value: 0 } },
+            vertexShader: `
+                varying vec2 vPos;
+                void main() {
+                    vPos = position.xz;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec2 vPos;
+                uniform float uTime;
+                void main() {
+                    float r = length(vPos);
+                    if (r > 32.5) discard;
+                    float rRing1 = smoothstep(0.09, 0.0, abs(r - 9.0));
+                    float rRing2 = smoothstep(0.09, 0.0, abs(r - 18.0));
+                    float rRing3 = smoothstep(0.11, 0.0, abs(r - 27.5));
+                    float rInner = smoothstep(0.09, 0.0, abs(r - 3.2));
+                    float axisX = smoothstep(0.08, 0.0, abs(vPos.y)) * smoothstep(31.0, 2.0, r);
+                    float axisZ = smoothstep(0.08, 0.0, abs(vPos.x)) * smoothstep(31.0, 2.0, r);
+                    vec3 col = vec3(0.12, 0.65, 1.0) * (rRing1 * 0.28 + rRing2 * 0.34 + rRing3 * 0.45);
+                    col += vec3(0.98, 0.38, 0.14) * ((axisX + axisZ) * 0.58 + rInner * 0.85);
+                    float alpha = clamp((rRing1 + rRing2 + rRing3 + axisX + axisZ) * 0.5, 0.0, 0.9);
+                    gl_FragColor = vec4(col, alpha);
+                }
+            `
+        });
+        galaxyRoot.add(new THREE.Mesh(gridPlaneGeo, gridPlaneMat));
+
+        // --- 4. INTERACTIVE 3D CLUSTER RINGS & DOM CALLOUTS ---
+        const clusterMeshes = [];
+        const clusterCallouts = [];
+
+        CLUSTERS.forEach((cluster) => {
+            const isSecVisible = !cluster.isSecret || unlockedSectors[cluster.id];
+            const ringGroup = new THREE.Group();
+            ringGroup.position.copy(cluster.pos);
+            ringGroup.visible = isSecVisible;
+
+            const ringGeo = new THREE.RingGeometry(1.2, 1.6, 32);
+            ringGeo.rotateX(-Math.PI / 2);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: cluster.color,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.9
+            });
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringGroup.add(ringMesh);
+
+            const hitSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(2.8, 12, 12),
+                new THREE.MeshBasicMaterial({ visible: false })
+            );
+            hitSphere.userData = { type: 'CLUSTER', clusterId: cluster.id, cluster };
+            ringGroup.add(hitSphere);
+
+            galaxyRoot.add(ringGroup);
+            clusterMeshes.push({ group: ringGroup, ringMesh, hitSphere, cluster });
+
+            // DOM Callout Card
+            if (overlayRef.current) {
+                const el = document.createElement('div');
+                el.className = `galaxy-callout clickable ${cluster.gold ? 'callout-gold' : ''}`;
+                el.style.display = isSecVisible ? 'block' : 'none';
+                el.innerHTML = `
+                    <div class="callout-anchor"></div>
+                    <div class="callout-line"></div>
+                    <div class="callout-card">
+                        <div class="flex items-center justify-between gap-3 text-[11px] font-mono font-bold ${cluster.gold ? 'text-amber-400' : 'text-[#38bdf8]'}">
+                            <span>${cluster.name[lang]}</span>
+                            <span>${cluster.planets.length} POIs</span>
+                        </div>
+                        <div class="text-[10px] text-slate-300 mt-0.5">${cluster.subtitle[lang]}</div>
+                    </div>
+                `;
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    enterSector(cluster.id);
+                });
+                overlayRef.current.appendChild(el);
+                clusterCallouts.push({ el, cluster, group: ringGroup });
+            }
+        });
+
+        // --- 5. SEAMLESS PLANET CANVAS TEXTURE GENERATOR (1024x512) ---
+        const TEXTURE_CACHE = {};
+        const getPlanetTexture = (paletteName) => {
+            if (TEXTURE_CACHE[paletteName]) return TEXTURE_CACHE[paletteName];
+            const c = document.createElement('canvas');
+            c.width = 1024;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+            const palettes = {
+                moon:     { base: '#6e6b66', dark: '#2d2e32', light: '#b2ada4', feature: '#434449' },
+                lava:     { base: '#231c1a', dark: '#110d0c', light: '#f97316', feature: '#dc2626' },
+                ice:      { base: '#386682', dark: '#1b384d', light: '#bae6fd', feature: '#0284c7' },
+                gas_cyan: { base: '#0e4f6e', dark: '#082c42', light: '#67e8f9', feature: '#0284c7' },
+                terran:   { base: '#1e4e68', dark: '#112c3d', light: '#3b7a57', feature: '#6b8e23' },
+                desert:   { base: '#8c4f30', dark: '#4f2814', light: '#d99b66', feature: '#a86038' }
+            };
+            const pal = palettes[paletteName] || palettes.moon;
+            ctx.fillStyle = pal.base;
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            for (let y = 0; y < c.height; y += 2) {
+                const lat = (y / c.height) * Math.PI;
+                const band = Math.sin(lat * 8.0) * 0.5 + 0.5;
+                ctx.fillStyle = band > 0.5 ? pal.dark : pal.feature;
+                ctx.globalAlpha = paletteName === 'gas_cyan' ? 0.35 : 0.16;
+                ctx.fillRect(0, y, c.width, 2);
+            }
+            for (let i = 0; i < 200; i++) {
+                const x = Math.random() * c.width;
+                const y = 36 + Math.random() * (c.height - 72);
+                const r = Math.pow(Math.random(), 2.2) * 44 + 3;
+                [-c.width, 0, c.width].forEach(offsetX => {
+                    const cx = x + offsetX;
+                    if (cx + r < 0 || cx - r > c.width) return;
+                    const grad = ctx.createRadialGradient(cx - r * 0.22, y - r * 0.22, r * 0.08, cx, y, r);
+                    grad.addColorStop(0.0, pal.dark);
+                    grad.addColorStop(0.72, pal.feature);
+                    grad.addColorStop(0.92, pal.light);
+                    grad.addColorStop(1.0, 'transparent');
+                    ctx.globalAlpha = 0.28 + Math.random() * 0.34;
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(cx, y, r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+            ctx.globalAlpha = 1.0;
+            const tex = new THREE.CanvasTexture(c);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.ClampToEdgeWrapping;
+            tex.anisotropy = maxAnisotropy;
+            TEXTURE_CACHE[paletteName] = tex;
+            return tex;
+        };
+
+        // --- 6. SECTOR PLANETS ROOT & SHADERS ---
+        const sectorRoot = new THREE.Group();
+        sectorRoot.visible = false;
+        scene.add(sectorRoot);
+
+        let activePlanetObjects = [];
+        let planetCallouts = [];
+
+        const clearSectorPlanets = () => {
+            activePlanetObjects.forEach(obj => sectorRoot.remove(obj.group));
+            activePlanetObjects = [];
+            planetCallouts.forEach(c => c.el.remove());
+            planetCallouts = [];
+        };
+
+        const buildSectorPlanets = (clusterId) => {
+            clearSectorPlanets();
+            const cluster = CLUSTERS.find(c => c.id === clusterId);
+            if (!cluster) return;
+
+            const atmoColors = {
+                moon:     new THREE.Vector3(0.38, 0.68, 1.0),
+                lava:     new THREE.Vector3(1.0, 0.38, 0.08),
+                ice:      new THREE.Vector3(0.45, 0.86, 1.0),
+                gas_cyan: new THREE.Vector3(0.18, 0.85, 0.98),
+                terran:   new THREE.Vector3(0.22, 0.68, 1.0),
+                desert:   new THREE.Vector3(0.96, 0.58, 0.26)
+            };
+
+            cluster.planets.forEach((pData, idx) => {
+                const pGroup = new THREE.Group();
+                pGroup.position.copy(pData.pos);
+
+                const tex = getPlanetTexture(pData.palette);
+                const atmoCol = atmoColors[pData.palette] || atmoColors.moon;
+                const isLava = pData.palette === 'lava' ? 1.0 : 0.0;
+                const hasClouds = (pData.palette === 'terran' || pData.palette === 'gas_cyan' || pData.palette === 'ice') ? 1.0 : 0.0;
+
+                const pGeo = new THREE.SphereGeometry(pData.radius, 48, 48);
+                const pMat = new THREE.ShaderMaterial({
+                    uniforms: {
+                        uTex: { value: tex },
+                        uSunDir: { value: new THREE.Vector3(-0.72, 0.42, 0.55).normalize() },
+                        uAtmoCol: { value: atmoCol },
+                        uIsLava: { value: isLava },
+                        uHasClouds: { value: hasClouds },
+                        uTime: { value: 0 }
+                    },
+                    vertexShader: `
+                        varying vec2 vUv;
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            vUv = uv;
+                            vec4 wp = modelMatrix * vec4(position, 1.0);
+                            vNormal = normalize(mat3(modelMatrix) * normal);
+                            vViewDir = normalize(cameraPosition - wp.xyz);
+                            gl_Position = projectionMatrix * viewMatrix * wp;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform sampler2D uTex;
+                        uniform vec3 uSunDir;
+                        uniform vec3 uAtmoCol;
+                        uniform float uIsLava;
+                        uniform float uHasClouds;
+                        uniform float uTime;
+                        varying vec2 vUv;
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            vec3 sampleCol = texture2D(uTex, vUv).rgb;
+                            float h0 = dot(sampleCol, vec3(0.333));
+                            float diff = smoothstep(-0.14, 0.88, dot(vNormal, uSunDir));
+                            float fresnel = pow(1.0 - max(0.0, dot(vNormal, vViewDir)), 3.4);
+                            vec3 atmoRim = uAtmoCol * fresnel * (0.28 + 0.72 * diff);
+                            float nightMask = smoothstep(0.12, -0.25, dot(vNormal, uSunDir));
+                            vec3 nightLight = mix(vec3(1.0, 0.72, 0.32) * smoothstep(0.68, 0.78, h0) * 0.45, vec3(1.0, 0.28, 0.04) * 1.2, uIsLava) * nightMask;
+                            vec3 col = sampleCol * (0.05 + diff * 1.15) + nightLight + atmoRim;
+                            gl_FragColor = vec4(col, 1.0);
+                        }
+                    `
+                });
+                const pMesh = new THREE.Mesh(pGeo, pMat);
+                pMesh.userData = { type: 'PLANET', planetData: pData, clusterId };
+                pGroup.add(pMesh);
+
+                // Rayleigh BackSide Glow
+                const haloGeo = new THREE.SphereGeometry(pData.radius * 1.12, 32, 32);
+                const haloMat = new THREE.ShaderMaterial({
+                    side: THREE.BackSide,
+                    transparent: true,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending,
+                    uniforms: {
+                        uAtmoCol: { value: atmoCol },
+                        uSunDir: { value: new THREE.Vector3(-0.72, 0.42, 0.55).normalize() }
+                    },
+                    vertexShader: `
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            vec4 wp = modelMatrix * vec4(position, 1.0);
+                            vNormal = normalize(mat3(modelMatrix) * normal);
+                            vViewDir = normalize(cameraPosition - wp.xyz);
+                            gl_Position = projectionMatrix * viewMatrix * wp;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform vec3 uAtmoCol;
+                        uniform vec3 uSunDir;
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            float rim = pow(clamp(1.0 + dot(vNormal, vViewDir), 0.0, 1.0), 3.0);
+                            float sunLit = smoothstep(-0.35, 0.55, dot(-vNormal, uSunDir));
+                            gl_FragColor = vec4(uAtmoCol * 1.2, rim * (0.18 + 0.65 * sunLit));
+                        }
+                    `
+                });
+                pGroup.add(new THREE.Mesh(haloGeo, haloMat));
+
+                // Cassini Rings
+                if (pData.hasRings) {
+                    const rGeo = new THREE.RingGeometry(pData.radius * 1.32, pData.radius * 2.25, 64);
+                    rGeo.rotateX(Math.PI * 0.43);
+                    const rMat = new THREE.ShaderMaterial({
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        depthWrite: false,
+                        uniforms: {
+                            uInner: { value: pData.radius * 1.32 },
+                            uOuter: { value: pData.radius * 2.25 },
+                            uRingCol: { value: atmoCol }
+                        },
+                        vertexShader: `
+                            varying vec3 vLocal;
+                            void main() {
+                                vLocal = position;
+                                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                            }
+                        `,
+                        fragmentShader: `
+                            uniform float uInner;
+                            uniform float uOuter;
+                            uniform vec3 uRingCol;
+                            varying vec3 vLocal;
+                            void main() {
+                                float r = length(vLocal);
+                                float t = clamp((r - uInner) / (uOuter - uInner), 0.0, 1.0);
+                                float cassini = 1.0 - 0.85 * exp(-pow((t - 0.62) / 0.035, 2.0));
+                                float edgeFade = smoothstep(0.0, 0.08, t) * smoothstep(1.0, 0.88, t);
+                                gl_FragColor = vec4(uRingCol, edgeFade * cassini * 0.52);
+                            }
+                        `
+                    });
+                    pGroup.add(new THREE.Mesh(rGeo, rMat));
+                }
+
+                // 3D GLB Model Docked on Orbit
+                let modelObj = null;
+                if (pData.modelPath) {
+                    loadGlb(pData.modelPath).then(m => {
+                        if (!m) return;
+                        const box = new THREE.Box3().setFromObject(m);
+                        const sz = box.getSize(new THREE.Vector3());
+                        const maxDim = Math.max(sz.x, sz.y, sz.z) || 1;
+                        m.scale.setScalar(pData.modelScale / maxDim);
+                        m.position.set(0, pData.radius + 1.8, 0);
+                        m.userData = { type: 'PROJECT_MODEL', planetData: pData, clusterId };
+                        pGroup.add(m);
+                        modelObj = m;
+                    });
+                }
+
+                sectorRoot.add(pGroup);
+
+                // Callout DOM
+                if (overlayRef.current) {
+                    const el = document.createElement('div');
+                    el.className = 'galaxy-callout clickable';
+                    el.innerHTML = `
+                        <div class="callout-anchor"></div>
+                        <div class="callout-line"></div>
+                        <div class="callout-card">
+                            <div class="flex items-center justify-between gap-2 text-[10px] font-mono font-bold text-[#38bdf8]">
+                                <span>${pData.name}</span>
+                                <span class="planet-status-badge">ORBITAL DOCK</span>
+                            </div>
+                            <div class="text-[11px] font-semibold text-white mt-0.5">${pData.desc[lang]}</div>
+                        </div>
+                    `;
+                    el.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        handleSelectTarget(pData);
+                    });
+                    overlayRef.current.appendChild(el);
+                    planetCallouts.push({ el, pData, group: pGroup });
+                }
+
+                activePlanetObjects.push({
+                    group: pGroup,
+                    mesh: pMesh,
+                    mat: pMat,
+                    data: pData,
+                    model: modelObj
+                });
+            });
+        };
+
+        // --- 7. PLAYER CURSOR RIG & VERLET ROPE ---
+        const playerGroup = new THREE.Group();
+        scene.add(playerGroup);
+
+        let rocketMesh = null;
+        let astronautMesh = null;
+
+        loadGlb('/3d/rocket.glb').then(m => {
+            if (m) {
+                m.scale.setScalar(0.45);
+                playerGroup.add(m);
+                rocketMesh = m;
+            }
+        });
+
+        const astroGroup = new THREE.Group();
+        scene.add(astroGroup);
+        loadGlb('/3d/Astronaut.glb').then(m => {
+            if (m) {
+                m.scale.setScalar(0.38);
+                astroGroup.add(m);
+                astronautMesh = m;
+            }
+        });
+
+        const ropeGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+        const ropeMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.5 });
+        const ropeLine = new THREE.Line(ropeGeo, ropeMat);
+        ropeLine.frustumCulled = false;
+        scene.add(ropeLine);
+
+        // --- 8. STATE & TRANSITIONS ---
+        let viewModeLocal = 'GALAXY_MAP';
+        let targetCamZ = 50.0;
+        let smoothCamZ = 50.0;
+        let warpFactor = 0.0;
+        let mouseX = 0, mouseY = 0;
+        let targetRocketPos = new THREE.Vector3(0, 0, 35);
+        let astroPos = new THREE.Vector3(-2, -2, 34);
+
+        const enterSector = (clusterId) => {
+            viewModeLocal = 'SECTOR_FLIGHT';
+            setViewMode('SECTOR_FLIGHT');
+            setActiveClusterId(clusterId);
+            const cl = CLUSTERS.find(c => c.id === clusterId);
+            if (cl?.track) setActiveTrack(cl.track);
+
+            playCosmicSfx('warp', settings);
+            warpFactor = 1.4;
+
+            galaxyRoot.visible = false;
+            clusterCallouts.forEach(c => { c.el.style.display = 'none'; });
+
+            buildSectorPlanets(clusterId);
+            sectorRoot.visible = true;
+            targetCamZ = 45.0;
+            smoothCamZ = 45.0;
+
+            // Update nebula dome colors
+            if (cl?.nebulaPalette) {
+                skyMat.uniforms.uCol1.value.copy(cl.nebulaPalette.c1);
+                skyMat.uniforms.uCol2.value.copy(cl.nebulaPalette.c2);
+                skyMat.uniforms.uCol3.value.copy(cl.nebulaPalette.c3);
+                skyMat.uniforms.uCol4.value.copy(cl.nebulaPalette.c4);
+            }
+        };
+
+        const exitSector = () => {
+            viewModeLocal = 'GALAXY_MAP';
+            setViewMode('GALAXY_MAP');
+            setActiveTrack('galaxy');
+            playCosmicSfx('warp', settings);
+            warpFactor = 1.2;
+
+            sectorRoot.visible = false;
+            clearSectorPlanets();
+
+            galaxyRoot.visible = true;
+            clusterCallouts.forEach(c => {
+                const isSecVisible = !c.cluster.isSecret || unlockedSectors[c.cluster.id];
+                c.el.style.display = isSecVisible ? 'block' : 'none';
+            });
+            targetCamZ = 50.0;
+
+            // Reset nebula dome to classic core colors
+            skyMat.uniforms.uCol1.value.set(0.04, 0.62, 0.56);
+            skyMat.uniforms.uCol2.value.set(0.08, 0.52, 0.88);
+            skyMat.uniforms.uCol3.value.set(0.32, 0.12, 0.65);
+            skyMat.uniforms.uCol4.value.set(0.95, 0.45, 0.12);
+        };
+
+        const handleSelectTarget = (pData) => {
+            playCosmicSfx('project', settings);
+            if (pData.projectId) {
+                window.dispatchEvent(new CustomEvent('spet:open-project-modal', { detail: { projectId: pData.projectId } }));
+            } else if (pData.specialType === 'DOOM_EARTH') {
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'doom_2' } }));
+            } else if (pData.specialType === 'DOOM_MARS') {
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'doom_e1m1' } }));
+            } else if (pData.specialType === 'DELICIA_JAILSON') {
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'delicia_doom' } }));
+            }
+        };
+
+        // Pointer & Raycast
+        const raycaster = new THREE.Raycaster();
+        const mouseVec = new THREE.Vector2();
+
+        const handlePointerMove = (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouseVec.set(mouseX, mouseY);
+
+            // Plane intersection for rocket flight
+            const planeZ = viewModeLocal === 'GALAXY_MAP' ? 36 : smoothCamZ - 14;
+            const dist = camera.position.z - planeZ;
+            const vFOV = THREE.MathUtils.degToRad(camera.fov);
+            const planeH = 2 * Math.tan(vFOV / 2) * dist;
+            const planeW = planeH * camera.aspect;
+            targetRocketPos.set(camera.position.x + (mouseX * planeW) / 2, camera.position.y + (mouseY * planeH) / 2, planeZ);
+        };
+
+        const handleWheel = (e) => {
+            if (viewModeLocal === 'SECTOR_FLIGHT') {
+                e.preventDefault();
+                targetCamZ = Math.max(-280, Math.min(50, targetCamZ - e.deltaY * 0.12));
+            }
+        };
+
+        const handleClick = (e) => {
+            if (e.target.closest('.galaxy-callout') || e.target.closest('button')) return;
+            raycaster.setFromCamera(mouseVec, camera);
+
+            if (viewModeLocal === 'GALAXY_MAP') {
+                const hits = raycaster.intersectObjects(clusterMeshes.map(c => c.hitSphere), true);
+                if (hits.length > 0 && hits[0].object.userData?.clusterId) {
+                    enterSector(hits[0].object.userData.clusterId);
+                }
+            } else {
+                const hits = raycaster.intersectObjects(sectorRoot.children, true);
+                if (hits.length > 0) {
+                    let obj = hits[0].object;
+                    while (obj && !obj.userData?.planetData && obj.parent) obj = obj.parent;
+                    if (obj?.userData?.planetData) {
+                        handleSelectTarget(obj.userData.planetData);
+                    }
+                }
+            }
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && viewModeLocal === 'SECTOR_FLIGHT') {
+                exitSector();
+            }
+        };
+
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('wheel', handleWheel, { passive: false });
+        window.addEventListener('click', handleClick);
+        window.addEventListener('keydown', handleKeyDown);
+
+        // Custom Event Listeners
+        const handleJumpEvent = (e) => {
+            const sec = e.detail?.sector;
+            if (sec === 'galaxy') {
+                exitSector();
+            } else if (sec) {
+                enterSector(sec);
+            }
+        };
+        const handleUnlockEvent = (e) => {
+            const sec = e.detail?.sector;
+            if (sec) unlockSector(sec);
+        };
+        const handleExitEvent = () => exitSector();
+
+        window.addEventListener('spet:space3-jump', handleJumpEvent);
+        window.addEventListener('spet:space3-unlock-sector', handleUnlockEvent);
+        window.addEventListener('spet:space3-exit-sector', handleExitEvent);
+
+        // Animation Loop
+        let animId;
+        const clock = new THREE.Clock();
+
+        const updateCalloutPosition = (el, worldPos) => {
+            const tempV = worldPos.clone();
+            tempV.project(camera);
+            if (tempV.z > 1.0) {
+                el.style.transform = 'translate3d(-9999px, -9999px, 0)';
+                return;
+            }
+            const sx = (tempV.x * 0.5 + 0.5) * window.innerWidth;
+            const sy = (-(tempV.y * 0.5) + 0.5) * window.innerHeight;
+            el.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+        };
+
+        const animate = () => {
+            animId = requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+
+            // Uniforms
+            skyMat.uniforms.uTime.value = time;
+            skyMat.uniforms.uCamZ.value = camera.position.z;
+            galMat.uniforms.uTime.value = time;
+            galMat.uniforms.uRocketWorld.value.copy(playerGroup.position);
+            gridPlaneMat.uniforms.uTime.value = time;
+
+            // Warp factor easing
+            if (warpFactor > 0.001) {
+                warpFactor = Math.max(0, warpFactor - delta * 0.85);
+            }
+            starMat.uniforms.uWarp.value = warpFactor;
+
+            // Camera Z easing
+            smoothCamZ += (targetCamZ - smoothCamZ) * 0.08;
+            camera.position.z = smoothCamZ;
+
+            // Rocket & Tethered Astronaut flight physics
+            playerGroup.position.lerp(targetRocketPos, 0.12);
+            const astroTarget = playerGroup.position.clone().add(new THREE.Vector3(-1.8, -1.8, -0.6));
+            astroPos.lerp(astroTarget, 0.08);
+            astroGroup.position.copy(astroPos);
+
+            // Update rope
+            const rPos = ropeLine.geometry.attributes.position;
+            rPos.setXYZ(0, playerGroup.position.x, playerGroup.position.y, playerGroup.position.z);
+            rPos.setXYZ(1, astroGroup.position.x, astroGroup.position.y, astroGroup.position.z);
+            rPos.needsUpdate = true;
+
+            // Galaxy view callouts
+            if (viewModeLocal === 'GALAXY_MAP') {
+                clusterCallouts.forEach(c => {
+                    const wp = new THREE.Vector3();
+                    c.group.getWorldPosition(wp);
+                    updateCalloutPosition(c.el, wp);
+                });
+            } else {
+                // Sector view planets rotation & callouts
+                activePlanetObjects.forEach(p => {
+                    p.group.rotation.y += delta * (p.data.rotSpeed || 0.005);
+                });
+                planetCallouts.forEach(c => {
+                    const wp = new THREE.Vector3();
+                    c.group.getWorldPosition(wp);
+                    updateCalloutPosition(c.el, wp);
+                });
+            }
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+        if (onLoadedRef.current) onLoadedRef.current();
+
+        // Resize handler
+        const handleResize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        };
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            cancelAnimationFrame(animId);
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('click', handleClick);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('spet:space3-jump', handleJumpEvent);
+            window.removeEventListener('spet:space3-unlock-sector', handleUnlockEvent);
+            window.removeEventListener('spet:space3-exit-sector', handleExitEvent);
+            if (renderer?.domElement?.parentElement) {
+                renderer.domElement.parentElement.removeChild(renderer.domElement);
+            }
+        };
+    }, [unlockedSectors, CLUSTERS]);
+
+    return (
+        <div className="space-v3-root">
+            {/* Background Music Player with Sector Awareness */}
+            <CosmicTrackPlayer
+                activeSectorTrack={activeTrack}
+                settings={settings}
+                isJukeboxActive={isJukeboxPlaying}
+                lang={lang}
+            />
+
+            {/* Three.js Canvas Container */}
+            <div ref={containerRef} className="fixed inset-0 z-0 bg-[#030407] pointer-events-none" />
+
+            {/* DOM Holographic Callout Layer */}
+            <div ref={overlayRef} className="fixed inset-0 z-15 pointer-events-none overflow-hidden" />
+
+            {/* In-Sector Top Navigation Bar & Breadcrumb */}
+            {viewMode === 'SECTOR_FLIGHT' && (
+                <div className="fixed top-16 left-0 right-0 z-30 px-4 sm:px-8 py-3 flex items-center justify-between pointer-events-auto bg-gradient-to-b from-black/80 via-black/40 to-transparent backdrop-blur-sm select-none animate-fade-in">
+                    <div className="flex items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                playCosmicSfx('warp', settings);
+                                window.dispatchEvent(new CustomEvent('spet:space3-exit-sector'));
+                            }}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-950/70 border border-cyan-500/50 text-cyan-300 hover:text-white hover:bg-cyan-900/80 hover:border-cyan-400 font-mono text-xs font-semibold tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.25)] cursor-pointer"
+                        >
+                            <i className="fas fa-chevron-left text-[10px]"></i>
+                            <span>{lang === 'pt' ? 'Voltar à Galáxia [ESC]' : 'Return to Galaxy [ESC]'}</span>
+                        </button>
+
+                        <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-300">
+                            <span className="text-slate-500">/</span>
+                            <span className="text-cyan-400 font-bold uppercase">
+                                {CLUSTERS.find(c => c.id === activeClusterId)?.name[lang]}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Sector Quick Switcher Pills */}
+                    <div className="hidden md:flex items-center gap-1.5 bg-black/60 border border-white/10 rounded-full p-1">
+                        {CLUSTERS.filter(c => !c.isSecret || unlockedSectors[c.id]).map(c => {
+                            const isCurrent = c.id === activeClusterId;
+                            return (
+                                <button
+                                    key={c.id}
+                                    type="button"
+                                    onClick={() => {
+                                        if (isCurrent) return;
+                                        playCosmicSfx('warp', settings);
+                                        window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: c.id } }));
+                                    }}
+                                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer ${
+                                        isCurrent
+                                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-bold shadow-[0_0_8px_rgba(6,182,212,0.3)]'
+                                            : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                    }`}
+                                >
+                                    {c.name[lang].split(' ')[0]}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* CC-BY Attributions Pill */}
+                    <button
+                        type="button"
+                        onClick={() => setShowAttributions(prev => !prev)}
+                        className="px-2.5 py-1 rounded-md bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-slate-300 hover:text-white font-mono text-[10px] transition-colors cursor-pointer"
+                    >
+                        <i className="fas fa-creative-commons text-[10px] mr-1 text-cyan-400"></i>
+                        <span>Créditos 3D</span>
+                    </button>
+                </div>
+            )}
+
+            {/* CC-BY Attributions Modal */}
+            {showAttributions && (
+                <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+                    <div className="bg-[#050505]/95 border border-white/15 rounded-xl max-w-md w-full p-5 space-y-4 font-sans text-slate-200 shadow-2xl">
+                        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                            <div className="flex items-center gap-2">
+                                <i className="fas fa-cube text-cyan-400 text-sm"></i>
+                                <h4 className="text-sm font-semibold text-white">Créditos de Modelos 3D (CC-BY 4.0)</h4>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setShowAttributions(false)}
+                                className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10"
+                            >
+                                <i className="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                        <div className="space-y-2 text-xs text-slate-300 max-h-72 overflow-y-auto pr-1">
+                            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.06]">
+                                <span className="font-semibold text-cyan-300">"Egg"</span> by <a href="https://skfb.ly/6uALr" target="_blank" rel="noreferrer" className="underline text-white">joe_carrot</a> (CC-BY 4.0).
+                            </div>
+                            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.06]">
+                                <span className="font-semibold text-cyan-300">"Journal"</span> by <a href="https://skfb.ly/66z8C" target="_blank" rel="noreferrer" className="underline text-white">FlukierJupiter</a> (CC-BY 4.0).
+                            </div>
+                            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.06]">
+                                <span className="font-semibold text-cyan-300">"RaY Gun"</span> by <a href="https://skfb.ly/oHYqX" target="_blank" rel="noreferrer" className="underline text-white">SovietCream</a> (CC-BY 4.0).
+                            </div>
+                            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.06]">
+                                <span className="font-semibold text-cyan-300">"Mystery Box"</span> by <a href="https://skfb.ly/oQNrK" target="_blank" rel="noreferrer" className="underline text-white">MDTOWERZ</a> (CC-BY 4.0).
+                            </div>
+                            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.06]">
+                                <span className="font-semibold text-cyan-300">"Lock And Key"</span> by <a href="https://skfb.ly/oTpNS" target="_blank" rel="noreferrer" className="underline text-white">Mehdi Shahsavan</a> (CC-BY 4.0).
+                            </div>
+                            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.06]">
+                                <span className="font-semibold text-cyan-300">"Cactuar (Final Fantasy)"</span> by <a href="https://skfb.ly/oFy9t" target="_blank" rel="noreferrer" className="underline text-white">mescri</a> (CC-BY 4.0).
+                            </div>
+                            <div className="text-[11px] text-slate-400 pt-1 italic">
+                                * Todos os demais modelos sem menção de créditos foram criados por Eduardo Gelain (SpetDev).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+
 // --- SPACE & SKY CANVAS (COSMIC SPACE & EARTH SKY THEMES) ---
 const SpaceCanvas = ({ theme = 'space' }) => {
     const canvasRef = useRef(null);
@@ -5091,11 +6759,20 @@ const ProjectsSection = ({ onNavigateJournal }) => {
             setViewerModelId(e.detail?.modelId || 'chicken');
             setShow3DViewer(true);
         };
+        const handleOpenProject = (e) => {
+            const pId = e.detail?.projectId;
+            if (pId) {
+                const proj = PORTFOLIO_DATA.projectsData.find(p => p.id === pId);
+                if (proj) setActiveModalProject(proj);
+            }
+        };
         const handlePatreonUnlock = () => setPatreonUnlockTick(prev => prev + 1);
         window.addEventListener('spet:open-3d-viewer', handleOpenViewer);
+        window.addEventListener('spet:open-project-modal', handleOpenProject);
         window.addEventListener('spet:patreon-unlock', handlePatreonUnlock);
         return () => {
             window.removeEventListener('spet:open-3d-viewer', handleOpenViewer);
+            window.removeEventListener('spet:open-project-modal', handleOpenProject);
             window.removeEventListener('spet:patreon-unlock', handlePatreonUnlock);
         };
     }, []);
@@ -6390,6 +8067,31 @@ const SettingsModal = ({
                             <div className="grid grid-cols-2 gap-2 pt-1">
                                 <button
                                     type="button"
+                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space3')}
+                                    disabled={window.IS_LOW_END}
+                                    className={`col-span-2 p-2.5 rounded-lg text-left border transition-all ${
+                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
+                                        settings.theme === 'space3'
+                                            ? 'bg-gradient-to-r from-cyan-950/60 to-blue-950/40 border-cyan-400 text-white shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-cyan-500/40'
+                                    }`}
+                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <div className="flex items-center gap-2">
+                                            <i className="fas fa-atom text-cyan-400 text-xs"></i>
+                                            <span>{t('settings.themeSpace3')}</span>
+                                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold">BETA</span>
+                                        </div>
+                                        {settings.theme === 'space3' && <i className="fas fa-check text-[10px] text-cyan-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {window.IS_LOW_END ? (lang === 'pt' ? 'Desativado (Hardware Limitado)' : 'Disabled (Hardware Limit)') : t('settings.themeSpace3Sub')}
+                                    </div>
+                                </button>
+
+                                <button
+                                    type="button"
                                     onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space2')}
                                     disabled={window.IS_LOW_END}
                                     className={`p-2.5 rounded-lg text-left border transition-all ${
@@ -6493,6 +8195,78 @@ const SettingsModal = ({
                     <div className="space-y-3">
                         <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
                             {t('settings.sectionAudio')}
+                        </div>
+
+                        {/* Master Volume */}
+                        <div className="py-2 border-b border-white/[0.06] space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="font-medium text-slate-200">{t('settings.volumeMaster')}</div>
+                                    <div className="text-[11px] text-slate-400">{t('settings.volumeMasterDesc')}</div>
+                                </div>
+                                <span className="font-mono text-[11px] font-bold text-primary px-2 py-0.5 rounded bg-primary/10 border border-primary/20">
+                                    {settings.masterVolume ?? 40}%
+                                </span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="1"
+                                value={settings.masterVolume ?? 40}
+                                onChange={(e) => onUpdateSetting('masterVolume', Number(e.target.value))}
+                                className="w-full accent-primary h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                            />
+                        </div>
+
+                        {/* Music Volume */}
+                        <div className="py-2 border-b border-white/[0.06] space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="font-medium text-slate-200">{t('settings.volumeMusic')}</div>
+                                    <div className="text-[11px] text-slate-400">{t('settings.volumeMusicDesc')}</div>
+                                </div>
+                                <span className="font-mono text-[11px] font-bold text-cyan-400 px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20">
+                                    {settings.musicVolume ?? 40}%
+                                </span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="1"
+                                value={settings.musicVolume ?? 40}
+                                onChange={(e) => onUpdateSetting('musicVolume', Number(e.target.value))}
+                                className="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                            />
+                        </div>
+
+                        {/* SFX Volume */}
+                        <div className="py-2 border-b border-white/[0.06] space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="font-medium text-slate-200">{t('settings.volumeSfx')}</div>
+                                    <div className="text-[11px] text-slate-400">{t('settings.volumeSfxDesc')}</div>
+                                </div>
+                                <span className="font-mono text-[11px] font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
+                                    {settings.sfxVolume ?? 40}%
+                                </span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="1"
+                                value={settings.sfxVolume ?? 40}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    onUpdateSetting('sfxVolume', val);
+                                    if (typeof playCosmicSfx === 'function') {
+                                        playCosmicSfx('blip', { ...settings, sfxVolume: val });
+                                    }
+                                }}
+                                className="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                            />
                         </div>
 
                         {/* Music Player */}
@@ -6613,6 +8387,33 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand
         const cleanCmd = cmd.replace(/['"]/g, '').trim();
 
         const newHistory = [...history, { type: 'user', text: `> ${inputVal}` }];
+
+        // Space 3.0 Galaxy Map Command
+        if (cleanCmd === 'galaxymap' || cleanCmd === '/galaxymap' || cleanCmd === 'space3' || cleanCmd === '/space3') {
+            window.dispatchEvent(new CustomEvent('spet:set-theme', { detail: { theme: 'space3' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'galaxy' } }));
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('terminal');
+            onClose();
+            return;
+        }
+
+        // MORE! Chicken command (immediate unlock and warp to secret poultry sector)
+        const isMoreChicken = (
+            cleanCmd === 'more! chicken' ||
+            cleanCmd === 'more chicken' ||
+            cleanCmd === '/more! chicken' ||
+            cleanCmd === '/more chicken' ||
+            cleanCmd === 'more! chicken!' ||
+            cleanCmd === 'more chicken!'
+        );
+        if (isMoreChicken) {
+            window.dispatchEvent(new CustomEvent('spet:set-theme', { detail: { theme: 'space3' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'chicken' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'chicken' } }));
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('warp');
+            onClose();
+            return;
+        }
 
         // Chicken easter egg command
         if (cleanCmd === 'chicken' || cleanCmd === 'chicken!' || cleanCmd === 'space_chicken' || cleanCmd === 'space_chicken!' || cleanCmd === 'space chicken' || cleanCmd === 'space chicken!') {
@@ -6786,127 +8587,43 @@ Celestial Mega-Chicken recalled. Natural lunar orbit and gravitational tides res
         );
 
         if (isDelicia) {
+            // Space 3.0 Delícia Sector Unlock & Warp
+            window.dispatchEvent(new CustomEvent('spet:set-theme', { detail: { theme: 'space3' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'delicia' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'delicia' } }));
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('warp');
+
             const nextDeliciaState = !window.__spetDeliciaActive;
             window.__spetDeliciaActive = nextDeliciaState;
             window.dispatchEvent(new CustomEvent('spet:delicia-toggle', { detail: { enabled: nextDeliciaState } }));
 
-            // Fun triumphant chord synth
-            try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (AudioCtx) {
-                    const ctx = new AudioCtx();
-                    const now = ctx.currentTime;
-                    [0, 0.12, 0.24].forEach((offset, idx) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'triangle';
-                        const freqs = [440, 554.37, 659.25]; // A major
-                        osc.frequency.setValueAtTime(freqs[idx], now + offset);
-                        gain.gain.setValueAtTime(0.22, now + offset);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.22);
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.start(now + offset);
-                        osc.stop(now + offset + 0.24);
-                    });
-                }
-            } catch(err) {}
-
-            if (nextDeliciaState) {
-                newHistory.push({
-                    type: 'output',
-                    text: `[🍊 AI QUE DELÍCIA, CARA! 🍊]
-   \\
-    \\   ( ͡° ͜ʖ ͡°)  *ERA ESSA A PEÇA QUE VOCÊ QUERIA?*
-
-SUCO DE LARANJA PROTOCOL ENGAGED!
-• A Lua transformou-se no lendário Jailson Mendes!
-• O cinturão de asteroides transformou-se em laranjas espaciais 3D!
-• Trilha sonora relaxante iniciada em looping no fundo.
-
-Comandos secretos:
-• Digite 'delicia' novamente para desativar e restaurar a órbita lunar.
-• Digite 'delicia doom' para jogar DELICIA DOOM (Total Conversion) no navegador!
-• Digite 'preview jailson' ou 'preview orange' para inspecionar os modelos 3D.`
-                });
-            } else {
-                newHistory.push({
-                    type: 'output',
-                    text: `[🌕 Gravidade & Órbita Lunar Restauradas]
-O suco de laranja acabou! A lua e os asteroides retornaram à órbita natural. Trilha sonora finalizada.`
-                });
-            }
-            setHistory(newHistory);
-            setInputVal('');
+            onClose();
             return;
         }
 
         // Secret MARS Easter Egg Command (NOT listed in 'help' command)
         const isMarsCmd = (
             cleanCmd === 'mars' ||
+            cleanCmd === '/mars' ||
             cleanCmd === 'mars!' ||
             cleanCmd === 'marte' ||
+            cleanCmd === '/marte' ||
             cleanCmd === 'marte!' ||
             cleanCmd === 'doom mars' ||
             cleanCmd === 'uac mars'
         );
 
         if (isMarsCmd) {
+            // Space 3.0 Solar System & DOOM Sector Warp
+            window.dispatchEvent(new CustomEvent('spet:set-theme', { detail: { theme: 'space3' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'solar' } }));
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('warp');
+
             const nextMarsState = !window.__spetMarsActive;
             window.__spetMarsActive = nextMarsState;
             window.dispatchEvent(new CustomEvent('spet:mars-toggle', { detail: { enabled: nextMarsState } }));
 
-            // E1M1-inspired low sawtooth power riff synth
-            try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (AudioCtx) {
-                    const ctx = new AudioCtx();
-                    const now = ctx.currentTime;
-                    const notes = [82.41, 82.41, 164.81, 82.41, 82.41, 146.83]; // E2, E2, E3, E2, E2, D3
-                    notes.forEach((freq, idx) => {
-                        const offset = idx * 0.11;
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'sawtooth';
-                        osc.frequency.setValueAtTime(freq, now + offset);
-                        gain.gain.setValueAtTime(0.22, now + offset);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.1);
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.start(now + offset);
-                        osc.stop(now + offset + 0.105);
-                    });
-                }
-            } catch (err) {}
-
-            if (nextMarsState) {
-                newHistory.push({
-                    type: 'output',
-                    text: `[🔴 UAC MARS TELEMETRY ONLINE — RIP AND TEAR! 🔴]
-============================================================
-• PLANETARY SHIFT : A Lua transformou-se em MARTE com Phobos e Deimos em órbita!
-• SECTOR EARTH    : A TERRA (com a Lua orbitando) surgiu no setor direito!
-• TETHER UNIT     : O astronauta do foguete transformou-se no DOOM SLAYER!
-
-[🎮 INTERACTIVE ORBITAL LAUNCHERS (UZDoom WebAssembly)]:
-• Clique em PHOBOS (lua de Marte) ➔ Inicia DOOM (E1M1: Hangar)
-• Clique em DEIMOS (lua de Marte) ➔ Inicia DOOM (E2M1: Deimos Anomaly)
-• Clique na TERRA (setor direito) ➔ Inicia DOOM II: Hell on Earth (MAP01)
-  (Os IWADs são baixados sob demanda e salvos no cache IndexedDB do navegador)
-
-Comandos extras:
-• Digite 'mars' novamente para desativar e restaurar a órbita lunar.
-• Digite 'preview slayer' para inspecionar o modelo 3D do Doom Slayer.`
-                });
-            } else {
-                newHistory.push({
-                    type: 'output',
-                    text: `[🌕 UAC Mars Telemetry Offline]
-Órbita lunar padrão e astronauta restaurados.`
-                });
-            }
-            setHistory(newHistory);
-            setInputVal('');
+            onClose();
             return;
         }
 
@@ -10263,7 +11980,10 @@ const App = () => {
         defaultLang: 'pt',
         theme: 'space2',
         skyboxIndex: 0,
-        easterEggSign: false
+        easterEggSign: false,
+        masterVolume: 40,
+        musicVolume: 40,
+        sfxVolume: 40
     };
 
     const [settings, setSettings] = useState(() => {
@@ -10283,7 +12003,10 @@ const App = () => {
                     defaultLang: parsed.defaultLang || parsed.defaultLanguage || DEFAULT_SETTINGS.defaultLang,
                     theme: (!parsed.theme || parsed.theme === 'space') ? DEFAULT_SETTINGS.theme : parsed.theme,
                     skyboxIndex: parsed.skyboxIndex !== undefined ? parsed.skyboxIndex : DEFAULT_SETTINGS.skyboxIndex,
-                    easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign
+                    easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign,
+                    masterVolume: parsed.masterVolume !== undefined ? Number(parsed.masterVolume) : DEFAULT_SETTINGS.masterVolume,
+                    musicVolume: parsed.musicVolume !== undefined ? Number(parsed.musicVolume) : DEFAULT_SETTINGS.musicVolume,
+                    sfxVolume: parsed.sfxVolume !== undefined ? Number(parsed.sfxVolume) : DEFAULT_SETTINGS.sfxVolume
                 };
             } else if (astroWelcomeSaved !== null) {
                 return {
@@ -10549,11 +12272,16 @@ const App = () => {
             setIsTerminalOpen(true);
         };
         const handleOpenPatreonModal = () => setShowPatreonModal(true);
+        const handleSetTheme = (e) => {
+            if (e.detail?.theme) handleUpdateSetting('theme', e.detail.theme);
+        };
         window.addEventListener('spet:open-terminal', handleOpenTerminal);
         window.addEventListener('spet:open-patreon-modal', handleOpenPatreonModal);
+        window.addEventListener('spet:set-theme', handleSetTheme);
         return () => {
             window.removeEventListener('spet:open-terminal', handleOpenTerminal);
             window.removeEventListener('spet:open-patreon-modal', handleOpenPatreonModal);
+            window.removeEventListener('spet:set-theme', handleSetTheme);
         };
     }, []);
 
@@ -10878,6 +12606,15 @@ const App = () => {
 
             {isSearchBot ? (
                 <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none" />
+            ) : settings.theme === 'space3' ? (
+                <SpaceCanvasV3
+                    skyboxIndex={settings.skyboxIndex || 0}
+                    onLoadingProgress={handleCanvasProgress}
+                    onLoaded={handleCanvasLoaded}
+                    settings={settings}
+                    lang={lang}
+                    isJukeboxPlaying={Boolean(ffMusicState.isActive)}
+                />
             ) : settings.theme === 'space2' ? (
                 <React.Fragment>
                     <SpaceCanvasV2 
