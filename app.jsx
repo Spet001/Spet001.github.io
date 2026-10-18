@@ -1102,6 +1102,14 @@ const PORTFOLIO_DATA = {
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
         {
+            id: "Gamifying-A-Galactic-Portfolio-Galaxy-Map",
+            title: "Quick Entry: Gamifying a Galactic Portfolio with the 3D Galaxy Map!",
+            date: "Oct 18, 2026",
+            file: "Gamifying-A-Galactic-Portfolio-Galaxy-Map.md",
+            category: "Creative Dev & Three.js",
+            excerpt: "Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors."
+        },
+        {
             id: "DEVLOG-Outcaster-Unity-6",
             title: "DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival",
             date: "Oct 16, 2026",
@@ -6618,7 +6626,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                         title={lang === 'pt' ? 'Entrar na experiência espacial 3D interativa' : 'Enter interactive 3D space experience'}
                     >
                         <i className="fas fa-compass text-cyan-400 text-xs"></i>
-                        <span>Experiencia Interativa: Galaxy Map</span>
+                        <span>{lang === 'pt' ? 'Experiência Interativa: Galaxy Map' : 'Interactive Experience: Galaxy Map'}</span>
                     </button>
                     <a
                         href="#projects"
@@ -8762,7 +8770,8 @@ const SettingsModal = ({
     onUpdateSetting,
     onResetDefaults,
     lang,
-    setLang
+    setLang,
+    isGalaxyMapActive = false
 }) => {
     if (!isOpen) return null;
 
@@ -13021,6 +13030,10 @@ const App = () => {
             const params = new URLSearchParams(window.location.search);
             const postParam = params.get('post');
 
+            if (path.toLowerCase().includes('doomjaja') || hash.toLowerCase().includes('doomjaja')) {
+                return { view: 'home', postId: null };
+            }
+
             if (path.includes('/privacy') || hash === 'privacy') {
                 return { view: 'privacy', postId: null };
             }
@@ -13169,7 +13182,36 @@ const App = () => {
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
     const [terminalInitialMessage, setTerminalInitialMessage] = useState(null);
     const [showPatreonModal, setShowPatreonModal] = useState(false);
-    const [easterGame, setEasterGame] = useState(null); // 'menu' | 'quake' | 'gta' | 'zombies' | null
+    const [easterGame, setEasterGame] = useState(() => {
+        try {
+            const path = window.location.pathname.toLowerCase();
+            const hash = window.location.hash.toLowerCase();
+            const params = new URLSearchParams(window.location.search);
+            if (path.includes('doomjaja') || hash.includes('doomjaja') || params.get('game') === 'delicia_doom' || params.get('game') === 'doomjaja') {
+                return 'delicia_doom';
+            }
+        } catch (e) {}
+        return null;
+    });
+
+    useEffect(() => {
+        const checkDirectEasterGame = () => {
+            try {
+                const path = window.location.pathname.toLowerCase();
+                const hash = window.location.hash.toLowerCase();
+                const params = new URLSearchParams(window.location.search);
+                if (path.includes('doomjaja') || hash.includes('doomjaja') || params.get('game') === 'delicia_doom' || params.get('game') === 'doomjaja') {
+                    setEasterGame('delicia_doom');
+                }
+            } catch (e) {}
+        };
+        window.addEventListener('hashchange', checkDirectEasterGame);
+        window.addEventListener('popstate', checkDirectEasterGame);
+        return () => {
+            window.removeEventListener('hashchange', checkDirectEasterGame);
+            window.removeEventListener('popstate', checkDirectEasterGame);
+        };
+    }, []);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [isMascotOpen, setIsMascotOpen] = useState(false);
     const [isZarathustraOpen, setIsZarathustraOpen] = useState(false);
@@ -13728,6 +13770,7 @@ const App = () => {
                 onResetDefaults={handleResetDefaults}
                 lang={lang}
                 setLang={(l) => { setLang(l); handleUpdateSetting('defaultLang', l); }}
+                isGalaxyMapActive={Boolean(isGalaxyMapActive || settings.theme === 'space3')}
             />
 
             {easterGame && (

@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'Gamifying-A-Galactic-Portfolio-Galaxy-Map': 'Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors.',
+    'entry_0017': 'Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors.',
     'DEVLOG-Outcaster-Unity-6': 'DEVLOG: Rebuilding Outcaster from scratch in Unity 6 (DX11). Engineering a custom LIVE 3D HUD Preview in the Inspector for zero-play-mode 2.5D weapon authoring, modular architecture, and a COD Zombies-style Survival Mode.',
     'entry_0016': 'DEVLOG: Rebuilding Outcaster from scratch in Unity 6 (DX11). Engineering a custom LIVE 3D HUD Preview in the Inspector for zero-play-mode 2.5D weapon authoring, modular architecture, and a COD Zombies-style Survival Mode.',
     'Sparky-Rush-Steam-Release': 'Sparky Rush: Purrils in Pawsville commercial launch on Steam by Converting Minds! QA breakdown: hunting 100+ collider flaws, fixing ultrawide UI issues, solving 20+ softlocks, and 60 FPS profiling on a GT 710.',
