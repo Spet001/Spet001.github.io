@@ -12,6 +12,8 @@
                 window.location.replace('/?game=delicia_doom#doomjaja');
             } else if (pathLower.includes('/journal/')) {
                 window.location.replace(path + window.location.search + window.location.hash);
+            } else if (pathLower.includes('/tools/')) {
+                window.location.replace(path + window.location.search + window.location.hash);
             } else {
                 window.location.replace('/' + window.location.search + window.location.hash);
             }

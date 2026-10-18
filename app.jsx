@@ -39,6 +39,7 @@ const PORTFOLIO_DATA = {
                 projects: "Projetos",
                 skills: "Habilidades",
                 journal: "Journal",
+                tools: "Tools",
                 terminal: "Terminal",
                 contact: "Contato",
                 resume: "Currículo (CV)"
@@ -96,6 +97,12 @@ const PORTFOLIO_DATA = {
                 subtitle: "Documentação de pesquisas em engenharia reversa, sandbox UWP e arquitetura de software.",
                 readArticle: "Ler Artigo Completo",
                 viewAll: "Acessar Todos os Artigos no Journal"
+            },
+            tools: {
+                title: "Ferramentas & Utilitários Web",
+                subtitle: "Utilitários desenvolvidos para modelagem procedural e pipelines de assets diretamente no navegador.",
+                openTool: "Abrir Quick 3D Studio",
+                desc: "Gerador procedural desenvolvido para transformar logos, insígnias e cartas colecionáveis (Yu-Gi-Oh!, Pokémon, Magic) em modelos 3D production-ready usando puro algoritmo matemático de contorno e extrusão, sem depender de inteligência artificial."
             },
             terminal: {
                 title: "Console Interativo (SpetTerm)",
@@ -186,6 +193,7 @@ const PORTFOLIO_DATA = {
                 projects: "Projects",
                 skills: "Tech Stack",
                 journal: "Journal",
+                tools: "Tools",
                 terminal: "Terminal",
                 contact: "Contact",
                 resume: "Resume (CV)"
@@ -243,6 +251,12 @@ const PORTFOLIO_DATA = {
                 subtitle: "In-depth documentation covering reverse engineering, UWP sandbox bypasses, and game architecture.",
                 readArticle: "Read Complete Entry",
                 viewAll: "View All Journal Entries"
+            },
+            tools: {
+                title: "Developer Tools & 3D Utilities",
+                subtitle: "Interactive in-browser utilities and procedural generators built for asset pipelines and gamedev.",
+                openTool: "Open Quick 3D Studio",
+                desc: "Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI."
             },
             terminal: {
                 title: "Interactive Console (SpetTerm)",
@@ -6502,6 +6516,9 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                     >
                         {t('nav.journal')}
                     </a>
+                    <a href="#tools" onClick={(e) => handleSectionClick(e, 'tools')} className="hover:text-primary transition-colors font-semibold cursor-pointer">
+                        {t('nav.tools') || 'Tools'}
+                    </a>
                     <a href="#contact" onClick={(e) => handleSectionClick(e, 'contact')} className="hover:text-white transition-colors">{t('nav.contact')}</a>
                 </nav>
 
@@ -6567,6 +6584,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'projects'); }} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'skills'); }} href="#skills" className="block text-sm text-slate-300 hover:text-primary">{t('nav.skills')}</a>
                     <a onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); if (onNavigateJournal) onNavigateJournal(); }} href="/journal" className="block text-sm text-primary font-semibold">{t('nav.journal')}</a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'tools'); }} href="#tools" className="block text-sm text-slate-300 hover:text-primary">{t('nav.tools') || 'Tools'}</a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'contact'); }} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenPatreon(); }} className="w-full text-left text-sm text-[#FF424D] hover:text-[#e03640] flex items-center gap-2 font-bold mb-3"><i className="fab fa-patreon"></i> Login with Patreon</button>
                     <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
@@ -6622,10 +6640,9 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                     <button
                         type="button"
                         onClick={() => window.dispatchEvent(new CustomEvent('spet:open-galaxy-map'))}
-                        className="px-5 py-3 rounded-lg bg-white/[0.04] border border-cyan-500/30 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/[0.06] text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer select-none"
+                        className="px-5 py-3 rounded-lg bg-white/[0.04] border border-cyan-500/30 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/[0.06] text-sm font-semibold transition-colors flex items-center cursor-pointer select-none"
                         title={lang === 'pt' ? 'Entrar na experiência espacial 3D interativa' : 'Enter interactive 3D space experience'}
                     >
-                        <i className="fas fa-compass text-cyan-400 text-xs"></i>
                         <span>{lang === 'pt' ? 'Experiência Interativa: Galaxy Map' : 'Interactive Experience: Galaxy Map'}</span>
                     </button>
                     <a
@@ -8073,6 +8090,84 @@ const JournalSection = ({ onNavigateJournal }) => {
     );
 };
 
+// --- TOOLS SECTION: Developer Utilities & Procedural Generators ---
+const ToolsSection = () => {
+    const { t, lang } = useContext(LanguageContext);
+
+    return (
+        <section id="tools" className="py-16 relative border-t border-white/[0.08]">
+            <div className="max-w-6xl mx-auto px-6">
+                
+                <div className="text-center sm:text-left mb-8">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                        {t('tools.title')}
+                    </h2>
+                    <p className="text-slate-400 mt-1 text-sm">
+                        {t('tools.subtitle')}
+                    </p>
+                </div>
+
+                {/* Featured Tool Card */}
+                <div className="glass-panel rounded-2xl border border-white/[0.08] hover:border-white/[0.2] overflow-hidden transition-all duration-300">
+                    <div className="grid lg:grid-cols-12 gap-0 items-stretch">
+                        
+                        {/* Visual Preview / Screenshot */}
+                        <div className="lg:col-span-7 relative bg-[#040612] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+                            <img
+                                src="/assets/tool_quick_3d_studio.png"
+                                alt="Spet's Quick 3D Studio"
+                                className="w-full h-full object-cover object-left-top"
+                                loading="lazy"
+                            />
+                        </div>
+
+                        {/* Description & Action Panel */}
+                        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-white/[0.01]">
+                            <div>
+                                <div className="text-[11px] font-mono text-primary font-semibold tracking-wider uppercase mb-1.5">
+                                    {lang === 'pt' ? 'Gerador 3D Procedural' : 'Procedural 3D Generator'}
+                                </div>
+
+                                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
+                                    Spet's Quick 3D Studio
+                                </h3>
+
+                                <p className="text-sm text-slate-300 leading-relaxed mb-6">
+                                    {t('tools.desc')}
+                                </p>
+
+                                <div className="flex flex-wrap gap-1.5 mb-6">
+                                    {['Three.js', 'WebGL', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR', 'Zero AI'].map((tag, i) => (
+                                        <span key={i} className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                <a
+                                    href="/tools/image-to-3d/"
+                                    className="px-5 py-2.5 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
+                                >
+                                    <span>{t('tools.openTool')}</span>
+                                    <i className="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+
+                                <span className="text-[11px] font-mono text-slate-500">
+                                    /tools/image-to-3d/
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
 // --- CONTACT SECTION: NO LOCATION ---
 const ContactSection = () => {
     const { t, lang } = useContext(LanguageContext);
@@ -8320,6 +8415,7 @@ const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigat
                     <a href="#projects" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.projects')}</a>
                     <a href="#skills" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.skills')}</a>
                     <a href="/journal" onClick={(e) => { e.preventDefault(); if (onNavigateJournal) onNavigateJournal(); }} className="hover:text-primary transition-colors text-primary font-semibold cursor-pointer">{t('nav.journal')}</a>
+                    <a href="#tools" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.tools') || 'Tools'}</a>
                     <a href="#contact" onClick={(e) => { if (currentView !== 'home') { e.preventDefault(); if (onNavigateHome) onNavigateHome(); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); } }} className="hover:text-primary transition-colors cursor-pointer">{t('nav.contact')}</a>
                 </div>
 
@@ -13035,7 +13131,11 @@ const App = () => {
             }
 
             if (path.includes('/privacy') || hash === 'privacy') {
-                return { view: 'privacy', postId: null };
+                return { view: 'privacy', postId: null, section: null };
+            }
+
+            if (path.includes('/tools') || hash === 'tools') {
+                return { view: 'home', postId: null, section: 'tools' };
             }
 
             if (path.includes('/journal') || hash.startsWith('entry_') || hash === 'journal' || postParam) {
@@ -13081,6 +13181,14 @@ const App = () => {
             const targetUrl = postId ? `/journal/${postId}/` : '/journal/';
             window.history.pushState({ view: 'journal', postId }, '', targetUrl);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (view === 'tools') {
+            setCurrentView('home');
+            setActiveJournalPost(null);
+            window.history.pushState({ view: 'home', sectionId: 'tools' }, '', '/#tools');
+            setTimeout(() => {
+                const el = document.getElementById('tools');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 50);
         } else if (view === 'privacy') {
             setCurrentView('privacy');
             setActiveJournalPost(null);
@@ -13107,6 +13215,15 @@ const App = () => {
         window.addEventListener('popstate', handlePopState);
         return () => window.removeEventListener('popstate', handlePopState);
     }, []);
+
+    useEffect(() => {
+        if (initialRoute?.section) {
+            setTimeout(() => {
+                const el = document.getElementById(initialRoute.section);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+    }, [initialRoute?.section]);
 
     // --- LOADING SCREEN STATE ---
     const isSearchBot = useMemo(() => (
@@ -13680,6 +13797,7 @@ const App = () => {
                             <ExperienceSection />
                             <ProjectsSection onNavigateJournal={(id) => navigateTo('journal', id)} />
                             <SkillsSection />
+                            <ToolsSection />
                             <JournalSection onNavigateJournal={(id) => navigateTo('journal', id)} />
                             <ContactSection />
                         </React.Fragment>

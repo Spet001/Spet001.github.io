@@ -28,3 +28,9 @@ texto.md
 # Env
 *.env
 *.example
+
+# Ignora qualquer arquivo que comece com "qa" e termine em ".js"
+qa*.js
+
+# Ignora o arquivo diagnose.js
+diagnose.js

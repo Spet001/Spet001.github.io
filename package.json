@@ -14,12 +14,16 @@
     "get-caller-file": "^2.0.5",
     "get-east-asian-width": "^1.7.0",
     "lilconfig": "^3.1.3",
+    "lucide-react": "^1.59.0",
     "mitt": "^3.0.1",
     "modern-tar": "^0.8.5",
     "puppeteer": "^25.12.0",
     "puppeteer-core": "^25.12.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "string-width": "^8.3.0",
     "strip-ansi": "^7.2.0",
+    "three": "^0.186.1",
     "typed-query-selector": "^2.12.3",
     "webdriver-bidi-protocol": "^0.4.3",
     "wrap-ansi": "^9.0.2",
@@ -35,7 +39,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild app.jsx --outfile=app.min.js --jsx=transform --jsx-factory=React.createElement --jsx-fragment=React.Fragment --minify && node build-journal.js",
+    "build:tools": "esbuild tools/image-to-3d/src/main.tsx --bundle --outfile=tools/image-to-3d/app.min.js --format=esm --minify",
+    "build": "esbuild app.jsx --outfile=app.min.js --jsx=transform --jsx-factory=React.createElement --jsx-fragment=React.Fragment --minify && esbuild tools/image-to-3d/src/main.tsx --bundle --outfile=tools/image-to-3d/app.min.js --format=esm --minify && node build-journal.js",
     "watch": "esbuild app.jsx --outfile=app.min.js --jsx=transform --jsx-factory=React.createElement --jsx-fragment=React.Fragment --watch"
   },
   "repository": {
