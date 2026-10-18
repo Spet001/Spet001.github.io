@@ -1136,7 +1136,7 @@ const PORTFOLIO_DATA = {
         {
             id: "What-Is-A-WAD-Modern-Games",
             title: "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
-            date: "Oct 11, 2026",
+            date: "Oct 18, 2026",
             file: "What-Is-A-WAD-Modern-Games.md",
             category: "Reverse Engineering & File Formats",
             excerpt: "Tracing the WAD lump filesystem from 1993 DOOM to reverse-engineering Treyarch's undocumented 0x543377AB Demonware WAD containers (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 resources."

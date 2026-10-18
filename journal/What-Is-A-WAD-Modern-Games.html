@@ -46,7 +46,7 @@
   "@type": "BlogPosting",
   "headline": "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
   "description": "Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.",
-  "datePublished": "Oct 11, 2026",
+  "datePublished": "Oct 18, 2026",
   "articleSection": "Reverse Engineering & File Formats",
   "url": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
   "mainEntityOfPage": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
@@ -459,7 +459,7 @@
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
                     <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
-                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 11, 2026</time>
+                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 18, 2026</time>
                         <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
                         <span><i class="far fa-folder mr-1"></i> Reverse Engineering & File Formats</span>
                     </div>
@@ -529,7 +529,10 @@ struct filelump_t {
 <li><code>18397\pub\online_tu17_mp.wad</code> (<em>Call of Duty: Black Ops 2</em> — Multiplayer, Title Update 17)</li>
 <li><code>18397\pub\online_tu17_zm.wad</code> (<em>Call of Duty: Black Ops 2</em> — Zombies, Title Update 17)</li>
 </ul>
-<p>If you search Google for <code>online_tu17_mp.wad</code> or its magic bytes, <strong>there are zero public results</strong>. Even AI search engines claim <em>&quot;WAD is not a component of Demonware&#39;s backend infrastructure for Call of Duty.&quot;</em></p>
+<h3>What is <code>online_tu14_mp_english.wad</code>?</h3>
+<p><strong><code>online_tu14_mp_english.wad</code></strong> is an official, proprietary Demonware Publisher Storage archive utilized by <em>Call of Duty: Black Ops 1</em> (T5) under Title Update 14 (TU14).</p>
+<p>When the Black Ops 1 client connects to Activision/Demonware online services (on Steam, MS Store, or community clients like Plutonium), it downloads this <code>.wad</code> file to initialize online multiplayer playlists (<code>playlists_mp.inf</code>), patch network DVAR limits, and deliver localized English game strings and Message of the Day data in a single compressed stream.</p>
+<p>If you search Google for <code>online_tu17_mp.wad</code> or <code>online_tu14_mp_english.wad</code>, you will often find forum errors or AI engines incorrectly guessing it relates to Minecraft or classic DOOM maps. In reality, it is Treyarch&#39;s custom binary container format.</p>
 <p>Let&#39;s open a hex editor and prove otherwise.</p>
 <h3>1. Why Does Demonware Use <code>.wad</code> Files?</h3>
 <p>In <em>Call of Duty</em>, <strong>Demonware</strong> handles authentication, matchmaking, stats, and <strong>Publisher Storage (<code>/pub/</code>)</strong> — a cloud key-value file store that the game client queries on boot via <code>bdTitleUtilities</code> / <code>DWFileTask</code> to fetch live-service configurations without requiring a binary patch.</p>

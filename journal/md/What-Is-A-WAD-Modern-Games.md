@@ -83,7 +83,13 @@ If you inspect the local Demonware Publisher Storage cache dumped by *Call of Du
 - `18397\pub\online_tu17_mp.wad` (*Call of Duty: Black Ops 2* — Multiplayer, Title Update 17)
 - `18397\pub\online_tu17_zm.wad` (*Call of Duty: Black Ops 2* — Zombies, Title Update 17)
 
-If you search Google for `online_tu17_mp.wad` or its magic bytes, **there are zero public results**. Even AI search engines claim *"WAD is not a component of Demonware's backend infrastructure for Call of Duty."*
+### What is `online_tu14_mp_english.wad`?
+
+**`online_tu14_mp_english.wad`** is an official, proprietary Demonware Publisher Storage archive utilized by *Call of Duty: Black Ops 1* (T5) under Title Update 14 (TU14).
+
+When the Black Ops 1 client connects to Activision/Demonware online services (on Steam, MS Store, or community clients like Plutonium), it downloads this `.wad` file to initialize online multiplayer playlists (`playlists_mp.inf`), patch network DVAR limits, and deliver localized English game strings and Message of the Day data in a single compressed stream.
+
+If you search Google for `online_tu17_mp.wad` or `online_tu14_mp_english.wad`, you will often find forum errors or AI engines incorrectly guessing it relates to Minecraft or classic DOOM maps. In reality, it is Treyarch's custom binary container format.
 
 Let's open a hex editor and prove otherwise.
 
