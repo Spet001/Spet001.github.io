@@ -592,9 +592,9 @@ const PORTFOLIO_DATA = {
             github: "#", 
             live: "#",
             tags: ["Game Assets", "Low Poly", "WebGL"],
-            description: {
-                pt: "Pacote de modelos 3D autorais low poly (Jato, Paraquedista, Foguete, Astronauta, Galinha Espacial) desenvolvidos para a simulação deste portfólio. Disponível gratuitamente para uso em jogos e projetos.",
-                en: "Collection of original low-poly 3D models (Jet, Paratrooper, Rocket, Astronaut, Space Chicken) created for this portfolio's simulation. Free to use in your own games and projects."
+                        description: {
+                pt: "Coleção completa de modelos e assets 3D autorais e otimizados (Jato, Foguete, Astronauta, Policial GameJam+, Galinha Espacial, Pistola Outcaster, Juggernog, Nuke T6, Pente de RAM, Logo BO3, Selo Guild Seal, Cartas YGO 3D Ryzeal e Tearlaments, Logos 3D SpetDev e Sparky Rush) modelados e convertidos para este portfólio e jogos WebGL. Disponíveis gratuitamente para a comunidade de desenvolvedores independentes.",
+                en: "Comprehensive collection of original and optimized 3D assets (Jet, Rocket, Astronaut, GameJam+ Cop, Space Chicken, Outcaster Pistol, Juggernog, T6 Nuke, RAM Stick, BO3 Logo, Guild Seal, 3D YGO Cards Ryzeal & Tearlaments, 3D Logos) crafted for this portfolio and WebGL games. Free for indie developers."
             },
             caseStudy: {
                 challenge: {
@@ -3235,7 +3235,2509 @@ const SpaceCanvasV2 = ({ skyboxIndex = 0, onLoadingProgress, onLoaded }) => {
 
 
 
-// --- SPACE & SKY CANVAS (COSMIC SPACE & EARTH SKY THEMES) ---
+
+// --- MASS EFFECT SOUND SYSTEM ---
+const playCosmicSfx = (sfxKey, settings = {}) => {
+    try {
+        const master = (settings?.masterVolume ?? 40) / 100;
+        const sfx = (settings?.sfxVolume ?? 40) / 100;
+        // Soft, gentle SFX volume (user requested lower volume for SFX)
+        const realVol = Math.min(1.0, master * sfx * 0.28);
+        if (realVol <= 0.002) return;
+
+        const files = {
+            warp: '/audio/mass effect/ME - Ambient - Mass Relay Jump.m4a',
+            anomaly: '/audio/mass effect/ME - EDI - Anomally Detected.m4a',
+            scan: '/audio/mass effect/ME - EDI - Scans Found Something.m4a',
+            blip: '/audio/mass effect/ME - Interface - Triple Blip.m4a',
+            project: '/audio/mass effect/ME - Interface - War Asset.m4a',
+            terminal: '/audio/mass effect/ME - Glyph- Terminal Updated.m4a'
+        };
+        const src = files[sfxKey];
+        if (!src) return;
+        const audio = new Audio(src);
+        audio.volume = Math.max(0, Math.min(1, realVol));
+        audio.play().catch(() => {});
+    } catch (e) {}
+};
+
+// --- DYNAMIC SECTOR BACKGROUND MUSIC MANAGER ---
+const CosmicTrackPlayer = ({
+    activeSectorTrack,
+    settings,
+    isJukeboxActive,
+    isEasterActive = false,
+    lang
+}) => {
+    const iframeRef = useRef(null);
+    const [isMuted, setIsMuted] = useState(false);
+
+    const trackMap = {
+        galaxy: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme (Uncharted Worlds)' },
+        core: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme' },
+        gamedev: { id: 'KI58_0T07Vs', title: 'Starfield OST — Into the Starfield' },
+        lowlevel: { id: 'UBLOvSb56Vc', title: 'Mass Effect 2 OST — The Illusive Man' },
+        tools: { id: '2HQaBWziYvY', title: 'Mass Effect — Normandy Theme' },
+        solar: { id: 'BSsfjHCFosw', title: 'DOOM OST — At Doom\'s Gate (E1M1)' },
+        delicia: { id: '9wVmCLtuUx0', title: 'Jailson Mendes — Música para Relaxar (Delícia Theme)' },
+        chicken: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme' }
+    };
+
+    const trackInfo = trackMap[activeSectorTrack] || trackMap.galaxy;
+    const targetVideoId = trackInfo.id;
+
+    const masterVol = (settings?.masterVolume ?? 40) / 100;
+    const musicVol = (settings?.musicVolume ?? 40) / 100;
+    const effectiveMusicVol = Math.max(0, Math.min(100, Math.round(masterVol * musicVol * 100)));
+
+    const sendCommand = (func, args = []) => {
+        try {
+            if (iframeRef.current && iframeRef.current.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(
+                    JSON.stringify({ event: 'command', func, args }),
+                    '*'
+                );
+            }
+        } catch (e) {}
+    };
+
+    const shouldMute = isMuted || isJukeboxActive || isEasterActive || !targetVideoId;
+
+    useEffect(() => {
+        if (!iframeRef.current) return;
+        const timer = setTimeout(() => {
+            if (shouldMute) {
+                sendCommand('mute');
+                sendCommand('pauseVideo');
+            } else {
+                sendCommand('unMute');
+                sendCommand('playVideo');
+                sendCommand('setVolume', [effectiveMusicVol]);
+            }
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [activeSectorTrack, effectiveMusicVol, shouldMute]);
+
+    return (
+        <React.Fragment>
+            <div className="hidden pointer-events-none opacity-0 select-none" aria-hidden="true">
+                <iframe
+                    ref={iframeRef}
+                    key={targetVideoId}
+                    width="1"
+                    height="1"
+                    src={`https://www.youtube.com/embed/${targetVideoId}?enablejsapi=1&autoplay=1&loop=1&playlist=${targetVideoId}&controls=0&disablekb=1&fs=0&modestbranding=1&playsinline=1`}
+                    title="Dynamic Cosmic Ambient Audio"
+                    allow="autoplay"
+                    onLoad={() => {
+                        if (!isMuted && !isJukeboxActive) {
+                            sendCommand('setVolume', [effectiveMusicVol]);
+                            sendCommand('unMute');
+                            sendCommand('playVideo');
+                        } else {
+                            sendCommand('mute');
+                        }
+                    }}
+                />
+            </div>
+            {!isJukeboxActive && settings?.musicPlayer && targetVideoId && (
+                <div className="fixed bottom-4 left-4 z-40 hidden sm:flex items-center gap-2 px-3 py-1.5 bg-black/85 border border-white/10 rounded-full text-xs text-slate-300 backdrop-blur-md shadow-lg select-none">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span className="font-mono text-[10px] text-cyan-300 font-semibold truncate max-w-[200px]">
+                        {trackInfo?.title}
+                    </span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-200 font-mono">
+                        {effectiveMusicVol}%
+                    </span>
+                    <button
+                        type="button"
+                        onClick={() => setIsMuted(prev => !prev)}
+                        className="text-slate-400 hover:text-white ml-1 cursor-pointer"
+                        title={isMuted ? (lang === 'pt' ? 'Ativar som' : 'Unmute') : (lang === 'pt' ? 'Mutar' : 'Mute')}
+                    >
+                        <i className={`fas ${isMuted ? 'fa-volume-mute text-rose-400' : 'fa-volume-low text-cyan-400'} text-[10px]`}></i>
+                    </button>
+                </div>
+            )}
+        </React.Fragment>
+    );
+};
+
+// Full Space 3.0 Cosmic Engine & Galaxy Map implementation (Mass Effect 3 Inspired)
+// Full Space 3.0 Cosmic Engine & Galaxy Map implementation (Mass Effect 3 Inspired)
+const SpaceCanvasV3 = ({
+    skyboxIndex = 0,
+    onLoadingProgress,
+    onLoaded,
+    lang = 'pt',
+    settings = {},
+    isFullscreenGalaxyMode = false,
+    onExitFullscreenGalaxy,
+    onToggleUI,
+    isJukeboxPlaying = false,
+    isEasterGameOpen: propIsEasterGameOpen = false
+}) => {
+    const containerRef = useRef(null);
+    const overlayRef = useRef(null);
+    const [viewMode, setViewMode] = useState('GALAXY_MAP'); // 'GALAXY_MAP' | 'SECTOR_FLIGHT'
+    const [activeClusterId, setActiveClusterId] = useState('core');
+    const [activeTrack, setActiveTrack] = useState('galaxy');
+    const [unlockedSectors, setUnlockedSectors] = useState(() => {
+        try {
+            const saved = localStorage.getItem('spet_unlocked_sectors');
+            return saved ? JSON.parse(saved) : { delicia: false, solar: true, chicken: false };
+        } catch (e) {
+            return { delicia: false, solar: true, chicken: false };
+        }
+    });
+    const [showAttributions, setShowAttributions] = useState(false);
+    const [selectedProjectCard, setSelectedProjectCard] = useState(null);
+    const [warpCinematic, setWarpCinematic] = useState({ active: false, targetName: '', progress: 0 });
+    const [isEasterGameOpen, setIsEasterGameOpen] = useState(false);
+    const isAnyEasterGameOpen = Boolean(propIsEasterGameOpen || isEasterGameOpen);
+
+    useEffect(() => {
+        const onOpenEaster = () => setIsEasterGameOpen(true);
+        const onCloseEaster = () => setIsEasterGameOpen(false);
+        window.addEventListener('spet:open-easter-game', onOpenEaster);
+        window.addEventListener('spet:close-easter-game', onCloseEaster);
+        return () => {
+            window.removeEventListener('spet:open-easter-game', onOpenEaster);
+            window.removeEventListener('spet:close-easter-game', onCloseEaster);
+        };
+    }, []);
+
+    const onProgressRef = useRef(onLoadingProgress);
+    const onLoadedRef = useRef(onLoaded);
+    useEffect(() => { onProgressRef.current = onLoadingProgress; }, [onLoadingProgress]);
+    useEffect(() => { onLoadedRef.current = onLoaded; }, [onLoaded]);
+
+    const unlockSector = useCallback((sectorId) => {
+        setUnlockedSectors(prev => {
+            const next = { ...prev, [sectorId]: true };
+            try { localStorage.setItem('spet_unlocked_sectors', JSON.stringify(next)); } catch (e) {}
+            return next;
+        });
+    }, []);
+
+    // 17 Real Projects mapped to 4 Primary Clusters + 3 Special Secret Clusters!
+    const CLUSTERS = useMemo(() => [
+        {
+            id: 'core',
+            name: { pt: 'Sistemas Centrais', en: 'Core Systems' },
+            subtitle: { pt: 'Portfólio Web & Technical Journal', en: 'Web Portfolio & Technical Journal' },
+            track: 'core',
+            pos: new THREE.Vector3(0, 0, 0),
+            color: 0x38bdf8,
+            gold: true,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.04, 0.62, 0.56),
+                c2: new THREE.Vector3(0.08, 0.52, 0.88),
+                c3: new THREE.Vector3(0.32, 0.12, 0.65),
+                c4: new THREE.Vector3(0.95, 0.45, 0.12)
+            },
+            planets: [
+                {
+                    id: 'portfolio_web',
+                    projectId: 'portfolio_web',
+                    name: 'Portfólio Web (SpetDev)',
+                    palette: 'terran',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(-14, 0, -45),
+                    models: [{ path: '/3d/spetdev_logo.glb', scale: 3.2, orbitDist: 2.8, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.28,
+                    desc: { pt: 'Experiência 3D Interativa em React, Three.js & Tailwind', en: 'Interactive 3D Experience with React, Three.js & Tailwind' },
+                    tags: ['React', 'Three.js', 'Tailwind', 'GLTF', 'Web Audio']
+                },
+                {
+                    id: 'technical_journal',
+                    projectId: 'technical_journal',
+                    name: 'Technical Journal (Artigos & Engenharia Reversa)',
+                    palette: 'gas_cyan',
+                    radius: 5.6,
+                    pos: new THREE.Vector3(18, 5, -125),
+                    hasRings: true,
+                    models: [{ path: '/3d/journal.glb', scale: 3.5, orbitDist: 3.0, orbitAngleOffset: 0, attribution: '"Journal" by FlukierJupiter (CC-BY 4.0)' }],
+                    rotSpeed: 0.22,
+                    desc: { pt: 'Artigos Técnicos, Engenharia Reversa & Otimização de Performance', en: 'Technical Articles, Reverse Engineering & Performance Research' },
+                    tags: ['Journal', 'Reverse Engineering', 'Three.js', 'Low-Level']
+                }
+            ]
+        },
+        {
+            id: 'gamedev',
+            name: { pt: 'Setor de Game Dev & Engines', en: 'Game Dev & Engines Sector' },
+            subtitle: { pt: 'Jogos, Protótipos Unity & Assets 3D', en: 'Games, Unity Prototypes & 3D Assets' },
+            track: 'gamedev',
+            pos: new THREE.Vector3(-16.5, 0, 10.5),
+            color: 0x22c55e,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.05, 0.45, 0.25),
+                c2: new THREE.Vector3(0.12, 0.72, 0.35),
+                c3: new THREE.Vector3(0.15, 0.25, 0.55),
+                c4: new THREE.Vector3(0.65, 0.95, 0.32)
+            },
+            planets: [
+                {
+                    id: 'sparky_rush_qa',
+                    projectId: 'sparky_rush_qa',
+                    name: 'Sparky Rush: Purrils in Pawsville (Steam QA)',
+                    palette: 'terran',
+                    radius: 4.4,
+                    pos: new THREE.Vector3(-18, -3, -40),
+                    models: [{ path: '/3d/sparky_rush_3d_logo.glb', scale: 3.0, orbitDist: 2.8, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.35,
+                    desc: { pt: 'Controle de Qualidade & Testes de QA (Lançado na Steam)', en: 'Quality Assurance & Regression Testing (Steam Release)' },
+                    tags: ['QA', 'Steam', 'Testing', 'Bug Hunting']
+                },
+                {
+                    id: 'outcaster_fps',
+                    projectId: 'outcaster_fps',
+                    name: 'Outcaster - Retro FPS Templates',
+                    palette: 'lava',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(16, 4, -85),
+                    models: [{ path: '/3d/pistol_overheat_1.glb', scale: 3.6, orbitDist: 2.9, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.30,
+                    desc: { pt: 'Template Boomer Shooter Modular em Unity 6 & C#', en: 'Modular Boomer Shooter Template in Unity 6 & C#' },
+                    tags: ['Unity', 'C#', 'Game Design', 'Retro FPS']
+                },
+                {
+                    id: 'pau_no_gato_game',
+                    projectId: 'pau_no_gato_game',
+                    name: 'Atirei o Pau no Gato',
+                    palette: 'desert',
+                    radius: 3.8,
+                    pos: new THREE.Vector3(-15, 5, -130),
+                    models: [{ path: '/3d/cop.glb', scale: 3.2, orbitDist: 2.7, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.40,
+                    desc: { pt: 'Jogo Indie Brasileiro de Plataforma & Ação', en: 'Brazilian Indie Platformer Action Game' },
+                    tags: ['GameDev', 'Indie', 'Unity', 'Action']
+                },
+                {
+                    id: 'free_3d_assets',
+                    projectId: 'free_3d_assets',
+                    name: 'Free to Use 3D Assets (Low Poly)',
+                    palette: 'ice',
+                    radius: 4.2,
+                    pos: new THREE.Vector3(18, -4, -175),
+                    hasRings: true,
+                    models: [{ path: '/3d/Paratrooper.glb', scale: 3.4, orbitDist: 2.8, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.25,
+                    desc: { pt: 'Modelos 3D Low-Poly Gratuitos para a Comunidade', en: 'Free Low-Poly 3D Assets for Game Developers' },
+                    tags: ['Blender', '3D Modeling', 'Low Poly', 'Free Assets']
+                },
+                {
+                    id: 'projecty_mdpro_web',
+                    projectId: 'projecty_mdpro_web',
+                    name: 'Meta Slave Planet (ProjectY)',
+                    palette: 'moon',
+                    radius: 4.6,
+                    pos: new THREE.Vector3(-12, 2, -220),
+                    // Dual orbiting cards: Ryzeal Detonator + Tearlaments Kitkallos!
+                    models: [
+                        { path: '/3d/ryzealdetonator_YGO.glb', scale: 3.6, orbitDist: 3.2, orbitAngleOffset: 0 },
+                        { path: '/3d/tearlamentskitkallos_YGO.glb', scale: 3.6, orbitDist: 3.2, orbitAngleOffset: Math.PI }
+                    ],
+                    rotSpeed: 0.32,
+                    desc: { pt: 'ProjectY - MDPro Web (Yu-Gi-Oh Simulator)', en: 'ProjectY - MDPro Web (Yu-Gi-Oh Simulator)' },
+                    tags: ['WebAssembly', 'C++', 'Networking', 'Card Game']
+                }
+            ]
+        },
+        {
+            id: 'lowlevel',
+            name: { pt: 'Setor de Baixo Nível & Reversing', en: 'Low-Level & Reversing Sector' },
+            subtitle: { pt: 'Engenharia Reversa, Injeção DLL & Bytecode VM', en: 'Reverse Engineering, DLL Injection & Bytecode VM' },
+            track: 'lowlevel',
+            pos: new THREE.Vector3(-19.5, 0, -13.5),
+            color: 0xa855f7,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.35, 0.08, 0.55),
+                c2: new THREE.Vector3(0.55, 0.12, 0.85),
+                c3: new THREE.Vector3(0.12, 0.25, 0.65),
+                c4: new THREE.Vector3(0.85, 0.42, 0.95)
+            },
+            planets: [
+                {
+                    id: 'resurge_client',
+                    projectId: 'resurge_client',
+                    name: 'Resurge Client (BO3 Multi-Platform)',
+                    palette: 'gas_cyan',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(-18, 4, -40),
+                    hasRings: true,
+                    models: [{ path: '/3d/logo_bo3.glb', scale: 3.2, orbitDist: 2.8, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.30,
+                    desc: { pt: 'Cliente Cross-Platform para Black Ops 3 (Linux, Windows, Steam Deck)', en: 'Cross-Platform Client for Black Ops 3 (Linux, Windows, Steam Deck)' },
+                    tags: ['C++', 'Reverse Engineering', 'Multi-Platform', 'Networking']
+                },
+                {
+                    id: 'cw_gsc_injector',
+                    projectId: 'cw_gsc_injector',
+                    name: 'CW GSC Injector (MS Store / Xbox PC)',
+                    palette: 'ice',
+                    radius: 4.2,
+                    pos: new THREE.Vector3(16, -3, -75),
+                    models: [{ path: '/3d/ray_gun.glb', scale: 3.2, orbitDist: 2.8, orbitAngleOffset: 0, attribution: '"RaY Gun" by SovietCream (CC-BY 4.0)' }],
+                    rotSpeed: 0.34,
+                    desc: { pt: 'Injetor de Scripts GSC em Tempo de Execução', en: 'Runtime GSC Script Injector for Cold War' },
+                    tags: ['C++', 'Assembly x64', 'Memory Injection', 'GSC']
+                },
+                {
+                    id: 'bo2_bo1_msclients',
+                    projectId: 'bo2_bo1_msclients',
+                    name: 'BO1 & BO2 MS Store Clients & GSC Injector',
+                    palette: 'moon',
+                    radius: 4.5,
+                    pos: new THREE.Vector3(-15, -4, -110),
+                    models: [{ path: '/3d/ram_stick.glb', scale: 3.4, orbitDist: 2.9, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.28,
+                    desc: { pt: 'Compatibilidade MS Store / Game Pass PC para Clássicos CoD', en: 'MS Store / Game Pass PC Port & Compatibility for Classic CoD' },
+                    tags: ['Reverse Engineering', 'Hooking', 'DirectX', 'C++']
+                },
+                {
+                    id: 'gsc_dumps_and_sources',
+                    projectId: 'gsc_dumps_and_sources',
+                    name: 'GSC Dumps and Pre-Compiled/Uncompiled Sources',
+                    palette: 'desert',
+                    radius: 4.0,
+                    pos: new THREE.Vector3(17, 5, -145),
+                    models: [{ path: '/3d/mystery_box.glb', scale: 3.2, orbitDist: 2.8, orbitAngleOffset: 0, attribution: '"Mystery Box" by MDTOWERZ (CC-BY 4.0)' }],
+                    rotSpeed: 0.32,
+                    desc: { pt: 'GSC Dumps & Descompilador de Opcodes VM', en: 'GSC Dumps & Opcode VM Decompiler' },
+                    tags: ['Bytecode VM', 'Decompiler', 'Reverse Engineering']
+                },
+                {
+                    id: 't6_gsc_mods',
+                    projectId: 't6_gsc_mods',
+                    name: 'Modos de Jogo Open Source T6 (GSC)',
+                    palette: 'lava',
+                    radius: 4.5,
+                    pos: new THREE.Vector3(19, -4, -180),
+                    // Dual orbiting models: Nuke (sleek 1.6 scale) + Juggernog (PBR lit)!
+                    models: [
+                        { path: '/3d/spet_t6_nuke.glb', scale: 1.6, orbitDist: 2.8, orbitAngleOffset: 0 },
+                        { path: '/3d/jugger.glb', scale: 3.0, orbitDist: 2.8, orbitAngleOffset: Math.PI }
+                    ],
+                    rotSpeed: 0.38,
+                    desc: { pt: 'Modos Customizados Open Source para Black Ops 2 Zombies & MP', en: 'Open Source Custom Modes for Black Ops 2 Zombies & MP' },
+                    tags: ['GSC', 'Modding', 'Black Ops II', 'Game Logic']
+                },
+                {
+                    id: 't9_mod_manager_re',
+                    projectId: 't9_mod_manager_re',
+                    name: 'Desbloqueie no Patreon! (T9 Mod Manager RE)',
+                    palette: 'moon',
+                    radius: 4.1,
+                    pos: new THREE.Vector3(-17, 6, -220),
+                    // Lock and Key on the Patreon locked entry!
+                    models: [{ path: '/3d/lock_and_key.glb', scale: 3.2, orbitDist: 2.7, orbitAngleOffset: 0, attribution: '"Lock And Key" by Mehdi Shahsavan (CC-BY 4.0)' }],
+                    rotSpeed: 0.30,
+                    desc: { pt: 'T9 Mod Manager RE (Patreon Confidencial)', en: 'T9 Mod Manager RE (Patreon Confidential)' },
+                    tags: ['C#', '.NET', 'Reverse Engineering', 'Process Memory']
+                },
+                {
+                    id: 'bo2_crossplay_relay',
+                    projectId: 'bo2_crossplay_relay',
+                    name: 'Desbloqueie no Patreon! (BO2 Crossplay Relay)',
+                    palette: 'gas_cyan',
+                    radius: 4.3,
+                    pos: new THREE.Vector3(16, -5, -255),
+                    models: [{ path: '/3d/space_satellite.glb', scale: 3.5, orbitDist: 3.0, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.26,
+                    desc: { pt: 'Relay de Rede Peer-to-Peer Crossplay (Patreon Confidencial)', en: 'Crossplay Peer-to-Peer Network Relay (Patreon Confidential)' },
+                    tags: ['UDP Socket', 'Relay', 'Crossplay', 'Patreon']
+                }
+            ]
+        },
+        {
+            id: 'tools',
+            name: { pt: 'Setor de Ferramentas & Modding', en: 'Tools & Modding Sector' },
+            subtitle: { pt: 'Utilitários Electron, Mods & Fixes', en: 'Electron Utilities, Mods & Fixes' },
+            track: 'tools',
+            pos: new THREE.Vector3(18.5, 0, -11.5),
+            color: 0xf59e0b,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.55, 0.35, 0.05),
+                c2: new THREE.Vector3(0.85, 0.55, 0.12),
+                c3: new THREE.Vector3(0.45, 0.15, 0.12),
+                c4: new THREE.Vector3(0.95, 0.82, 0.22)
+            },
+            planets: [
+                {
+                    id: 'fable3_fixer',
+                    projectId: 'fable3_fixer',
+                    name: 'Fable 3 Fixer (App Electron)',
+                    palette: 'terran',
+                    radius: 4.4,
+                    pos: new THREE.Vector3(-16, 3, -40),
+                    models: [{ path: '/3d/guild_seal.glb', scale: 3.4, orbitDist: 2.8, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.34,
+                    desc: { pt: 'Utilitário Electron para Restaurar DLCs e Conectividade GFWL', en: 'Electron Utility to Restore DLCs & GFWL Connectivity' },
+                    tags: ['Electron', 'Node.js', 'Patching', 'GFWL']
+                },
+                {
+                    id: 'ff13_fix_ms_store',
+                    projectId: 'ff13_fix_ms_store',
+                    name: 'FF13Fix for Microsoft Store',
+                    palette: 'ice',
+                    radius: 4.8,
+                    pos: new THREE.Vector3(17, -4, -90),
+                    models: [{ path: '/3d/cactuar_final_fantasy.glb', scale: 3.6, orbitDist: 2.8, orbitAngleOffset: 0, attribution: '"Cactuar (Final Fantasy)" by mescri (CC-BY 4.0)' }],
+                    rotSpeed: 0.28,
+                    desc: { pt: 'Port do FF13Fix para a versão Microsoft Store do Xbox PC', en: 'FF13Fix Port for Xbox PC / Microsoft Store Version' },
+                    tags: ['C++', 'DirectX 9', 'Frame Pacing', 'Hooks']
+                },
+                {
+                    id: 'autoparms_yakuza',
+                    projectId: 'autoparms_yakuza',
+                    name: 'AutoParMS - Yakuza Mod Toolkit',
+                    palette: 'desert',
+                    radius: 4.2,
+                    pos: new THREE.Vector3(-14, 5, -140),
+                    models: [{ path: '/3d/kamuro_sign.glb', scale: 3.5, orbitDist: 2.8, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.32,
+                    desc: { pt: 'AutoParMS Yakuza (Dragon Engine Modder)', en: 'AutoParMS Yakuza (Dragon Engine Modder)' },
+                    tags: ['Python', 'File Parser', 'Dragon Engine']
+                }
+            ]
+        },
+        {
+            id: 'solar',
+            isSpecialSystem: true,
+            name: { pt: 'Sistema Solar (UAC Telemetry)', en: 'Solar System (UAC Telemetry)' },
+            subtitle: { pt: 'Terra, Lua, Marte, Fobos, Deimos & DOOM', en: 'Earth, Moon, Mars, Phobos, Deimos & DOOM' },
+            track: 'solar',
+            pos: new THREE.Vector3(19.0, 0, 14.0),
+            color: 0xef4444,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.65, 0.08, 0.04),
+                c2: new THREE.Vector3(0.88, 0.22, 0.06),
+                c3: new THREE.Vector3(0.22, 0.12, 0.35),
+                c4: new THREE.Vector3(1.00, 0.45, 0.12)
+            },
+            planets: []
+        },
+        {
+            id: 'delicia',
+            isSecret: true,
+            isSpecialSystem: true,
+            name: { pt: 'Setor Secreto Delícia', en: 'Secret Delícia Sector' },
+            subtitle: { pt: 'Jailson Mendes & Laranjas Espaciais', en: 'Jailson Mendes & Space Oranges' },
+            track: 'delicia',
+            pos: new THREE.Vector3(11.0, 0, -22.0),
+            color: 0xf97316,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.75, 0.32, 0.02),
+                c2: new THREE.Vector3(0.95, 0.52, 0.08),
+                c3: new THREE.Vector3(0.35, 0.12, 0.02),
+                c4: new THREE.Vector3(1.00, 0.75, 0.15)
+            },
+            planets: []
+        },
+        {
+            id: 'chicken',
+            isSecret: true,
+            isSpecialSystem: true,
+            name: { pt: 'Setor Secreto das Galinhas', en: 'Secret Poultry Sector' },
+            subtitle: { pt: 'Mega Chicken & Asteroides Cósmicos', en: 'Mega Chicken & Cosmic Asteroids' },
+            track: 'chicken',
+            pos: new THREE.Vector3(-22.0, 0, -11.0),
+            color: 0x38bdf8,
+            nebulaPalette: {
+                c1: new THREE.Vector3(0.12, 0.45, 0.88),
+                c2: new THREE.Vector3(0.35, 0.75, 1.00),
+                c3: new THREE.Vector3(0.65, 0.32, 0.85),
+                c4: new THREE.Vector3(0.95, 0.85, 0.25)
+            },
+            planets: []
+        }
+    ], [lang]);
+
+    const exitSectorFnRef = useRef(null);
+    const enterSectorFnRef = useRef(null);
+    const clustersRef = useRef(CLUSTERS);
+    clustersRef.current = CLUSTERS;
+
+    // Set global flag so CLI knows we are in Galaxy Map mode
+    useEffect(() => {
+        window.__spetGalaxyActive = true;
+        return () => { window.__spetGalaxyActive = false; };
+    }, []);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x02040a, 0.0018);
+
+        const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 3500);
+        camera.position.set(0, 0, 50.0);
+
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: false,
+            powerPreference: 'high-performance'
+        });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.05;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        container.appendChild(renderer.domElement);
+
+        const loader = new THREE.GLTFLoader();
+        const modelCache = new Map();
+
+        // Model Normalization + PBR Material Lighting Fix (Juggernog lit, SkinnedMesh nuke scaled!)
+        const normalizeModel = (model, targetSize, pathHint = '') => {
+            model.traverse((child) => {
+                if (child.isMesh && child.material) {
+                    const mats = Array.isArray(child.material) ? child.material : [child.material];
+                    mats.forEach(mat => {
+                        if (mat.metalness !== undefined && mat.metalness > 0.2) {
+                            mat.metalness = 0.08;
+                        }
+                        if (mat.roughness !== undefined && mat.roughness < 0.4) {
+                            mat.roughness = 0.6;
+                        }
+                        mat.needsUpdate = true;
+                    });
+                }
+            });
+
+            // Robust bounding box computation for SkinnedMesh and hierarchical models
+            let box = new THREE.Box3();
+            model.updateMatrixWorld(true);
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
+                    if (child.geometry.boundingBox) {
+                        const b = child.geometry.boundingBox.clone();
+                        b.applyMatrix4(child.matrixWorld);
+                        box.union(b);
+                    }
+                }
+            });
+            if (box.isEmpty()) {
+                box.setFromObject(model);
+            }
+            const size = box.getSize(new THREE.Vector3());
+            let maxDim = Math.max(size.x, size.y, size.z);
+            if (pathHint.includes('nuke') && (!maxDim || maxDim < 10.0)) {
+                maxDim = 109.0;
+            } else if (!maxDim || !isFinite(maxDim) || maxDim <= 0.001) {
+                maxDim = 1.0;
+            }
+            const s = targetSize / maxDim;
+            model.scale.set(s, s, s);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center.multiplyScalar(s));
+        };
+
+        const createNormalizedPivot = (model, targetSize, pathHint = '') => {
+            const pivot = new THREE.Group();
+            normalizeModel(model, targetSize, pathHint);
+            pivot.add(model);
+            return pivot;
+        };
+
+        const loadGlb = (path) => {
+            if (!path) return Promise.resolve(null);
+            if (modelCache.has(path)) return Promise.resolve(modelCache.get(path).clone());
+            return new Promise((resolve) => {
+                loader.load(
+                    path,
+                    (gltf) => {
+                        modelCache.set(path, gltf.scene);
+                        resolve(gltf.scene.clone());
+                    },
+                    undefined,
+                    () => resolve(null)
+                );
+            });
+        };
+
+        // Multi-directional lighting so models (like Juggernog) are fully illuminated
+        const ambientLight = new THREE.AmbientLight(0xdbeafe, 1.2);
+        scene.add(ambientLight);
+
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1e293b, 1.3);
+        scene.add(hemiLight);
+
+        const sunLight = new THREE.DirectionalLight(0xfffbeb, 2.2);
+        sunLight.position.set(-90, 65, 85);
+        scene.add(sunLight);
+
+        const fillLight = new THREE.DirectionalLight(0x7dd3fc, 1.4);
+        fillLight.position.set(70, -40, -120);
+        scene.add(fillLight);
+
+        // --- 1. NEBULA CELESTIAL DOME (ORIGINAL RESTORED 360° ACES SHADER FROM e622790) ---
+        const skyGeo = new THREE.SphereGeometry(1200, 48, 48);
+        const skyMat = new THREE.ShaderMaterial({
+            side: THREE.BackSide,
+            depthWrite: false,
+            uniforms: {
+                uTime: { value: 0 },
+                uCamZ: { value: 50.0 },
+                uCol1: { value: new THREE.Vector3(0.04, 0.62, 0.56) },
+                uCol2: { value: new THREE.Vector3(0.08, 0.52, 0.88) },
+                uCol3: { value: new THREE.Vector3(0.32, 0.12, 0.65) },
+                uCol4: { value: new THREE.Vector3(0.95, 0.45, 0.12) }
+            },
+            vertexShader: `
+                varying vec3 vDir;
+                void main() {
+                    vDir = normalize(position);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                uniform float uCamZ;
+                uniform vec3 uCol1;
+                uniform vec3 uCol2;
+                uniform vec3 uCol3;
+                uniform vec3 uCol4;
+                varying vec3 vDir;
+
+                float hash13(vec3 p3) {
+                    p3 = fract(p3 * 0.1031);
+                    p3 += dot(p3, p3.zyx + 31.32);
+                    return fract((p3.x + p3.y) * p3.z);
+                }
+                float noise3(vec3 x) {
+                    vec3 i = floor(x);
+                    vec3 f = fract(x);
+                    f = f * f * (3.0 - 2.0 * f);
+                    return mix(
+                        mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),
+                            mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),
+                        mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),
+                            mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y), f.z
+                    );
+                }
+                float fbm4(vec3 p) {
+                    float v = 0.0, a = 0.5;
+                    for (int i = 0; i < 4; i++) {
+                        v += a * noise3(p);
+                        p = p * 2.03 + vec3(1.7, 9.2, 3.4);
+                        a *= 0.5;
+                    }
+                    return v;
+                }
+                vec3 acesToneMap(vec3 x) {
+                    return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
+                }
+                void main() {
+                    vec3 rd = normalize(vDir);
+                    vec3 bg = vec3(0.005, 0.008, 0.016);
+                    float rightMask = smoothstep(-0.38, 0.48, rd.x * 0.85 + rd.y * 0.28);
+                    if (rightMask > 0.005) {
+                        vec3 p = rd * 2.6 + vec3(0.0, uTime * 0.008, -uCamZ * 0.0015);
+                        float n1 = fbm4(p);
+                        float n2 = fbm4(p * 1.85 + vec3(n1 * 1.6, -n1 * 1.2, 2.1));
+                        float ridge = clamp(1.0 - abs(n2 * 2.0 - 1.0), 0.0, 1.0);
+                        ridge = ridge * ridge;
+
+                        vec3 neb = mix(bg, uCol3, smoothstep(0.25, 0.72, n1) * rightMask * 0.75);
+                        neb = mix(neb, uCol1, smoothstep(0.35, 0.78, n2) * rightMask * 0.82);
+                        neb += uCol2 * pow(n2, 2.4) * rightMask * 0.65;
+                        neb += uCol4 * pow(ridge, 3.0) * rightMask * 0.78;
+
+                        float dust = smoothstep(0.52, 0.78, noise3(p * 4.2 - n2));
+                        neb *= (1.0 - dust * 0.68 * rightMask);
+                        bg = neb;
+                    }
+                    gl_FragColor = vec4(acesToneMap(bg), 1.0);
+                }
+            `
+        });
+        const skyMesh = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(skyMesh);
+
+        // --- 2. 9,000 WARP STARS WITH RELAY STREAK SHADER ---
+        const starCount = 9000;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        const starCol = new Float32Array(starCount * 3);
+        const starSizes = new Float32Array(starCount);
+        const starPalette = [
+            new THREE.Color(0x9bb8ff),
+            new THREE.Color(0xcad8ff),
+            new THREE.Color(0xfff4ea),
+            new THREE.Color(0xffd2a1),
+            new THREE.Color(0x38bdf8)
+        ];
+        for (let i = 0; i < starCount; i++) {
+            const r = 120 + Math.random() * 820;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            starPos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+            starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            starPos[i * 3 + 2] = r * Math.cos(phi) - 80;
+            const c = starPalette[i % starPalette.length];
+            starCol[i * 3]     = c.r;
+            starCol[i * 3 + 1] = c.g;
+            starCol[i * 3 + 2] = c.b;
+            starSizes[i] = Math.pow(Math.random(), 3.0) * 4.2 + 0.9;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        starGeo.setAttribute('color', new THREE.BufferAttribute(starCol, 3));
+        starGeo.setAttribute('aSize', new THREE.BufferAttribute(starSizes, 1));
+
+        const starMat = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexColors: true,
+            uniforms: { uWarp: { value: 0.0 } },
+            vertexShader: `
+                attribute float aSize;
+                varying vec3 vColor;
+                varying float vWarp;
+                uniform float uWarp;
+                void main() {
+                    vColor = color;
+                    vWarp = uWarp;
+                    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = clamp(aSize * (220.0 / max(1.0, -mvPos.z)) * (1.0 + uWarp * 2.2), 1.0, 26.0);
+                    gl_Position = projectionMatrix * mvPos;
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                varying float vWarp;
+                void main() {
+                    vec2 uv = gl_PointCoord - 0.5;
+                    uv.x /= (1.0 + vWarp * 3.0);
+                    float d = length(uv);
+                    if (d > 0.5) discard;
+                    float core = exp(-d * d * 26.0);
+                    vec3 col = mix(vColor, vec3(0.55, 0.88, 1.0), vWarp * 0.65);
+                    gl_FragColor = vec4(col * (1.0 + core * 0.8), core);
+                }
+            `
+        });
+        const starPoints = new THREE.Points(starGeo, starMat);
+        scene.add(starPoints);
+
+        // --- 3. 75,000 STAR SPIRAL GALAXY WITH MASS EFFECT TACTICAL GRID ---
+        // Centered & stationary root so clicking cluster nodes is easy and stable!
+        const galaxyRoot = new THREE.Group();
+        galaxyRoot.position.set(0, 0, -8.0);
+        galaxyRoot.rotation.set(0.65, 0, 0);
+        scene.add(galaxyRoot);
+
+        const galCount = 75000;
+        const galGeo = new THREE.BufferGeometry();
+        const galOrbit = new Float32Array(galCount * 4);
+        const galCol = new Float32Array(galCount * 3);
+        const galDummy = new Float32Array(galCount * 3);
+        const cGalCore = new THREE.Color(0xfff1d0);
+        const cGalWarm = new THREE.Color(0xfbbf24);
+        const cGalBlue = new THREE.Color(0x38bdf8);
+        const cGalDeep = new THREE.Color(0x3b82f6);
+        const cGalPink = new THREE.Color(0xf43f5e);
+
+        for (let i = 0; i < galCount; i++) {
+            const arm = i % 4;
+            const u = Math.pow(Math.random(), 1.38);
+            const r = 0.4 + u * 29.5;
+            const logAngle = r * 0.31 + (arm * Math.PI * 0.5);
+            const armWidth = (0.28 + u * 0.95) * (Math.random() < 0.78 ? 0.65 : 1.65);
+            const angle = logAngle + (Math.random() - 0.5) * armWidth;
+            const thickness = (Math.random() - 0.5) * (2.2 * Math.exp(-r * 0.12) + 0.25);
+
+            galOrbit[i * 4]     = r;
+            galOrbit[i * 4 + 1] = angle;
+            galOrbit[i * 4 + 2] = thickness;
+            galOrbit[i * 4 + 3] = (r < 4.5 ? 3.2 : 1.6) * (0.6 + Math.random() * 0.9);
+
+            const col = cGalCore.clone();
+            if (u > 0.08) col.lerp(cGalWarm, Math.min(1, (u - 0.08) * 3.5));
+            if (u > 0.22) col.lerp(cGalBlue, Math.min(1, (u - 0.22) * 2.0));
+            if (u > 0.58) col.lerp(cGalDeep, Math.min(1, (u - 0.58) * 2.2));
+            if (u > 0.25 && Math.random() < 0.07) col.lerp(cGalPink, 0.8);
+
+            galCol[i * 3]     = col.r;
+            galCol[i * 3 + 1] = col.g;
+            galCol[i * 3 + 2] = col.b;
+        }
+        galGeo.setAttribute('position', new THREE.BufferAttribute(galDummy, 3));
+        galGeo.setAttribute('aOrbit', new THREE.BufferAttribute(galOrbit, 4));
+        galGeo.setAttribute('color', new THREE.BufferAttribute(galCol, 3));
+
+        const galMat = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexColors: true,
+            uniforms: {
+                uTime: { value: 0 },
+                uRocketWorld: { value: new THREE.Vector3() }
+            },
+            vertexShader: `
+                attribute vec4 aOrbit;
+                varying vec3 vColor;
+                varying float vAlpha;
+                uniform float uTime;
+                uniform vec3 uRocketWorld;
+                void main() {
+                    float r = aOrbit.x;
+                    float theta0 = aOrbit.y;
+                    float yOff = aOrbit.z;
+                    float sz = aOrbit.w;
+                    float omega = 1.25 / pow(r + 1.4, 0.58);
+                    float theta = theta0 - uTime * omega * 0.18;
+                    vec3 localP = vec3(cos(theta) * r, yOff, sin(theta) * r);
+                    vec4 worldP = modelMatrix * vec4(localP, 1.0);
+                    vec3 diff = worldP.xyz - uRocketWorld;
+                    float d = length(diff);
+                    if (d < 9.5) {
+                        float push = pow(1.0 - d / 9.5, 2.0) * 1.6;
+                        worldP.xyz += normalize(diff + vec3(0.001)) * push;
+                    }
+                    vColor = color;
+                    vAlpha = smoothstep(30.5, 16.0, r) * 0.9;
+                    vec4 mvPos = viewMatrix * worldP;
+                    gl_PointSize = clamp(sz * (145.0 / max(1.0, -mvPos.z)), 1.0, 15.0);
+                    gl_Position = projectionMatrix * mvPos;
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                varying float vAlpha;
+                void main() {
+                    vec2 uv = gl_PointCoord - 0.5;
+                    float d2 = dot(uv, uv);
+                    if (d2 > 0.25) discard;
+                    float g = exp(-d2 * 18.0);
+                    gl_FragColor = vec4(vColor * (1.0 + g * 0.7), g * vAlpha);
+                }
+            `
+        });
+        const galaxyPoints = new THREE.Points(galGeo, galMat);
+        galaxyPoints.frustumCulled = false;
+        galaxyRoot.add(galaxyPoints);
+
+        // Tactical 1px Grid Plane
+        const gridPlaneGeo = new THREE.PlaneGeometry(66, 66);
+        gridPlaneGeo.rotateX(-Math.PI / 2);
+        const gridPlaneMat = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            uniforms: { uTime: { value: 0 } },
+            vertexShader: `
+                varying vec2 vPos;
+                void main() {
+                    vPos = position.xz;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec2 vPos;
+                uniform float uTime;
+                void main() {
+                    float r = length(vPos);
+                    if (r > 32.5) discard;
+                    float rRing1 = smoothstep(0.09, 0.0, abs(r - 9.0));
+                    float rRing2 = smoothstep(0.09, 0.0, abs(r - 18.0));
+                    float rRing3 = smoothstep(0.11, 0.0, abs(r - 27.5));
+                    float rInner = smoothstep(0.09, 0.0, abs(r - 3.2));
+                    float axisX = smoothstep(0.08, 0.0, abs(vPos.y)) * smoothstep(31.0, 2.0, r);
+                    float axisZ = smoothstep(0.08, 0.0, abs(vPos.x)) * smoothstep(31.0, 2.0, r);
+                    vec3 col = vec3(0.12, 0.65, 1.0) * (rRing1 * 0.28 + rRing2 * 0.34 + rRing3 * 0.45);
+                    col += vec3(0.98, 0.38, 0.14) * ((axisX + axisZ) * 0.58 + rInner * 0.85);
+                    float alpha = clamp((rRing1 + rRing2 + rRing3 + axisX + axisZ) * 0.5, 0.0, 0.9);
+                    gl_FragColor = vec4(col, alpha);
+                }
+            `
+        });
+        galaxyRoot.add(new THREE.Mesh(gridPlaneGeo, gridPlaneMat));
+
+        // --- 4. INTERACTIVE 3D CLUSTER RINGS & DOM CALLOUTS ---
+        const clusterMeshes = [];
+        const clusterCalloutsList = [];
+
+        CLUSTERS.forEach((cluster) => {
+            const isSecVisible = !cluster.isSecret || unlockedSectors[cluster.id];
+            const ringGroup = new THREE.Group();
+            ringGroup.position.copy(cluster.pos);
+            ringGroup.visible = isSecVisible;
+
+            const ringGeo = new THREE.RingGeometry(1.2, 1.6, 32);
+            ringGeo.rotateX(-Math.PI / 2);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: cluster.color,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.9
+            });
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringGroup.add(ringMesh);
+
+            const hitSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(2.8, 12, 12),
+                new THREE.MeshBasicMaterial({ visible: false })
+            );
+            hitSphere.userData = { type: 'CLUSTER', clusterId: cluster.id, cluster };
+            ringGroup.add(hitSphere);
+
+            galaxyRoot.add(ringGroup);
+            clusterMeshes.push({ group: ringGroup, ringMesh, hitSphere, cluster });
+
+            // DOM Callout Card
+            if (overlayRef.current) {
+                const el = document.createElement('div');
+                el.className = `me3-cluster-label ${cluster.gold ? 'gold' : ''}`;
+                el.style.display = isSecVisible ? 'block' : 'none';
+                el.innerHTML = `
+                    <div class="me3-label-title">${cluster.name[lang] || cluster.name.pt}</div>
+                    <div class="me3-label-sub">${cluster.planets.length ? cluster.planets.length + ' POIs' : (cluster.id === 'solar' ? 'DOOM Telemetry' : 'Easter Egg')}</div>
+                `;
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    enterSector(cluster.id);
+                });
+                overlayRef.current.appendChild(el);
+                clusterCalloutsList.push({ el, cluster, group: ringGroup });
+            }
+        });
+
+        // --- 5. SEAMLESS PLANET CANVAS TEXTURE GENERATOR (1024x512) ---
+        const TEXTURE_CACHE = {};
+        const getPlanetTexture = (paletteName) => {
+            if (TEXTURE_CACHE[paletteName]) return TEXTURE_CACHE[paletteName];
+            const c = document.createElement('canvas');
+            c.width = 1024;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+            const palettes = {
+                moon:     { base: '#6e6b66', dark: '#2d2e32', light: '#b2ada4', feature: '#434449' },
+                lava:     { base: '#231c1a', dark: '#110d0c', light: '#f97316', feature: '#dc2626' },
+                ice:      { base: '#386682', dark: '#1b384d', light: '#bae6fd', feature: '#0284c7' },
+                gas_cyan: { base: '#0e4f6e', dark: '#082c42', light: '#67e8f9', feature: '#0284c7' },
+                terran:   { base: '#1e4e68', dark: '#112c3d', light: '#3b7a57', feature: '#6b8e23' },
+                desert:   { base: '#8c4f30', dark: '#4f2814', light: '#d99b66', feature: '#a86038' }
+            };
+            const p = palettes[paletteName] || palettes.moon;
+
+            ctx.fillStyle = p.base;
+            ctx.fillRect(0, 0, 1024, 512);
+
+            for (let i = 0; i < 450; i++) {
+                ctx.fillStyle = (i % 2 === 0) ? p.dark : p.light;
+                ctx.globalAlpha = 0.08 + Math.random() * 0.18;
+                ctx.beginPath();
+                const x = Math.random() * 1024;
+                const y = Math.random() * 512;
+                const r = 12 + Math.random() * 75;
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            for (let y = 0; y < 512; y += 4) {
+                ctx.fillStyle = (y % 8 === 0) ? p.feature : p.dark;
+                ctx.globalAlpha = 0.12;
+                ctx.fillRect(0, y, 1024, 2);
+            }
+
+            const tex = new THREE.CanvasTexture(c);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.ClampToEdgeWrapping;
+            TEXTURE_CACHE[paletteName] = tex;
+            return tex;
+        };
+
+        const atmoColors = {
+            moon:     new THREE.Vector3(0.5, 0.55, 0.65),
+            lava:     new THREE.Vector3(1.0, 0.35, 0.08),
+            ice:      new THREE.Vector3(0.35, 0.78, 1.0),
+            gas_cyan: new THREE.Vector3(0.12, 0.85, 0.95),
+            terran:   new THREE.Vector3(0.22, 0.65, 1.0),
+            desert:   new THREE.Vector3(0.95, 0.65, 0.25)
+        };
+
+        // --- 6. SECTOR PLANETS ROOT & PROCEDURAL SHADERS ---
+        const sectorRoot = new THREE.Group();
+        sectorRoot.visible = false;
+        scene.add(sectorRoot);
+
+        let activePlanetObjects = [];
+        const planetCallouts = [];
+
+        const clearSector = () => {
+            while (sectorRoot.children.length > 0) {
+                const obj = sectorRoot.children[0];
+                sectorRoot.remove(obj);
+            }
+            activePlanetObjects = [];
+            planetCallouts.forEach(c => { if (c.el && c.el.parentNode) c.el.parentNode.removeChild(c.el); });
+            planetCallouts.length = 0;
+        };
+
+        const createSectorCallout = (targetGroup, titleText, subText, onClick) => {
+            if (!overlayRef.current) return;
+            const el = document.createElement('div');
+            el.className = 'me3-planet-label';
+            el.innerHTML = `
+                <div class="me3-planet-title">${titleText}</div>
+                <div class="me3-planet-sub">${subText}</div>
+            `;
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (onClick) onClick();
+            });
+            overlayRef.current.appendChild(el);
+            planetCallouts.push({ el, group: targetGroup });
+        };
+
+        const buildSectorPlanets = (clusterId) => {
+            clearSector();
+            const cluster = clustersRef.current.find(c => c.id === clusterId);
+            if (!cluster) return;
+
+            // SPECIAL EASTER EGG: SOLAR SYSTEM (EARTH, MOON, MARS, PHOBOS, DEIMOS)
+            if (clusterId === 'solar') {
+                // Glorious Animated Sun with Solar Granules & Coronal Flare Halo
+                const sunGroup = new THREE.Group();
+                sunGroup.position.set(-65, 12, -180);
+                sectorRoot.add(sunGroup);
+
+                const sunGeo = new THREE.SphereGeometry(15, 48, 48);
+                const sunMat = new THREE.ShaderMaterial({
+                    uniforms: { uTime: { value: 0 } },
+                    vertexShader: `
+                        varying vec2 vUv;
+                        varying vec3 vNormal;
+                        void main() {
+                            vUv = uv;
+                            vNormal = normalize(normalMatrix * normal);
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                        }
+                    `,
+                    fragmentShader: `
+                        varying vec2 vUv;
+                        varying vec3 vNormal;
+                        uniform float uTime;
+                        float hash2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+                        float sn(vec2 p) {
+                            vec2 i = floor(p); vec2 f = fract(p);
+                            f = f * f * (3.0 - 2.0 * f);
+                            return mix(mix(hash2(i), hash2(i + vec2(1.0, 0.0)), f.x),
+                                       mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), f.x), f.y);
+                        }
+                        void main() {
+                            float n = sn(vUv * 16.0 + vec2(uTime * 0.08, -uTime * 0.05));
+                            float n2 = sn(vUv * 32.0 - vec2(uTime * 0.12, uTime * 0.06));
+                            vec3 coreCol = mix(vec3(1.0, 0.72, 0.15), vec3(1.0, 0.35, 0.02), n);
+                            coreCol += vec3(1.0, 0.95, 0.6) * pow(n2, 2.4) * 0.6;
+                            float fresnel = pow(1.0 - max(0.0, dot(vNormal, vec3(0,0,1))), 1.8);
+                            vec3 finalCol = mix(coreCol, vec3(1.0, 0.25, 0.0), fresnel * 0.7);
+                            gl_FragColor = vec4(finalCol, 1.0);
+                        }
+                    `
+                });
+                const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+                sunGroup.add(sunMesh);
+
+                const sunGlowGeo = new THREE.SphereGeometry(21, 32, 32);
+                const sunGlowMat = new THREE.ShaderMaterial({
+                    side: THREE.BackSide,
+                    transparent: true,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending,
+                    vertexShader: `
+                        varying vec3 vNormal;
+                        void main() {
+                            vNormal = normalize(normalMatrix * normal);
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                        }
+                    `,
+                    fragmentShader: `
+                        varying vec3 vNormal;
+                        void main() {
+                            float rim = pow(clamp(1.0 + dot(vNormal, vec3(0,0,-1)), 0.0, 1.0), 2.8);
+                            gl_FragColor = vec4(vec3(1.0, 0.55, 0.12) * 1.6, rim * 0.85);
+                        }
+                    `
+                });
+                sunGroup.add(new THREE.Mesh(sunGlowGeo, sunGlowMat));
+
+                createSectorCallout(
+                    sunGroup,
+                    lang === 'pt' ? 'Sol (Estrela Central)' : 'Sun (Central Star)',
+                    lang === 'pt' ? 'Anomalia Solar UAC' : 'UAC Solar Telemetry',
+                    () => {}
+                );
+
+                // Mars (Doom E1M1)
+                const marsGroup = new THREE.Group();
+                marsGroup.position.set(16, 2, -65);
+                sectorRoot.add(marsGroup);
+
+                loadGlb('/3d/mars.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 8.5, '/3d/mars.glb');
+                    pivot.userData = { type: 'EASTER_MARS', game: 'doom_e1m1' };
+                    marsGroup.add(pivot);
+                });
+
+                // Phobos & Deimos orbiting Mars
+                const phobosOrbit = new THREE.Group();
+                marsGroup.add(phobosOrbit);
+                loadGlb('/3d/asteroid1.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 1.5, '/3d/asteroid1.glb');
+                    pivot.position.set(7.5, 0, 0);
+                    pivot.userData = { type: 'EASTER_PHOBOS', game: 'doom_e1m1' };
+                    phobosOrbit.add(pivot);
+                });
+
+                const deimosOrbit = new THREE.Group();
+                deimosOrbit.rotation.x = 0.45;
+                marsGroup.add(deimosOrbit);
+                loadGlb('/3d/asteroid2.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 1.2, '/3d/asteroid2.glb');
+                    pivot.position.set(-11.5, 0, 0);
+                    pivot.userData = { type: 'EASTER_DEIMOS', game: 'doom_e1m1' };
+                    deimosOrbit.add(pivot);
+                });
+
+                createSectorCallout(
+                    marsGroup,
+                    lang === 'pt' ? 'Marte, Fobos & Deimos (UAC)' : 'Mars, Phobos & Deimos (UAC)',
+                    lang === 'pt' ? 'Fobos & Deimos em órbita • Clique para jogar DOOM (1993)' : 'Phobos & Deimos in orbit • Click to play DOOM (1993)',
+                    () => window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'doom_e1m1' } }))
+                );
+
+                // Earth & Moon (Doom 2)
+                const earthGroup = new THREE.Group();
+                earthGroup.position.set(-18, -4, -135);
+                sectorRoot.add(earthGroup);
+
+                loadGlb('/3d/earth.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 9.2, '/3d/earth.glb');
+                    pivot.userData = { type: 'EASTER_EARTH', game: 'doom_2' };
+                    earthGroup.add(pivot);
+                });
+
+                const moonOrbit = new THREE.Group();
+                earthGroup.add(moonOrbit);
+                loadGlb('/3d/moon.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 2.4, '/3d/moon.glb');
+                    pivot.position.set(8.5, 0, 0);
+                    moonOrbit.add(pivot);
+                });
+
+                createSectorCallout(
+                    earthGroup,
+                    lang === 'pt' ? 'Terra & Lua (DOOM II)' : 'Earth & Moon (DOOM II)',
+                    lang === 'pt' ? 'Clique para jogar Hell on Earth' : 'Click to play Hell on Earth',
+                    () => window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'doom_2' } }))
+                );
+
+                activePlanetObjects.push(
+                    { type: 'SOLAR_SUN', sunMesh, sunMat },
+                    { type: 'SOLAR_MARS', group: marsGroup, phobosOrbit, deimosOrbit },
+                    { type: 'SOLAR_EARTH', group: earthGroup, moonOrbit }
+                );
+                return;
+            }
+
+            // SPECIAL EASTER EGG: DELÍCIA SECTOR (JAILSON & ORANGES)
+            if (clusterId === 'delicia') {
+                const jailsonGroup = new THREE.Group();
+                jailsonGroup.position.set(0, 0, -45);
+                sectorRoot.add(jailsonGroup);
+
+                let jailsonMesh = null;
+                loadGlb('/3d/jailson.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 11.5, '/3d/jailson.glb');
+                    pivot.userData = { type: 'EASTER_JAILSON', game: 'delicia_doom' };
+                    jailsonGroup.add(pivot);
+                    jailsonMesh = pivot;
+                });
+
+                const orangeOrbit = new THREE.Group();
+                jailsonGroup.add(orangeOrbit);
+                const oranges = [];
+                for (let o = 0; o < 6; o++) {
+                    const ang = (o / 6) * Math.PI * 2;
+                    loadGlb('/3d/orange.glb').then(m => {
+                        if (!m) return;
+                        const pivot = createNormalizedPivot(m, 2.2, '/3d/orange.glb');
+                        pivot.position.set(Math.cos(ang) * 9.5, Math.sin(ang * 2) * 1.5, Math.sin(ang) * 9.5);
+                        orangeOrbit.add(pivot);
+                        oranges.push(pivot);
+                    });
+                }
+
+                createSectorCallout(
+                    jailsonGroup,
+                    lang === 'pt' ? 'Jailson Mendes' : 'Jailson Mendes',
+                    lang === 'pt' ? 'Que delícia cara! Clique para jogar Delícia DOOM' : 'Click to play Delícia DOOM',
+                    () => window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'delicia_doom' } }))
+                );
+
+                activePlanetObjects.push({
+                    type: 'DELICIA_SYSTEM',
+                    jailsonGroup,
+                    jailsonMesh,
+                    orangeOrbit,
+                    oranges
+                });
+                return;
+            }
+
+            // SPECIAL EASTER EGG: CHICKEN SECTOR (MEGA CHICKEN & GOLDEN EGG)
+            if (clusterId === 'chicken') {
+                const chickenGroup = new THREE.Group();
+                chickenGroup.position.set(-15, 4, -35);
+                sectorRoot.add(chickenGroup);
+
+                let chickenMesh = null;
+                loadGlb('/3d/space_chicken!.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 14.5, '/3d/space_chicken!.glb');
+                    chickenGroup.add(pivot);
+                    chickenMesh = pivot;
+                });
+
+                const eggOrbit = new THREE.Group();
+                chickenGroup.add(eggOrbit);
+                let eggMesh = null;
+                loadGlb('/3d/egg.glb').then(m => {
+                    if (!m) return;
+                    const pivot = createNormalizedPivot(m, 3.2, '/3d/egg.glb');
+                    pivot.position.set(9.5, 0, 0);
+                    eggOrbit.add(pivot);
+                    eggMesh = pivot;
+                });
+
+                createSectorCallout(
+                    chickenGroup,
+                    lang === 'pt' ? 'Mega Galinha Cósmica' : 'Mega Cosmic Chicken',
+                    lang === 'pt' ? 'Có-có-ricó! A galinha lendária do espaço' : 'The legendary space chicken',
+                    () => {}
+                );
+
+                activePlanetObjects.push({
+                    type: 'CHICKEN_SYSTEM',
+                    chickenGroup,
+                    chickenMesh,
+                    eggOrbit,
+                    eggMesh
+                });
+                return;
+            }
+
+            // STANDARD REAL PROJECT CLUSTERS (PROCEDURAL PLANETS + DOCKED 3D GLB MODELS)
+            cluster.planets.forEach((pData, idx) => {
+                const pGroup = new THREE.Group();
+                pGroup.position.copy(pData.pos);
+
+                const tex = getPlanetTexture(pData.palette);
+                const atmoCol = atmoColors[pData.palette] || atmoColors.moon;
+                const isLava = pData.palette === 'lava' ? 1.0 : 0.0;
+                const hasClouds = (pData.palette === 'terran' || pData.palette === 'gas_cyan' || pData.palette === 'ice') ? 1.0 : 0.0;
+
+                const pGeo = new THREE.SphereGeometry(pData.radius, 48, 48);
+                const pMat = new THREE.ShaderMaterial({
+                    uniforms: {
+                        uTex: { value: tex },
+                        uSunDir: { value: new THREE.Vector3(-0.72, 0.42, 0.55).normalize() },
+                        uAtmoCol: { value: atmoCol },
+                        uIsLava: { value: isLava },
+                        uHasClouds: { value: hasClouds },
+                        uTime: { value: 0 }
+                    },
+                    vertexShader: `
+                        varying vec2 vUv;
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            vUv = uv;
+                            vec4 wp = modelMatrix * vec4(position, 1.0);
+                            vNormal = normalize(mat3(modelMatrix) * normal);
+                            vViewDir = normalize(cameraPosition - wp.xyz);
+                            gl_Position = projectionMatrix * viewMatrix * wp;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform sampler2D uTex;
+                        uniform vec3 uSunDir;
+                        uniform vec3 uAtmoCol;
+                        uniform float uIsLava;
+                        uniform float uHasClouds;
+                        uniform float uTime;
+                        varying vec2 vUv;
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            vec3 sampleCol = texture2D(uTex, vUv).rgb;
+                            float h0 = dot(sampleCol, vec3(0.333));
+                            float diff = smoothstep(-0.14, 0.88, dot(vNormal, uSunDir));
+                            float fresnel = pow(1.0 - max(0.0, dot(vNormal, vViewDir)), 3.4);
+                            vec3 atmoRim = uAtmoCol * fresnel * (0.28 + 0.72 * diff);
+                            float nightMask = smoothstep(0.12, -0.25, dot(vNormal, uSunDir));
+                            vec3 nightLight = mix(vec3(1.0, 0.72, 0.32) * smoothstep(0.68, 0.78, h0) * 0.45, vec3(1.0, 0.28, 0.04) * 1.2, uIsLava) * nightMask;
+                            vec3 col = sampleCol * (0.05 + diff * 1.15) + nightLight + atmoRim;
+                            gl_FragColor = vec4(col, 1.0);
+                        }
+                    `
+                });
+                const pMesh = new THREE.Mesh(pGeo, pMat);
+                pMesh.userData = { type: 'PLANET', planetData: pData, clusterId };
+                pGroup.add(pMesh);
+
+                // Rayleigh BackSide Glow Halo
+                const haloGeo = new THREE.SphereGeometry(pData.radius * 1.12, 32, 32);
+                const haloMat = new THREE.ShaderMaterial({
+                    side: THREE.BackSide,
+                    transparent: true,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending,
+                    uniforms: {
+                        uAtmoCol: { value: atmoCol },
+                        uSunDir: { value: new THREE.Vector3(-0.72, 0.42, 0.55).normalize() }
+                    },
+                    vertexShader: `
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            vec4 wp = modelMatrix * vec4(position, 1.0);
+                            vNormal = normalize(mat3(modelMatrix) * normal);
+                            vViewDir = normalize(cameraPosition - wp.xyz);
+                            gl_Position = projectionMatrix * viewMatrix * wp;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform vec3 uAtmoCol;
+                        uniform vec3 uSunDir;
+                        varying vec3 vNormal;
+                        varying vec3 vViewDir;
+                        void main() {
+                            float rim = pow(clamp(1.0 + dot(vNormal, vViewDir), 0.0, 1.0), 3.0);
+                            float sunLit = smoothstep(-0.35, 0.55, dot(-vNormal, uSunDir));
+                            gl_FragColor = vec4(uAtmoCol * 1.2, rim * (0.18 + 0.65 * sunLit));
+                        }
+                    `
+                });
+                pGroup.add(new THREE.Mesh(haloGeo, haloMat));
+
+                // Cassini Rings
+                if (pData.hasRings) {
+                    const rGeo = new THREE.RingGeometry(pData.radius * 1.32, pData.radius * 2.25, 64);
+                    rGeo.rotateX(Math.PI * 0.43);
+                    const rMat = new THREE.ShaderMaterial({
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        depthWrite: false,
+                        uniforms: {
+                            uInner: { value: pData.radius * 1.32 },
+                            uOuter: { value: pData.radius * 2.25 },
+                            uRingCol: { value: atmoCol }
+                        },
+                        vertexShader: `
+                            varying vec3 vLocal;
+                            void main() {
+                                vLocal = position;
+                                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                            }
+                        `,
+                        fragmentShader: `
+                            uniform float uInner;
+                            uniform float uOuter;
+                            uniform vec3 uRingCol;
+                            varying vec3 vLocal;
+                            void main() {
+                                float r = length(vLocal);
+                                float t = clamp((r - uInner) / (uOuter - uInner), 0.0, 1.0);
+                                float cassini = 1.0 - 0.85 * exp(-pow((t - 0.62) / 0.035, 2.0));
+                                float edgeFade = smoothstep(0.0, 0.08, t) * smoothstep(1.0, 0.88, t);
+                                gl_FragColor = vec4(uRingCol, edgeFade * cassini * 0.52);
+                            }
+                        `
+                    });
+                    pGroup.add(new THREE.Mesh(rGeo, rMat));
+                }
+
+                // 3D GLB Models Docked in True Orbit Pivots
+                const orbitPivot = new THREE.Group();
+                orbitPivot.rotation.x = 0.28;
+                orbitPivot.rotation.z = -0.15;
+                pGroup.add(orbitPivot);
+
+                const modelsList = pData.models || (pData.modelPath ? [{ path: pData.modelPath, scale: pData.modelScale, orbitDist: 2.8, orbitAngleOffset: 0 }] : []);
+                const spawnedModels = [];
+
+                modelsList.forEach(mCfg => {
+                    loadGlb(mCfg.path).then(m => {
+                        if (!m) return;
+                        let pivot;
+                        if (mCfg.path.includes('nuke')) {
+                            // Convert SkinnedMesh to static regular Mesh & permanently scale the raw BufferGeometry vertices!
+                            const nukeGroup = new THREE.Group();
+                            m.traverse(child => {
+                                if (child.isMesh && child.geometry) {
+                                    // Clone geometry and strip bone attributes
+                                    const geom = child.geometry.clone();
+                                    delete geom.attributes.skinIndex;
+                                    delete geom.attributes.skinWeight;
+                                    geom.computeBoundingBox();
+                                    const b = geom.boundingBox;
+                                    const sz = b.getSize(new THREE.Vector3());
+                                    const maxD = Math.max(sz.x, sz.y, sz.z) || 109.0;
+                                    geom.center();
+                                    const s = 1.6 / maxD;
+                                    geom.scale(s, s, s);
+                                    geom.computeBoundingBox();
+                                    geom.computeVertexNormals();
+
+                                    const mat = Array.isArray(child.material) 
+                                        ? child.material.map(mt => mt.clone()) 
+                                        : child.material.clone();
+                                    const regMesh = new THREE.Mesh(geom, mat);
+                                    nukeGroup.add(regMesh);
+                                }
+                            });
+                            pivot = new THREE.Group();
+                            pivot.add(nukeGroup);
+                        } else {
+                            pivot = createNormalizedPivot(m, mCfg.scale || 3.2, mCfg.path);
+                        }
+
+                        const dist = pData.radius + (mCfg.orbitDist || 2.8);
+                        const ang = mCfg.orbitAngleOffset || 0;
+                        pivot.position.set(Math.cos(ang) * dist, 0, Math.sin(ang) * dist);
+                        pivot.userData = { type: 'PROJECT_MODEL', planetData: pData, clusterId };
+                        orbitPivot.add(pivot);
+                        spawnedModels.push(pivot);
+                    });
+                });
+
+                const planetRecord = {
+                    type: 'PROJECT_PLANET',
+                    group: pGroup,
+                    mesh: pMesh,
+                    mat: pMat,
+                    data: pData,
+                    orbitPivot: orbitPivot,
+                    models: spawnedModels,
+                    orbitSpeed: 0.32 + (idx % 3) * 0.08,
+                    rotSpeed: pData.rotSpeed || 0.32
+                };
+
+                sectorRoot.add(pGroup);
+
+                createSectorCallout(
+                    pGroup,
+                    pData.name,
+                    pData.desc[lang] || pData.desc.pt,
+                    () => handleSelectTarget(pData)
+                );
+
+                activePlanetObjects.push(planetRecord);
+            });
+        };
+
+        // --- 7. PLAYER CURSOR RIG & PHYSICS (ROCKET, ASTRONAUT, OXYGEN & THRUSTER PARTICLES) ---
+        const _finalTarget = new THREE.Vector3();
+        const _targetDir = new THREE.Vector3();
+        const _targetQuat = new THREE.Quaternion();
+        const _tailOffset = new THREE.Vector3();
+        const _tailPos = new THREE.Vector3();
+        const _tailDir = new THREE.Vector3();
+        const _diff = new THREE.Vector3();
+
+        const mouse = { x: 0, y: 0 };
+        const keys = {};
+
+        // Rocket Group
+        const rocketGroup = new THREE.Group();
+        rocketGroup.position.set(0, 0, 10);
+        scene.add(rocketGroup);
+
+        loadGlb('/3d/rocket.glb').then(m => {
+            if (m) {
+                normalizeModel(m, 4, '/3d/rocket.glb');
+                m.rotation.z = 0;
+                m.position.set(0, 0, 0);
+                rocketGroup.add(m);
+            }
+        });
+
+        // Astronaut & Slayer Group
+        const astronautGroup = new THREE.Group();
+        astronautGroup.position.set(5, -5, 10);
+        scene.add(astronautGroup);
+
+        let astroModel = null;
+        loadGlb('/3d/Astronaut.glb').then(m => {
+            if (m) {
+                normalizeModel(m, 1.7, '/3d/Astronaut.glb');
+                m.position.set(0, 0, 0);
+                astronautGroup.add(m);
+                astroModel = m;
+            }
+        });
+
+        let slayerModel = null;
+        loadGlb('/3d/slayer.glb').then(m => {
+            if (m) {
+                normalizeModel(m, 1.7, '/3d/slayer.glb');
+                m.position.set(0, 0, 0);
+                m.visible = false;
+                astronautGroup.add(m);
+                slayerModel = m;
+            }
+        });
+
+        const astroVelocity = new THREE.Vector3();
+
+        // Tether Rope
+        const ropeMaterial = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.65 });
+        const ropeGeometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0)]);
+        const rope = new THREE.Line(ropeGeometry, ropeMaterial);
+        scene.add(rope);
+
+        // Rocket Thruster Fire Particles (Instanced Mesh)
+        const particleCount = 60;
+        const pGeo = new THREE.SphereGeometry(0.28, 6, 6);
+        const pMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.85 });
+        const fireInstMesh = new THREE.InstancedMesh(pGeo, pMat, particleCount);
+        scene.add(fireInstMesh);
+
+        const particles = [];
+        const _instMatrix = new THREE.Matrix4();
+        const _instQuat = new THREE.Quaternion();
+        const _instScale = new THREE.Vector3();
+        const _zeroMatrix = new THREE.Matrix4().makeScale(0, 0, 0);
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                pos: new THREE.Vector3(),
+                velocity: new THREE.Vector3(),
+                life: 0,
+                maxLife: 20
+            });
+            fireInstMesh.setMatrixAt(i, _zeroMatrix);
+        }
+        fireInstMesh.instanceMatrix.needsUpdate = true;
+        let pIndex = 0;
+
+        // Astronaut Oxygen Bubbles (Hardware GPU Instanced Mesh)
+        const oxCount = 40;
+        const oxParticles = [];
+        const oxGeo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
+        const oxInstMat = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, transparent: true, opacity: 0.6, depthWrite: false });
+        const oxInstMesh = new THREE.InstancedMesh(oxGeo, oxInstMat, oxCount);
+        for (let i = 0; i < oxCount; i++) {
+            oxInstMesh.setMatrixAt(i, _zeroMatrix);
+            oxParticles.push({ pos: new THREE.Vector3(), life: 0, maxLife: 1, velocity: new THREE.Vector3() });
+        }
+        oxInstMesh.instanceMatrix.needsUpdate = true;
+        scene.add(oxInstMesh);
+        let oxIndex = 0;
+        let oxSpawnAccum = 0;
+
+        // --- 8. STATE & VIEW TRANSITIONS ---
+        let viewModeLocal = 'GALAXY_MAP';
+        let targetCamZ = 50.0;
+        let smoothCamZ = 50.0;
+        let warpFactor = 0.0;
+
+        // 360° Free-Look with Right Mouse Button
+        let isRightMouseDown = false;
+        let prevMouseX = 0, prevMouseY = 0;
+        let camYaw = 0, camPitch = 0;
+        let smoothCamYaw = 0, smoothCamPitch = 0;
+
+        const enterSector = (clusterId) => {
+            const cl = clustersRef.current.find(c => c.id === clusterId);
+            const targetName = cl?.name[lang] || cl?.name.pt || clusterId;
+
+            // Trigger Mass Relay transit cinematic synced to ME sound (~2.2s)
+            setWarpCinematic({ active: true, targetName, progress: 0 });
+            playCosmicSfx('warp', settings);
+            warpFactor = 3.2;
+
+            setTimeout(() => {
+                viewModeLocal = 'SECTOR_FLIGHT';
+                setViewMode('SECTOR_FLIGHT');
+                setActiveClusterId(clusterId);
+                if (cl?.track) setActiveTrack(cl.track);
+
+                galaxyRoot.visible = false;
+                clusterCalloutsList.forEach(c => { c.el.style.display = 'none'; });
+
+                // Swap to DOOM Slayer when entering Solar System!
+                if (clusterId === 'solar') {
+                    if (astroModel) astroModel.visible = false;
+                    if (slayerModel) slayerModel.visible = true;
+                } else {
+                    if (astroModel) astroModel.visible = true;
+                    if (slayerModel) slayerModel.visible = false;
+                }
+
+                buildSectorPlanets(clusterId);
+                sectorRoot.visible = true;
+
+                // RESET CAMERA TO DEFAULT SECTOR VIEW (Clean perspective angle, no tilted leftover yaw/pitch!)
+                camYaw = 0;
+                camPitch = 0.18;
+                smoothCamYaw = 0;
+                smoothCamPitch = 0.18;
+                targetCamZ = 45.0;
+                smoothCamZ = 45.0;
+
+                if (cl?.nebulaPalette) {
+                    skyMat.uniforms.uCol1.value.copy(cl.nebulaPalette.c1);
+                    skyMat.uniforms.uCol2.value.copy(cl.nebulaPalette.c2);
+                    skyMat.uniforms.uCol3.value.copy(cl.nebulaPalette.c3);
+                    skyMat.uniforms.uCol4.value.copy(cl.nebulaPalette.c4);
+                }
+
+                setWarpCinematic(prev => ({ ...prev, active: false }));
+            }, 2200);
+        };
+        enterSectorFnRef.current = enterSector;
+
+        // Exit Sector with Clean Camera Reset
+        const exitSector = () => {
+            viewModeLocal = 'GALAXY_MAP';
+            setViewMode('GALAXY_MAP');
+            setActiveTrack('galaxy');
+            playCosmicSfx('warp', settings);
+
+            sectorRoot.visible = false;
+            clearSector();
+
+            if (astroModel) astroModel.visible = true;
+            if (slayerModel) slayerModel.visible = false;
+
+            galaxyRoot.visible = true;
+            clusterCalloutsList.forEach(c => {
+                const isSecVisible = !c.cluster.isSecret || unlockedSectors[c.cluster.id];
+                c.el.style.display = isSecVisible ? 'block' : 'none';
+            });
+
+            // RESET CAMERA TO DEFAULT GALAXY VIEW
+            camYaw = 0;
+            camPitch = 0;
+            smoothCamYaw = 0;
+            smoothCamPitch = 0;
+            targetCamZ = 50.0;
+            smoothCamZ = 50.0;
+
+            // Restore vibrant galaxy palette
+            skyMat.uniforms.uCol1.value.set(0.04, 0.62, 0.56);
+            skyMat.uniforms.uCol2.value.set(0.08, 0.52, 0.88);
+            skyMat.uniforms.uCol3.value.set(0.32, 0.12, 0.65);
+            skyMat.uniforms.uCol4.value.set(0.95, 0.45, 0.12);
+        };
+        exitSectorFnRef.current = exitSector;
+
+        const handleSelectTarget = (pData) => {
+            playCosmicSfx('project', settings);
+            if (pData.projectId) {
+                // Find project in projectsData and open the floating project card!
+                const p = (PORTFOLIO_DATA.projectsData || []).find(proj => proj.id === pData.projectId);
+                if (p) {
+                    setSelectedProjectCard(p);
+                } else {
+                    window.dispatchEvent(new CustomEvent('spet:open-project-modal', { detail: { projectId: pData.projectId } }));
+                }
+            } else if (pData.specialType === 'DOOM_EARTH') {
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'doom_2' } }));
+            } else if (pData.specialType === 'DOOM_MARS') {
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'doom_e1m1' } }));
+            } else if (pData.specialType === 'DELICIA_JAILSON') {
+                window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: 'delicia_doom' } }));
+            }
+        };
+
+        const raycaster = new THREE.Raycaster();
+        const mouseVec = new THREE.Vector2();
+
+        const handleContextMenu = (e) => {
+            e.preventDefault();
+        };
+
+        const handlePointerDown = (e) => {
+            if (e.button === 2) {
+                isRightMouseDown = true;
+                prevMouseX = e.clientX;
+                prevMouseY = e.clientY;
+            }
+        };
+
+        const handlePointerUp = (e) => {
+            if (e.button === 2) {
+                isRightMouseDown = false;
+            }
+        };
+
+        const handlePointerMove = (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            if (isRightMouseDown) {
+                const dx = e.clientX - prevMouseX;
+                const dy = e.clientY - prevMouseY;
+                prevMouseX = e.clientX;
+                prevMouseY = e.clientY;
+
+                camYaw -= dx * 0.006;
+                camPitch = Math.max(-0.6, Math.min(1.2, camPitch - dy * 0.006));
+            }
+        };
+
+        const handleWheel = (e) => {
+            e.preventDefault();
+            if (viewModeLocal === 'SECTOR_FLIGHT') {
+                targetCamZ = Math.max(-280, Math.min(65, targetCamZ - e.deltaY * 0.055));
+            } else {
+                // Galaxy Map Zoom: allow user to zoom closer to the galaxy or further out
+                targetCamZ = Math.max(20.0, Math.min(95.0, targetCamZ - e.deltaY * 0.045));
+            }
+        };
+
+        const handleClick = (e) => {
+            if (e.button !== 0) return;
+            // Ignore click if clicking HUD controls or project card
+            if (e.target.closest('.me3-cluster-label') || e.target.closest('.me3-planet-label') || e.target.closest('button') || e.target.closest('.floating-project-card')) return;
+
+            mouseVec.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseVec.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouseVec, camera);
+
+            if (viewModeLocal === 'GALAXY_MAP') {
+                const hits = raycaster.intersectObjects(clusterMeshes.map(c => c.hitSphere), true);
+                if (hits.length > 0) {
+                    const obj = hits[0].object;
+                    const cRecord = clusterMeshes.find(c => c.hitSphere === obj);
+                    if (cRecord) enterSector(cRecord.cluster.id);
+                }
+            } else {
+                const hits = raycaster.intersectObjects(sectorRoot.children, true);
+                if (hits.length > 0) {
+                    let obj = hits[0].object;
+                    while (obj && !obj.userData?.planetData && !obj.userData?.game && obj.parent !== sectorRoot) {
+                        obj = obj.parent;
+                    }
+                    if (obj?.userData?.planetData) {
+                        handleSelectTarget(obj.userData.planetData);
+                    } else if (obj?.userData?.game) {
+                        window.dispatchEvent(new CustomEvent('spet:open-easter-game', { detail: { game: obj.userData.game } }));
+                    }
+                }
+            }
+        };
+
+        const handleKeyDown = (e) => {
+            keys[e.key] = true;
+            if (e.key === 'Escape') {
+                if (selectedProjectCard) {
+                    setSelectedProjectCard(null);
+                } else if (viewModeLocal === 'SECTOR_FLIGHT') {
+                    exitSector();
+                } else if (isFullscreenGalaxyMode && typeof onExitFullscreenGalaxy === 'function') {
+                    onExitFullscreenGalaxy();
+                }
+            }
+            if ((e.key === 'q' || e.key === 'Q') && typeof onToggleUI === 'function') {
+                onToggleUI();
+            }
+        };
+
+        const handleKeyUp = (e) => {
+            keys[e.key] = false;
+        };
+
+        // Custom Jump Event Listener (for CLI teleport commands)
+        const handleJumpEvent = (e) => {
+            const sec = e.detail?.sector;
+            if (sec) {
+                unlockSector(sec);
+                enterSector(sec);
+            }
+        };
+
+        const handleUnlockEvent = (e) => {
+            const sec = e.detail?.sector;
+            if (sec) unlockSector(sec);
+        };
+
+        const handleUnlockAll = () => {
+            setUnlockedSectors({ delicia: true, solar: true, chicken: true });
+            try {
+                localStorage.setItem('spet_unlocked_sectors', JSON.stringify({ delicia: true, solar: true, chicken: true }));
+            } catch (e) {}
+        };
+
+        window.addEventListener('spet:space3-jump', handleJumpEvent);
+        window.addEventListener('spet:space3-unlock-sector', handleUnlockEvent);
+        window.addEventListener('spet:space3-unlock-all', handleUnlockAll);
+        window.addEventListener('contextmenu', handleContextMenu);
+        window.addEventListener('pointerdown', handlePointerDown);
+        window.addEventListener('pointerup', handlePointerUp);
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('wheel', handleWheel, { passive: false });
+        window.addEventListener('click', handleClick);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        // --- 9. ANIMATION LOOP ---
+        let clock = new THREE.Clock();
+        let animId;
+
+        const updateCalloutPosition = (el, worldPos) => {
+            const wp = worldPos.clone();
+            wp.project(camera);
+            if (wp.z > 1.0) {
+                el.style.opacity = '0';
+                return;
+            }
+            const sx = (wp.x * 0.5 + 0.5) * window.innerWidth;
+            const sy = (-(wp.y * 0.5) + 0.5) * window.innerHeight;
+            el.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+            el.style.opacity = '1';
+        };
+
+        const animate = () => {
+            animId = requestAnimationFrame(animate);
+
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            const dtScale = Math.min(delta * 60, 2.5);
+
+            // Shaders animation
+            skyMat.uniforms.uTime.value = time;
+            skyMat.uniforms.uCamZ.value = camera.position.z;
+            galMat.uniforms.uTime.value = time;
+            galMat.uniforms.uRocketWorld.value.copy(rocketGroup.position);
+            gridPlaneMat.uniforms.uTime.value = time;
+
+            if (warpFactor > 0.02) {
+                warpFactor *= 0.94;
+            } else {
+                warpFactor = 0.0;
+            }
+            starMat.uniforms.uWarp.value = warpFactor;
+
+            // Camera Smoothing
+            smoothCamZ += (targetCamZ - smoothCamZ) * 0.08;
+            camera.position.z = smoothCamZ;
+
+            smoothCamYaw += (camYaw - smoothCamYaw) * 0.08;
+            smoothCamPitch += (camPitch - smoothCamPitch) * 0.08;
+            camera.rotation.set(smoothCamPitch, smoothCamYaw, 0, 'YXZ');
+
+            // --- FULL 360° ROCKET & ASTRONAUT TRACKING PLANE ---
+            const camDir = camera.getWorldDirection(new THREE.Vector3());
+            const planePoint = camera.position.clone().addScaledVector(camDir, 32.0);
+            const viewPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(camDir.clone().negate(), planePoint);
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersectPt = new THREE.Vector3();
+            raycaster.ray.intersectPlane(viewPlane, intersectPt);
+            if (intersectPt) {
+                _finalTarget.copy(intersectPt);
+            }
+
+            const lerpAlpha = 1 - Math.pow(1 - 0.08, dtScale);
+            rocketGroup.position.lerp(_finalTarget, lerpAlpha);
+
+            // TRUE 3D ROCKET ORIENTATION: NOSE ALWAYS POINTS TOWARDS CURSOR ON ALL AXES!
+            _targetDir.copy(_finalTarget).sub(rocketGroup.position);
+            if (_targetDir.lengthSq() > 0.001) {
+                _targetDir.normalize();
+                _targetQuat.setFromUnitVectors(new THREE.Vector3(0, 1, 0), _targetDir);
+                rocketGroup.quaternion.slerp(_targetQuat, 1 - Math.pow(1 - 0.14, dtScale));
+            }
+
+            if (rocketGroup.children[0]) {
+                rocketGroup.children[0].position.y = Math.sin(time * 5) * 0.15;
+            }
+
+            // Thruster Tail Position in Full 3D World Space
+            _tailOffset.set(0, -2.2, 0).applyQuaternion(rocketGroup.quaternion);
+            _tailPos.copy(rocketGroup.position).add(_tailOffset);
+            _tailDir.set(0, -1, 0).applyQuaternion(rocketGroup.quaternion).normalize();
+
+            // Spawn Fire Particles from Rocket Thrusters
+            const p = particles[pIndex];
+            p.life = Math.random() * 15 + 10;
+            p.maxLife = p.life;
+            p.pos.copy(_tailPos);
+            p.velocity.set(
+                _tailDir.x * 0.28 + (Math.random() - 0.5) * 0.05,
+                _tailDir.y * 0.28 + (Math.random() - 0.5) * 0.05,
+                _tailDir.z * 0.28 + (Math.random() - 0.5) * 0.05
+            );
+            pIndex = (pIndex + 1) % particleCount;
+
+            for (let i = 0; i < particleCount; i++) {
+                const pt = particles[i];
+                if (pt.life > 0) {
+                    pt.life -= dtScale;
+                    if (pt.life <= 0) {
+                        fireInstMesh.setMatrixAt(i, _zeroMatrix);
+                    } else {
+                        pt.pos.addScaledVector(pt.velocity, dtScale);
+                        const sc = (pt.life / pt.maxLife) * 1.4;
+                        _instScale.set(sc, sc, sc);
+                        _instMatrix.compose(pt.pos, _instQuat, _instScale);
+                        fireInstMesh.setMatrixAt(i, _instMatrix);
+                    }
+                }
+            }
+            fireInstMesh.instanceMatrix.needsUpdate = true;
+
+            // Astronaut Spring Tether Physics
+            _diff.copy(_tailPos).sub(astronautGroup.position);
+            const ropeDist = _diff.length();
+            const restingLength = 6.0;
+            if (ropeDist > 0.0001) {
+                const force = (ropeDist - restingLength) * 0.002 * dtScale;
+                astroVelocity.addScaledVector(_diff, force / ropeDist);
+            }
+
+            let isThrusting = false;
+            const speed = 0.015 * dtScale;
+            if (keys['w'] || keys['W'] || keys['ArrowUp']) { astroVelocity.y += speed; isThrusting = true; }
+            if (keys['s'] || keys['S'] || keys['ArrowDown']) { astroVelocity.y -= speed; isThrusting = true; }
+            if (keys['a'] || keys['A'] || keys['ArrowLeft']) { astroVelocity.x -= speed; isThrusting = true; }
+            if (keys['d'] || keys['D'] || keys['ArrowRight']) { astroVelocity.x += speed; isThrusting = true; }
+
+            // Astronaut Oxygen Bubbles emission when thrusting
+            if (isThrusting) {
+                oxSpawnAccum += dtScale;
+                if (oxSpawnAccum >= 0.85) {
+                    oxSpawnAccum = 0;
+                    const op = oxParticles[oxIndex];
+                    op.life = Math.random() * 20 + 10;
+                    op.maxLife = op.life;
+                    op.pos.set(astronautGroup.position.x, astronautGroup.position.y - 0.3, astronautGroup.position.z);
+                    op.velocity.set((Math.random() - 0.5) * 0.04, -0.04 - Math.random() * 0.04, (Math.random() - 0.5) * 0.04);
+                    _instScale.set(1, 1, 1);
+                    _instMatrix.compose(op.pos, _instQuat, _instScale);
+                    oxInstMesh.setMatrixAt(oxIndex, _instMatrix);
+                    oxIndex = (oxIndex + 1) % oxCount;
+                }
+            }
+
+            for (let i = 0; i < oxCount; i++) {
+                const op = oxParticles[i];
+                if (op.life > 0) {
+                    op.life -= dtScale;
+                    if (op.life <= 0) {
+                        oxInstMesh.setMatrixAt(i, _zeroMatrix);
+                    } else {
+                        op.pos.addScaledVector(op.velocity, dtScale);
+                        const sc = op.life / op.maxLife;
+                        _instScale.set(sc, sc, sc);
+                        _instMatrix.compose(op.pos, _instQuat, _instScale);
+                        oxInstMesh.setMatrixAt(i, _instMatrix);
+                    }
+                }
+            }
+            oxInstMesh.instanceMatrix.needsUpdate = true;
+
+            astroVelocity.multiplyScalar(Math.pow(0.98, dtScale));
+            astronautGroup.position.addScaledVector(astroVelocity, dtScale);
+
+            if (ropeDist > 12) {
+                const pullAlpha = (ropeDist - 12) * (1 - Math.pow(1 - 0.1, dtScale)) / ropeDist;
+                astronautGroup.position.add(_diff.multiplyScalar(pullAlpha));
+            }
+
+            astronautGroup.rotation.y = time * 0.5;
+            astronautGroup.rotation.z = -astroVelocity.x * 2;
+
+            // Update Tether Rope
+            const rPositions = rope.geometry.attributes.position.array;
+            rPositions[0] = _tailPos.x; rPositions[1] = _tailPos.y; rPositions[2] = _tailPos.z;
+            rPositions[3] = astronautGroup.position.x; rPositions[4] = astronautGroup.position.y + 0.5; rPositions[5] = astronautGroup.position.z;
+            rope.geometry.attributes.position.needsUpdate = true;
+
+            // --- SECTOR OBJECTS ANIMATION ---
+            if (viewModeLocal === 'GALAXY_MAP') {
+                clusterCalloutsList.forEach(c => {
+                    const wp = new THREE.Vector3();
+                    c.group.getWorldPosition(wp);
+                    updateCalloutPosition(c.el, wp);
+                });
+            } else {
+                activePlanetObjects.forEach(p => {
+                    if (p.type === 'PROJECT_PLANET') {
+                        p.group.rotation.y += delta * (p.rotSpeed || 0.3);
+                        if (p.mat && p.mat.uniforms.uTime) p.mat.uniforms.uTime.value = time;
+                        if (p.orbitPivot) {
+                            p.orbitPivot.rotation.y += delta * (p.orbitSpeed || 0.35);
+                            p.models.forEach(m => { m.rotation.y += delta * 0.85; });
+                        }
+                    } else if (p.type === 'SOLAR_SUN') {
+                        if (p.sunMat && p.sunMat.uniforms.uTime) p.sunMat.uniforms.uTime.value = time;
+                    } else if (p.type === 'SOLAR_MARS') {
+                        p.group.rotation.y += delta * 0.32;
+                        if (p.phobosOrbit) p.phobosOrbit.rotation.y += delta * 0.65;
+                        if (p.deimosOrbit) p.deimosOrbit.rotation.y -= delta * 0.45;
+                    } else if (p.type === 'SOLAR_EARTH') {
+                        p.group.rotation.y += delta * 0.38;
+                        if (p.moonOrbit) p.moonOrbit.rotation.y += delta * 0.55;
+                    } else if (p.type === 'DELICIA_SYSTEM') {
+                        if (p.jailsonMesh) p.jailsonMesh.rotation.y += delta * 0.45;
+                        if (p.orangeOrbit) p.orangeOrbit.rotation.y += delta * 0.75;
+                        p.oranges.forEach(o => { o.rotation.y += delta * 1.5; });
+                    } else if (p.type === 'CHICKEN_SYSTEM') {
+                        if (p.chickenMesh) p.chickenMesh.rotation.y += delta * 0.42;
+                        if (p.eggOrbit) p.eggOrbit.rotation.y += delta * 0.85;
+                    }
+                });
+
+                planetCallouts.forEach(c => {
+                    const wp = new THREE.Vector3();
+                    c.group.getWorldPosition(wp);
+                    wp.y += 6.5;
+                    updateCalloutPosition(c.el, wp);
+                });
+            }
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+        if (onLoadedRef.current) onLoadedRef.current();
+
+        const handleResize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            cancelAnimationFrame(animId);
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('spet:space3-jump', handleJumpEvent);
+            window.removeEventListener('spet:space3-unlock-sector', handleUnlockEvent);
+            window.removeEventListener('spet:space3-unlock-all', handleUnlockAll);
+            window.removeEventListener('contextmenu', handleContextMenu);
+            window.removeEventListener('pointerdown', handlePointerDown);
+            window.removeEventListener('pointerup', handlePointerUp);
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('click', handleClick);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+
+            clusterCalloutsList.forEach(c => { if (c.el && c.el.parentNode) c.el.parentNode.removeChild(c.el); });
+            planetCallouts.forEach(c => { if (c.el && c.el.parentNode) c.el.parentNode.removeChild(c.el); });
+
+            if (container && renderer.domElement && container.contains(renderer.domElement)) {
+                container.removeChild(renderer.domElement);
+            }
+            renderer.dispose();
+        };
+    }, [lang, unlockedSectors, unlockSector]);
+
+    return (
+        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-auto select-none bg-black">
+            {/* Three.js Canvas Root */}
+            <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-auto cursor-crosshair" />
+
+            {/* DOM Holographic Callouts Container */}
+            <div ref={overlayRef} className="absolute inset-0 z-10 pointer-events-none" />
+
+            <style>{`
+                /* Mass Effect 3 Tactical Hologram Labels */
+                .me3-cluster-label {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    transform: translate(-50%, -100%);
+                    pointer-events: auto;
+                    cursor: pointer;
+                    user-select: none;
+                    text-align: center;
+                    white-space: nowrap;
+                    will-change: transform, opacity;
+                    z-index: 20;
+                    transition: opacity 0.15s ease-out;
+                }
+                .me3-cluster-label .me3-label-title {
+                    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+                    font-size: 13px;
+                    font-weight: 700;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    color: #f1f5f9;
+                    text-shadow: 0 0 10px rgba(56, 189, 248, 0.8), 0 2px 4px rgba(0,0,0,0.9);
+                    transition: color 0.2s, text-shadow 0.2s, transform 0.2s;
+                }
+                .me3-cluster-label:hover .me3-label-title {
+                    color: #38bdf8;
+                    text-shadow: 0 0 16px rgba(56, 189, 248, 1), 0 0 30px rgba(56, 189, 248, 0.6);
+                    transform: translateY(-2px);
+                }
+                .me3-cluster-label.gold .me3-label-title {
+                    color: #fef08a;
+                    text-shadow: 0 0 10px rgba(250, 204, 21, 0.8), 0 2px 4px rgba(0,0,0,0.9);
+                }
+                .me3-cluster-label.gold:hover .me3-label-title {
+                    color: #facc15;
+                    text-shadow: 0 0 18px rgba(250, 204, 21, 1), 0 0 32px rgba(250, 204, 21, 0.7);
+                }
+                .me3-cluster-label .me3-label-sub {
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                    font-size: 10px;
+                    font-weight: 500;
+                    color: #94a3b8;
+                    letter-spacing: 0.05em;
+                    margin-top: 2px;
+                    opacity: 0.85;
+                    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+                }
+                .me3-cluster-label:hover .me3-label-sub {
+                    opacity: 1;
+                    color: #e2e8f0;
+                }
+
+                /* Sector Planet Holographic Tag */
+                .me3-planet-label {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    transform: translate(-50%, -100%);
+                    pointer-events: auto;
+                    cursor: pointer;
+                    user-select: none;
+                    text-align: center;
+                    white-space: nowrap;
+                    will-change: transform, opacity;
+                    z-index: 20;
+                    transition: opacity 0.15s ease-out;
+                }
+                .me3-planet-label .me3-planet-title {
+                    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+                    font-size: 12px;
+                    font-weight: 700;
+                    letter-spacing: 0.06em;
+                    color: #7dd3fc;
+                    text-shadow: 0 0 8px rgba(56, 189, 248, 0.75), 0 2px 4px rgba(0,0,0,0.9);
+                    transition: color 0.2s, transform 0.2s;
+                }
+                .me3-planet-label:hover .me3-planet-title {
+                    color: #ffffff;
+                    text-shadow: 0 0 16px rgba(56, 189, 248, 1);
+                    transform: translateY(-2px);
+                }
+                .me3-planet-label .me3-planet-sub {
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                    font-size: 9px;
+                    color: #94a3b8;
+                    margin-top: 1px;
+                    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+                }
+            `}</style>
+
+            {/* Mass Relay Warp Jump Transit Cinematic Overlay (2.2s synced to audio) */}
+            {warpCinematic.active && (
+                <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center pointer-events-none select-none transition-all duration-300">
+                    <div className="relative flex flex-col items-center space-y-4">
+                        <div className="w-24 h-24 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin shadow-[0_0_35px_rgba(56,189,248,0.7)]"></div>
+                        <div className="text-center space-y-1 font-mono">
+                            <div className="text-xs text-cyan-400 font-bold tracking-widest uppercase animate-pulse">
+                                [ MASS RELAY TRANSIT // WARP VELOCITY ]
+                            </div>
+                            <div className="text-sm text-white font-bold tracking-wider">
+                                {warpCinematic.targetName}
+                            </div>
+                            <div className="text-[10px] text-cyan-300/70">
+                                {lang === 'pt' ? 'CALIBRANDO MATRIZ DE PROPULSÃO...' : 'CALIBRATING DRIVE CORE...'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Floating Project Card Overlay (spawns when clicking a project planet!) */}
+            {selectedProjectCard && (
+                <div 
+                    onClick={() => setSelectedProjectCard(null)}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none"
+                >
+                    <div 
+                        onClick={(e) => e.stopPropagation()}
+                        className="floating-project-card relative max-w-md w-full glass-panel rounded-2xl overflow-hidden border border-cyan-500/40 bg-[#060b16]/95 p-5 shadow-[0_0_40px_rgba(56,189,248,0.35)] animate-in fade-in zoom-in-95 duration-200"
+                    >
+                        {/* Prominent High-Contrast Close [X] Button */}
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedProjectCard(null);
+                            }}
+                            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/80 hover:bg-rose-600 text-white border border-white/20 hover:border-rose-500 flex items-center justify-center transition-all text-sm z-50 cursor-pointer shadow-lg"
+                            title={lang === 'pt' ? 'Fechar (ESC)' : 'Close (ESC)'}
+                            aria-label="Close"
+                        >
+                            <i className="fas fa-times text-xs"></i>
+                        </button>
+
+                        {/* Card Image / Preview */}
+                        {selectedProjectCard.image && (
+                            <div className="h-44 w-full bg-[#03060c] rounded-xl overflow-hidden relative border border-white/10 mb-4">
+                                {selectedProjectCard.image.endsWith('.mp4') ? (
+                                    <video
+                                        src={selectedProjectCard.image}
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <img
+                                        src={selectedProjectCard.image}
+                                        alt={selectedProjectCard.title[lang] || selectedProjectCard.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#060b16] via-transparent to-transparent opacity-80" />
+                                <div className="absolute top-3 left-3 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                                    {selectedProjectCard.categoryLabel ? (selectedProjectCard.categoryLabel[lang] || selectedProjectCard.categoryLabel.pt) : selectedProjectCard.category}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Title & Description */}
+                        <h3 className="text-base font-bold text-white mb-1.5 pr-8">
+                            {typeof selectedProjectCard.title === 'object' ? (selectedProjectCard.title[lang] || selectedProjectCard.title.pt) : selectedProjectCard.title}
+                        </h3>
+
+                        <p className="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-4">
+                            {typeof selectedProjectCard.description === 'object' ? (selectedProjectCard.description[lang] || selectedProjectCard.description.pt) : selectedProjectCard.description}
+                        </p>
+
+                        {/* Tags */}
+                        {selectedProjectCard.tags && (
+                            <div className="flex flex-wrap gap-1 mb-4">
+                                {selectedProjectCard.tags.slice(0, 4).map((tag, i) => (
+                                    <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-white/[0.05] text-slate-300 border border-white/[0.08] font-mono">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Action Buttons (same as homepage cards!) */}
+                        <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const p = selectedProjectCard;
+                                    setSelectedProjectCard(null);
+                                    window.dispatchEvent(new CustomEvent('spet:open-project-modal', { detail: { projectId: p.id } }));
+                                }}
+                                className="text-xs font-semibold text-primary hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+                            >
+                                <span>{lang === 'pt' ? 'Ver Estudo de Caso' : 'View Case Study'}</span>
+                                <i className="fas fa-arrow-right text-[10px]"></i>
+                            </button>
+
+                            <div className="flex items-center gap-2">
+                                {selectedProjectCard.repo && !selectedProjectCard.isLocked && (
+                                    <a
+                                        href={selectedProjectCard.repo}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="w-7 h-7 rounded-md bg-white/[0.06] hover:bg-white/[0.15] text-slate-200 hover:text-white flex items-center justify-center transition-colors text-xs"
+                                        title="Source Code"
+                                    >
+                                        <i className={selectedProjectCard.repo.includes('github.com') ? "fab fa-github" : "fab fa-gitlab"}></i>
+                                    </a>
+                                )}
+                                {selectedProjectCard.live && selectedProjectCard.id !== 'free_3d_assets' && selectedProjectCard.id !== 'technical_journal' && (
+                                    <a
+                                        href={selectedProjectCard.live}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
+                                        title="Live Link"
+                                    >
+                                        <i className="fas fa-external-link-alt"></i>
+                                    </a>
+                                )}
+                                {selectedProjectCard.journalId && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const jId = selectedProjectCard.journalId;
+                                            setSelectedProjectCard(null);
+                                            if (typeof onExitFullscreenGalaxy === 'function') onExitFullscreenGalaxy();
+                                            window.location.href = `/journal/${jId}/`;
+                                        }}
+                                        className="w-7 h-7 rounded-md bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-white flex items-center justify-center transition-colors text-xs cursor-pointer"
+                                        title="Technical Journal Article"
+                                    >
+                                        <i className="fas fa-book text-[10px]"></i>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Clean Minimal Controls (No generic/vibecoded badges, no Q/3D clutters) */}
+            <div className="fixed top-4 left-4 z-40 flex items-center gap-2 select-none pointer-events-auto">
+                <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent('spet:open-terminal'))}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#030712]/80 hover:bg-cyan-950/60 border border-cyan-500/40 hover:border-cyan-400 text-xs font-mono text-cyan-300 hover:text-white backdrop-blur-md transition-all cursor-pointer shadow-sm rounded-sm"
+                    title={lang === 'pt' ? 'Abrir Terminal CLI (Ctrl+K)' : 'Open CLI Terminal (Ctrl+K)'}
+                >
+                    <i className="fas fa-terminal text-[10px] text-cyan-400"></i>
+                    <span>CLI</span>
+                </button>
+
+                {viewMode === 'SECTOR_FLIGHT' && (
+                    <button
+                        type="button"
+                        onClick={() => { if (exitSectorFnRef.current) exitSectorFnRef.current(); }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#030712]/80 hover:bg-amber-950/60 border border-amber-500/50 hover:border-amber-400 text-xs font-mono text-amber-300 hover:text-white backdrop-blur-md transition-all cursor-pointer shadow-sm rounded-sm"
+                    >
+                        <i className="fas fa-chevron-left text-[10px]"></i>
+                        <span>{lang === 'pt' ? 'MAPA' : 'MAP'}</span>
+                        <span className="text-[10px] opacity-70">[ESC]</span>
+                    </button>
+                )}
+
+                {isFullscreenGalaxyMode && (
+                    <button
+                        type="button"
+                        onClick={onExitFullscreenGalaxy}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#030712]/80 hover:bg-rose-950/60 border border-white/20 hover:border-rose-400 text-xs font-mono text-slate-300 hover:text-white backdrop-blur-md transition-all cursor-pointer shadow-sm rounded-sm"
+                        title="Sair do modo Galaxy Map"
+                    >
+                        <i className="fas fa-times text-[10px]"></i>
+                        <span>{lang === 'pt' ? 'SAIR' : 'EXIT'}</span>
+                    </button>
+                )}
+            </div>
+
+            {/* Bottom-Center Tactical Guide with Custom Visual Hardware Mouse & Key Icons (Never overlaps Astro mascot!) */}
+            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 hidden sm:flex items-center gap-3.5 px-4 py-1.5 bg-[#030712]/90 border border-cyan-500/30 rounded-sm text-[11px] font-mono text-slate-300 backdrop-blur-md select-none pointer-events-none shadow-[0_0_25px_rgba(0,0,0,0.85)]">
+                <div className="flex items-center gap-1.5 text-cyan-300">
+                    <svg className="w-3.5 h-4 inline-block text-cyan-400 shrink-0" viewBox="0 0 24 36" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="32" rx="10" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                        <line x1="2" y1="15" x2="22" y2="15" />
+                        <path d="M 2 12 A 10 10 0 0 1 12 2 L 12 15 L 2 15 Z" fill="#38bdf8" stroke="none" />
+                    </svg>
+                    <span>{viewMode === 'GALAXY_MAP' ? (lang === 'pt' ? 'Entrar no Sistema' : 'Enter System') : (lang === 'pt' ? 'Abrir Card' : 'Open Card')}</span>
+                </div>
+
+                <span className="text-white/20">|</span>
+
+                <div className="flex items-center gap-1.5 text-slate-300">
+                    <svg className="w-3.5 h-4 inline-block text-cyan-400 shrink-0" viewBox="0 0 24 36" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="32" rx="10" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                        <line x1="2" y1="15" x2="22" y2="15" />
+                        <path d="M 12 2 A 10 10 0 0 1 22 12 L 22 15 L 12 15 Z" fill="#38bdf8" stroke="none" />
+                    </svg>
+                    <span>{lang === 'pt' ? 'Free Look 360°' : '360° Free Look'}</span>
+                </div>
+
+                <span className="text-white/20">|</span>
+
+                <div className="flex items-center gap-1.5 text-slate-300">
+                    <svg className="w-3.5 h-4 inline-block text-cyan-400 shrink-0" viewBox="0 0 24 36" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="32" rx="10" />
+                        <rect x="10" y="6" width="4" height="8" rx="2" fill="#38bdf8" stroke="none" />
+                    </svg>
+                    <span>Zoom</span>
+                </div>
+
+                <span className="text-white/20">|</span>
+
+                <div className="flex items-center gap-1.5 text-slate-400">
+                    <span className="px-1.5 py-0.2 rounded bg-white/10 text-[9px] font-mono text-slate-200 border border-white/20">ESC</span>
+                    <span>{lang === 'pt' ? 'Voltar' : 'Exit'}</span>
+                </div>
+            </div>
+
+            {/* 3D Model Credits Attribution Drawer (CC-BY 4.0) */}
+            {showAttributions && (
+                <div 
+                    onClick={() => setShowAttributions(false)}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md select-none"
+                >
+                    <div 
+                        onClick={(e) => e.stopPropagation()}
+                        className="max-w-md w-full bg-[#0a0f1d] border border-cyan-500/40 rounded-2xl p-6 text-xs text-slate-300 space-y-3 font-mono shadow-[0_0_30px_rgba(56,189,248,0.3)] max-h-[80vh] overflow-y-auto"
+                    >
+                        <div className="flex items-center justify-between pb-2 border-b border-white/10 text-cyan-300 font-bold text-sm">
+                            <span>CRÉDITOS DOS MODELOS 3D (CC-BY 4.0)</span>
+                            <button
+                                type="button"
+                                onClick={() => setShowAttributions(false)}
+                                className="text-slate-400 hover:text-white text-base cursor-pointer"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <div className="space-y-2 text-[11px] leading-relaxed text-slate-300">
+                            <p>• "Journal" by FlukierJupiter (https://skfb.ly/66z8C) — Licensed under CC-BY 4.0</p>
+                            <p>• "RaY Gun" by SovietCream (https://skfb.ly/oHYqX) — Licensed under CC-BY 4.0</p>
+                            <p>• "Mystery Box" by MDTOWERZ (https://skfb.ly/oQNrK) — Licensed under CC-BY 4.0</p>
+                            <p>• "Lock And Key" by Mehdi Shahsavan (https://skfb.ly/oTpNS) — Licensed under CC-BY 4.0</p>
+                            <p>• "Cactuar (Final Fantasy)" by mescri (https://skfb.ly/oFy9t) — Licensed under CC-BY 4.0</p>
+                            <p className="text-cyan-400 pt-2 font-semibold">
+                                {lang === 'pt' 
+                                    ? '* Modelos não listados acima (Outcaster Pistol, SpetDev 3D Logo, Juggernog, Satélite, Nuke T6, RAM Stick, BO3 Logo, Cards YGO, etc.) foram modelados ou convertidos por Eduardo Gelain (SpetDev).' 
+                                    : '* Models not listed above were modeled or converted by Eduardo Gelain (SpetDev).'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Dynamic Sector Soundtrack Streaming Player */}
+            <CosmicTrackPlayer
+                activeSectorTrack={activeTrack}
+                settings={settings}
+                isJukeboxActive={Boolean(isJukeboxPlaying)}
+                isEasterActive={Boolean(isAnyEasterGameOpen)}
+                lang={lang}
+            />
+        </div>
+    );
+};
+
+
 const SpaceCanvas = ({ theme = 'space' }) => {
     const canvasRef = useRef(null);
     const themeRef = useRef(theme);
@@ -4109,6 +6611,15 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
 
                 {/* Primary Action Buttons */}
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3.5 pt-8">
+                    <button
+                        type="button"
+                        onClick={() => window.dispatchEvent(new CustomEvent('spet:open-galaxy-map'))}
+                        className="px-5 py-3 rounded-lg bg-white/[0.04] border border-cyan-500/30 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/[0.06] text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer select-none"
+                        title={lang === 'pt' ? 'Entrar na experiência espacial 3D interativa' : 'Enter interactive 3D space experience'}
+                    >
+                        <i className="fas fa-compass text-cyan-400 text-xs"></i>
+                        <span>Experiencia Interativa: Galaxy Map</span>
+                    </button>
                     <a
                         href="#projects"
                         className="px-6 py-3 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primaryHover transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
@@ -4492,16 +7003,22 @@ const ExperienceSection = () => {
 
 const ModelViewerModal = ({ onClose, lang, initialModelId = 'jet' }) => {
     const models = [
-        { id: 'jet', name: 'Jet', file: '/3d/jet.glb' },
+        { id: 'jet', name: 'Jet (Low Poly)', file: '/3d/jet.glb' },
+        { id: 'rocket', name: lang === 'pt' ? 'Foguete (Portfólio)' : 'Rocket (Portfolio)', file: '/3d/rocket.glb' },
         { id: 'para', name: 'Paratrooper', file: '/3d/Paratrooper.glb' },
-        { id: 'rocket', name: 'Rocket', file: '/3d/rocket.glb' },
-        { id: 'astro', name: 'Astronaut', file: '/3d/Astronaut.glb' },
-        { id: 'slayer', name: 'Doom Slayer', file: '/3d/slayer.glb' },
+        { id: 'astro', name: lang === 'pt' ? 'Astronauta Cósmico' : 'Cosmic Astronaut', file: '/3d/Astronaut.glb' },
+        { id: 'cop', name: lang === 'pt' ? 'Policial (GameJam+)' : 'Cop (GameJam+)', file: '/3d/cop.glb' },
         { id: 'chicken', name: lang === 'pt' ? 'Galinha Espacial' : 'Space Chicken', file: '/3d/space_chicken!.glb' },
-        { id: 'jailson', name: 'Jailson Mendes', file: '/3d/jailson.glb' },
-        { id: 'orange', name: lang === 'pt' ? 'Laranja Cósmica' : 'Cosmic Orange', file: '/3d/orange.glb' },
-        { id: 'cop', name: lang === 'pt' ? 'Policial (Atirei o Pau no Gato)' : 'Cop (Atirei o Pau no Gato)', file: '/3d/cop.glb' },
-        { id: 'moon_test', name: lang === 'pt' ? 'Lua de Teste (RuTracker)' : 'Test Moon (RuTracker)', file: '/3d/moon_test.glb' }
+        { id: 'pistol', name: lang === 'pt' ? 'Pistola Outcaster' : 'Outcaster Pistol', file: '/3d/pistol_overheat_1.glb' },
+        { id: 'spet_logo', name: 'SpetDev 3D Logo', file: '/3d/spetdev_logo.glb' },
+        { id: 'sparky_logo', name: 'Sparky Rush 3D Logo', file: '/3d/sparky_rush_3d_logo.glb' },
+        { id: 'guild_seal', name: 'Guild Seal (Fable 3)', file: '/3d/guild_seal.glb' },
+        { id: 'nuke', name: 'Nuke Power-Up (T6)', file: '/3d/spet_t6_nuke.glb' },
+        { id: 'jugger', name: 'Juggernog Perk Machine', file: '/3d/jugger.glb' },
+        { id: 'ram', name: 'RAM Stick DDR', file: '/3d/ram_stick.glb' },
+        { id: 'bo3_logo', name: 'Black Ops 3 Logo', file: '/3d/logo_bo3.glb' },
+        { id: 'ryzeal', name: 'Ryzeal Detonator (YGO 3D)', file: '/3d/ryzealdetonator_YGO.glb' },
+        { id: 'tearlaments', name: 'Tearlaments Kitkallos (YGO 3D)', file: '/3d/tearlamentskitkallos_YGO.glb' }
     ];
     const initial = models.find(m => m.id === initialModelId) || models[0];
     const [selected, setSelected] = React.useState(initial);
@@ -6355,7 +8872,7 @@ const SettingsModal = ({
                             </div>
 
                             {/* Subsetting on Astro: Disable Welcome Message */}
-                            {settings.companionBot && (
+                            {settings.companionBot && !isGalaxyMapActive && (
                                 <div className="mt-3 ml-3 pl-3 border-l-2 border-slate-800 flex items-center justify-between py-1.5 transition-all">
                                     <div className="pr-4">
                                         <div className="text-xs font-medium text-slate-300">
@@ -6388,6 +8905,27 @@ const SettingsModal = ({
                                 <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.themeDesc')}</div>
                             </div>
                             <div className="grid grid-cols-2 gap-2 pt-1">
+                                <button
+                                    type="button"
+                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space3')}
+                                    disabled={window.IS_LOW_END}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
+                                        settings.theme === 'space3'
+                                            ? 'bg-[#050505]/90 border-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                                    }`}
+                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span className="text-cyan-400">{lang === 'pt' ? 'Espaço 3.0 (Beta)' : 'Space 3.0 (Beta)'}</span>
+                                        {settings.theme === 'space3' && <i className="fas fa-check text-[10px] text-cyan-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {lang === 'pt' ? 'Galaxy Map 3D & 55k Estrelas' : '3D Galaxy Map & 55k Stars'}
+                                    </div>
+                                </button>
+
                                 <button
                                     type="button"
                                     onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space2')}
@@ -6529,6 +9067,58 @@ const SettingsModal = ({
                             )}
                         </div>
 
+                        
+                        {/* 3-Channel Audio Volume Sliders */}
+                        <div className="py-2.5 border-b border-slate-800/80 space-y-2.5">
+                            <div className="font-medium text-slate-200">
+                                {lang === 'pt' ? 'Controle de Volume (3 Canais)' : '3-Channel Audio Levels'}
+                            </div>
+                            <div className="space-y-2">
+                                <div className="space-y-1">
+                                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-300">
+                                        <span>Master Volume</span>
+                                        <span className="text-cyan-400 font-bold">{settings.masterVolume ?? 40}%</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={settings.masterVolume ?? 40}
+                                        onChange={(e) => onUpdateSetting('masterVolume', parseInt(e.target.value))}
+                                        className="w-full accent-cyan-400 h-1 bg-slate-800 rounded-lg cursor-pointer"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-300">
+                                        <span>Music Volume</span>
+                                        <span className="text-cyan-400 font-bold">{settings.musicVolume ?? 40}%</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={settings.musicVolume ?? 40}
+                                        onChange={(e) => onUpdateSetting('musicVolume', parseInt(e.target.value))}
+                                        className="w-full accent-cyan-400 h-1 bg-slate-800 rounded-lg cursor-pointer"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-300">
+                                        <span>SFX Volume</span>
+                                        <span className="text-cyan-400 font-bold">{settings.sfxVolume ?? 40}%</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={settings.sfxVolume ?? 40}
+                                        onChange={(e) => onUpdateSetting('sfxVolume', parseInt(e.target.value))}
+                                        className="w-full accent-cyan-400 h-1 bg-slate-800 rounded-lg cursor-pointer"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Easter Egg Sign */}
                         <div className="flex items-center justify-between py-2 border-b border-slate-800/80">
                             <div>
@@ -6576,7 +9166,7 @@ const SettingsModal = ({
 };
 
 // --- INTERACTIVE TERMINAL CLI (SpetTerm) ---
-const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer, onNavigateJournal, initialMessage }) => {
+const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer, onNavigateJournal, initialMessage, isGalaxyMapActive }) => {
     const [history, setHistory] = useState(() => {
         const base = [
             { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
@@ -6613,6 +9203,59 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand
         const cleanCmd = cmd.replace(/['"]/g, '').trim();
 
         const newHistory = [...history, { type: 'user', text: `> ${inputVal}` }];
+
+        // SPETUNLOCK cheat command (inspired by Black Ops 1 3arc Unlock!)
+        if (cleanCmd === 'spetunlock' || cleanCmd === 'spet unlock' || cleanCmd === '/spetunlock' || cleanCmd === '3arc unlock' || cleanCmd === '3arcunlock') {
+            const allUnlocked = { delicia: true, solar: true, chicken: true };
+            try {
+                localStorage.setItem('spet_unlocked_sectors', JSON.stringify(allUnlocked));
+            } catch (err) {}
+            window.dispatchEvent(new CustomEvent('spet:space3-unlock-all'));
+            window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'delicia' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'solar' } }));
+            window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'chicken' } }));
+            
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('discovery');
+            
+            setHistory(prev => [
+                ...prev,
+                { type: 'user', text: `> ${inputVal}` },
+                { type: 'system', text: ">> PROTOCOLO 3ARC / SPETUNLOCK ATIVADO <<" },
+                { type: 'prompt_special', text: "[CHEAT]: Todos os setores de Easter Egg foram desbloqueados e revelados no Galaxy Map! (Sistema Solar, Setor Delícia, Setor das Galinhas)" }
+            ]);
+            setInputVal('');
+            return;
+        }
+
+        // Galaxy Map Mode Toggle Command (always opens galaxy map from anywhere)
+        if (cleanCmd === 'galaxymap' || cleanCmd === '/galaxymap' || cleanCmd === 'galaxy map' || cleanCmd === '/galaxy map' || cleanCmd === 'space3' || cleanCmd === '/space3') {
+            window.dispatchEvent(new CustomEvent('spet:open-galaxy-map'));
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('warp');
+            onClose();
+            return;
+        }
+
+        // If Galaxy Map is currently active, secret commands teleport immediately inside the 3D map!
+        if (isGalaxyMapActive) {
+            if (cleanCmd === 'more! chicken' || cleanCmd === 'more chicken' || cleanCmd === '/more! chicken' || cleanCmd === '/more chicken' || cleanCmd === 'chicken' || cleanCmd === '/chicken') {
+                window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'chicken' } }));
+                window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'chicken' } }));
+                onClose();
+                return;
+            }
+            if (cleanCmd === 'mars' || cleanCmd === '/mars' || cleanCmd === 'marte' || cleanCmd === '/marte' || cleanCmd === 'doom mars' || cleanCmd === 'uac mars') {
+                window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'solar' } }));
+                onClose();
+                return;
+            }
+            if (cleanCmd === 'delicia' || cleanCmd === '/delicia' || cleanCmd === 'delícia' || cleanCmd === '/delícia' || cleanCmd === 'jailson' || cleanCmd === '/jailson' || cleanCmd === 'suco de laranja') {
+                window.dispatchEvent(new CustomEvent('spet:space3-unlock-sector', { detail: { sector: 'delicia' } }));
+                window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: 'delicia' } }));
+                onClose();
+                return;
+            }
+        }
+
 
         // Chicken easter egg command
         if (cleanCmd === 'chicken' || cleanCmd === 'chicken!' || cleanCmd === 'space_chicken' || cleanCmd === 'space_chicken!' || cleanCmd === 'space chicken' || cleanCmd === 'space chicken!') {
@@ -10296,6 +12939,69 @@ const App = () => {
     });
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [activeGalaxyProject, setActiveGalaxyProject] = useState(null);
+
+    // Listen to spet:open-project-modal to open ProjectModal in Galaxy Map mode!
+    useEffect(() => {
+        const handleOpenProjModal = (e) => {
+            const pId = e.detail?.projectId;
+            if (!pId) return;
+            const p = (PORTFOLIO_DATA.projectsData || []).find(proj => proj.id === pId);
+            if (p) setActiveGalaxyProject(p);
+        };
+        window.addEventListener('spet:open-project-modal', handleOpenProjModal);
+        return () => window.removeEventListener('spet:open-project-modal', handleOpenProjModal);
+    }, []);
+
+    const [isGalaxyMapActive, setIsGalaxyMapActive] = useState(() => settings.theme === 'space3');
+    const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
+
+    const triggerGalaxyMapTransition = useCallback((targetActive, targetSector = null) => {
+        playCosmicSfx('warp', settings);
+        setIsThemeTransitioning(true);
+
+        setTimeout(() => {
+            setIsGalaxyMapActive(targetActive);
+            if (targetSector) {
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: targetSector } }));
+                }, 100);
+            }
+        }, 300);
+
+        setTimeout(() => {
+            setIsThemeTransitioning(false);
+        }, 650);
+    }, [settings]);
+
+    // Handle spet:open-galaxy-map event
+    useEffect(() => {
+        const handleOpenGalaxyMap = (e) => {
+            const targetSec = e.detail?.targetSector || null;
+            triggerGalaxyMapTransition(true, targetSec);
+        };
+        window.addEventListener('spet:open-galaxy-map', handleOpenGalaxyMap);
+        return () => window.removeEventListener('spet:open-galaxy-map', handleOpenGalaxyMap);
+    }, [triggerGalaxyMapTransition]);
+
+    // Global Key Listener for (Q) and (ESC)
+    useEffect(() => {
+        const handleGlobalKeys = (e) => {
+            const tag = e.target?.tagName?.toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable) return;
+
+            if (e.key === 'q' || e.key === 'Q') {
+                e.preventDefault();
+                triggerGalaxyMapTransition(!isGalaxyMapActive);
+            } else if (e.key === 'Escape' && isGalaxyMapActive) {
+                e.preventDefault();
+                window.dispatchEvent(new CustomEvent('spet:space3-try-exit-mode'));
+            }
+        };
+        window.addEventListener('keydown', handleGlobalKeys);
+        return () => window.removeEventListener('keydown', handleGlobalKeys);
+    }, [isGalaxyMapActive, triggerGalaxyMapTransition]);
+
     const [lang, setLang] = useState(() => {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -10878,6 +13584,19 @@ const App = () => {
 
             {isSearchBot ? (
                 <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none" />
+            ) : (isGalaxyMapActive || settings.theme === 'space3') ? (
+                <SpaceCanvasV3
+                    skyboxIndex={settings.skyboxIndex || 0}
+                    onLoadingProgress={handleCanvasProgress}
+                    onLoaded={handleCanvasLoaded}
+                    settings={settings}
+                    lang={lang}
+                    isJukeboxPlaying={Boolean(ffMusicState.isActive)}
+                    isEasterGameOpen={Boolean(easterGame)}
+                    isFullscreenGalaxyMode={isGalaxyMapActive}
+                    onExitFullscreenGalaxy={() => triggerGalaxyMapTransition(false)}
+                    onToggleUI={() => triggerGalaxyMapTransition(!isGalaxyMapActive)}
+                />
             ) : settings.theme === 'space2' ? (
                 <React.Fragment>
                     <SpaceCanvasV2 
@@ -10895,7 +13614,7 @@ const App = () => {
             ) : <SpaceCanvas theme={settings.theme} />}
 
             {/* Main Website Content - hidden while loading to prevent overlap */}
-            <div className={`transition-opacity duration-700 ${isLoadingScreen && !isFadeOut && !isSearchBot && currentView !== 'journal' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
+            <div className={`transition-opacity duration-700 ${(isLoadingScreen && !isFadeOut && !isSearchBot && currentView !== 'journal') || isGalaxyMapActive ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
                 <TopBar
                     onOpenCV={() => { playSoftClick(); setIsCVOpen(true); }}
                     onToggleTerminal={() => { playSoftClick(); setIsTerminalOpen(prev => !prev); }}
@@ -10964,6 +13683,18 @@ const App = () => {
             </div>
 
             {/* Modals */}
+            {activeGalaxyProject && (
+                <ProjectModal
+                    project={activeGalaxyProject}
+                    onClose={() => setActiveGalaxyProject(null)}
+                    lang={lang}
+                    onOpen3DViewer={() => {}}
+                    onNavigateJournal={(jid) => {
+                        window.location.href = `/journal/${jid}/`;
+                    }}
+                />
+            )}
+
             {isCVOpen && (
                 <ResumeModal
                     isOpen={isCVOpen}
@@ -10974,6 +13705,7 @@ const App = () => {
             {isTerminalOpen && (
                 <TerminalModal
                     isOpen={isTerminalOpen}
+                    isGalaxyMapActive={Boolean(isGalaxyMapActive || settings.theme === 'space3')}
                     initialMessage={terminalInitialMessage}
                     onClose={() => { setIsTerminalOpen(false); setTerminalInitialMessage(null); }}
                     onOpenCV={() => setIsCVOpen(true)}
