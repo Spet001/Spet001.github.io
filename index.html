@@ -804,38 +804,156 @@
             <!-- Proprietary Tools & Web Utilities Section -->
             <section id="tools" class="py-16 border-b border-white/[0.08]">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-white">Developer Tools & 3D Utilities</h2>
-                    <p class="text-sm text-slate-400 mt-1">Interactive in-browser utilities and procedural generators built for asset pipelines and gamedev.</p>
+                    <h2 class="text-2xl font-bold text-white">Developer Tools & In-Browser Utilities</h2>
+                    <p class="text-sm text-slate-400 mt-1">Interactive in-browser utilities for binary reverse engineering, game archive inspection, and procedural 3D modeling.</p>
                 </div>
-                <div class="rounded-2xl glass-panel border border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)] overflow-hidden transition-all duration-300">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
-                        <div class="lg:col-span-7 bg-[#040612] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex items-center justify-center">
-                            <img src="/assets/tool_quick_3d_studio.png" alt="Spet's Quick 3D Studio" class="w-full h-auto object-cover" loading="lazy" />
-                        </div>
-                        <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-purple-950/20 via-black/40 to-transparent">
-                            <div>
-                                <div class="text-[11px] font-mono text-purple-400 font-semibold tracking-wider uppercase mb-1.5">
-                                    Procedural 3D Generator
+                <div class="space-y-6">
+                    <!-- Tool 1: Easy Decompiler -->
+                    <div class="rounded-2xl glass-panel border border-cyan-500/30 hover:border-cyan-400/60 shadow-[0_8px_30px_rgba(6,182,212,0.12)] overflow-hidden transition-all duration-300">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
+                            <div class="lg:col-span-6 xl:col-span-7 bg-[#05070B] p-6 border-b lg:border-b-0 lg:border-r border-white/[0.08] font-mono text-xs text-slate-300 flex flex-col justify-between">
+                                <div class="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400">
+                                    <span class="flex items-center gap-2"><i class="fas fa-terminal text-cyan-400"></i> rizin.wasm + ghidra/jsdec</span>
+                                    <span class="text-[10px] text-cyan-400 font-bold">WASM WORKER</span>
                                 </div>
-                                <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's Quick 3D Studio</h3>
-                                <p class="text-sm text-slate-300 leading-relaxed mb-6">
-                                    Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI.
-                                </p>
-                                <div class="flex flex-wrap gap-1.5 mb-6">
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Three.js</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">WebGL</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Procedural 3D</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">GLTF / GLB Exporter</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">PBR</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Zero AI</span>
+                                <div class="space-y-1 py-3">
+                                    <div class="text-slate-500">// Decompiled C-like pseudo-code</div>
+                                    <div><span class="text-cyan-400">int32_t</span> <span class="text-amber-300">entry0</span>(<span class="text-cyan-400">void</span>) {</div>
+                                    <div class="pl-4 text-slate-400">rsi = *(0x401000);</div>
+                                    <div class="pl-4 text-emerald-400">if (rax == 0x5a4d) { /* PE MZ Header */</div>
+                                    <div class="pl-8 text-cyan-300">init_relocations();</div>
+                                    <div class="pl-4">}</div>
+                                    <div>}</div>
+                                </div>
+                                <div class="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
+                                    <span>PE, ELF, Mach-O, Raw x86/x64, ARM, MIPS</span>
+                                    <span class="text-emerald-400 font-semibold">100% Client-Side</span>
                                 </div>
                             </div>
-                            <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
-                                <a href="/tools/image-to-3d/" class="px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-purple-600/30 flex items-center gap-2">
-                                    <span>Open Quick 3D Studio</span>
-                                    <i class="fas fa-arrow-right text-[10px]"></i>
-                                </a>
-                                <span class="text-[11px] font-mono text-purple-400/80">/tools/image-to-3d/</span>
+                            <div class="lg:col-span-6 xl:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-cyan-950/20 via-black/40 to-transparent">
+                                <div>
+                                    <div class="text-[11px] font-mono text-cyan-400 font-semibold tracking-wider uppercase mb-1.5">
+                                        WASM Binary Analyzer & Decompiler
+                                    </div>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's Easy Decompiler</h3>
+                                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                                        Local-first WebAssembly binary analyzer and dual C-like decompiler workbench powered by Rizin + jsdec and Ghidra C++ Decompiler in Web Workers. Zero server uploads.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1.5 mb-6">
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-cyan-200/90 border border-cyan-500/20">WebAssembly</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-cyan-200/90 border border-cyan-500/20">Rizin WASM</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-cyan-200/90 border border-cyan-500/20">Ghidra / jsdec</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-cyan-200/90 border border-cyan-500/20">x86/x64, ARM, MIPS</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-cyan-200/90 border border-cyan-500/20">CFG Graphs</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-cyan-200/90 border border-cyan-500/20">Zero AI</span>
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                    <a href="/tools/easy-decompiler/" class="px-5 py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-cyan-600/30 flex items-center gap-2">
+                                        <span>Open Easy Decompiler</span>
+                                        <i class="fas fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                    <span class="text-[11px] font-mono text-cyan-400/80">/tools/easy-decompiler/</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool 2: Universal Game File Opener -->
+                    <div class="rounded-2xl glass-panel border border-amber-500/30 hover:border-amber-400/60 shadow-[0_8px_30px_rgba(245,158,11,0.12)] overflow-hidden transition-all duration-300">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
+                            <div class="lg:col-span-6 xl:col-span-7 bg-[#0B0F17] p-6 border-b lg:border-b-0 lg:border-r border-white/[0.08] font-mono text-xs text-slate-300 flex flex-col justify-between">
+                                <div class="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400">
+                                    <span class="flex items-center gap-2"><i class="fas fa-folder-tree text-amber-400"></i> Virtual Filesystem Tree & Carver</span>
+                                    <span class="text-[10px] text-amber-400 font-bold">25+ ENGINES</span>
+                                </div>
+                                <div class="space-y-1.5 py-3 text-slate-300">
+                                    <div class="flex justify-between text-slate-500 text-[11px]">
+                                        <span>LUMP / ASSET</span>
+                                        <span>OFFSET</span>
+                                        <span>SIZE</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-200">
+                                        <span class="text-amber-300 truncate">data/scripts/main.gsc</span>
+                                        <span class="text-slate-400">0x000100</span>
+                                        <span>14.2 KB</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-300">
+                                        <span class="text-cyan-300 truncate">audio/stream_01.hca</span>
+                                        <span class="text-slate-400">0x003A40</span>
+                                        <span>1.4 MB</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-300">
+                                        <span class="text-emerald-300 truncate">PARAM.SFO</span>
+                                        <span class="text-slate-400">0x000800</span>
+                                        <span>2.0 KB</span>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
+                                    <span>Bethesda, Ubisoft, Rockstar, PlayStation, FromSoft</span>
+                                    <span class="text-emerald-400 font-semibold">RFC 1950 Zlib</span>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-6 xl:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-amber-950/20 via-black/40 to-transparent">
+                                <div>
+                                    <div class="text-[11px] font-mono text-amber-400 font-semibold tracking-wider uppercase mb-1.5">
+                                        Universal Game Archive & Stream Carver
+                                    </div>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's Universal Game File Opener</h3>
+                                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                                        In-browser virtual filesystem inspector and carver supporting 25+ PC and console game engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft mods (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs), Call of Duty FastFiles (.ff), and raw Zlib streams.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1.5 mb-6">
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">BSA / BA2</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">FORGE</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">Rockstar RPF</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">PlayStation PKG</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">CRIWARE</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">FromSoft BND</span>
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                    <a href="/tools/universal-file/" class="px-5 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs transition-colors shadow-lg shadow-amber-600/30 flex items-center gap-2">
+                                        <span>Open Game File Opener</span>
+                                        <i class="fas fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                    <span class="text-[11px] font-mono text-amber-400/80">/tools/universal-file/</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool 3: Quick 3D Studio -->
+                    <div class="rounded-2xl glass-panel border border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)] overflow-hidden transition-all duration-300">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
+                            <div class="lg:col-span-7 bg-[#040612] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex items-center justify-center">
+                                <img src="/assets/tool_quick_3d_studio.png" alt="Spet's Quick 3D Studio" class="w-full h-auto object-cover" loading="lazy" />
+                            </div>
+                            <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-purple-950/20 via-black/40 to-transparent">
+                                <div>
+                                    <div class="text-[11px] font-mono text-purple-400 font-semibold tracking-wider uppercase mb-1.5">
+                                        Procedural 3D Generator
+                                    </div>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's Quick 3D Studio</h3>
+                                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                                        Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1.5 mb-6">
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Three.js</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">WebGL</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Procedural 3D</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">GLTF / GLB Exporter</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">PBR</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Zero AI</span>
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                    <a href="/tools/image-to-3d/" class="px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-purple-600/30 flex items-center gap-2">
+                                        <span>Open Quick 3D Studio</span>
+                                        <i class="fas fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                    <span class="text-[11px] font-mono text-purple-400/80">/tools/image-to-3d/</span>
+                                </div>
                             </div>
                         </div>
                     </div>

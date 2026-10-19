@@ -100,9 +100,17 @@ const PORTFOLIO_DATA = {
             },
             tools: {
                 title: "Ferramentas & Utilitários Web",
-                subtitle: "Utilitários desenvolvidos para modelagem procedural e pipelines de assets diretamente no navegador.",
+                subtitle: "Utilitários desenvolvidos para engenharia reversa, análise de arquivos e modelagem procedural diretamente no navegador.",
                 openTool: "Abrir Quick 3D Studio",
-                desc: "Gerador procedural desenvolvido para transformar logos, insígnias e cartas colecionáveis (Yu-Gi-Oh!, Pokémon, Magic) em modelos 3D production-ready usando puro algoritmo matemático de contorno e extrusão, sem depender de inteligência artificial."
+                desc: "Gerador procedural desenvolvido para transformar logos, insígnias e cartas colecionáveis (Yu-Gi-Oh!, Pokémon, Magic) em modelos 3D production-ready usando puro algoritmo matemático de contorno e extrusão, sem depender de inteligência artificial.",
+                easyDecompTitle: "Spet's Easy Decompiler",
+                easyDecompBadge: "Descompilador & Analisador Binário WASM",
+                easyDecompDesc: "Workbench de descompilação estática direto no navegador com WebAssembly e Web Workers. Suporte a binários x86, x64, ARM e MIPS com decompilação C-like (Rizin + Ghidra/jsdec), visualização de grafos de fluxo e zero upload para servidores.",
+                easyDecompOpen: "Abrir Easy Decompiler",
+                universalFileTitle: "Spet's Universal Game File Opener",
+                universalFileBadge: "Inspetor & Carvedor Universal de Games",
+                universalFileDesc: "Inspetor e extrator de sistemas de arquivos virtuais de games no browser. Suporte a mais de 25 formatos de engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs) e CoD FastFiles (.ff).",
+                universalFileOpen: "Abrir File Opener"
             },
             terminal: {
                 title: "Console Interativo (SpetTerm)",
@@ -253,10 +261,18 @@ const PORTFOLIO_DATA = {
                 viewAll: "View All Journal Entries"
             },
             tools: {
-                title: "Developer Tools & 3D Utilities",
-                subtitle: "Interactive in-browser utilities and procedural generators built for asset pipelines and gamedev.",
+                title: "Developer Tools & In-Browser Utilities",
+                subtitle: "Interactive in-browser utilities for binary reverse engineering, game archive inspection, and procedural 3D modeling.",
                 openTool: "Open Quick 3D Studio",
-                desc: "Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI."
+                desc: "Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI.",
+                easyDecompTitle: "Spet's Easy Decompiler",
+                easyDecompBadge: "WASM Binary Analyzer & Decompiler",
+                easyDecompDesc: "Local-first WebAssembly binary analyzer and dual C-like decompiler workbench powered by Rizin + jsdec and Ghidra C++ Decompiler in Web Workers. Analyzes PE, ELF, Mach-O, and raw machine code (x86, x64, ARM, MIPS) with zero server uploads.",
+                easyDecompOpen: "Open Easy Decompiler",
+                universalFileTitle: "Spet's Universal Game File Opener",
+                universalFileBadge: "Universal Game Archive & Stream Carver",
+                universalFileDesc: "In-browser virtual filesystem inspector and carver supporting 25+ PC and console game engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft mods (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs), Call of Duty FastFiles (.ff), and raw Zlib streams.",
+                universalFileOpen: "Open Game File Opener"
             },
             terminal: {
                 title: "Interactive Console (SpetTerm)",
@@ -8102,13 +8118,120 @@ const JournalSection = ({ onNavigateJournal }) => {
     );
 };
 
-// --- TOOLS SECTION: Developer Utilities & Procedural Generators ---
+// --- TOOLS SECTION: Developer Utilities & In-Browser Workbenches ---
 const ToolsSection = () => {
     const { t, lang } = useContext(LanguageContext);
 
+    const toolsList = [
+        {
+            id: 'easy-decompiler',
+            url: '/tools/easy-decompiler/',
+            title: t('tools.easyDecompTitle') || "Spet's Easy Decompiler",
+            badge: t('tools.easyDecompBadge') || "WASM Binary Analyzer & Decompiler",
+            desc: t('tools.easyDecompDesc') || "Local-first WebAssembly binary analyzer and dual C-like decompiler workbench powered by Rizin + jsdec and Ghidra in Web Workers. Pure client-side execution.",
+            openText: t('tools.easyDecompOpen') || "Open Easy Decompiler",
+            accentBorder: "border-cyan-500/30 hover:border-cyan-400/60 shadow-[0_8px_30px_rgba(6,182,212,0.12)]",
+            badgeColor: "text-cyan-400 border-cyan-500/20",
+            buttonBg: "bg-cyan-600 hover:bg-cyan-500 shadow-cyan-600/30",
+            pathColor: "text-cyan-400/80",
+            tags: ['WebAssembly', 'Rizin WASM', 'Ghidra / jsdec', 'x86 / x64', 'ARM / MIPS', 'Zero Uploads', 'Client-Side'],
+            preview: (
+                <div className="w-full h-full min-h-[220px] bg-[#05070B] p-5 flex flex-col justify-between font-mono text-xs border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400">
+                        <span className="flex items-center gap-2"><i className="fas fa-terminal text-cyan-400"></i> rizin.wasm session</span>
+                        <span className="text-[10px] text-cyan-400/80 font-bold">STANDALONE WASM</span>
+                    </div>
+                    <div className="space-y-1 py-2 text-slate-300">
+                        <div className="text-slate-500">// Decompiled C-like pseudo-code</div>
+                        <div><span className="text-cyan-400">int32_t</span> <span className="text-amber-300">entry0</span>(<span className="text-cyan-400">void</span>) {'{'}</div>
+                        <div className="pl-4 text-slate-400">rsi = *(0x401000);</div>
+                        <div className="pl-4 text-emerald-400">if (rax == 0x5a4d) {'{'} /* MZ header */</div>
+                        <div className="pl-8 text-cyan-300">init_relocations();</div>
+                        <div className="pl-4">{'}'}</div>
+                        <div>{'}'}</div>
+                    </div>
+                    <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
+                        <span>Exports: rzweb_cmd</span>
+                        <span className="text-emerald-400 font-semibold">100% Client-Side</span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'universal-file',
+            url: '/tools/universal-file/',
+            title: t('tools.universalFileTitle') || "Spet's Universal Game File Opener",
+            badge: t('tools.universalFileBadge') || "Universal Game Archive & Stream Carver",
+            desc: t('tools.universalFileDesc') || "In-browser virtual filesystem inspector and carver supporting 25+ PC and console game engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft mods (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs), Call of Duty FastFiles (.ff), and raw Zlib streams.",
+            openText: t('tools.universalFileOpen') || "Open Game File Opener",
+            accentBorder: "border-amber-500/30 hover:border-amber-400/60 shadow-[0_8px_30px_rgba(245,158,11,0.12)]",
+            badgeColor: "text-amber-400 border-amber-500/20",
+            buttonBg: "bg-amber-600 hover:bg-amber-500 shadow-amber-600/30 text-slate-950 font-bold",
+            pathColor: "text-amber-400/80",
+            tags: ['Bethesda BSA/BA2', 'Ubisoft FORGE', 'Rockstar RPF', 'Minecraft JAR', 'PlayStation PKG', 'CRIWARE', 'FromSoft BND', 'Square SDAT', 'FastFiles .ff'],
+            preview: (
+                <div className="w-full h-full min-h-[220px] bg-[#0B0F17] p-5 flex flex-col justify-between font-mono text-xs border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400">
+                        <span className="flex items-center gap-2"><i className="fas fa-folder-tree text-amber-400"></i> Virtual Filesystem Tree</span>
+                        <span className="text-[10px] text-amber-400/80 font-bold">25+ ENGINES</span>
+                    </div>
+                    <div className="space-y-1.5 py-2 text-slate-300">
+                        <div className="flex justify-between text-slate-500 text-[11px]">
+                            <span>LUMP / ASSET</span>
+                            <span>OFFSET</span>
+                            <span>SIZE</span>
+                        </div>
+                        <div className="flex justify-between text-slate-200">
+                            <span className="text-amber-300 truncate">data/scripts/main.gsc</span>
+                            <span className="text-slate-400">0x000100</span>
+                            <span>14.2 KB</span>
+                        </div>
+                        <div className="flex justify-between text-slate-300">
+                            <span className="text-cyan-300 truncate">audio/stream_01.hca</span>
+                            <span className="text-slate-400">0x003A40</span>
+                            <span>1.4 MB</span>
+                        </div>
+                        <div className="flex justify-between text-slate-300">
+                            <span className="text-emerald-300 truncate">PARAM.SFO</span>
+                            <span className="text-slate-400">0x000800</span>
+                            <span>2.0 KB</span>
+                        </div>
+                    </div>
+                    <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
+                        <span>Hex Sync & Stream Carver</span>
+                        <span className="text-emerald-400 font-semibold">RFC 1950 Zlib</span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'quick-3d',
+            url: '/tools/image-to-3d/',
+            title: "Spet's Quick 3D Studio",
+            badge: lang === 'pt' ? 'Gerador 3D Procedural' : 'Procedural 3D Generator',
+            desc: t('tools.desc'),
+            openText: t('tools.openTool'),
+            accentBorder: "border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)]",
+            badgeColor: "text-purple-400 border-purple-500/20",
+            buttonBg: "bg-purple-600 hover:bg-purple-500 shadow-purple-600/30",
+            pathColor: "text-purple-400/80",
+            tags: ['Three.js', 'WebGL', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR', 'Zero AI'],
+            preview: (
+                <div className="relative w-full h-full min-h-[220px] bg-[#040612] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+                    <img
+                        src="/assets/tool_quick_3d_studio.png"
+                        alt="Spet's Quick 3D Studio"
+                        className="w-full h-full object-cover object-left-top"
+                        loading="lazy"
+                    />
+                </div>
+            )
+        }
+    ];
+
     return (
         <section id="tools" className="py-16 relative border-t border-white/[0.08]">
-            <div className="max-w-6xl mx-auto px-6">
+            <div className="max-w-6xl mx-auto px-6 space-y-8">
                 
                 <div className="text-center sm:text-left mb-8">
                     <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -8119,60 +8242,62 @@ const ToolsSection = () => {
                     </p>
                 </div>
 
-                {/* Featured Tool Card */}
-                <div className="glass-panel rounded-2xl border border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)] overflow-hidden transition-all duration-300">
-                    <div className="grid lg:grid-cols-12 gap-0 items-stretch">
-                        
-                        {/* Visual Preview / Screenshot */}
-                        <div className="lg:col-span-7 relative bg-[#040612] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08]">
-                            <img
-                                src="/assets/tool_quick_3d_studio.png"
-                                alt="Spet's Quick 3D Studio"
-                                className="w-full h-full object-cover object-left-top"
-                                loading="lazy"
-                            />
-                        </div>
-
-                        {/* Description & Action Panel */}
-                        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-purple-950/20 via-black/40 to-transparent">
-                            <div>
-                                <div className="text-[11px] font-mono text-purple-400 font-semibold tracking-wider uppercase mb-1.5">
-                                    {lang === 'pt' ? 'Gerador 3D Procedural' : 'Procedural 3D Generator'}
+                {/* All Tools Grid / Stack */}
+                <div className="space-y-6">
+                    {toolsList.map((tool) => (
+                        <div
+                            key={tool.id}
+                            className={`glass-panel rounded-2xl border ${tool.accentBorder} overflow-hidden transition-all duration-300`}
+                        >
+                            <div className="grid lg:grid-cols-12 gap-0 items-stretch">
+                                
+                                {/* Visual Preview Panel */}
+                                <div className="lg:col-span-6 xl:col-span-7 relative flex items-center justify-center overflow-hidden">
+                                    {tool.preview}
                                 </div>
 
-                                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
-                                    Spet's Quick 3D Studio
-                                </h3>
+                                {/* Description & Action Panel */}
+                                <div className="lg:col-span-6 xl:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-white/[0.02] via-black/40 to-transparent">
+                                    <div>
+                                        <div className={`text-[11px] font-mono font-semibold tracking-wider uppercase mb-1.5 ${tool.badgeColor.split(' ')[0]}`}>
+                                            {tool.badge}
+                                        </div>
 
-                                <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                                    {t('tools.desc')}
-                                </p>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
+                                            {tool.title}
+                                        </h3>
 
-                                <div className="flex flex-wrap gap-1.5 mb-6">
-                                    {['Three.js', 'WebGL', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR', 'Zero AI'].map((tag, i) => (
-                                        <span key={i} className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">
-                                            {tag}
+                                        <p className="text-sm text-slate-300 leading-relaxed mb-6">
+                                            {tool.desc}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-1.5 mb-6">
+                                            {tool.tags.map((tag, i) => (
+                                                <span key={i} className={`text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-200 border ${tool.badgeColor.split(' ')[1]}`}>
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                        <a
+                                            href={tool.url}
+                                            className={`px-5 py-2.5 rounded-lg ${tool.buttonBg} text-white text-xs font-semibold transition-colors shadow-lg flex items-center gap-2 cursor-pointer`}
+                                        >
+                                            <span>{tool.openText}</span>
+                                            <i className="fas fa-arrow-right text-[10px]"></i>
+                                        </a>
+
+                                        <span className={`text-[11px] font-mono ${tool.pathColor}`}>
+                                            {tool.url}
                                         </span>
-                                    ))}
+                                    </div>
+
                                 </div>
                             </div>
-
-                            <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
-                                <a
-                                    href="/tools/image-to-3d/"
-                                    className="px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-purple-600/30 flex items-center gap-2 cursor-pointer"
-                                >
-                                    <span>{t('tools.openTool')}</span>
-                                    <i className="fas fa-arrow-right text-[10px]"></i>
-                                </a>
-
-                                <span className="text-[11px] font-mono text-purple-400/80">
-                                    /tools/image-to-3d/
-                                </span>
-                            </div>
-
                         </div>
-                    </div>
+                    ))}
                 </div>
 
             </div>
