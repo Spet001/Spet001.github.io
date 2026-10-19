@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'Exploring-Legacy-UWP-Titles': 'Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.',
+    'entry_0018': 'Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.',
     'Gamifying-A-Galactic-Portfolio-Galaxy-Map': 'Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors.',
     'entry_0017': 'Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors.',
     'DEVLOG-Outcaster-Unity-6': 'DEVLOG: Rebuilding Outcaster from scratch in Unity 6 (DX11). Engineering a custom LIVE 3D HUD Preview in the Inspector for zero-play-mode 2.5D weapon authoring, modular architecture, and a COD Zombies-style Survival Mode.',

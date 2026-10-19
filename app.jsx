@@ -102,10 +102,10 @@ const PORTFOLIO_DATA = {
                 title: "Ferramentas & Utilitários Web",
                 subtitle: "Utilitários desenvolvidos para engenharia reversa, análise de arquivos e modelagem procedural diretamente no navegador.",
                 openTool: "Abrir Quick 3D Studio",
-                desc: "Gerador procedural desenvolvido para transformar logos, insígnias e cartas colecionáveis (Yu-Gi-Oh!, Pokémon, Magic) em modelos 3D production-ready usando puro algoritmo matemático de contorno e extrusão, sem depender de inteligência artificial.",
+                desc: "Gerador procedural desenvolvido para transformar logos, insígnias e cartas colecionáveis (Yu-Gi-Oh!, Pokémon, Magic) em modelos 3D production-ready através de algoritmos determinísticos de contorno, triangulação e extrusão de malhas.",
                 easyDecompTitle: "Spet's Easy Decompiler",
                 easyDecompBadge: "Descompilador & Analisador Binário WASM",
-                easyDecompDesc: "Workbench de descompilação estática direto no navegador com WebAssembly e Web Workers. Suporte a binários x86, x64, ARM e MIPS com decompilação C-like (Rizin + Ghidra/jsdec), visualização de grafos de fluxo e zero upload para servidores.",
+                easyDecompDesc: "Workbench de engenharia reversa estática executado no navegador via WebAssembly e Web Workers isolados. Suporte a binários PE/ELF em arquiteturas x86, x64, ARM e MIPS, descompilação C-like dual (Rizin + Ghidra Sleigh) e recuperação de grafos de fluxo (CFG).",
                 easyDecompOpen: "Abrir Easy Decompiler",
                 universalFileTitle: "Spet's Universal Game File Opener",
                 universalFileBadge: "Inspetor & Carvedor Universal de Games",
@@ -264,10 +264,10 @@ const PORTFOLIO_DATA = {
                 title: "Developer Tools & In-Browser Utilities",
                 subtitle: "Interactive in-browser utilities for binary reverse engineering, game archive inspection, and procedural 3D modeling.",
                 openTool: "Open Quick 3D Studio",
-                desc: "Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI.",
+                desc: "Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction, constrained triangulation, and geometric mesh extrusion.",
                 easyDecompTitle: "Spet's Easy Decompiler",
                 easyDecompBadge: "WASM Binary Analyzer & Decompiler",
-                easyDecompDesc: "Local-first WebAssembly binary analyzer and dual C-like decompiler workbench powered by Rizin + jsdec and Ghidra C++ Decompiler in Web Workers. Analyzes PE, ELF, Mach-O, and raw machine code (x86, x64, ARM, MIPS) with zero server uploads.",
+                easyDecompDesc: "Static binary reverse engineering workbench executing in WebAssembly and isolated Web Workers. Disassembles and decompiles PE, ELF, and raw binaries (x86, x64, ARM, MIPS) with dual C-like engines (Rizin + Ghidra Sleigh) and control-flow graph (CFG) recovery.",
                 easyDecompOpen: "Open Easy Decompiler",
                 universalFileTitle: "Spet's Universal Game File Opener",
                 universalFileBadge: "Universal Game Archive & Stream Carver",
@@ -638,6 +638,39 @@ const PORTFOLIO_DATA = {
                 impact: {
                     pt: "Os modelos agora fazem parte da simulação principal e estão abertos para a comunidade.",
                     en: "The models are now featured in the main portfolio simulation and open-sourced for the community."
+                }
+            }
+        },
+        {
+            id: "spet_web_tools_suite",
+            category: "tools",
+            categoryLabel: { pt: "Ferramentas & Utilitários Web", en: "Web Tooling & Reverse Engineering" },
+            image: "/assets/tool_easy_decompiler.png",
+            caseStudyImages: [
+                "/assets/tool_easy_decompiler.png",
+                "/assets/tool_universal_file.png"
+            ],
+            title: { pt: "Suíte de Ferramentas Web & Engenharia Reversa", en: "Web Tools & Reverse Engineering Suite" },
+            featured: true,
+            live: "/tools/",
+            liveLabel: { pt: "Explorar Ferramentas", en: "Open Tools Suite" },
+            tags: ["WebAssembly", "Rizin Core", "Ghidra Sleigh", "Game Archives", "Three.js", "AST Decompilation", "25+ Formats"],
+            description: {
+                pt: "Suíte completa de utilitários e analisadores de engenharia reversa executados no browser: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines: Bethesda, id Tech, Ubisoft, Rockstar, PlayStation) e Quick 3D Studio.",
+                en: "Comprehensive reverse engineering and archive extraction suite running client-side: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ game engines), and Quick 3D Studio."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Engenharia reversa estática e dissecação de arquivos proprietários de jogos tradicionalmente exigem a instalação de softwares pesados de desktop (IDA Pro, Ghidra, QuickBMS) e dependências de ambiente nativo.",
+                    en: "Static binary reverse engineering and proprietary game archive parsing traditionally require heavy desktop toolchains (IDA Pro, Ghidra, QuickBMS) and native OS dependencies."
+                },
+                solution: {
+                    pt: "Compilação de runtimes e parsers de baixo nível (Rizin, jsdec, Ghidra Sleigh, zlib) para WebAssembly em Web Workers isolados, combinados com uma interface de alta densidade inspirada em Binary Ninja e SLADE3.",
+                    en: "Ported low-level reverse engineering runtimes (Rizin, jsdec, Ghidra Sleigh, zlib) to WebAssembly in isolated Web Workers, wrapped in an ultra-dense workstation UI inspired by Binary Ninja and SLADE3."
+                },
+                impact: {
+                    pt: "Disponibilização instantânea de ferramentas de pesquisa e engenharia reversa diretamente no navegador sem necessidade de uploads externos.",
+                    en: "Delivered instant in-browser reverse engineering and game asset inspection without external server reliance."
                 }
             }
         },
@@ -1132,6 +1165,14 @@ const PORTFOLIO_DATA = {
 
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
+        {
+            id: "Exploring-Legacy-UWP-Titles",
+            title: "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
+            date: "Oct 19, 2026",
+            file: "Exploring-Legacy-UWP-Titles.md",
+            category: "Reverse Engineering & Windows Internals",
+            excerpt: "Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails."
+        },
         {
             id: "Gamifying-A-Galactic-Portfolio-Galaxy-Map",
             title: "Quick Entry: Gamifying a Galactic Portfolio with the 3D Galaxy Map!",
@@ -6529,12 +6570,14 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                             e.preventDefault();
                             if (onNavigateJournal) onNavigateJournal();
                         }}
-                        className={`hover:text-primary transition-colors font-semibold cursor-pointer ${currentView === 'journal' ? 'text-primary' : 'text-slate-300'}`}
+                        className={`hover:text-primary transition-colors font-semibold cursor-pointer inline-flex items-center gap-1.5 ${currentView === 'journal' ? 'text-primary' : 'text-slate-300'}`}
                     >
-                        {t('nav.journal')}
+                        <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                        <span>{t('nav.journal')}</span>
                     </a>
-                    <a href="#tools" onClick={(e) => handleSectionClick(e, 'tools')} className="hover:text-primary transition-colors font-semibold cursor-pointer">
-                        {t('nav.tools') || 'Tools'}
+                    <a href="#tools" onClick={(e) => handleSectionClick(e, 'tools')} className="hover:text-primary transition-colors font-semibold cursor-pointer inline-flex items-center gap-1.5 text-slate-300">
+                        <img src="/assets/icons/spet_sprites/green_chip.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                        <span>{t('nav.tools') || 'Tools'}</span>
                     </a>
                     <a href="#contact" onClick={(e) => handleSectionClick(e, 'contact')} className="hover:text-white transition-colors">{t('nav.contact')}</a>
                 </nav>
@@ -6547,7 +6590,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                         className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
                         title="Open SpetTerm CLI (Ctrl+K)"
                     >
-                        <i className="fas fa-terminal text-[11px] text-primary"></i>
+                        <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
                         <span>CLI</span>
                     </button>
 
@@ -6557,16 +6600,16 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                         className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
                         title={lang === 'pt' ? 'Configurações' : 'Settings'}
                     >
-                        <i className="fas fa-sliders text-[11px] text-primary"></i>
+                        <img src="/assets/icons/gears-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
                         <span className="hidden sm:inline">{lang === 'pt' ? 'Config' : 'Settings'}</span>
                     </button>
 
                     <button
                         onClick={onOpenCV}
-                        className="px-3.5 py-1.5 text-xs font-medium rounded-md bg-primary text-white hover:bg-primaryHover transition-all shadow-sm shadow-primary/20 whitespace-nowrap"
+                        className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-md bg-primary text-white hover:bg-primaryHover transition-all shadow-sm shadow-primary/20 whitespace-nowrap"
                     >
-                        <i className="fas fa-file-lines mr-1.5"></i>
-                        {t('nav.resume')}
+                        <img src="/assets/icons/spet_sprites/floppy_disk.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                        <span>{t('nav.resume')}</span>
                     </button>
 
                     <div className="flex items-center bg-white/[0.04] border border-white/[0.08] rounded-md p-0.5">
@@ -6600,15 +6643,23 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'experience'); }} href="#experience" className="block text-sm text-slate-300 hover:text-primary">{t('nav.experience')}</a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'projects'); }} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'skills'); }} href="#skills" className="block text-sm text-slate-300 hover:text-primary">{t('nav.skills')}</a>
-                    <a onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); if (onNavigateJournal) onNavigateJournal(); }} href="/journal" className="block text-sm text-primary font-semibold">{t('nav.journal')}</a>
-                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'tools'); }} href="#tools" className="block text-sm text-slate-300 hover:text-primary">{t('nav.tools') || 'Tools'}</a>
+                    <a onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); if (onNavigateJournal) onNavigateJournal(); }} href="/journal" className="flex items-center gap-2 text-sm text-primary font-semibold">
+                        <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
+                        <span>{t('nav.journal')}</span>
+                    </a>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'tools'); }} href="#tools" className="flex items-center gap-2 text-sm text-slate-300 hover:text-primary">
+                        <img src="/assets/icons/spet_sprites/green_chip.png" alt="" className="w-3.5 h-3.5 pixelated" />
+                        <span>{t('nav.tools') || 'Tools'}</span>
+                    </a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'contact'); }} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenPatreon(); }} className="w-full text-left text-sm text-[#FF424D] hover:text-[#e03640] flex items-center gap-2 font-bold mb-3"><i className="fab fa-patreon"></i> Login with Patreon</button>
                     <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
-                        <i className="fas fa-terminal text-primary"></i> Terminal CLI
+                        <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-3.5 h-3.5 pixelated" />
+                        <span>Terminal CLI</span>
                     </button>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenSettings(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
-                        <i className="fas fa-sliders text-primary"></i> {lang === 'pt' ? 'Configurações' : 'Settings'}
+                        <img src="/assets/icons/gears-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
+                        <span>{lang === 'pt' ? 'Configurações' : 'Settings'}</span>
                     </button>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenEasterMenu(); }} className="w-full text-left text-sm text-slate-400 hover:text-white flex items-center gap-2">
                         <i className="fas fa-ghost text-amber-400"></i> Easter Egg Vault
@@ -6657,16 +6708,17 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                     <button
                         type="button"
                         onClick={() => window.dispatchEvent(new CustomEvent('spet:open-galaxy-map'))}
-                        className="px-5 py-3 rounded-lg bg-white/[0.04] border border-cyan-500/30 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/[0.06] text-sm font-semibold transition-colors flex items-center cursor-pointer select-none"
+                        className="px-5 py-3 rounded-lg bg-white/[0.04] border border-cyan-500/30 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/[0.06] text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer select-none"
                         title={lang === 'pt' ? 'Entrar na experiência espacial 3D interativa' : 'Enter interactive 3D space experience'}
                     >
+                        <img src="/assets/icons/spet_sprites/portal_wormhole.png" alt="" className="w-4 h-4 pixelated inline-block" />
                         <span>{lang === 'pt' ? 'Experiência Interativa: Galaxy Map' : 'Interactive Experience: Galaxy Map'}</span>
                     </button>
                     <a
                         href="#projects"
                         className="px-6 py-3 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primaryHover transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
                     >
-                        <i className="fas fa-layer-group"></i>
+                        <img src="/assets/icons/spet_sprites/blue_folder.png" alt="" className="w-4 h-4 pixelated inline-block" />
                         <span>{t('hero.ctaProjects')}</span>
                     </a>
                     
@@ -6674,7 +6726,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                         href="#contact"
                         className="px-5 py-3 rounded-lg bg-white/[0.04] border border-white/[0.1] text-slate-200 text-sm font-semibold hover:bg-white/[0.08] hover:text-white transition-colors flex items-center gap-2"
                     >
-                        <i className="fas fa-envelope"></i>
+                        <img src="/assets/icons/spet_sprites/radio_tower.png" alt="" className="w-4 h-4 pixelated inline-block" />
                         <span>{t('hero.ctaContact')}</span>
                     </a>
 
@@ -6683,7 +6735,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                         className="px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.08] text-slate-300 text-sm font-mono hover:text-white hover:border-slate-500 transition-colors flex items-center gap-2"
                         title="Open SpetTerm CLI"
                     >
-                        <i className="fas fa-terminal text-primary"></i>
+                        <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-4 h-4 pixelated inline-block" />
                         <span>CLI</span>
                     </button>
                 </div>
@@ -7725,18 +7777,19 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                 {/* Category Filters */}
                 <div className="flex flex-wrap items-center gap-1.5 p-1 bg-white/[0.03] border border-white/[0.06] rounded-xl mb-8 w-fit">
                     {[
-                        { id: 'all', label: t('projects.categories.all') },
-                        { id: 'reverse', label: t('projects.categories.reverse') },
-                        { id: 'gamedev', label: t('projects.categories.gamedev') },
-                        { id: 'tools', label: t('projects.categories.tools') },
-                        { id: 'qa', label: t('projects.categories.qa') }
+                        { id: 'all', label: t('projects.categories.all'), sprite: '/assets/icons/spet_sprites/blue_folder.png' },
+                        { id: 'reverse', label: t('projects.categories.reverse'), sprite: '/assets/icons/spet_sprites/green_chip.png' },
+                        { id: 'gamedev', label: t('projects.categories.gamedev'), sprite: '/assets/icons/spet_sprites/gba_cartridge.png' },
+                        { id: 'tools', label: t('projects.categories.tools'), sprite: '/assets/icons/spet_sprites/terminal_window.png' },
+                        { id: 'qa', label: t('projects.categories.qa'), sprite: '/assets/icons/spet_sprites/radar_sonar.png' }
                     ].map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => { playSoftClick(); setSelectedCategory(tab.id); }}
-                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${selectedCategory === tab.id ? 'bg-primary text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap inline-flex items-center gap-1.5 ${selectedCategory === tab.id ? 'bg-primary text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
                         >
-                            {tab.label}
+                            <img src={tab.sprite} alt="" className="w-3.5 h-3.5 pixelated" />
+                            <span>{tab.label}</span>
                         </button>
                     ))}
                 </div>
@@ -7760,6 +7813,12 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                     >
                         {filteredProjects.map((p, idx) => {
                             const isLockedState = isProjectLocked(p);
+                            const categorySprite = 
+                                p.category === 'reverse' ? '/assets/icons/spet_sprites/green_chip.png' :
+                                p.category === 'gamedev' ? '/assets/icons/spet_sprites/gba_cartridge.png' :
+                                p.category === 'tools' ? '/assets/icons/spet_sprites/terminal_window.png' :
+                                p.category === 'qa' ? '/assets/icons/spet_sprites/radar_sonar.png' :
+                                '/assets/icons/spet_sprites/blue_folder.png';
                             return (
                             <article
                                 key={`${p.id}-${selectedCategory}-${searchQuery}`}
@@ -7784,7 +7843,10 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                 <div className="p-5 flex-1 flex flex-col justify-between">
                                     <div>
                                         <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1.5">
-                                            <span className="text-primary font-semibold">{p.categoryLabel[lang]}</span>
+                                            <span className="text-primary font-semibold flex items-center gap-1.5">
+                                                <img src={categorySprite} alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                                                <span>{p.categoryLabel[lang]}</span>
+                                            </span>
                                         </div>
 
                                         <h3 
@@ -7939,14 +8001,22 @@ const SkillsSection = () => {
 
                 {/* Compact Grid Columns with 3D Tech Badges */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {techCategories.map((cat) => (
+                    {techCategories.map((cat) => {
+                        const catSprite = 
+                            cat.id === 'systems' ? '/assets/icons/spet_sprites/green_chip.png' :
+                            cat.id === 'reverse' ? '/assets/icons/spet_sprites/server_rack.png' :
+                            cat.id === 'gamedev' ? '/assets/icons/spet_sprites/gba_cartridge.png' :
+                            cat.id === 'scripting' ? '/assets/icons/spet_sprites/terminal_window.png' :
+                            cat.id === 'qa' ? '/assets/icons/spet_sprites/radar_sonar.png' :
+                            '/assets/icons/spet_sprites/blue_folder.png';
+                        return (
                         <div 
                             key={cat.id}
                             className="glass-panel rounded-xl p-4 border border-white/[0.08] hover:border-primary/40 transition-colors flex flex-col justify-between"
                         >
                             <div>
                                 <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-white/[0.06]">
-                                    <i className={`${cat.icon} text-primary text-sm`}></i>
+                                    <img src={catSprite} alt="" className="w-4 h-4 pixelated inline-block" />
                                     <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-200">
                                         {t(`skills.${cat.nameKey}`)}
                                     </h3>
@@ -7976,7 +8046,8 @@ const SkillsSection = () => {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
             </div>
@@ -8086,7 +8157,10 @@ const JournalSection = ({ onNavigateJournal }) => {
                             >
                                 <div>
                                     <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2 gap-2">
-                                        <span className="text-primary font-semibold truncate">{entry.category}</span>
+                                        <span className="text-primary font-semibold truncate flex items-center gap-1.5">
+                                            <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block shrink-0" />
+                                            <span className="truncate">{entry.category}</span>
+                                        </span>
                                         <div className="flex items-center gap-2 shrink-0 text-[10px] text-slate-400">
                                             {views !== null && (
                                                 <span><i className="far fa-eye mr-0.5"></i> {views}</span>
@@ -8126,34 +8200,24 @@ const ToolsSection = () => {
         {
             id: 'easy-decompiler',
             url: '/tools/easy-decompiler/',
-            title: t('tools.easyDecompTitle') || "Spet's Easy Decompiler",
+            title: t('tools.easyDecompTitle') || "Spet's Easy Online Decompiler",
             badge: t('tools.easyDecompBadge') || "WASM Binary Analyzer & Decompiler",
-            desc: t('tools.easyDecompDesc') || "Local-first WebAssembly binary analyzer and dual C-like decompiler workbench powered by Rizin + jsdec and Ghidra in Web Workers. Pure client-side execution.",
-            openText: t('tools.easyDecompOpen') || "Open Easy Decompiler",
+            icon: '/assets/icons/spet_sprites/green_chip.png',
+            desc: t('tools.easyDecompDesc') || "Local WebAssembly binary analyzer and dual C-like decompiler workbench powered by Rizin and Ghidra Sleigh in Web Workers.",
+            openText: t('tools.easyDecompOpen') || "Open Easy Online Decompiler",
             accentBorder: "border-cyan-500/30 hover:border-cyan-400/60 shadow-[0_8px_30px_rgba(6,182,212,0.12)]",
             badgeColor: "text-cyan-400 border-cyan-500/20",
             buttonBg: "bg-cyan-600 hover:bg-cyan-500 shadow-cyan-600/30",
             pathColor: "text-cyan-400/80",
-            tags: ['WebAssembly', 'Rizin WASM', 'Ghidra / jsdec', 'x86 / x64', 'ARM / MIPS', 'Zero Uploads', 'Client-Side'],
+            tags: ['WebAssembly', 'Rizin Core', 'Ghidra Sleigh', 'x86 / x64', 'ARM / MIPS', 'PE32 / ELF', 'CFG Recovery'],
             preview: (
-                <div className="w-full h-full min-h-[220px] bg-[#05070B] p-5 flex flex-col justify-between font-mono text-xs border-b lg:border-b-0 lg:border-r border-white/[0.08]">
-                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400">
-                        <span className="flex items-center gap-2"><i className="fas fa-terminal text-cyan-400"></i> rizin.wasm session</span>
-                        <span className="text-[10px] text-cyan-400/80 font-bold">STANDALONE WASM</span>
-                    </div>
-                    <div className="space-y-1 py-2 text-slate-300">
-                        <div className="text-slate-500">// Decompiled C-like pseudo-code</div>
-                        <div><span className="text-cyan-400">int32_t</span> <span className="text-amber-300">entry0</span>(<span className="text-cyan-400">void</span>) {'{'}</div>
-                        <div className="pl-4 text-slate-400">rsi = *(0x401000);</div>
-                        <div className="pl-4 text-emerald-400">if (rax == 0x5a4d) {'{'} /* MZ header */</div>
-                        <div className="pl-8 text-cyan-300">init_relocations();</div>
-                        <div className="pl-4">{'}'}</div>
-                        <div>{'}'}</div>
-                    </div>
-                    <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
-                        <span>Exports: rzweb_cmd</span>
-                        <span className="text-emerald-400 font-semibold">100% Client-Side</span>
-                    </div>
+                <div className="relative w-full h-full min-h-[220px] bg-[#05070B] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                    <img
+                        src="/assets/tool_easy_decompiler.png"
+                        alt="Spet's Easy Online Decompiler"
+                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
                 </div>
             )
         },
@@ -8162,45 +8226,22 @@ const ToolsSection = () => {
             url: '/tools/universal-file/',
             title: t('tools.universalFileTitle') || "Spet's Universal Game File Opener",
             badge: t('tools.universalFileBadge') || "Universal Game Archive & Stream Carver",
+            icon: '/assets/icons/spet_sprites/saturn_folder.png',
             desc: t('tools.universalFileDesc') || "In-browser virtual filesystem inspector and carver supporting 25+ PC and console game engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft mods (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs), Call of Duty FastFiles (.ff), and raw Zlib streams.",
             openText: t('tools.universalFileOpen') || "Open Game File Opener",
             accentBorder: "border-amber-500/30 hover:border-amber-400/60 shadow-[0_8px_30px_rgba(245,158,11,0.12)]",
             badgeColor: "text-amber-400 border-amber-500/20",
             buttonBg: "bg-amber-600 hover:bg-amber-500 shadow-amber-600/30 text-slate-950 font-bold",
             pathColor: "text-amber-400/80",
-            tags: ['Bethesda BSA/BA2', 'Ubisoft FORGE', 'Rockstar RPF', 'Minecraft JAR', 'PlayStation PKG', 'CRIWARE', 'FromSoft BND', 'Square SDAT', 'FastFiles .ff'],
+            tags: ['Bethesda BSA/BA2', 'Ubisoft FORGE', 'Rockstar RPF', 'PlayStation PKG', 'CRIWARE Audio', 'FromSoft BND', 'CoD FastFiles', 'id Tech WAD/PAK'],
             preview: (
-                <div className="w-full h-full min-h-[220px] bg-[#0B0F17] p-5 flex flex-col justify-between font-mono text-xs border-b lg:border-b-0 lg:border-r border-white/[0.08]">
-                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400">
-                        <span className="flex items-center gap-2"><i className="fas fa-folder-tree text-amber-400"></i> Virtual Filesystem Tree</span>
-                        <span className="text-[10px] text-amber-400/80 font-bold">25+ ENGINES</span>
-                    </div>
-                    <div className="space-y-1.5 py-2 text-slate-300">
-                        <div className="flex justify-between text-slate-500 text-[11px]">
-                            <span>LUMP / ASSET</span>
-                            <span>OFFSET</span>
-                            <span>SIZE</span>
-                        </div>
-                        <div className="flex justify-between text-slate-200">
-                            <span className="text-amber-300 truncate">data/scripts/main.gsc</span>
-                            <span className="text-slate-400">0x000100</span>
-                            <span>14.2 KB</span>
-                        </div>
-                        <div className="flex justify-between text-slate-300">
-                            <span className="text-cyan-300 truncate">audio/stream_01.hca</span>
-                            <span className="text-slate-400">0x003A40</span>
-                            <span>1.4 MB</span>
-                        </div>
-                        <div className="flex justify-between text-slate-300">
-                            <span className="text-emerald-300 truncate">PARAM.SFO</span>
-                            <span className="text-slate-400">0x000800</span>
-                            <span>2.0 KB</span>
-                        </div>
-                    </div>
-                    <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
-                        <span>Hex Sync & Stream Carver</span>
-                        <span className="text-emerald-400 font-semibold">RFC 1950 Zlib</span>
-                    </div>
+                <div className="relative w-full h-full min-h-[220px] bg-[#0B0F17] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                    <img
+                        src="/assets/tool_universal_file.png"
+                        alt="Spet's Universal Game File Opener"
+                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
                 </div>
             )
         },
@@ -8209,13 +8250,14 @@ const ToolsSection = () => {
             url: '/tools/image-to-3d/',
             title: "Spet's Quick 3D Studio",
             badge: lang === 'pt' ? 'Gerador 3D Procedural' : 'Procedural 3D Generator',
+            icon: '/assets/icons/spet_sprites/paintbrush.png',
             desc: t('tools.desc'),
             openText: t('tools.openTool'),
             accentBorder: "border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)]",
             badgeColor: "text-purple-400 border-purple-500/20",
             buttonBg: "bg-purple-600 hover:bg-purple-500 shadow-purple-600/30",
             pathColor: "text-purple-400/80",
-            tags: ['Three.js', 'WebGL', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR', 'Zero AI'],
+            tags: ['Three.js', 'WebGL 2.0', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR Shaders'],
             preview: (
                 <div className="relative w-full h-full min-h-[220px] bg-[#040612] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08]">
                     <img
@@ -8259,8 +8301,15 @@ const ToolsSection = () => {
                                 {/* Description & Action Panel */}
                                 <div className="lg:col-span-6 xl:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-white/[0.02] via-black/40 to-transparent">
                                     <div>
-                                        <div className={`text-[11px] font-mono font-semibold tracking-wider uppercase mb-1.5 ${tool.badgeColor.split(' ')[0]}`}>
-                                            {tool.badge}
+                                        <div className={`text-[11px] font-mono font-semibold tracking-wider uppercase mb-1.5 flex items-center gap-2 ${tool.badgeColor.split(' ')[0]}`}>
+                                            {tool.icon && (
+                                                <img
+                                                    src={tool.icon}
+                                                    alt=""
+                                                    className="w-4 h-4 pixelated shrink-0 inline-block"
+                                                />
+                                            )}
+                                            <span>{tool.badge}</span>
                                         </div>
 
                                         <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
@@ -8361,8 +8410,9 @@ const ContactSection = () => {
                     <div className="md:col-span-5 space-y-4">
                         <div className="glass-panel rounded-xl p-5 border border-white/[0.08] space-y-4">
                             <div>
-                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">
-                                    {lang === 'pt' ? 'E-mail Direto' : 'Direct Email'}
+                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                                    <img src="/assets/icons/spet_sprites/radio_tower.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                                    <span>{lang === 'pt' ? 'E-mail Direto' : 'Direct Email'}</span>
                                 </div>
                                 <div className="flex items-center justify-between gap-2">
                                     <span className="text-sm font-semibold text-white font-mono select-all truncate">
@@ -8380,7 +8430,10 @@ const ContactSection = () => {
                             </div>
 
                             <div className="pt-3 border-t border-white/[0.06]">
-                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">Discord</div>
+                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                                    <img src="/assets/icons/spet_sprites/audio_speaker.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                                    <span>Discord</span>
+                                </div>
                                 <div className="text-sm font-semibold text-white font-mono">
                                     Spet001
                                 </div>
@@ -10508,7 +10561,7 @@ Comandos extras:
                 const track = onMusicCommand ? onMusicCommand('ff') : null;
                 newHistory.push({
                     type: 'output',
-                    text: `[💎 FF BATTLE OST ACTIVATED 💎]
+                    text: `[AUDIO // FF BATTLE OST INITIALIZED]
 ▶ Playing: "${track ? track.title : 'Those Who Fight Further (Fight On!)'}"
 Game: ${track ? track.game : 'Final Fantasy VII'} (${track ? track.year : '1997'})
 Composer: ${track ? track.composer : 'Nobuo Uematsu'}
@@ -10519,7 +10572,7 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music cod', 'music li
                 const track = onMusicCommand ? onMusicCommand('cod') : null;
                 newHistory.push({
                     type: 'output',
-                    text: `[🎯 COD MENU OST ACTIVATED 🎯]
+                    text: `[AUDIO // COD MENU OST INITIALIZED]
 ▶ Playing: "${track ? track.title : 'Multiplayer Theme'}"
 Game: ${track ? track.game : 'Call of Duty: Black Ops 4'} (${track ? track.year : '2018'})
 Composer: ${track ? track.composer : 'Jack Wall'}
@@ -10531,15 +10584,15 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music lis
                 const isCod = track?.playlist === 'cod';
                 newHistory.push({
                     type: 'output',
-                    text: `[♫] Switched Playlist to: ${isCod ? '🎯 COD Menu OST' : '💎 FF Battle OST'}
+                    text: `[AUDIO] Switched Playlist to: ${isCod ? 'COD Menu OST' : 'FF Battle OST'}
 ▶ Playing: "${track ? track.title : ''}" (${track ? track.game : ''} - ${track ? track.composer : ''})`
                 });
             } else if (sub === 'list') {
                 newHistory.push({
                     type: 'output',
-                    text: `♫ OST Jukebox Playlists (FF Battle OST & COD Menu OST) ♫
+                    text: `OST Jukebox Playlists (FF Battle OST & COD Menu OST)
 
-=== [💎 FF BATTLE OST (15 Tracks)] ===
+=== [FF BATTLE OST (15 Tracks)] ===
 [1]  Those Who Fight Further (Fight On!) - Final Fantasy VII (1997)
 [2]  The Decisive Battle (決戦) - Final Fantasy VI (1994)
 [3]  Boss Battle Theme - Final Fantasy IV DS (2007)
@@ -10556,7 +10609,7 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music lis
 [14] Otherworld - Final Fantasy X (2001)
 [15] Battle 2 (Boss Theme) - Final Fantasy V (1992)
 
-=== [🎯 COD MENU OST (7 Tracks)] ===
+=== [COD MENU OST (7 Tracks)] ===
 [1]  Multiplayer Theme - Call of Duty: Black Ops 4 (2018)
 [2]  Main Theme - Call of Duty: Black Ops II (2012)
 [3]  Adrenaline (Multiplayer Menu) - Call of Duty: Black Ops II (2012)
@@ -10571,37 +10624,37 @@ Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', '
                 if (onMusicCommand) onMusicCommand('stop');
                 newHistory.push({
                     type: 'output',
-                    text: `[♫] OST playback stopped.`
+                    text: `[AUDIO] OST playback stopped.`
                 });
             } else if (sub === 'next') {
                 const nextTrack = onMusicCommand ? onMusicCommand('next') : null;
                 const totalTracks = nextTrack?.playlist === 'cod' ? 7 : 15;
-                const badge = nextTrack?.playlist === 'cod' ? '🎯 COD' : '💎 FF';
+                const badge = nextTrack?.playlist === 'cod' ? '[COD]' : '[FF]';
                 newHistory.push({
                     type: 'output',
                     text: nextTrack
-                        ? `[♫] ${badge} Next Track [${nextTrack.index + 1}/${totalTracks}]: "${nextTrack.title}" (${nextTrack.game} - ${nextTrack.composer})`
-                        : `[♫] Switched to next track.`
+                        ? `[AUDIO] ${badge} Next Track [${nextTrack.index + 1}/${totalTracks}]: "${nextTrack.title}" (${nextTrack.game} - ${nextTrack.composer})`
+                        : `[AUDIO] Switched to next track.`
                 });
             } else if (sub === 'prev') {
                 const prevTrack = onMusicCommand ? onMusicCommand('prev') : null;
                 const totalTracks = prevTrack?.playlist === 'cod' ? 7 : 15;
-                const badge = prevTrack?.playlist === 'cod' ? '🎯 COD' : '💎 FF';
+                const badge = prevTrack?.playlist === 'cod' ? '[COD]' : '[FF]';
                 newHistory.push({
                     type: 'output',
                     text: prevTrack
-                        ? `[♫] ${badge} Previous Track [${prevTrack.index + 1}/${totalTracks}]: "${prevTrack.title}" (${prevTrack.game} - ${prevTrack.composer})`
-                        : `[♫] Switched to previous track.`
+                        ? `[AUDIO] ${badge} Previous Track [${prevTrack.index + 1}/${totalTracks}]: "${prevTrack.title}" (${prevTrack.game} - ${prevTrack.composer})`
+                        : `[AUDIO] Switched to previous track.`
                 });
             } else if (sub === 'random' || sub === 'shuffle') {
                 const randTrack = onMusicCommand ? onMusicCommand('random') : null;
                 const totalTracks = randTrack?.playlist === 'cod' ? 7 : 15;
-                const badge = randTrack?.playlist === 'cod' ? '🎯 COD' : '💎 FF';
+                const badge = randTrack?.playlist === 'cod' ? '[COD]' : '[FF]';
                 newHistory.push({
                     type: 'output',
                     text: randTrack
-                        ? `[🎲] ${badge} Shuffled to Track [${randTrack.index + 1}/${totalTracks}]: "${randTrack.title}" (${randTrack.game} - ${randTrack.composer})`
-                        : `[🎲] Shuffled to random track.`
+                        ? `[AUDIO:RND] ${badge} Shuffled to Track [${randTrack.index + 1}/${totalTracks}]: "${randTrack.title}" (${randTrack.game} - ${randTrack.composer})`
+                        : `[AUDIO:RND] Shuffled to random track.`
                 });
             } else {
                 // start playing music immediately in minimized dock state
@@ -10609,7 +10662,7 @@ Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', '
                 const isCod = track?.playlist === 'cod';
                 newHistory.push({
                     type: 'output',
-                    text: `[${isCod ? '🎯 COD MENU' : '💎 FF BATTLE'} OST JUKEBOX ACTIVATED]
+                    text: `[AUDIO // ${isCod ? 'COD MENU' : 'FF BATTLE'} OST JUKEBOX ACTIVATED]
 ▶ Playing: "${track ? track.title : 'Those Who Fight Further (Fight On!)'}"
 Game: ${track ? track.game : 'Final Fantasy VII'}
 Composer: ${track ? track.composer : 'Nobuo Uematsu'}
@@ -10631,8 +10684,8 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
             newHistory.push({
                 type: 'output',
                 text: nextFpsState
-                    ? `[⚡ FPS & GPU TELEMETRY HUD: ENABLED]\nOverlay fixado no canto superior direito (FPS atual, 1% Low / Min 2s, Frame Time ms, Draw Calls WebGL e Seção ativa no scroll).\nDigite 'fps' novamente para ocultar.`
-                    : `[⚡ FPS & GPU TELEMETRY HUD: DISABLED]`
+                    ? `[TELEMETRY // FPS & GPU HUD: ENABLED]\nOverlay fixado no canto superior direito (FPS atual, 1% Low / Min 2s, Frame Time ms, Draw Calls WebGL e Seção ativa no scroll).\nDigite 'fps' novamente para ocultar.`
+                    : `[TELEMETRY // FPS & GPU HUD: DISABLED]`
             });
             setHistory(newHistory);
             setInputVal('');
@@ -10836,8 +10889,8 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                 id: 'init-minimal',
                 role: 'model',
                 text: l === 'pt'
-                    ? "👨‍🚀 **Astro online!** A mensagem de boas-vindas inicial está desativada nas preferências. Como posso ajudar a explorar o portfólio do Eduardo?"
-                    : "👨‍🚀 **Astro online!** Initial welcome message is disabled in preferences. How can I help you explore Eduardo's work?",
+                    ? "[ASTRO // ONLINE] Modo de inicialização silenciosa ativo. Como posso ajudar a explorar a arquitetura e projetos do portfólio?"
+                    : "[ASTRO // ONLINE] Silent startup active. How can I assist you with inspecting the architecture and projects?",
                 isMinimal: true,
                 reaction: null,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -10847,7 +10900,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
             return {
                 id: 'init-full',
                 role: 'model',
-                text: "👋 Olá! Sou o **Astro** 🚀, o mascote e guia técnico do Eduardo Gelain.\n\nEstou aqui para ajudar **recrutadores**, **líderes de engenharia** e **visitantes** a descobrirem tudo sobre o portfólio:\n- 💼 **Recrutadores**: Resumo executivo (TL;DR), stack principal, impacto em QA e soft skills\n- 🎮 **Game Dev**: Arquitetura Unity/C#, netcode multiplayer e jogos comerciais (Outcaster, Sparky)\n- ⚡ **Engenharia Reversa**: Injeção de DLLs, exploração de sandboxes UWP/GDK e modding Call of Duty\n- 📬 **Contato**: Canais diretos e disponibilidade para contratação\n\nComo posso ajudar você hoje?",
+                text: "[ASTRO // TECHNICAL COMPANION]\n\nAssistente de navegação técnica de Eduardo Gelain. Escolha uma das consultas rápidas ou digite sua dúvida:\n- [TL;DR Recrutador]: Resumo executivo, proficiência de baixo nível, impacto comercial em QA e soft skills\n- [Game Dev]: Arquitetura Unity/C#, netcode multiplayer e projetos comerciais (Outcaster, Sparky Rush)\n- [Engenharia Reversa]: Injeção de DLLs, exploração de sandboxes UWP/GDK e modding de jogos\n- [Contato & Disponibilidade]: Canais diretos e status para contratação\n\nComo posso ajudar?",
                 reaction: null,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
@@ -10855,7 +10908,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
             return {
                 id: 'init-full',
                 role: 'model',
-                text: "👋 Hi! I'm **Astro** 🚀, Eduardo Gelain's AI mascot & technical guide.\n\nI'm here to help **tech recruiters**, **hiring managers**, and **engineers** explore Eduardo's work:\n- 💼 **Recruiters**: Quick executive TL;DR, core competencies, QA impact, and team fit\n- 🎮 **Game Dev**: Unity/C# systems, custom multiplayer netcode, and released games (Outcaster, Sparky)\n- ⚡ **Reverse Engineering**: DLL injection, UWP/GDK sandbox exploration, and Call of Duty internals\n- 📬 **Contact**: Direct channels & availability for opportunities\n\nHow can I assist your search today?",
+                text: "[ASTRO // TECHNICAL COMPANION]\n\nTechnical navigation assistant for Eduardo Gelain's portfolio. Select a quick query or ask directly:\n- [Recruiter TL;DR]: Executive summary, low-level tooling proficiency, commercial QA record, and architecture\n- [Game Dev]: Unity/C# systems, multiplayer netcode, and published titles (Outcaster, Sparky Rush)\n- [Reverse Engineering]: DLL injection, UWP/GDK sandboxing, and binary decompilation\n- [Contact & Availability]: Direct communication channels and hiring availability\n\nHow can I assist your search?",
                 reaction: null,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
@@ -11028,17 +11081,17 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
     };
 
     const quickQuestions = lang === 'pt' ? [
-        { label: '💼 TL;DR para Recrutador', prompt: 'Você pode me dar um resumo executivo (TL;DR) das qualificações de Eduardo Gelain para vagas de Software / Game Dev?' },
-        { label: '🎮 Unity & Game Dev', prompt: 'Quais são os principais projetos de desenvolvimento de jogos do Eduardo e suas competências em Unity e Netcode?' },
-        { label: '⚡ Engenharia Reversa', prompt: 'Explique a experiência do Eduardo em Engenharia Reversa, injeção de DLLs e sandbox UWP/GDK.' },
-        { label: '🧪 Experiência em QA', prompt: 'Como foi a experiência do Eduardo como QA em lançamentos comerciais na Steam?' },
-        { label: '📬 Contato & Disponibilidade', prompt: 'Como posso entrar em contato com o Eduardo para uma entrevista ou oportunidade?' }
+        { label: '[TL;DR] Perfil Recrutador', prompt: 'Você pode me dar um resumo executivo (TL;DR) das qualificações de Eduardo Gelain para vagas de Software / Game Dev?' },
+        { label: '[DEV] Unity & Game Dev', prompt: 'Quais são os principais projetos de desenvolvimento de jogos do Eduardo e suas competências em Unity e Netcode?' },
+        { label: '[RE] Engenharia Reversa', prompt: 'Explique a experiência do Eduardo em Engenharia Reversa, injeção de DLLs e sandbox UWP/GDK.' },
+        { label: '[QA] Histórico Comercial', prompt: 'Como foi a experiência do Eduardo como QA em lançamentos comerciais na Steam?' },
+        { label: '[NET] Contato & Disponibilidade', prompt: 'Como posso entrar em contato com o Eduardo para uma entrevista ou oportunidade?' }
     ] : [
-        { label: '💼 Recruiter TL;DR', prompt: 'Can you give me an executive TL;DR summary of Eduardo Gelain’s qualifications for Software & Game Developer roles?' },
-        { label: '🎮 Unity & Game Dev', prompt: 'What are Eduardo’s standout game development projects and core Unity/Netcode skills?' },
-        { label: '⚡ Reverse Engineering', prompt: 'Explain Eduardo’s experience in Reverse Engineering, DLL injection, and UWP/GDK sandboxes.' },
-        { label: '🧪 QA Impact', prompt: 'What is Eduardo’s track record in Software QA on commercial Steam releases?' },
-        { label: '📬 Contact & Availability', prompt: 'How can I contact Eduardo for an interview or project opportunity?' }
+        { label: '[TL;DR] Recruiter Summary', prompt: 'Can you give me an executive TL;DR summary of Eduardo Gelain’s qualifications for Software & Game Developer roles?' },
+        { label: '[DEV] Unity & Game Dev', prompt: 'What are Eduardo’s standout game development projects and core Unity/Netcode skills?' },
+        { label: '[RE] Reverse Engineering', prompt: 'Explain Eduardo’s experience in Reverse Engineering, DLL injection, and UWP/GDK sandboxes.' },
+        { label: '[QA] Commercial QA Impact', prompt: 'What is Eduardo’s track record in Software QA on commercial Steam releases?' },
+        { label: '[NET] Contact & Availability', prompt: 'How can I contact Eduardo for an interview or project opportunity?' }
     ];
 
     return (
@@ -11056,7 +11109,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                             <i className="fas fa-times text-[10px]"></i>
                         </button>
                         <div className="flex items-start gap-2.5 pr-3">
-                            <span className="text-lg">👨‍🚀</span>
+                            <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-5 h-5 pixelated inline-block shrink-0 mt-0.5" />
                             <div>
                                 <div className="font-semibold text-cyan-400 mb-0.5">Astro · Mascot</div>
                                 <p className="text-slate-300 leading-snug">
@@ -11132,7 +11185,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                     <div className="px-4 py-3.5 bg-black/60 border-b border-white/[0.1] flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="relative w-9 h-9 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-inner">
-                                <span className="text-lg">👨‍🚀</span>
+                                <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-5 h-5 pixelated inline-block" />
                                 <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary border border-slate-950"></span>
                             </div>
                             <div>
@@ -13852,6 +13905,17 @@ const App = () => {
         return DEFAULT_SETTINGS;
     });
 
+    const [lang, setLang] = useState(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.defaultLang || parsed.defaultLanguage) return parsed.defaultLang || parsed.defaultLanguage;
+            }
+        } catch (e) {}
+        return 'pt';
+    });
+
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [activeGalaxyProject, setActiveGalaxyProject] = useState(null);
 
@@ -13869,24 +13933,101 @@ const App = () => {
 
     const [isGalaxyMapActive, setIsGalaxyMapActive] = useState(() => settings.theme === 'space3');
     const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
+    const [galaxyLoading, setGalaxyLoading] = useState({
+        active: false,
+        fadeOut: false,
+        isExiting: false,
+        progress: 0,
+        statusText: ''
+    });
 
     const triggerGalaxyMapTransition = useCallback((targetActive, targetSector = null) => {
         playCosmicSfx('warp', settings);
         setIsThemeTransitioning(true);
 
-        setTimeout(() => {
-            setIsGalaxyMapActive(targetActive);
-            if (targetSector) {
-                setTimeout(() => {
-                    window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: targetSector } }));
-                }, 100);
-            }
-        }, 300);
+        if (targetActive) {
+            // ENTERING GALAXY MAP
+            setGalaxyLoading({
+                active: true,
+                fadeOut: false,
+                isExiting: false,
+                progress: 15,
+                statusText: lang === 'pt' ? 'Iniciando dobra estelar...' : 'Engaging warp drive...'
+            });
 
-        setTimeout(() => {
-            setIsThemeTransitioning(false);
-        }, 650);
-    }, [settings]);
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({
+                    ...prev,
+                    progress: 60,
+                    statusText: lang === 'pt' ? 'Compilando malha estelar & 55.000 corpos celestes...' : 'Compiling stellar mesh & 55,000 celestial bodies...'
+                }));
+                setIsGalaxyMapActive(true);
+            }, 300);
+
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({
+                    ...prev,
+                    progress: 90,
+                    statusText: lang === 'pt' ? 'Alinhando matriz de projeção tridimensional...' : 'Aligning 3D projection matrix...'
+                }));
+            }, 700);
+
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({
+                    ...prev,
+                    progress: 100,
+                    statusText: lang === 'pt' ? 'Conexão orbital estabelecida.' : 'Orbital link established.'
+                }));
+                if (targetSector) {
+                    window.dispatchEvent(new CustomEvent('spet:space3-jump', { detail: { sector: targetSector } }));
+                }
+            }, 950);
+
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({ ...prev, fadeOut: true }));
+            }, 1150);
+
+            setTimeout(() => {
+                setGalaxyLoading({ active: false, fadeOut: false, isExiting: false, progress: 0, statusText: '' });
+                setIsThemeTransitioning(false);
+            }, 1650);
+        } else {
+            // EXITING GALAXY MAP
+            setGalaxyLoading({
+                active: true,
+                fadeOut: false,
+                isExiting: true,
+                progress: 25,
+                statusText: lang === 'pt' ? 'Desacelerando dobra espacial...' : 'Disengaging warp field...'
+            });
+
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({
+                    ...prev,
+                    progress: 70,
+                    statusText: lang === 'pt' ? 'Restaurando viewport padrão & desalocando shaders...' : 'Restoring standard viewport & freeing shaders...'
+                }));
+                setIsGalaxyMapActive(false);
+            }, 300);
+
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({
+                    ...prev,
+                    progress: 100,
+                    statusText: lang === 'pt' ? 'Órbita restabelecida.' : 'Orbit restored.'
+                }));
+            }, 600);
+
+            setTimeout(() => {
+                setGalaxyLoading(prev => ({ ...prev, fadeOut: true }));
+            }, 750);
+
+            setTimeout(() => {
+                setGalaxyLoading({ active: false, fadeOut: false, isExiting: false, progress: 0, statusText: '' });
+                setIsThemeTransitioning(false);
+            }, 1250);
+        }
+    }, [settings, lang]);
 
     // Handle spet:open-galaxy-map event
     useEffect(() => {
@@ -13915,17 +14056,6 @@ const App = () => {
         window.addEventListener('keydown', handleGlobalKeys);
         return () => window.removeEventListener('keydown', handleGlobalKeys);
     }, [isGalaxyMapActive, triggerGalaxyMapTransition]);
-
-    const [lang, setLang] = useState(() => {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                if (parsed.defaultLang || parsed.defaultLanguage) return parsed.defaultLang || parsed.defaultLanguage;
-            }
-        } catch (e) {}
-        return 'pt';
-    });
 
     // --- ROUTING STATE (SPA: Home / Journal / Privacy) ---
     const parseRoute = () => {
@@ -14545,6 +14675,75 @@ const App = () => {
                             {lang === 'pt' 
                                 ? 'Mova o cursor para navegar · Setas (↑ ← ↓ →) ou W/A/S/D guiam o astronauta'
                                 : 'Move cursor to fly · Arrow keys (↑ ← ↓ →) or W/A/S/D pilot astronaut'}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Galaxy Map Cinematic Warp Loadscreen (Smooth enter/exit transitions) */}
+            {galaxyLoading.active && (
+                <div
+                    id="galaxy-warp-loadscreen"
+                    className={`fixed inset-0 z-[99998] flex flex-col justify-between p-6 sm:p-10 select-none transition-opacity duration-500 ease-out overflow-hidden ${
+                        galaxyLoading.fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+                    }`}
+                    style={{ backgroundColor: '#030508' }}
+                >
+                    {/* Animated background & vignette */}
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-950/30 via-[#030508]/80 to-[#030508] pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+
+                    {/* Top Header */}
+                    <div className="relative z-10 flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                            <img src="/assets/icons/spet_sprites/portal_wormhole.png" alt="" className="w-4 h-4 pixelated" />
+                            <span className="text-sm font-bold tracking-tight text-white font-mono">SpetDev // Galaxy Engine</span>
+                            <span className="text-slate-600 text-xs">/</span>
+                            <span className="text-xs font-mono text-cyan-400">
+                                {galaxyLoading.isExiting ? '[WARP_DEACTIVATION]' : '[WARP_ENGAGEMENT_SEQUENCE]'}
+                            </span>
+                        </div>
+                        <div className="text-xs text-slate-500 font-mono hidden sm:block">
+                            {galaxyLoading.isExiting ? 'RELAY: DOCKED // DESYNAPSE' : 'RELAY: ACTIVE // 55,000 BODIES'}
+                        </div>
+                    </div>
+
+                    {/* Center Reticle / Telemetry */}
+                    <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center space-y-3">
+                        <div className="relative flex items-center justify-center w-16 h-16">
+                            <div className="absolute inset-0 rounded-full border border-cyan-500/30 animate-ping opacity-30"></div>
+                            <div className="absolute inset-2 rounded-full border border-dashed border-cyan-400/50 animate-spin" style={{ animationDuration: '6s' }}></div>
+                            <img
+                                src="/assets/icons/spet_sprites/portal_wormhole.png"
+                                alt=""
+                                className="w-8 h-8 pixelated animate-pulse"
+                            />
+                        </div>
+                        <div className="text-xs font-mono font-semibold tracking-wider text-cyan-300 uppercase">
+                            {galaxyLoading.statusText}
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-500">
+                            {galaxyLoading.isExiting 
+                                ? (lang === 'pt' ? 'Restaurando viewport padrão e buffers gráficos...' : 'Restoring standard viewport and graphic buffers...')
+                                : (lang === 'pt' ? 'Compilando shaders estelares & malhas orbitais Three.js...' : 'Compiling stellar shaders & Three.js orbital meshes...')}
+                        </div>
+                    </div>
+
+                    {/* Bottom Status & Progress Bar */}
+                    <div className="relative z-10 max-w-md w-full mx-auto">
+                        <div className="flex items-center justify-between text-xs mb-2 font-mono">
+                            <span className="text-slate-400">
+                                {galaxyLoading.isExiting 
+                                    ? (lang === 'pt' ? 'Desconectando mapa galáctico' : 'Disengaging galaxy map') 
+                                    : (lang === 'pt' ? 'Sincronizando coordenadas 3D' : 'Synchronizing 3D coordinates')}
+                            </span>
+                            <span className="text-cyan-400 font-bold">{galaxyLoading.progress}%</span>
+                        </div>
+                        <div className="h-[2px] w-full bg-white/[0.12] rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-gradient-to-r from-cyan-500 to-blue-400 transition-all duration-300 ease-out rounded-full shadow-[0_0_8px_rgba(6,182,212,0.8)]"
+                                style={{ width: `${galaxyLoading.progress}%` }}
+                            />
                         </div>
                     </div>
                 </div>

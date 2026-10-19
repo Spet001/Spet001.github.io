@@ -1,5 +1,12 @@
 [
     {
+        "id": "entry_0018",
+        "title": "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
+        "date": "Oct 19, 2026",
+        "category": "Reverse Engineering & Windows Internals",
+        "file": "Exploring-Legacy-UWP-Titles.md"
+    },
+    {
         "id": "entry_0017",
         "title": "Quick Entry: Gamifying a Galactic Portfolio with the 3D Galaxy Map!",
         "date": "Oct 18, 2026",

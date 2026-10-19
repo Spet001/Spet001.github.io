@@ -29,8 +29,10 @@ texto.md
 *.env
 *.example
 
-# Ignora qualquer arquivo que comece com "qa" e termine em ".js"
+# Test scripts & screenshot automation
+scripts/
+screenshots/
+test-results/
+coverage/
 qa*.js
-
-# Ignora o arquivo diagnose.js
 diagnose.js

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, MDPro Web, ProjectY, Jailson Mendes Mods, Doomjaja, Delicia DOOM, Galaxy Map, Three.js Galaxy Map, WebGL 3D Portfolio, online_tu17_mp.wad documentation, online_tu17_zm.wad documentation, online_tu14_mp_english.wad documentation, online_tu14_sp_english.wad documentation, Demonware WAD, T3WAD, 0x543377AB, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <meta name="author" content="Eduardo Gelain">
+    <meta name="robots" content="noindex, follow">
+
+    <!-- Canonical URL & Alternate Discovery -->
+    <link rel="canonical" href="https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/">
+    <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/">
+    <meta property="og:title" content="Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain">
+    <meta property="og:description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
+    <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1668">
+    <meta property="og:image:height" content="506">
+    <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+    <meta property="og:site_name" content="Eduardo Gelain Portfolio">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/">
+    <meta name="twitter:title" content="Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain">
+    <meta name="twitter:description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
+    <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
+    <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
+  "description": "Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.",
+  "datePublished": "Oct 19, 2026",
+  "articleSection": "Reverse Engineering & Windows Internals",
+  "url": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
+  "mainEntityOfPage": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown & Sanitizer for Mascot Chat & Technical Journal -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#00aaff',
+                        primaryHover: '#0077b6',
+                        dark: '#050505',
+                        darkPanel: 'rgba(5, 5, 5, 0.85)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for base tweaks -->
+    <style>
+        html {
+            scroll-behavior: smooth !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            cursor: none !important;
+            overflow-x: hidden;
+        }
+
+        a,
+        button,
+        .clickable { cursor: none !important; }
+
+        .glass-panel {
+            background: rgba(8, 10, 15, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Custom Scrollbar for Journal Entries */
+        .journal-entries-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.7);
+        }
+        .journal-entries-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+            margin: 4px 0;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+        }
+
+        .fade-in-section {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
+        /* Subtle Project Card Fade-In on Filter & Search */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .project-card-animate {
+            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
+        #projects article {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+            position: relative;
+        }
+
+        #projects article:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 170, 255, 0.6) !important;
+            box-shadow: 
+                inset 0 0 0 1px rgba(0, 170, 255, 0.45),
+                inset 0 0 22px rgba(0, 170, 255, 0.15),
+                0 16px 36px -8px rgba(0, 170, 255, 0.24),
+                0 12px 28px -6px rgba(0, 0, 0, 0.65) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-card-animate {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            #projects article:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Custom Cursor (GPU-composited via rAF-coalesced translate3d, zero style recalculation on 1000Hz mice) */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%) scale(1);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        #custom-cursor[data-hover="1"] {
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+        }
+
+        /* Mascot Companion styles */
+        @keyframes astroFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1.5deg); }
+        }
+        .astro-float {
+            animation: astroFloat 3.5s ease-in-out infinite;
+        }
+
+        /* Subtle bubble entrance animations and transitions */
+        @keyframes mascotBubbleIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes mascotAiGlow {
+            0% {
+                border-color: rgba(56, 189, 248, 0.75);
+                box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+            }
+            100% {
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        @keyframes typingCursorBlink {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0; transform: scaleY(0.7); }
+        }
+
+        .mascot-typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 15px;
+            background-color: #38bdf8;
+            margin-left: 3px;
+            vertical-align: -1px;
+            animation: typingCursorBlink 0.75s infinite ease-in-out;
+            border-radius: 1px;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+        }
+
+        .mascot-bubble-user {
+            animation: mascotBubbleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mascot-bubble-ai {
+            animation: mascotBubbleIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .mascot-bubble-ai.new-arrival {
+            animation: mascotBubbleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, mascotAiGlow 1.4s ease-out forwards;
+        }
+
+        @keyframes wavePulse {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .typing-dot-1 { animation: wavePulse 1.2s infinite ease-in-out 0s; }
+        .typing-dot-2 { animation: wavePulse 1.2s infinite ease-in-out 0.2s; }
+        .typing-dot-3 { animation: wavePulse 1.2s infinite ease-in-out 0.4s; }
+
+        .mascot-chat-content p { margin-bottom: 0.5rem; line-height: 1.5; }
+        .mascot-chat-content p:last-child { margin-bottom: 0; }
+        .mascot-chat-content ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content code { background: rgba(15, 23, 42, 0.85); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85em; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .mascot-chat-content pre { background: #080d1a; padding: 0.75rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mascot-chat-content pre code { background: transparent; padding: 0; color: #e2e8f0; border: none; }
+        .mascot-chat-content a { color: #38bdf8; text-decoration: underline; }
+        .mascot-chat-content strong { color: #fff; font-weight: 600; }
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        /* Journal Markdown Reader Styles */
+        .markdown-body h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff; }
+        .markdown-body h2 { font-size: 1.45rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .markdown-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e2e8f0; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+        .markdown-body a { color: #00aaff; text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-body a:hover { color: #38bdf8; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.35rem; }
+        .markdown-body blockquote { border-left: 4px solid #00aaff; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-bottom: 1.25rem; background: rgba(0, 170, 255, 0.05); padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body code { background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875em; color: #38bdf8; }
+        .markdown-body pre { background-color: rgba(5, 5, 5, 0.95); padding: 1.1rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .markdown-body pre code { background-color: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.85em; }
+        .markdown-body img { max-width: 100%; border-radius: 0.75rem; margin: 1.25rem 0; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .markdown-body hr { border-color: rgba(255, 255, 255, 0.08); margin: 2rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; text-align: left; }
+        .markdown-body th { background: rgba(255,255,255,0.05); color: #fff; }
+</style>
+
+    <!-- React & Three.js Libraries -->
+    <script>
+        // Fix Chromium bug on large internal blob: URLs in Three.js GLTFLoader (r128):
+        // ImageBitmapLoader fails with net::ERR_ABORTED ("TypeError: Failed to fetch") on large blobs (moon.glb & nebula0.glb).
+        // Forcing TextureLoader (HTMLImageElement) guarantees reliable loading across all browsers.
+        window.createImageBitmap = undefined;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style>
+        .text-glow {
+            text-shadow: 0px 2px 8px rgba(0,0,0,0.9), 0px 4px 20px rgba(0,0,0,0.8);
+        }
+        .text-glow-none {
+            text-shadow: none !important;
+        }
+        @media print {
+            #astro-assistant,
+            #astro-chat-window,
+            #custom-cursor,
+            #initial-loading-screen,
+            nav,
+            header,
+            footer,
+            canvas,
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+
+<body class="antialiased selection:bg-primary selection:text-white">
+    <div id="custom-cursor"></div>
+    <!-- Pre-hydration initial loading overlay -->
+    <div id="initial-loading-screen" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+        <div class="flex items-center gap-2.5">
+            <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-xs text-slate-400">SpetDev</span>
+        </div>
+
+        <div class="max-w-xs w-full">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+                <span>Iniciando ambiente...</span>
+                <span>···</span>
+            </div>
+            <div class="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
+                <div class="h-full bg-primary/70 rounded-full w-1/3 animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.dismissInitialLoadingScreen = function() {
+            var el = document.getElementById('initial-loading-screen');
+            if (el && el.parentNode) {
+                el.style.transition = 'opacity 0.7s ease-out';
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    if (el && el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }, 700);
+            }
+        };
+    </script>
+    <div id="root">
+        <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
+        <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
+        <header class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
+                    <i class="fas fa-terminal text-primary"></i>
+                    <span>Spet<span class="text-primary">Dev</span></span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
+                    <a href="#tools" class="hover:text-primary transition-colors">Tools</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-book-open"></i> Technical Journal
+                    </a>
+                </div>
+            </div>
+        </header>
+
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
+            </div>
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 19, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Reverse Engineering & Windows Internals</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="Exploring-Legacy-UWP-Titles">
+<p>An engineering case study on reverse engineering legacy Windows 10 UWP games (<em>Call of Duty: Infinite Warfare</em>), weaponizing UWP Dumper&#39;s suspended process lifecycle for AppContainer DLL injection, VMT hooking the undocumented <code>IStoreContextServer</code> COM interface, and analyzing the cryptographic limits of client-side Server-to-Server (S2S) entitlement spoofing.</p>
+<hr>
+<h2>1. Architectural Divergence: Legacy UWP (AppContainer) vs. Modern GDK</h2>
+<p>Modern PC releases on the Xbox App / Microsoft Store employ the <strong>Gaming Desktop Kernel (GDK)</strong>. In GDK games, the executable is essentially a standard Win32 binary (<code>.exe</code>) augmented with Microsoft Gaming Runtime services (<code>XStore</code>, <code>XUser</code>, <code>XGameSave</code>). Memory layout, thread scheduling, and debugger attachments behave like standard desktop processes, with entitlements queried via documented APIs such as <code>XStoreQueryGameLicenseAsync</code> or <code>XStoreQueryAssociatedProductsAsync</code>.</p>
+<p>In contrast, <strong>Legacy Windows 10 UWP</strong> titles (spanning from 2016 to 2019, including <em>Call of Duty: Infinite Warfare</em>, <em>Modern Warfare Remastered UWP</em>, <em>Gears of War 4</em>, and <em>Halo 5: Forge</em>) were built on pure Windows Runtime (WinRT) AppX application packaging:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Subsystem</th>
+<th align="left">Legacy UWP (Infinite Warfare)</th>
+<th align="left">Modern GDK (BOCW / MWIII)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Sandbox Model</strong></td>
+<td align="left"><code>AppContainer</code> Isolation (<code>S-1-15-2-1</code>)</td>
+<td align="left">Win32 Medium Integrity + Gaming Services</td>
+</tr>
+<tr>
+<td align="left"><strong>Binary Packaging</strong></td>
+<td align="left">Encrypted AppX / EFS VFS Container</td>
+<td align="left">Unpacked loose files / Virtual Disk Mounting</td>
+</tr>
+<tr>
+<td align="left"><strong>Store Interface</strong></td>
+<td align="left">Undocumented <code>IStoreContextServer</code> (COM)</td>
+<td align="left">Documented <code>XStore</code> C/C++ SDK</td>
+</tr>
+<tr>
+<td align="left"><strong>Memory Isolation</strong></td>
+<td align="left">Strict DACL, blocked Win32 IPC</td>
+<td align="left">Standard process security descriptors</td>
+</tr>
+<tr>
+<td align="left"><strong>Debugger Hooking</strong></td>
+<td align="left">Denied <code>PROCESS_ALL_ACCESS</code> without SID</td>
+<td align="left">Standard <code>CreateRemoteThread</code> / Detours</td>
+</tr>
+</tbody></table>
+<p>Because Legacy UWP runs under an isolated <code>AppContainer</code>, traditional dynamic analysis tools fail outright: standard injection mechanisms are rejected by the Windows kernel security model, and loaded DLLs are blocked unless explicitly granted <code>ALL APPLICATION PACKAGES</code> access rights.</p>
+<hr>
+<h2>2. The Injection Vector: Repurposing UWP Dumper</h2>
+<p>To inject our research module (<code>ZeroProxy</code> / <code>client-iw7-store</code>) into the live game, standard injection (<code>OpenProcess</code> + <code>VirtualAllocEx</code> + <code>CreateRemoteThread</code>) was insufficient because of access restrictions enforced on AppContainer processes.</p>
+<p>Instead of writing a complex kernel driver or token impersonation service, we repurposed the suspended process lifecycle vector popularized by <strong>UWP Dumper</strong> (<code>Woomer/UWP Dumper</code> by Wunkolo and emoose):</p>
+<pre><code class="language-text">[UWP Launcher]
+       │
+       ▼
+IPackageDebugSettings::EnableDebugging()
+       │  (Launches AppX package suspended with DebugToken)
+       ▼
+Target Game Process Spawned (SUSPENDED in AppContainer)
+       │
+       ├── Original UWP Dumper Action: Dump decrypted memory to disk
+       │
+       └── Our Weaponized ZeroProxy Action:
+             1. Adjust Security Descriptor (Add &#39;ALL APPLICATION PACKAGES&#39; ACE)
+             2. QueueUserAPC / Remote Thread Injection of ZeroProxy.dll
+             3. ResumeProcess() -&gt; DllMain() executes before Game DRM activates
+</code></pre>
+<p>By intercepting the target process at the point of suspension, our DLL is injected directly into the game&#39;s virtual address space before any in-game anti-tamper or WinRT runtime initialization runs. Once mapped, <code>DllMain</code> delegates execution to a detached worker thread, ensuring the game&#39;s loader thread finishes without deadlocks:</p>
+<pre><code class="language-cpp">BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
+        client_module = hModule;
+        DisableThreadLibraryCalls(hModule);
+        
+        HANDLE hThread = CreateThread(nullptr, 0, [](LPVOID) -&gt; DWORD {
+            init(); // ZeroProxy initialization routine
+            return 0;
+        }, nullptr, 0, nullptr);
+        
+        if (hThread) CloseHandle(hThread);
+    }
+    return TRUE;
+}
+</code></pre>
+<hr>
+<h2>3. Dissecting the Undocumented <code>IStoreContextServer</code></h2>
+<p>In WinRT, developers access in-app purchases and license checks using the high-level <code>Windows.Services.Store.StoreContext</code> class. However, <code>windows.services.store.dll</code> is merely a thin client wrapper. The actual license validation and catalog synchronization are delegated via local RPC/COM to an internal, undocumented system service interface: <strong><code>IStoreContextServer</code></strong> (managed by <code>Windows.Services.Store.Internal.StoreContextServer</code>).</p>
+<p><img src="/assets/journal/iw7_store_methods.png" alt="Store Context Server Interface Methods"></p>
+<p>To intercept this interface before the game executes its initial entitlement handshake, we hook <code>RoGetActivationFactory</code> and <code>RoActivateInstance</code> from <code>api-ms-win-core-winrt-l1-1-0.dll</code>:</p>
+<pre><code class="language-cpp">// Hooking WinRT Core Activation
+typedef HRESULT(__stdcall* RoGetActivationFactory_t)(HSTRING, REFIID, void**);
+typedef HRESULT(__stdcall* RoActivateInstance_t)(HSTRING, IInspectable**);
+
+utils::hook::detour ro_activate_instance_hook;
+utils::hook::detour ro_get_activation_factory_hook;
+</code></pre>
+<p>When the game requests an activation factory for <code>Windows.Services.Store.StoreContext</code>, our detour intercepts the instance, creates a shadow Virtual Method Table (VMT), and redirects all internal COM method slots to custom analysis stubs.</p>
+<hr>
+<h2>4. VMT Hooking &amp; Logging In-Game Purchases (COD Points)</h2>
+<p>With the shadow VTable in place, we mapped the virtual method dispatch offsets of <code>IStoreContextServer</code>:</p>
+<ul>
+<li><strong><code>Method[6]</code> — <code>GetCustomerCollectionsId</code></strong>: Requests signed authorization tokens representing the user&#39;s content entitlements.</li>
+<li><strong><code>Method[7]</code> — <code>GetCustomerPurchaseId</code></strong>: Requests tokens authorizing consumable or digital purchases.</li>
+<li><strong><code>Method[11]</code> — <code>GetAssociatedStoreProducts</code></strong>: Enumerates available catalog items (DLCs, add-ons, and consumable bundles).</li>
+<li><strong><code>Method[14]</code> — <code>GetUserCollection</code></strong>: Checks user inventory for specific SKU identifiers.</li>
+<li><strong><code>Method[20]</code> — <code>GetAppLicense</code></strong>: Queries the base game license parameters.</li>
+</ul>
+<h3>Real-Time Ingestion of COD Points Package IDs</h3>
+<p>When <em>Call of Duty: Infinite Warfare</em> loads the Quartermaster / Store menu, our logging pipeline intercepted consecutive calls to <code>Method[11]</code> querying store package IDs:</p>
+<pre><code class="language-text">[WinRT] IStoreContextServer::Method[11] called! a2=00007FF7B4C02840, a3=0000000000000000
+[WinRT] Enumerating Store Products for Parent: 9NBLGGH52PH9 (Base IW7)
+[WinRT] Query Filter: &quot;Consumable&quot;
+[WinRT] Found Target Product: COD Points (200 CP Bundle) -&gt; SKU: 9NBLGGH52PD2
+[WinRT] Found Target Product: COD Points (1100 CP Bundle) -&gt; SKU: 9NBLGGH5393R
+[WinRT] Found Target Product: COD Points (2400 CP Bundle) -&gt; SKU: 9NBLGGH52PH9
+</code></pre>
+<p>Each parameter passed to these COM methods utilizes Windows <code>HSTRING</code> handles allocated on the caller&#39;s stack frame. We engineered dynamic stack-scanning logic to locate and inspect output pointers:</p>
+<pre><code class="language-cpp">inline bool try_spoof_hstring_param(void* param, const std::wstring&amp; json_val, const std::string&amp; name, bool force = false) {
+    if (!param) return false;
+    HSTRING* out_hstr = (HSTRING*)param;
+    if (IsBadWritePtr(out_hstr, sizeof(HSTRING))) return false;
+    if (!is_stack_pointer(out_hstr)) return false;
+    
+    if (force || *out_hstr == nullptr) {
+        HRESULT create_hr = WindowsCreateString(json_val.c_str(), (UINT32)json_val.length(), out_hstr);
+        LOG(&quot;WinRT&quot;, INFO, &quot;Captured &amp; Injected HSTRING parameter {}, hr: 0x{:08X}&quot;, name, (unsigned int)create_hr);
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<hr>
+<h2>5. The Server-to-Server (S2S) Brick Wall: Why Local DLC Spoofing Fails</h2>
+<p>While we successfully intercepted license queries and catalog enumeration, attempting to spoof DLC ownership (e.g., unlocking the Season Pass or DLC map packs) via local memory patching hit an insurmountable obstacle: <strong>Server-to-Server (S2S) Cryptographic Verification</strong>.</p>
+<p><img src="/assets/journal/iw7_s2s_flow.png" alt="Server to Server Cryptographic Architecture"></p>
+<p>In older PC DRM schemes (such as SteamAPI or legacy SecuROM), modifying the return code of <code>BIsSubscribedApp</code> or patching local license structures in memory was sufficient because the game client itself made the final entitlement decision.</p>
+<p>In modern Microsoft Store architectures, local validation is intentionally bypassed:</p>
+<ol>
+<li><strong>Signed Token Request</strong>: When the game client invokes <code>Method[6]</code> (<code>GetCustomerCollectionsId</code>), the OS Store service contacts Microsoft authentication servers and returns a cryptographically signed <strong>JSON Web Token (JWT)</strong>.</li>
+<li><strong>Off-Client Forwarding</strong>: The game does not evaluate this token locally. Instead, it packages the raw JWT into an RPC payload and transmits it over TLS to Activision / Demonware backend servers.</li>
+<li><strong>Server-Side Signature Check</strong>: The Demonware server retrieves Microsoft&#39;s public key from the official Azure/Store JWKS endpoint and verifies the digital signature.</li>
+<li><strong>Entitlement Grant</strong>: Only if Microsoft&#39;s digital signature matches the authenticated Xbox Live account does the game server transmit the decryption keys or playlist access permissions for the requested DLC.</li>
+</ol>
+<p>Because the JWT is signed with Microsoft&#39;s private RSA key, forged local strings (such as injectively returning <code>{&quot;isActive&quot;: true}</code> in <code>Method[6]</code>) are rejected upstream by the backend server:</p>
+<pre><code class="language-text">[Demonware] Ingested JWT payload from client
+[Demonware] Verifying signature against MS Store Public Key...
+[Demonware] ERROR: Signature verification failed (Invalid RSA PKCS#1 v1.5 padding)
+[Demonware] Entitlement rejected. Client DLC flags set to 0.
+</code></pre>
+<p>This explains why generic UWP game fixes (such as those by the online-fix team for games like <em>Gears of War 4</em>) require explicit hash parameters inside configuration files (<code>.ini</code> files with cryptographic identity payloads) and dedicated backend relay servers rather than simple client-side memory detours.</p>
+<hr>
+<h2>6. Summary &amp; Technical Takeaways</h2>
+<ol>
+<li><strong>UWP Dumper as an Injection Tool</strong>: Repurposing <code>IPackageDebugSettings</code> allows arbitrary C++ instrumentation inside Windows 10 AppContainer sandboxes without triggering security violations.</li>
+<li><strong><code>IStoreContextServer</code> Interface</strong>: The core of Windows 10 UWP store communication is an unexported COM interface whose VTable can be dynamically detoured via <code>RoGetActivationFactory</code> interception.</li>
+<li><strong>S2S Security</strong>: Client-side memory hacking cannot bypass Server-to-Server authenticated entitlements when cryptographic validation is offloaded to remote server clusters.</li>
+<li><strong>Artifacts &amp; Reference Implementation</strong>: Complete research source code and hooks are documented in the <a href="https://gitlab.com/Spet001/msclients">ZeroProxy GDK</a> research repository under <code>src/client-iw7-store</code>.</li>
+</ol>
+
+                </div>
+            </article>
+        </main>
+
+        <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">
+            <p>Eduardo Gelain · SpetDev. All rights reserved.</p>
+            <p class="mt-1">
+                <a href="/sitemap.xml" class="hover:underline text-slate-400">Sitemap</a> · 
+                <a href="/llm.txt" class="hover:underline text-slate-400">LLM Context</a> · 
+                <a href="/privacy.html" class="hover:underline text-slate-400">Privacy Policy</a>
+            </p>
+        </footer>
+
+        <noscript>
+            <div class="p-6 bg-[#050505]/95 backdrop-blur-md border-t border-primary/40 text-center text-slate-300 text-sm">
+                <p><strong>Note:</strong> JavaScript is optional. All portfolio projects, technical skills, and research journal articles above are fully accessible without scripts.</p>
+            </div>
+        </noscript>
+    </div>
+
+    <script defer src="/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('custom-cursor');
+            if (!cursor) return;
+
+            let cx = -100, cy = -100;
+            let lastTarget = null;
+            let isHover = false;
+            let rafPending = false;
+
+            const updateCursor = () => {
+                rafPending = false;
+                const nextHover = Boolean(
+                    lastTarget &&
+                    lastTarget.closest &&
+                    lastTarget.closest('a, button, .clickable')
+                );
+                if (nextHover !== isHover) {
+                    isHover = nextHover;
+                    cursor.dataset.hover = isHover ? '1' : '0';
+                }
+                cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) scale(${isHover ? 1.5 : 1})`;
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                cx = e.clientX;
+                cy = e.clientY;
+                lastTarget = e.target;
+                if (!rafPending) {
+                    rafPending = true;
+                    requestAnimationFrame(updateCursor);
+                }
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>
