@@ -78,10 +78,10 @@
     },
     {
         "id": "entry_0006",
-        "title": "Bypassing MS Store License Checks for Call of Duty DLCs",
+        "title": "UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)",
         "date": "Sep 21, 2026",
-        "category": "Security & GDK",
-        "file": "UWPCOD-GDK-DLC-Unlocker.md"
+        "category": "Security & GDK Architecture",
+        "file": "UWP-GDK-Sandbox-Entitlement-Analysis.md"
     },
     {
         "id": "entry_0005",
@@ -99,10 +99,10 @@
     },
     {
         "id": "entry_0003",
-        "title": "Leakers....Shame for you all",
+        "title": "Document: Explaining Unauthorized Leaks & Network Architecture Analysis",
         "date": "Sep 19, 2026",
         "category": "Network Engineering & Security",
-        "file": "shame_for_the_leakers.md"
+        "file": "Document-Explaining-Leaks.md"
     },
     {
         "id": "entry_0002",

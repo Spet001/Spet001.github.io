@@ -5,22 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Bypassing MS Store License Checks for Call of Duty DLCs | Eduardo Gelain Technical Journal</title>
-    <meta name="description" content="Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.">
+    <title>UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation) | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, MDPro Web, ProjectY, Jailson Mendes Mods, Doomjaja, Delicia DOOM, Galaxy Map, Three.js Galaxy Map, WebGL 3D Portfolio, online_tu17_mp.wad documentation, online_tu17_zm.wad documentation, online_tu14_mp_english.wad documentation, online_tu14_sp_english.wad documentation, Demonware WAD, T3WAD, 0x543377AB, Three.js 120 FPS Optimization, 4GB Patch DXVK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="noindex, follow">
 
     <!-- Canonical URL & Alternate Discovery -->
-    <link rel="canonical" href="https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/">
+    <link rel="canonical" href="https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/">
     <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/">
-    <meta property="og:title" content="Bypassing MS Store License Checks for Call of Duty DLCs | Eduardo Gelain">
-    <meta property="og:description" content="Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.">
+    <meta property="og:url" content="https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/">
+    <meta property="og:title" content="UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation) | Eduardo Gelain">
+    <meta property="og:description" content="Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -33,9 +33,9 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/">
-    <meta name="twitter:title" content="Bypassing MS Store License Checks for Call of Duty DLCs | Eduardo Gelain">
-    <meta name="twitter:description" content="Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.">
+    <meta name="twitter:url" content="https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/">
+    <meta name="twitter:title" content="UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation) | Eduardo Gelain">
+    <meta name="twitter:description" content="Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
@@ -44,12 +44,12 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Bypassing MS Store License Checks for Call of Duty DLCs",
-  "description": "Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.",
+  "headline": "UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)",
+  "description": "Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.",
   "datePublished": "Sep 21, 2026",
-  "articleSection": "Security & GDK",
-  "url": "https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/",
-  "mainEntityOfPage": "https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/",
+  "articleSection": "Security & GDK Architecture",
+  "url": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/",
+  "mainEntityOfPage": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/",
   "author": {
     "@type": "Person",
     "name": "Eduardo Gelain",
@@ -386,6 +386,19 @@
         .text-glow-none {
             text-shadow: none !important;
         }
+        @media print {
+            #astro-assistant,
+            #astro-chat-window,
+            #custom-cursor,
+            #initial-loading-screen,
+            nav,
+            header,
+            footer,
+            canvas,
+            .no-print {
+                display: none !important;
+            }
+        }
     </style>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -462,12 +475,12 @@
                     <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
                         <time><i class="far fa-calendar-alt mr-1"></i> Sep 21, 2026</time>
                         <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
-                        <span><i class="far fa-folder mr-1"></i> Security & GDK</span>
+                        <span><i class="far fa-folder mr-1"></i> Security & GDK Architecture</span>
                     </div>
-                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Bypassing MS Store License Checks for Call of Duty DLCs</h1>
-                    <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.</p>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.</p>
                 </header>
-                <div id="content" class="markdown-body" data-prerendered="UWPCOD-GDK-DLC-Unlocker">
+                <div id="content" class="markdown-body" data-prerendered="UWP-GDK-Sandbox-Entitlement-Analysis">
 <p>When the <em>Call of Duty</em> titles started appearing on the Microsoft Store (such as <em>Advanced Warfare</em> and <em>WWII</em>), the community quickly noticed a major shift in how DLCs were handled. In the Steam era, buying a DLC meant downloading gigabytes of new maps and assets. On the UWP / Microsoft Store ecosystem, the reality is entirely different.</p>
 <p>The &quot;DLC&quot; you purchase on the MS Store is nothing more than a 10MB dummy package. All the actual DLC assets—maps, zombie modes, weapons—are <strong>already pre-installed natively</strong> inside the massive 100GB+ base game download. The 10MB package simply acts as a cryptographic &quot;Activator&quot; or license token for the Windows to validate.</p>
 <p>I developed a module that dynamically emulates the Microsoft GDK (Game Development Kit) API. This allows custom clients, offline users, or anyone with the base game files to unlock all DLCs without tampering with the game&#39;s executable.</p>

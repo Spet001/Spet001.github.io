@@ -34,14 +34,16 @@ const ENTRY_DESCRIPTIONS = {
     'What-Is-GSC': 'Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.',
     'Cloudflare-Workers-Backend': 'Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.',
     'T6-Open-Source-GSC-Mods': 'Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.',
-    'UWPCOD-GDK-DLC-Unlocker': 'Reverse engineering UWP/GDK sandbox entitlement tokens and license verification routines for pre-installed Call of Duty DLC assets.',
+    'UWPCOD-GDK-DLC-Unlocker': 'Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.',
+    'UWP-GDK-Sandbox-Entitlement-Analysis': 'Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.',
     'T6-GSC-Injector-MS-Store': 'Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.',
     'T5-GSC-Injector-MS-Store': 'Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.',
     'CW-GSC-Injection-MS-Store': 'Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.',
-    'T9-Mod-Manager-RE': 'Classified technical breakdown of Call of Duty Black Ops Cold War mod management and engine hooks.',
-    'entry_0007': 'Classified technical breakdown of Call of Duty Black Ops Cold War mod management and engine hooks.',
-    'shame_for_the_leakers': 'Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.',
-    'entry_0003': 'Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.'
+    'T9-Mod-Manager-RE': 'Classified technical analysis on desktop script management software decompilation, runtime decryption routines, and bytecode extraction.',
+    'entry_0007': 'Classified technical analysis on desktop script management software decompilation, runtime decryption routines, and bytecode extraction.',
+    'shame_for_the_leakers': 'Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.',
+    'Document-Explaining-Leaks': 'Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.',
+    'entry_0003': 'Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.'
 };
 
 function getSlug(entry) {
@@ -226,6 +228,37 @@ ${articleHtml}
 
         generatedCount++;
         console.log(`[SSG Journal] Generated: /journal/${slug}/index.html`);
+    });
+
+    // 1.1 Generate redirects for legacy URL paths that were renamed to preserve external backlinks
+    const LEGACY_URL_REDIRECTS = {
+        'shame_for_the_leakers': 'Document-Explaining-Leaks',
+        'UWPCOD-GDK-DLC-Unlocker': 'UWP-GDK-Sandbox-Entitlement-Analysis'
+    };
+
+    Object.entries(LEGACY_URL_REDIRECTS).forEach(([oldSlug, newSlug]) => {
+        const redirectHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting to ${newSlug} | Eduardo Gelain Technical Journal</title>
+    <link rel="canonical" href="https://spet01.dev/journal/${newSlug}/">
+    <meta name="robots" content="noindex, follow">
+    <meta http-equiv="refresh" content="0; url=/journal/${newSlug}/">
+    <script>window.location.replace('/journal/${newSlug}/');</script>
+</head>
+<body style="background:#050505;color:#94a3b8;font-family:sans-serif;padding:3rem 1rem;text-align:center;">
+    <p>Redirecting to <a href="/journal/${newSlug}/" style="color:#ff5500;font-weight:bold;">https://spet01.dev/journal/${newSlug}/</a>...</p>
+</body>
+</html>`;
+
+        const oldDir = path.join(JOURNAL_DIR, oldSlug);
+        if (!fs.existsSync(oldDir)) {
+            fs.mkdirSync(oldDir, { recursive: true });
+        }
+        fs.writeFileSync(path.join(oldDir, 'index.html'), redirectHtml, 'utf8');
+        fs.writeFileSync(path.join(JOURNAL_DIR, `${oldSlug}.html`), redirectHtml, 'utf8');
+        console.log(`[SSG Journal] Generated legacy redirect: /journal/${oldSlug}/ -> /journal/${newSlug}/`);
     });
 
     // 2. Generate Master /journal/index.html with pre-rendered list of articles

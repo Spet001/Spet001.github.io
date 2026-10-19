@@ -5,22 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Leakers....Shame for you all | Eduardo Gelain Technical Journal</title>
-    <meta name="description" content="Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.">
+    <title>Document: Explaining Unauthorized Leaks & Network Architecture Analysis | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, MDPro Web, ProjectY, Jailson Mendes Mods, Doomjaja, Delicia DOOM, Galaxy Map, Three.js Galaxy Map, WebGL 3D Portfolio, online_tu17_mp.wad documentation, online_tu17_zm.wad documentation, online_tu14_mp_english.wad documentation, online_tu14_sp_english.wad documentation, Demonware WAD, T3WAD, 0x543377AB, Three.js 120 FPS Optimization, 4GB Patch DXVK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="noindex, follow">
 
     <!-- Canonical URL & Alternate Discovery -->
-    <link rel="canonical" href="https://spet01.dev/journal/shame_for_the_leakers/">
+    <link rel="canonical" href="https://spet01.dev/journal/Document-Explaining-Leaks/">
     <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spet01.dev/journal/shame_for_the_leakers/">
-    <meta property="og:title" content="Leakers....Shame for you all | Eduardo Gelain">
-    <meta property="og:description" content="Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.">
+    <meta property="og:url" content="https://spet01.dev/journal/Document-Explaining-Leaks/">
+    <meta property="og:title" content="Document: Explaining Unauthorized Leaks & Network Architecture Analysis | Eduardo Gelain">
+    <meta property="og:description" content="Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -33,9 +33,9 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://spet01.dev/journal/shame_for_the_leakers/">
-    <meta name="twitter:title" content="Leakers....Shame for you all | Eduardo Gelain">
-    <meta name="twitter:description" content="Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.">
+    <meta name="twitter:url" content="https://spet01.dev/journal/Document-Explaining-Leaks/">
+    <meta name="twitter:title" content="Document: Explaining Unauthorized Leaks & Network Architecture Analysis | Eduardo Gelain">
+    <meta name="twitter:description" content="Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
@@ -44,12 +44,12 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Leakers....Shame for you all",
-  "description": "Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.",
+  "headline": "Document: Explaining Unauthorized Leaks & Network Architecture Analysis",
+  "description": "Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.",
   "datePublished": "Sep 19, 2026",
   "articleSection": "Network Engineering & Security",
-  "url": "https://spet01.dev/journal/shame_for_the_leakers/",
-  "mainEntityOfPage": "https://spet01.dev/journal/shame_for_the_leakers/",
+  "url": "https://spet01.dev/journal/Document-Explaining-Leaks/",
+  "mainEntityOfPage": "https://spet01.dev/journal/Document-Explaining-Leaks/",
   "author": {
     "@type": "Person",
     "name": "Eduardo Gelain",
@@ -386,6 +386,19 @@
         .text-glow-none {
             text-shadow: none !important;
         }
+        @media print {
+            #astro-assistant,
+            #astro-chat-window,
+            #custom-cursor,
+            #initial-loading-screen,
+            nav,
+            header,
+            footer,
+            canvas,
+            .no-print {
+                display: none !important;
+            }
+        }
     </style>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -464,10 +477,10 @@
                         <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
                         <span><i class="far fa-folder mr-1"></i> Network Engineering & Security</span>
                     </div>
-                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Leakers....Shame for you all</h1>
-                    <p class="text-slate-300 text-sm leading-relaxed">Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical breakdown of HMAC-SHA1/3DES-CBC packet translation, LUI checksum correction, and live memory usercmd patching.</p>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Document: Explaining Unauthorized Leaks & Network Architecture Analysis</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.</p>
                 </header>
-                <div id="content" class="markdown-body" data-prerendered="shame_for_the_leakers">
+                <div id="content" class="markdown-body" data-prerendered="Document-Explaining-Leaks">
 <blockquote>
 <p><strong>Public Integrity Notice &amp; Declaration of Authorship:</strong>
 The <strong>BO2 Crossplay Relay</strong> project was strictly a confidential, proprietary research project and <strong>100% CLOSED SOURCE</strong>. Recently, my private GitLab account was unlawfully compromised (hacked), and the private repository was leaked and dumped to the public without authorization.</p>

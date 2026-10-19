@@ -123,8 +123,8 @@ Eduardo publishes deep-dive research papers in his Technical Journal at https://
    - Topics: Call of Duty: Black Ops II (T6), open-source modding, GSC gameplay scripts.
    - Summary: Releasing previously closed-source, obfuscated custom game modes for Black Ops 2 Zombies/Multiplayer to preserve community creations and foster open mod development.
 
-8. **Bypassing MS Store License Checks for Call of Duty DLCs**
-   - URL: https://spet01.dev/journal/UWPCOD-GDK-DLC-Unlocker/
+8. **UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)**
+   - URL: https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/
    - Topics: UWP, Microsoft Store, GDK, License Verification, Reverse Engineering, Cryptographic Tokens.
    - Summary: Explores how modern UWP/MS Store games pre-install all 100GB+ DLC assets inside base packages, relying on a 10MB license token check, and how reverse engineering the licensing API allows validating DLC entitlement hooks.
 
@@ -143,10 +143,10 @@ Eduardo publishes deep-dive research papers in his Technical Journal at https://
     - Topics: Call of Duty: Black Ops Cold War, Sigscanning, Dynamic Pattern Matching, Anti-Cheat, Memory Scanning.
     - Summary: Overcoming hardcoded offset obsolescence across game updates by building a dynamic heuristic sigscanner in C++ to locate GSC loading routines in runtime memory.
 
-12. **Leakers....Shame for you all**
-    - URL: https://spet01.dev/journal/shame_for_the_leakers/
+12. **Document: Explaining Unauthorized Leaks & Network Architecture Analysis**
+    - URL: https://spet01.dev/journal/Document-Explaining-Leaks/
     - Topics: Call of Duty: Black Ops II (T6), Crossplay Relay, Npcap Layer-2 Injection, HMAC-SHA1 + 3DES-CBC Cryptography, usercmd_t Memory Patching, LUI Gamestate Translation, Code Leak & Integrity Statement.
-    - Summary: Statement on the unauthorized breach and leak of the closed-source BO2 Crossplay Relay code and stolen credits, alongside an exhaustive technical breakdown of real-time protocol translation (2095 <-> 2092), dynamic LUI checksum replacement (0x297163A2 -> 0x0030A5F3), and live kernel memory patching of usercmd (+0x3A) structures in t6mp.exe. Real authors: Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet.
+    - Summary: Technical statement and disclosure on the unauthorized breach and leak of the closed-source BO2 Crossplay Relay code and stolen credits, alongside an exhaustive technical breakdown of real-time protocol translation (2095 <-> 2092), dynamic LUI checksum replacement (0x297163A2 -> 0x0030A5F3), and live kernel memory patching of usercmd (+0x3A) structures in t6mp.exe. Real authors: Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet.
 
 ## Tech Stack
 - Languages: C++, C# (.NET), Python, TypeScript, JavaScript, x86/x64 Assembly, SQL, HTML5/CSS3

@@ -46,8 +46,8 @@ const PORTFOLIO_DATA = {
             },
             hero: {
                 status: "Disponível para Projetos & Oportunidades",
-                role: "Desenvolvedor de Software & Jogos · Engenharia Reversa",
-                desc: "Especializado em C++, C#, Python, Unity e Unreal Engine. Com foco em desenvolvimento de software de alto desempenho, sistemas de baixo nível, injeção de DLLs/scripts, exploração em ambientes restritos (UWP/GDK) e qualidade de software.",
+                role: "Engenheiro de Software & Jogos · Sistemas & Segurança",
+                desc: "Especializado em C++, C#, Python, Unity e Unreal Engine. Atuação focada em engenharia de software de alto desempenho, arquitetura de sistemas operacionais (Win32, UWP/GDK), interoperabilidade de baixo nível, automação e garantia de qualidade de software (QA).",
                 ctaProjects: "Explorar Projetos",
                 ctaContact: "Entrar em Contato",
                 ctaCV: "Visualizar CV",
@@ -200,8 +200,8 @@ const PORTFOLIO_DATA = {
             },
             hero: {
                 status: "Available for Roles & Projects",
-                role: "Software & Game Developer · Reverse Engineer",
-                desc: "Specialized in C++, C#, Python, Unity, and Unreal Engine. Focused on high-performance software engineering, low-level systems, DLL/script injection, sandboxed environment exploration (UWP/GDK), and software QA.",
+                role: "Software & Game Engineer · Systems & Security",
+                desc: "Specialized in C++, C#, Python, Unity, and Unreal Engine. Proven expertise in high-performance software engineering, low-level systems interoperability, operating system architecture (Win32, UWP/GDK), automation, and software quality assurance (QA).",
                 ctaProjects: "Explore Projects",
                 ctaContact: "Get in Touch",
                 ctaCV: "View Resume",
@@ -347,18 +347,18 @@ const PORTFOLIO_DATA = {
         {
             id: "exp_qa_sparky",
             role: { pt: "Analista de Testes Manuais QA", en: "Manual QA Analyst" },
-            company: { pt: "Sparky Rush: Purrils in Pawsville (Steam)", en: "Sparky Rush: Purrils in Pawsville (Steam)" },
+            company: { pt: "Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)", en: "Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)" },
             period: { pt: "2025 - Presente", en: "2025 - Present" },
             type: { pt: "Lançamento Comercial na Steam", en: "Commercial Game Release" },
             bullets: {
                 pt: [
-                    "Atuação técnica como QA Tester no jogo de plataforma 3D 'Sparky Rush', lançado comercialmente na Steam.",
+                    "Atuação técnica como QA Tester no jogo de plataforma 3D 'Sparky Rush', lançado comercialmente na Steam pela Converting Minds.",
                     "Identificação, reprodução rigorosa e documentação de mais de 50 bugs críticos de física, renderização e lógica de gameplay.",
                     "Análise dedutiva de código em Unity (C#) para auxiliar a equipe de desenvolvimento a diagnosticar causas raiz com agilidade.",
                     "Testes de regressão e validação contínua de builds pré-lançamento para assegurar estabilidade."
                 ],
                 en: [
-                    "Technical QA Tester on the 3D platformer 'Sparky Rush', published commercially on Steam.",
+                    "Technical QA Tester on the 3D platformer 'Sparky Rush', published commercially on Steam by Converting Minds.",
                     "Identified, reliably reproduced, and documented 50+ critical bugs across physics, rendering, and gameplay logic.",
                     "Deductive code analysis in Unity (C#) helping the dev team rapidly diagnose root causes.",
                     "Performed regression testing and build certification to ensure launch stability."
@@ -368,8 +368,8 @@ const PORTFOLIO_DATA = {
         },
         {
             id: "exp_gamedev_generic",
-            role: { pt: "Programador de Jogos", en: "Gameplay Programmer" },
-            company: { pt: "Desenvolvimento de Jogos (Unity & Unreal Engine)", en: "Game Development (Unity & Unreal Engine)" },
+            role: { pt: "Programador de Jogos & Sistemas", en: "Gameplay & Systems Programmer" },
+            company: { pt: "Projetos Comerciais & Independent R&D", en: "Commercial Game Projects & Independent R&D" },
             period: { pt: "2025 - Presente", en: "2025 - Present" },
             type: { pt: "Engenharia de Jogos", en: "Game Engineering" },
             bullets: {
@@ -390,20 +390,20 @@ const PORTFOLIO_DATA = {
         },
         {
             id: "exp_reverse_modding",
-            role: { pt: "Engenheiro de Sistemas & Modding", en: "Systems & Reverse Engineer" },
-            company: { pt: "Engenharia Reversa & Modding Systems", en: "Reverse Engineering & Modding Systems" },
+            role: { pt: "Engenheiro de Sistemas & Pesquisa de Segurança", en: "Systems & Security Research Engineer" },
+            company: { pt: "Independent R&D / Open Source Security Research", en: "Independent R&D / Open Source Security Research" },
             period: { pt: "2024 - Presente", en: "2024 - Present" },
             type: { pt: "Sistemas & Baixo Nível", en: "Systems & Low-Level" },
             bullets: {
                 pt: [
-                    "Pesquisa avançada e quebra de restrições do ecossistema UWP (Universal Windows Platform) e Microsoft Game Development Kit (GDK).",
-                    "Criação de injetores GSC e clientes customizados em C/C++ para franquias como Call of Duty (Black Ops 1, 2, 3 e Cold War).",
-                    "Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de funções de bytecode da VM.",
+                    "Pesquisa avançada em segurança de runtimes, arquitetura de entitlements e isolamento de processos no ecossistema UWP/GDK.",
+                    "Criação de injetores GSC e clientes customizados em C/C++ para instrumentação de bytecode e interoperabilidade de assets legados.",
+                    "Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de dispatchers de VM.",
                     "Desenvolvimento de launchers em Electron e ferramentas com foco em estabilidade e segurança."
                 ],
                 en: [
-                    "Advanced research and restriction bypass for the UWP (Universal Windows Platform) and Microsoft GDK environment.",
-                    "Engineered GSC injectors and custom clients in C/C++ for Call of Duty titles (BO1, BO2, BO3, and Cold War).",
+                    "Advanced runtime security research, entitlement architecture analysis, and process sandboxing inside UWP and Microsoft GDK.",
+                    "Engineered C/C++ custom runtimes and bytecode injectors enabling dynamic instrumentation and legacy asset preservation.",
                     "Developed native DLL injection routines, dynamic memory signature pattern scanners, and VM bytecode hooks.",
                     "Engineered Electron launchers and modding toolkits delivering stable and crash-free execution."
                 ]
@@ -412,18 +412,18 @@ const PORTFOLIO_DATA = {
         },
         {
             id: "exp_ti_support",
-            role: { pt: "Suporte de TI & Automação", en: "IT Support & Automation" },
-            company: { pt: "Infraestrutura de TI & Sistemas", en: "IT Infrastructure & Systems" },
+            role: { pt: "Especialista em Suporte de TI & Automação", en: "IT Support & Automation Specialist" },
+            company: { pt: "Public Sector IT Infrastructure (Infraestrutura Governamental)", en: "Public Sector IT Infrastructure" },
             period: { pt: "2026 - Presente", en: "2026 - Present" },
             type: { pt: "Infraestrutura de TI", en: "IT Infrastructure" },
             bullets: {
                 pt: [
-                    "Apoio técnico operacional de infraestrutura de TI, gerenciamento de redes locais e estações de trabalho.",
+                    "Apoio técnico operacional de infraestrutura de TI no setor público, gerenciamento de redes locais e estações de trabalho.",
                     "Desenvolvimento de scripts de automação em Python e PowerShell (.ps1) para manutenção preventiva e resolução ágil de incidentes.",
                     "Diagnóstico de hardware/software, implantação de sistemas operacionais e suporte direto a usuários."
                 ],
                 en: [
-                    "Technical IT infrastructure support, local networking management, and workstation maintenance.",
+                    "Technical IT infrastructure support in the public sector, local networking management, and workstation maintenance.",
                     "Developed automation scripts in Python and PowerShell (.ps1) for preventative maintenance and rapid incident resolution.",
                     "Hardware/software diagnostics, OS deployments, and direct end-user tech support."
                 ]
@@ -544,8 +544,8 @@ const PORTFOLIO_DATA = {
             featured: true,
             tags: ["Reverse Engineering", "Low-Level C++", "GSC VM", "GDK / UWP", "Architecture", "Technical Writing"],
             description: {
-                pt: "Publicação técnica autoral documentando pesquisas de baixo nível, engenharia reversa de motores de jogos (Call of Duty T5/T6/T9, DOOM WADs), bypass de sandboxes UWP/GDK, injeção de bytecode GSC e arquitetura serverless. Inclui sistema de busca por tags, ordenação por popularidade e tradução automática on-demand.",
-                en: "Original technical publication documenting low-level systems research, game engine reverse engineering (Call of Duty T5/T6/T9, DOOM WADs), UWP/GDK sandbox bypassing, GSC bytecode injection, and serverless architecture. Features tag filtering, popularity sorting, and on-demand translation."
+                pt: "Publicação técnica autoral documentando pesquisas de baixo nível, engenharia reversa de motores de jogos clássicos e modernos (id Tech, Treyarch GSC VM), bypass de sandboxes UWP/GDK, injeção de bytecode GSC e arquitetura serverless. Inclui sistema de busca por tags, ordenação por popularidade e tradução automática on-demand.",
+                en: "Original technical publication documenting low-level systems research, game engine reverse engineering (id Tech, Treyarch GSC VM), UWP/GDK sandbox bypassing, GSC bytecode injection, and serverless architecture. Features tag filtering, popularity sorting, and on-demand translation."
             },
             caseStudy: {
                 challenge: {
@@ -667,27 +667,27 @@ const PORTFOLIO_DATA = {
                 "https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo1gsc.png",
                 "https://gitlab.com/Spet001/msclients/-/raw/master/assets/bo2.png"
             ],
-            title: "BO1 & BO2 MS Store Clients & GSC Injector",
+            title: "UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)",
             featured: true,
             repo: "https://gitlab.com/Spet001/msclients",
             journalId: "T6-GSC-Injector-MS-Store",
-            tags: ["C++", "GSC Modding", "Reverse Engineering", "VM Hooking", "DLC Unlocker", "UWP"],
+            tags: ["C++", "Security Research", "Reverse Engineering", "UWP/GDK", "Entitlement Architecture", "VM Hooking"],
             description: {
-                pt: "Suíte completa em C++ com cliente modificado, injetor GSC em tempo real e desbloqueador de DLCs para Black Ops 1 e 2 na Windows Store. Permite compilar e carregar scripts customizados de Zombies e Multiplayer contornando proteções da VM.",
-                en: "Complete C++ suite featuring custom client modification, real-time GSC script injector, and DLC unlocker for Black Ops 1 & 2 Windows Store. Compiles and executes custom Zombies and Multiplayer scripts by hooking VM execution pointers."
+                pt: "Suíte de pesquisa em C++ com cliente modificado, instrumentação de bytecode em tempo real e análise da arquitetura de entitlements no ecossistema UWP/GDK. Permite a execução controlada de rotinas customizadas de scripting e interoperabilidade de assets legados.",
+                en: "C++ systems security research suite featuring custom client modification, real-time bytecode instrumentation, and UWP/GDK entitlement architecture analysis. Enables controlled custom scripting and legacy asset preservation."
             },
             caseStudy: {
                 challenge: {
-                    pt: "A engine do BO1 e BO2 na Windows Store impõe proteção de integridade na memória, isolamento de processos GDK e uma VM de GSC que rejeita scripts não assinados, além de bloquear acesso a DLCs compradas em plataformas descontinuadas.",
-                    en: "The BO1 and BO2 Windows Store builds enforce memory integrity protections, GDK process sandboxing, and a GSC VM that rejects unsigned bytecode, while also blocking legacy DLC entitlements."
+                    pt: "O runtime de jogos na Windows Store impõe proteção de integridade na memória, isolamento rigoroso de processos GDK e uma VM de bytecode que restringe scripts não assinados, além de descontinuar verificação de entitlements em plataformas legadas.",
+                    en: "Windows Store game runtimes enforce memory integrity protections, strict GDK process sandboxing, and a bytecode VM restricting unsigned scripts, alongside deprecation of legacy entitlement verification."
                 },
                 solution: {
-                    pt: "Desenvolvimento de pattern scanning dinâmico para localizar a tabela de Asset Pools e os manipuladores de execução de bytecode GSC da VM. A ferramenta injeta uma DLL em C++ que redireciona o ponteiro do parser para carregar scripts compilados pelo usuário e faz hooking das chamadas XStore para validar posse de DLCs.",
-                    en: "Developed dynamic pattern scanning to locate the Asset Pool table and the VM's GSC bytecode dispatch handlers. Injected a native C++ DLL redirecting script execution pointers to load user-compiled bytecode while hooking XStore API calls to validate DLC entitlements."
+                    pt: "Desenvolvimento de pattern scanning dinâmico para mapear Asset Pools e despachantes de execução da VM. Injeção de módulo nativo em C++ redirecionando ponteiros de despacho e analisando interfaces XStore/XPackage para emulação de validações locais.",
+                    en: "Developed dynamic memory pattern scanning to map Asset Pools and VM bytecode dispatchers. Injected a native C++ research module redirecting dispatch pointers and analyzing XStore/XPackage interfaces for localized validation emulation."
                 },
                 impact: {
-                      pt: "200+ jogadores puderam desfrutar de mods GSC e de DLCs sem DRM.",
-                      en: "200+ players were able to enjoy GSC mods and DRM-free DLCs."
+                      pt: "Preservação da compatibilidade de assets legados e documentação técnica da arquitetura UWP/GDK para a comunidade de pesquisa.",
+                      en: "Preserved legacy asset interoperability and documented UWP/GDK runtime architecture for software research."
                   }
             }
         },
@@ -857,30 +857,31 @@ const PORTFOLIO_DATA = {
         {
             id: "t9_mod_manager_re",
             category: "reverse",
-            categoryLabel: { pt: "Engenharia Reversa / Criptografia", en: "Reverse Engineering / Cryptography" },
+            categoryLabel: { pt: "Engenharia Reversa & Análise Binária", en: "Reverse Engineering & Binary Analysis" },
             image: "/assets/cwgsc.png",
             lockedImage: "/assets/cwgsc_locked.jpg",
-            title: { pt: "Desbloqueie no Patreon!", en: "Unlock this Entry on Patreon!" },
+            title: { pt: "Descompilação Binária & Engenharia Reversa de Gerenciador de Scripts", en: "Proprietary Script Manager Binary Decompilation & Static Analysis" },
+            lockedTitle: { pt: "Descompilação de Gerenciador de Scripts & Extração de Bytecode (Patreon)", en: "Proprietary Script Manager Decompilation & Bytecode Extraction (Patreon)" },
             isLocked: true,
             featured: true,
             journalId: "entry_0007",
-            tags: ["Python", "AES-GCM", "Reverse Engineering", "Cryptography", "Call of Duty"],
+            tags: ["C#", "C++", ".NET Decompilation", "Reverse Engineering", "Static Analysis", "Bytecode VM", "GSC"],
             description: {
-                pt: "🔒 Este projeto é confidencial/privado! Desbloqueie o Estudo de Caso completo e a entrada técnica do Journal assinando o Patreon!",
-                en: "🔒 This project is in preview/private! Unlock the full Case Study and technical Journal entry by subscribing to Patreon!"
+                pt: "Análise estática e engenharia reversa de uma ferramenta desktop proprietária de código fechado para gerenciamento de scripts. O projeto envolveu a descompilação de assemblies protegidos, engenharia reversa das rotinas de criptografia interna e extração do código-fonte completo dos scripts em bytecode para disponibilização pública e preservação técnica.",
+                en: "Static analysis and reverse engineering of a closed-source proprietary desktop script management tool. Involved decompiling obfuscated assemblies, reverse engineering internal encryption routines, and extracting the complete script source code to open-source it for research and digital preservation."
             },
             caseStudy: {
                 challenge: {
-                    pt: "[CONTEÚDO BLOQUEADO] Requer autenticação do Patreon.",
-                    en: "[LOCKED CONTENT] Log in via Patreon to view the project challenge."
+                    pt: "Uma ferramenta de terceiros distribuía scripts e assets sob criptografia e ofuscação proprietárias em aplicativo de código fechado, impedindo a auditoria de segurança, interoperabilidade e inspeção técnica pela comunidade.",
+                    en: "A third-party desktop tool packaged and distributed scripts under proprietary encryption and obfuscation routines within a closed-source binary, preventing security audits, interoperability, and technical inspection."
                 },
                 solution: {
-                    pt: "[CONTEÚDO BLOQUEADO] Faça login pelo Patreon para ver o código fonte e a solução.",
-                    en: "[LOCKED CONTENT] Log in via Patreon to view the source code and solution."
+                    pt: "Engenharia reversa dos assemblies da aplicação, reconstrução das rotinas de decodificação de payloads e extração automatizada do acervo completo de scripts para publicação em repositório público aberto para desenvolvedores. [Documentação completa e análises estruturadas disponíveis no Patreon].",
+                    en: "Reverse engineered the application assemblies, reconstructed runtime payload decoding routines, and automated the extraction of all bundled scripts into an open-source repository for developers. [Full documentation and structured technical analysis unlocked on Patreon]."
                 },
                 impact: {
-                    pt: "[CONTEÚDO BLOQUEADO] Faça login pelo Patreon para ver os resultados do projeto.",
-                    en: "[LOCKED CONTENT] Log in via Patreon to view the project results and impacts."
+                    pt: "Liberação do código-fonte integral dos scripts para a comunidade técnica, viabilizando o aprendizado transparente da API de scripts do motor e auditoria independente.",
+                    en: "Open-sourced the complete script codebase for technical developers, enabling transparent study of the engine's scripting APIs and independent security auditing."
                 }
             }
         },
@@ -898,7 +899,7 @@ const PORTFOLIO_DATA = {
                 pt: "🔒 Este projeto é confidencial/privado! Desbloqueie o Estudo de Caso completo e a entrada técnica do Journal assinando o Patreon!",
                 en: "🔒 This project is in preview/private! Unlock the full Case Study and technical Journal entry by subscribing to Patreon!"
             },
-            journalId: "entry_0003",
+            journalId: "Document-Explaining-Leaks",
             caseStudy: {
                 challenge: {
                     pt: "[CONTEÚDO BLOQUEADO] Requer autenticação do Patreon.",
@@ -909,9 +910,9 @@ const PORTFOLIO_DATA = {
                     en: "[LOCKED CONTENT] Log in via the Journal to read the network architecture."
                 },
                 impact: {
-                      pt: "[CONTEÚDO BLOQUEADO] Faça login pelo Patreon para ver os resultados do projeto.",
-                      en: "[LOCKED CONTENT] Log in via Patreon to view the project results and impacts."
-                  }
+                    pt: "[CONTEÚDO BLOQUEADO] Faça login pelo Patreon para ver os resultados do projeto.",
+                    en: "[LOCKED CONTENT] Log in via Patreon to view the project results and impacts."
+                }
             }
         },
         {
@@ -1196,12 +1197,12 @@ const PORTFOLIO_DATA = {
             excerpt: "Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications."
         },
         {
-            id: "UWPCOD-GDK-DLC-Unlocker",
-            title: "Bypassing MS Store License Checks for Call of Duty DLCs",
+            id: "UWP-GDK-Sandbox-Entitlement-Analysis",
+            title: "UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)",
             date: "Sep 21, 2026",
-            file: "UWPCOD-GDK-DLC-Unlocker.md",
-            category: "Security & GDK",
-            excerpt: "Detailed breakdown of the XStore entitlement validation routines and how memory hooks bypass verification inside the Windows Gaming runtime."
+            file: "UWP-GDK-Sandbox-Entitlement-Analysis.md",
+            category: "Security & GDK Architecture",
+            excerpt: "Detailed breakdown of XStore entitlement validation routines, GDK sandboxing mechanisms, and native memory hooks for legacy software preservation."
         },
         {
             id: "T6-GSC-Injector-MS-Store",
@@ -1220,12 +1221,12 @@ const PORTFOLIO_DATA = {
             excerpt: "Documenting memory signatures and thread redirection techniques in older Treyarch engines adapted for the Microsoft Store."
         },
         {
-            id: "shame_for_the_leakers",
-            title: "Leakers....Shame for you all",
+            id: "Document-Explaining-Leaks",
+            title: "Document: Explaining Unauthorized Leaks & Network Architecture Analysis",
             date: "Sep 19, 2026",
-            file: "shame_for_the_leakers.md",
+            file: "Document-Explaining-Leaks.md",
             category: "Network Engineering & Security",
-            excerpt: "Public statement on the unauthorized breach and leak of the BO2 Crossplay Relay code, exposing credit theft, alongside a deep technical architectural overview of the real-time crossplay relay."
+            excerpt: "Technical disclosure and incident post-mortem on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing and crossplay relay topology."
         },
         {
             id: "CW-GSC-Injection-MS-Store",
@@ -3649,15 +3650,15 @@ const SpaceCanvasV3 = ({
                 {
                     id: 't9_mod_manager_re',
                     projectId: 't9_mod_manager_re',
-                    name: 'Desbloqueie no Patreon! (T9 Mod Manager RE)',
+                    name: 'Desbloqueie no Patreon! (Script Tool RE)',
                     palette: 'moon',
                     radius: 4.1,
                     pos: new THREE.Vector3(-17, 6, -220),
                     // Lock and Key on the Patreon locked entry!
                     models: [{ path: '/3d/lock_and_key.glb', scale: 3.2, orbitDist: 2.7, orbitAngleOffset: 0, attribution: '"Lock And Key" by Mehdi Shahsavan (CC-BY 4.0)' }],
                     rotSpeed: 0.30,
-                    desc: { pt: 'T9 Mod Manager RE (Patreon Confidencial)', en: 'T9 Mod Manager RE (Patreon Confidential)' },
-                    tags: ['C#', '.NET', 'Reverse Engineering', 'Process Memory']
+                    desc: { pt: 'Engenharia Reversa de Gerenciador de Scripts (Patreon Confidencial)', en: 'Script Manager Binary Decompilation (Patreon Confidential)' },
+                    tags: ['C#', '.NET', 'Reverse Engineering', 'Static Analysis']
                 },
                 {
                     id: 'bo2_crossplay_relay',
@@ -6733,11 +6734,11 @@ const AboutSection = () => {
     const pillars = [
         {
             id: 'reverse',
-            title: { pt: 'Engenharia Reversa', en: 'Reverse Engineering' },
-            tagline: { pt: 'Modding & Low-Level Systems', en: 'Modding & Low-Level Systems' },
+            title: { pt: 'Engenharia Reversa & Baixo Nível', en: 'Reverse Engineering & Systems' },
+            tagline: { pt: 'Runtime Analysis & Architecture', en: 'Runtime Analysis & Architecture' },
             description: {
-                pt: 'Injeção de DLLs nativas em C/C++, hooking de VM bytecode, scanners dinâmicos de memória e contorno de sandboxes fechados (UWP/GDK).',
-                en: 'Native C/C++ DLL injection, VM bytecode hooking, dynamic memory scanning, and bypassing hardened UWP/GDK process sandboxes.'
+                pt: 'Análise de binários em C/C++, instrumentação de rotinas em tempo de execução, hooking de dispatchers, mapeamento de memória e interoperabilidade no ecossistema Win32 e UWP/GDK.',
+                en: 'Native C/C++ binary analysis, runtime instrumentation, dispatcher hooking, memory layout inspection, and low-level interoperability across Win32 and UWP/GDK environments.'
             },
             badges: [
                 { name: 'C++', icon: 'https://skillicons.dev/icons?i=cpp' },
@@ -6814,12 +6815,24 @@ const AboutSection = () => {
                         </div>
                     </div>
 
-                    {/* Concise Bio */}
-                    <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 max-w-3xl">
-                        {lang === 'pt'
-                            ? "Desenvolvedor de software e jogos focado em sistemas de baixo nível, engenharia reversa e otimização. Experiência que transita de injeções de memória e modding no ecossistema UWP/GDK ao desenvolvimento de física em Unity/UE5 e automações em Python."
-                            : "Software & Game Developer specialized in low-level systems, reverse engineering, and performance optimization. Experience bridging memory hooking and modding across UWP/GDK to high-velocity game physics in Unity/UE5 and Python automation tooling."}
-                    </p>
+                    {/* Extended Corporate & Personal Bio */}
+                    <div className="space-y-3 text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 max-w-3xl">
+                        <p>
+                            {lang === 'pt'
+                                ? "Sou desenvolvedor de software e jogos com foco em engenharia de sistemas, arquitetura de software, computação de baixo nível e garantia de qualidade (QA). Minha abordagem para a computação é guiada por uma regra fundamental: não tratar a tecnologia como uma caixa preta. Desde os primeiros passos na programação, sou movido por entender o que acontece sob o capô — como o código se traduz em instruções de máquina, como a memória do processo é gerenciada e como subsistemas de jogos e do sistema operacional interagem em tempo real."
+                                : "I am a software and game engineer focused on systems engineering, software architecture, low-level computing, and technical quality assurance (QA). My engineering philosophy revolves around a simple principle: never treat software as a black box. From my earliest programming days, I have been driven by a relentless curiosity to understand what happens under the hood — how high-level code translates into machine instructions, how operating system memory is managed, and how complex subsystems coordinate in real time."}
+                        </p>
+                        <p>
+                            {lang === 'pt'
+                                ? "Com base sólida em Ciência da Computação, combino o rigor teórico em estruturas de dados, algoritmos e compiladores com a prática diária de desenvolvimento em C, C++, C#, Python e TypeScript. Minha experiência abrange desde a engenharia de gameplay e arquitetura desacoplada em Unity e Unreal Engine 5 até pesquisas aprofundadas em ambientes restritos (como sandboxes UWP/GDK e APIs nativas do Win32), análise estática e dinâmica de binários, instrumentação de memória e automação de infraestrutura com scripts de diagnóstico."
+                                : "Grounded in Computer Science foundations, I combine theoretical rigor in data structures, algorithms, and compilers with hands-on production engineering in C, C++, C#, Python, and TypeScript. My technical breadth spans modular gameplay systems in Unity and Unreal Engine 5, deep systems research within restricted OS environments (such as UWP/GDK sandboxes and native Win32 APIs), dynamic/static binary analysis, memory instrumentation, and infrastructure automation via diagnostic scripting."}
+                        </p>
+                        <p>
+                            {lang === 'pt'
+                                ? "Tendo participado ativamente de todo o ciclo de lançamento comercial de um título para PC distribuído na Steam, conheço a disciplina necessária para entregar software estável sob prazos reais: atuei no diagnóstico e isolamento de causa-raiz de falhas críticas, otimização de ciclos de CPU/GPU e testes rigorosos de regressão. Priorizo arquiteturas testáveis, resolução permanente de problemas na origem e o desenvolvimento de ferramentas eficientes que aumentem a produtividade e a robustez técnica do ecossistema onde atuo."
+                                : "Having actively contributed across the entire commercial release cycle of a published PC title on Steam, I bring first-hand discipline in shipping production-grade software under real-world constraints: conducting deterministic root-cause crash debugging, CPU/GPU frametime profiling, and rigorous regression validation. I prioritize decoupled testable architectures, permanent fixes at the source over superficial patches, and building clean developer tooling that empowers teams to deliver reliable, high-performance software."}
+                        </p>
+                    </div>
 
                     {/* Dynamic 4 Pillar Cards with 3D Badges */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 mb-3.5">
@@ -7735,7 +7748,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                             <article
                                 key={`${p.id}-${selectedCategory}-${searchQuery}`}
                                 style={{ animationDelay: `${Math.min(idx * 40, 240)}ms` }}
-                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group transition-transform duration-200 project-card-animate"
+                                className="glass-panel rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col group transition-all duration-200 project-card-animate"
                             >
                                 {/* Authentic Project Image - Cleanly cropped border-to-border */}
                                 <div 
@@ -7746,7 +7759,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent opacity-60 pointer-events-none" />
                                     <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-20">
                                         <span className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-black/90 text-white border border-primary/50 shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-transform">
-                                            {t('projects.viewDetails')}
+                                             {t('projects.viewDetails')}
                                         </span>
                                     </div>
                                 </div>
@@ -7756,7 +7769,6 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                     <div>
                                         <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1.5">
                                             <span className="text-primary font-semibold">{p.categoryLabel[lang]}</span>
-                                            
                                         </div>
 
                                         <h3 
@@ -8108,7 +8120,7 @@ const ToolsSection = () => {
                 </div>
 
                 {/* Featured Tool Card */}
-                <div className="glass-panel rounded-2xl border border-white/[0.08] hover:border-white/[0.2] overflow-hidden transition-all duration-300">
+                <div className="glass-panel rounded-2xl border border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)] overflow-hidden transition-all duration-300">
                     <div className="grid lg:grid-cols-12 gap-0 items-stretch">
                         
                         {/* Visual Preview / Screenshot */}
@@ -8122,9 +8134,9 @@ const ToolsSection = () => {
                         </div>
 
                         {/* Description & Action Panel */}
-                        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-white/[0.01]">
+                        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-purple-950/20 via-black/40 to-transparent">
                             <div>
-                                <div className="text-[11px] font-mono text-primary font-semibold tracking-wider uppercase mb-1.5">
+                                <div className="text-[11px] font-mono text-purple-400 font-semibold tracking-wider uppercase mb-1.5">
                                     {lang === 'pt' ? 'Gerador 3D Procedural' : 'Procedural 3D Generator'}
                                 </div>
 
@@ -8138,7 +8150,7 @@ const ToolsSection = () => {
 
                                 <div className="flex flex-wrap gap-1.5 mb-6">
                                     {['Three.js', 'WebGL', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR', 'Zero AI'].map((tag, i) => (
-                                        <span key={i} className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">
+                                        <span key={i} className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">
                                             {tag}
                                         </span>
                                     ))}
@@ -8148,13 +8160,13 @@ const ToolsSection = () => {
                             <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
                                 <a
                                     href="/tools/image-to-3d/"
-                                    className="px-5 py-2.5 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
+                                    className="px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-purple-600/30 flex items-center gap-2 cursor-pointer"
                                 >
                                     <span>{t('tools.openTool')}</span>
                                     <i className="fas fa-arrow-right text-[10px]"></i>
                                 </a>
 
-                                <span className="text-[11px] font-mono text-slate-500">
+                                <span className="text-[11px] font-mono text-purple-400/80">
                                     /tools/image-to-3d/
                                 </span>
                             </div>
@@ -8539,10 +8551,608 @@ const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigat
 // --- RESUME (CV) VIEWER MODAL (NO LOCATION) ---
 const ResumeModal = ({ isOpen, onClose }) => {
     const { t, lang } = useContext(LanguageContext);
+    const [copiedATS, setCopiedATS] = useState(false);
     if (!isOpen) return null;
 
+    const downloadFile = (content, fileName, mimeType) => {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    const getAtsPlainText = () => {
+        return lang === 'pt' ? `EDUARDO GELAIN
+Engenheiro de Software & Jogos · Sistemas & Segurança
+E-mail: gelain15mj@gmail.com
+GitHub: https://github.com/Spet001
+GitLab: https://gitlab.com/Spet001
+Portfólio: https://spet01.dev/
+
+============================================================
+RESUMO PROFISSIONAL
+============================================================
+Engenheiro de software e jogos focado em C/C++, C#, Python e TypeScript com especialização em arquitetura de motores (Unity e Unreal Engine 5), sistemas de baixo nível, arquitetura de sistemas operacionais (Win32, UWP/GDK), análise e instrumentação de binários, automação de infraestrutura e garantia de qualidade de software (QA). Experiência comprovada em lançamentos comerciais na Steam e ferramentas de pesquisa e preservação digital para a comunidade técnica.
+
+============================================================
+FORMAÇÃO ACADÊMICA
+============================================================
+Bacharelado em Ciência da Computação (Ensino Superior)
+- Ênfase em Arquitetura de Software, Algoritmos e Estruturas de Dados, Sistemas Operacionais, Compiladores e Segurança da Informação.
+
+============================================================
+EXPERIÊNCIA PROFISSIONAL
+============================================================
+1. Analista de Testes Manuais QA | Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)
+Período: 2025 - Presente
+- Atuação técnica no ciclo de QA do jogo comercial 3D 'Sparky Rush', publicado na Steam pela Converting Minds.
+- Identificação, reprodução rigorosa e documentação detalhada de mais de 50 bugs críticos de física, renderização e lógica de gameplay.
+- Análise dedutiva de código em Unity (C#) auxiliando a equipe central de desenvolvimento a diagnosticar causas-raiz e mitigar regressões.
+- Homologação de builds e testes contínuos de estabilidade pré-lançamento.
+
+2. Programador de Jogos & Sistemas | Projetos Comerciais & Independent R&D
+Período: 2025 - Presente
+- Desenvolvimento de mecânicas de gameplay, física e sistemas interativos utilizando Unity (C#) e Unreal Engine (C++).
+- Programação de máquinas de estado para IA de inimigos, locomoção fluida de personagens (FSM) e sistemas dinâmicos de armas.
+- Otimização de pipelines de renderização e profiling de performance para garantia de taxas de quadros acima de 144 FPS.
+- Criação e manutenção de templates modulares reutilizáveis para a comunidade de desenvolvedores independentes.
+
+3. Engenheiro de Sistemas & Pesquisa de Segurança | Independent R&D / Open Source Security Research
+Período: 2024 - Presente
+- Pesquisa avançada em segurança de runtimes, arquitetura de entitlements e isolamento de processos no ecossistema UWP/GDK.
+- Criação de ferramentas em C/C++ para instrumentação de bytecode e preservação de compatibilidade de assets legados.
+- Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de dispatchers de VM.
+- Desenvolvimento de launchers em Electron e utilitários multiplataforma focados em integridade de execução.
+
+4. Especialista em Suporte de TI & Automação | Public Sector IT Infrastructure
+Período: 2026 - Presente
+- Apoio técnico operacional de infraestrutura de TI no setor público, gerenciamento de redes locais e estações de trabalho.
+- Desenvolvimento de scripts de automação em Python e PowerShell (.ps1) para manutenção preventiva e resolução ágil de incidentes.
+- Diagnóstico de hardware/software, implantação de sistemas operacionais e suporte direto a usuários finais.
+
+============================================================
+PRINCIPAIS PROJETOS
+============================================================
+- Outcaster - Retro FPS Templates (Unity 6 / C#): Framework completo de FPS retrô com live 3D HUD preview no Inspector, mecânicas de armas modulares e profiling de alta taxa de quadros.
+- UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32): Pesquisa de segurança e instrumentação de runtime contornando sandboxes UWP/GDK, com hooks de VM e compatibilidade de assets legados.
+- Descompilação Binária & Preservação de Scripts GSC (C# / C++): Análise estática, descompilação de assemblies e extração de scripts em bytecode para preservação técnica e pesquisa da comunidade.
+- Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python): Relay assíncrono UDP de baixa latência (<4ms) com tradução de pacotes binários, recálculo de somas de verificação e bridge crossplay.
+- Spet's Quick 3D Studio (Three.js / WebGL / TypeScript): Engine procedural 2D para 3D sem IA, com extração de contornos vetoriais e exportação direta para .GLB/.GLTF binário.
+- Sparky Rush Commercial QA: Auditoria técnica e testes de regressão para publicação comercial na Steam.
+
+============================================================
+COMPETÊNCIAS TÉCNICAS (TECH STACK)
+============================================================
+- Linguagens: C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.
+- Engines & Frameworks: Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.
+- Ferramentas & Ambientes: Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.
+- Metodologias & Especialidades: Sistemas de Baixo Nível, Netcode UDP P2P, QA & Testes de Regressão, Profiling de Memória, Engenharia Reversa, Automação.`
+        : `EDUARDO GELAIN
+Software & Game Engineer · Systems & Security
+Email: gelain15mj@gmail.com
+GitHub: https://github.com/Spet001
+GitLab: https://gitlab.com/Spet001
+Portfolio: https://spet01.dev/
+
+============================================================
+EXECUTIVE SUMMARY
+============================================================
+Software and game engineer specializing in C/C++, C#, Python, and TypeScript with focused expertise in game engine architecture (Unity and Unreal Engine 5), low-level systems, operating systems architecture (Win32, UWP/GDK), binary analysis and runtime instrumentation, infrastructure automation, and software quality assurance (QA). Proven track record on commercial Steam launches and open-source tooling for technical communities.
+
+============================================================
+EDUCATION
+============================================================
+Bachelor's Degree in Computer Science (Higher Education)
+- Emphasis on Software Architecture, Algorithms & Data Structures, Operating Systems, Compilers, and Information Security.
+
+============================================================
+PROFESSIONAL EXPERIENCE
+============================================================
+1. Manual QA Analyst & Tester | Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)
+Period: 2025 - Present
+- Technical QA Analyst for the 3D platformer 'Sparky Rush', published commercially on Steam by Converting Minds.
+- Systematically discovered, isolated, reliably reproduced, and documented 50+ critical bugs across physics, graphics, and gameplay logic.
+- Conducted deductive code analysis in Unity (C#) assisting the core development team in diagnosing root causes and preventing regressions.
+- Performed regression testing and build certification cycles ensuring launch stability.
+
+2. Gameplay & Systems Programmer | Commercial Game Projects & Independent R&D
+Period: 2025 - Present
+- Engineered core gameplay mechanics, physics, and interactive systems using Unity (C#) and Unreal Engine (C++).
+- Programmed state machines for enemy AI, fluid character locomotion (FSM), and dynamic weapon management systems.
+- Profiled and optimized rendering pipelines to sustain high framerates (144+ FPS).
+- Authored and maintained modular game templates for the independent game development community.
+
+3. Systems & Security Research Engineer | Independent R&D / Open Source Security Research
+Period: 2024 - Present
+- Conducted advanced runtime security research, entitlement architecture analysis, and process sandboxing in UWP and Microsoft GDK.
+- Engineered C/C++ custom runtimes and bytecode injectors enabling dynamic instrumentation and legacy asset preservation.
+- Developed native DLL injection routines, dynamic memory signature pattern scanners, and VM bytecode hooks.
+- Engineered Electron launchers and cross-platform modding toolkits delivering stable and crash-free execution.
+
+4. IT Support & Automation Specialist | Public Sector IT Infrastructure
+Period: 2026 - Present
+- Delivered operational IT infrastructure technical support in the public sector, managing local network topologies and workstations.
+- Developed automation scripts in Python and PowerShell (.ps1) for preventative maintenance and rapid incident resolution.
+- Executed hardware/software diagnostics, OS deployments, and direct end-user technical support.
+
+============================================================
+FEATURED PROJECTS
+============================================================
+- Outcaster - Retro FPS Templates (Unity 6 / C#): Complete retro FPS framework with live 3D HUD inspector preview, modular weapon mechanics, and high-framerate profiling.
+- UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32): Security research suite analyzing UWP/GDK process restrictions, featuring VM bytecode hooking and legacy asset preservation.
+- Proprietary Script Manager Decompilation & Bytecode Extraction (C# / C++): Static analysis, assembly decompilation, and GSC script extraction for digital preservation and community research.
+- Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python): Asynchronous low-latency UDP relay (<4ms) performing on-the-fly binary packet translation, checksum recalculation, and crossplay bridging.
+- Spet's Quick 3D Studio (Three.js / WebGL / TypeScript): Deterministic 2D-to-3D procedural mesh generator without AI, featuring contour vector extraction and binary .GLB/.GLTF export.
+- Sparky Rush Commercial QA: Technical auditing and regression testing for commercial release on Steam.
+
+============================================================
+TECHNICAL SKILLS & COMPETENCIES
+============================================================
+- Languages: C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.
+- Engines & Frameworks: Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.
+- Systems & Tools: Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.
+- Core Specialties: Low-Level Systems, P2P UDP Netcode, QA & Regression Testing, Memory Profiling, Reverse Engineering, Automation.`;
+    };
+
+    const getAtsMarkdown = () => {
+        if (lang === 'pt') {
+            return `# EDUARDO GELAIN
+**Engenheiro de Software & Jogos · Sistemas & Segurança**
+- **Email:** gelain15mj@gmail.com
+- **GitHub:** https://github.com/Spet001
+- **GitLab:** https://gitlab.com/Spet001
+- **Portfólio:** https://spet01.dev/
+
+---
+
+## RESUMO PROFISSIONAL
+Engenheiro de software e jogos focado em C/C++, C#, Python e TypeScript com especialização em arquitetura de motores (Unity e Unreal Engine 5), sistemas de baixo nível, arquitetura de sistemas operacionais (Win32, UWP/GDK), análise e instrumentação de binários, automação de infraestrutura e garantia de qualidade de software (QA). Experiência comprovada em lançamentos comerciais na Steam e ferramentas abertas para a comunidade técnica.
+
+---
+
+## FORMAÇÃO ACADÊMICA
+**Bacharelado em Ciência da Computação** (Ensino Superior)
+- Ênfase em Arquitetura de Software, Algoritmos e Estruturas de Dados, Sistemas Operacionais, Compiladores e Segurança da Informação.
+
+---
+
+## EXPERIÊNCIA PROFISSIONAL
+
+### 1. Analista de Testes Manuais QA | Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)
+*Período: 2025 - Presente*
+- Atuação técnica no ciclo de QA do jogo comercial 3D 'Sparky Rush', publicado na Steam pela Converting Minds.
+- Identificação, reprodução rigorosa e documentação detalhada de mais de 50 bugs críticos de física, renderização e lógica de gameplay.
+- Análise dedutiva de código em Unity (C#) auxiliando a equipe central de desenvolvimento a diagnosticar causas-raiz e mitigar regressões.
+- Homologação de builds e testes contínuos de estabilidade pré-lançamento.
+
+### 2. Programador de Jogos & Sistemas | Projetos Comerciais & Independent R&D
+*Período: 2025 - Presente*
+- Desenvolvimento de mecânicas de gameplay, física e sistemas interativos utilizando Unity (C#) e Unreal Engine (C++).
+- Programação de máquinas de estado para IA de inimigos, locomoção fluida de personagens (FSM) e sistemas dinâmicos de armas.
+- Otimização de pipelines de renderização e profiling de performance para garantia de taxas de quadros acima de 144 FPS.
+- Criação e manutenção de templates modulares reutilizáveis para a comunidade de desenvolvedores independentes.
+
+### 3. Engenheiro de Sistemas & Pesquisa de Segurança | Independent R&D / Open Source Security Research
+*Período: 2024 - Presente*
+- Pesquisa avançada em segurança de runtimes, arquitetura de entitlements e isolamento de processos no ecossistema UWP/GDK.
+- Criação de ferramentas e clientes customizados em C/C++ para instrumentação de bytecode e preservação de compatibilidade de assets legados.
+- Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de dispatchers de VM.
+- Desenvolvimento de launchers em Electron e utilitários multiplataforma focados em estabilidade e integridade de execução.
+
+### 4. Especialista em Suporte de TI & Automação | Public Sector IT Infrastructure
+*Período: 2026 - Presente*
+- Apoio técnico operacional de infraestrutura de TI no setor público, gerenciamento de redes locais e estações de trabalho.
+- Desenvolvimento de scripts de automação em Python e PowerShell (.ps1) para manutenção preventiva e resolução ágil de incidentes.
+- Diagnóstico de hardware/software, implantação de sistemas operacionais e suporte direto a usuários finais.
+
+---
+
+## PRINCIPAIS PROJETOS
+- **Outcaster - Retro FPS Templates (Unity 6 / C#):** Framework completo de FPS retrô com live 3D HUD preview no Inspector, mecânicas de armas modulares e profiling de alta taxa de quadros.
+- **UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32):** Pesquisa de segurança e instrumentação de runtime contornando restrições de processos UWP/GDK, com hooks de VM e compatibilidade de assets legados.
+- **Descompilação Binária & Preservação de Scripts GSC (C# / C++):** Análise estática, descompilação de assemblies e extração de scripts em bytecode para preservação técnica.
+- **Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python):** Relay assíncrono UDP de baixa latência (<4ms) com tradução de pacotes binários, recálculo de somas de verificação e bridge crossplay.
+- **Spet's Quick 3D Studio (Three.js / WebGL / TypeScript):** Engine procedural 2D para 3D sem IA, com extração de contornos vetoriais e exportação direta para .GLB/.GLTF binário.
+- **Sparky Rush Commercial QA:** Auditoria técnica e testes de regressão para publicação comercial na Steam.
+
+---
+
+## COMPETÊNCIAS TÉCNICAS (TECH STACK)
+- **Linguagens:** C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.
+- **Engines & Frameworks:** Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.
+- **Ferramentas & Ambientes:** Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.
+- **Especialidades:** Sistemas de Baixo Nível, Netcode UDP P2P, QA & Testes de Regressão, Profiling de Memória, Engenharia Reversa, Automação.`;
+        }
+
+        return `# EDUARDO GELAIN
+**Software & Game Engineer · Systems & Security**
+- **Email:** gelain15mj@gmail.com
+- **GitHub:** https://github.com/Spet001
+- **GitLab:** https://gitlab.com/Spet001
+- **Portfolio:** https://spet01.dev/
+
+---
+
+## EXECUTIVE SUMMARY
+Software and game engineer specializing in C/C++, C#, Python, and TypeScript with focused expertise in game engine architecture (Unity and Unreal Engine 5), low-level systems, operating systems architecture (Win32, UWP/GDK), binary analysis and runtime instrumentation, infrastructure automation, and software quality assurance (QA). Proven track record on commercial Steam launches and open-source tooling.
+
+---
+
+## EDUCATION
+**Bachelor's Degree in Computer Science** (Higher Education)
+- Emphasis on Software Architecture, Algorithms & Data Structures, Operating Systems, Compilers, and Information Security.
+
+---
+
+## PROFESSIONAL EXPERIENCE
+
+### 1. Manual QA Analyst & Tester | Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)
+*Period: 2025 - Present*
+- Technical QA Analyst for the 3D platformer 'Sparky Rush', published commercially on Steam by Converting Minds.
+- Systematically discovered, isolated, reliably reproduced, and documented 50+ critical bugs across physics, graphics, and gameplay logic.
+- Conducted deductive code analysis in Unity (C#) assisting the core development team in diagnosing root causes and preventing regressions.
+- Performed regression testing and build certification cycles ensuring launch stability.
+
+### 2. Gameplay & Systems Programmer | Commercial Game Projects & Independent R&D
+*Period: 2025 - Present*
+- Engineered core gameplay mechanics, physics, and interactive systems using Unity (C#) and Unreal Engine (C++).
+- Programmed state machines for enemy AI, fluid character locomotion (FSM), and dynamic weapon management systems.
+- Profiled and optimized rendering pipelines to sustain high framerates (144+ FPS).
+- Authored and maintained modular game templates for the independent game development community.
+
+### 3. Systems & Security Research Engineer | Independent R&D / Open Source Security Research
+*Period: 2024 - Present*
+- Conducted advanced runtime security research, entitlement architecture analysis, and process sandboxing in UWP and Microsoft GDK.
+- Engineered C/C++ custom runtimes and bytecode injectors enabling dynamic instrumentation and legacy asset preservation.
+- Developed native DLL injection routines, dynamic memory signature pattern scanners, and VM bytecode hooks.
+- Engineered Electron launchers and cross-platform modding toolkits delivering stable and crash-free execution.
+
+### 4. IT Support & Automation Specialist | Public Sector IT Infrastructure
+*Period: 2026 - Present*
+- Delivered operational IT infrastructure technical support in the public sector, managing local network topologies and workstations.
+- Developed automation scripts in Python and PowerShell (.ps1) for preventative maintenance and rapid incident resolution.
+- Executed hardware/software diagnostics, OS deployments, and direct end-user technical support.
+
+---
+
+## FEATURED PROJECTS
+- **Outcaster - Retro FPS Templates (Unity 6 / C#):** Complete retro FPS framework with live 3D HUD inspector preview, modular weapon mechanics, and high-framerate profiling.
+- **UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32):** Security research suite analyzing UWP/GDK process restrictions, featuring VM bytecode hooking and legacy asset preservation.
+- **Proprietary Script Manager Decompilation & Bytecode Extraction (C# / C++):** Static analysis, assembly decompilation, and script bytecode extraction for digital preservation.
+- **Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python):** Asynchronous low-latency UDP relay (<4ms) performing on-the-fly binary packet translation, checksum recalculation, and crossplay bridging.
+- **Spet's Quick 3D Studio (Three.js / WebGL / TypeScript):** Deterministic 2D-to-3D procedural mesh generator without AI, featuring contour vector extraction and binary .GLB/.GLTF export.
+- **Sparky Rush Commercial QA:** Technical auditing and regression testing for commercial release on Steam.
+
+---
+
+## TECHNICAL SKILLS & COMPETENCIES
+- **Languages:** C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.
+- **Engines & Frameworks:** Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.
+- **Systems & Tools:** Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.
+- **Core Specialties:** Low-Level Systems, P2P UDP Netcode, QA & Regression Testing, Memory Profiling, Reverse Engineering, Automation.`;
+    };
+
+    const getAtsDocxHtml = () => {
+        if (lang === 'pt') {
+            return '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<title>Curriculo - Eduardo Gelain</title>\n' +
+                '<style>\nbody { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.35; color: #111; margin: 20mm; }\n' +
+                'h1 { font-size: 20pt; margin: 0 0 4pt 0; text-transform: uppercase; color: #000; letter-spacing: 0.5pt; }\n' +
+                '.subhead { font-size: 11pt; font-weight: bold; color: #222; margin-bottom: 4pt; }\n' +
+                '.contact { font-size: 9.5pt; color: #444; margin-bottom: 14pt; }\n' +
+                'h2 { font-size: 12pt; text-transform: uppercase; border-bottom: 1.5pt solid #222; padding-bottom: 2pt; margin: 12pt 0 6pt 0; color: #111; }\n' +
+                '.exp-item { margin-bottom: 8pt; }\n' +
+                '.exp-header { font-weight: bold; font-size: 10.5pt; color: #000; }\n' +
+                '.exp-date { float: right; font-weight: bold; color: #333; }\n' +
+                '.clear { clear: both; }\n' +
+                'p { margin: 2pt 0 4pt 0; }\n' +
+                'ul { margin: 2pt 0 6pt 18pt; padding: 0; }\n' +
+                'li { margin-bottom: 2pt; font-size: 10pt; line-height: 1.35; }\n' +
+                '</style>\n</head>\n<body>\n' +
+                '<h1>Eduardo Gelain</h1>\n' +
+                '<div class="subhead">Engenheiro de Software & Jogos · Sistemas & Segurança</div>\n' +
+                '<div class="contact">Email: gelain15mj@gmail.com | GitHub: github.com/Spet001 | GitLab: gitlab.com/Spet001 | Portfolio: spet01.dev</div>\n' +
+                '<h2>Resumo Profissional</h2>\n' +
+                '<p>Engenheiro de software e jogos focado em C/C++, C#, Python e TypeScript com especialização em arquitetura de motores (Unity e Unreal Engine 5), sistemas de baixo nível, arquitetura de sistemas operacionais (Win32, UWP/GDK), análise e instrumentação de binários, automação de infraestrutura e garantia de qualidade de software (QA). Experiência comprovada em lançamentos comerciais na Steam e ferramentas abertas para a comunidade técnica.</p>\n' +
+                '<h2>Formação Acadêmica</h2>\n' +
+                '<div class="exp-header">Bacharelado em Ciência da Computação<span class="exp-date">Ensino Superior</span></div>\n<div class="clear"></div>\n' +
+                '<p>Ênfase em Arquitetura de Software, Algoritmos e Estruturas de Dados, Sistemas Operacionais, Compiladores e Segurança da Informação.</p>\n' +
+                '<h2>Experiência Profissional</h2>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Analista de Testes Manuais QA · Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)<span class="exp-date">2025 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Atuação técnica no ciclo de QA do jogo comercial 3D Sparky Rush, publicado na Steam pela Converting Minds.</li>\n' +
+                '<li>Identificação, reprodução rigorosa e documentação de mais de 50 bugs críticos de física, renderização e lógica de gameplay.</li>\n' +
+                '<li>Análise dedutiva de código em Unity (C#) auxiliando a equipe central a diagnosticar causas-raiz e mitigar regressões.</li>\n' +
+                '<li>Homologação de builds e testes contínuos de estabilidade pré-lançamento.</li>\n</ul>\n</div>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Programador de Jogos & Sistemas · Projetos Comerciais & Independent R&D<span class="exp-date">2025 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Desenvolvimento de mecânicas de gameplay, física e sistemas interativos utilizando Unity (C#) e Unreal Engine (C++).</li>\n' +
+                '<li>Programação de máquinas de estado para IA de inimigos, locomoção fluida de personagens (FSM) e sistemas dinâmicos de armas.</li>\n' +
+                '<li>Otimização de pipelines de renderização e profiling de performance para garantia de taxas de quadros acima de 144 FPS.</li>\n' +
+                '<li>Criação e manutenção de templates modulares reutilizáveis para a comunidade de desenvolvedores independentes.</li>\n</ul>\n</div>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Engenheiro de Sistemas & Pesquisa de Segurança · Independent R&D / Open Source Security Research<span class="exp-date">2024 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Pesquisa avançada em segurança de runtimes, arquitetura de entitlements e isolamento de processos no ecossistema UWP/GDK.</li>\n' +
+                '<li>Criação de ferramentas em C/C++ para instrumentação de bytecode e preservação de compatibilidade de assets legados.</li>\n' +
+                '<li>Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de dispatchers de VM.</li>\n' +
+                '<li>Desenvolvimento de launchers em Electron e utilitários multiplataforma focados em estabilidade e integridade de execução.</li>\n</ul>\n</div>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Especialista em Suporte de TI & Automação · Public Sector IT Infrastructure<span class="exp-date">2026 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Apoio técnico operacional de infraestrutura de TI no setor público, gerenciamento de redes locais e estações de trabalho.</li>\n' +
+                '<li>Desenvolvimento de scripts de automação em Python e PowerShell (.ps1) para manutenção preventiva e resolução ágil de incidentes.</li>\n' +
+                '<li>Diagnóstico de hardware/software, implantação de sistemas operacionais e suporte direto a usuários finais.</li>\n</ul>\n</div>\n' +
+                '<h2>Principais Projetos</h2>\n' +
+                '<ul>\n<li><strong>Outcaster - Retro FPS Templates (Unity 6 / C#):</strong> Framework completo de FPS retrô com live 3D HUD preview no Inspector, mecânicas modulares e profiling de alta taxa de quadros.</li>\n' +
+                '<li><strong>UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32):</strong> Pesquisa de segurança de runtimes UWP/GDK, com hooks de VM e compatibilidade de assets legados.</li>\n' +
+                '<li><strong>Descompilação Binária & Preservação de Scripts GSC (C# / C++):</strong> Análise estática, descompilação de assemblies e extração de scripts em bytecode para preservação técnica.</li>\n' +
+                '<li><strong>Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python):</strong> Relay assíncrono UDP de baixa latência (&lt;4ms) com tradução de pacotes binários, recálculo de somas de verificação e bridge crossplay.</li>\n' +
+                '<li><strong>Spet\'s Quick 3D Studio (Three.js / WebGL / TypeScript):</strong> Engine procedural 2D para 3D determinística sem IA, com extração de contornos vetoriais e exportação direta para .GLB/.GLTF binário.</li>\n' +
+                '<li><strong>Sparky Rush Commercial QA:</strong> Auditoria técnica e testes de regressão para publicação comercial na Steam.</li>\n</ul>\n' +
+                '<h2>Competências Técnicas</h2>\n' +
+                '<p><strong>Linguagens:</strong> C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.<br>\n' +
+                '<strong>Engines & Frameworks:</strong> Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.<br>\n' +
+                '<strong>Ferramentas & Ambientes:</strong> Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.<br>\n' +
+                '<strong>Especialidades:</strong> Sistemas de Baixo Nível, Netcode UDP P2P, QA & Testes de Regressão, Profiling de Memória, Engenharia Reversa, Automação.</p>\n' +
+                '</body>\n</html>';
+        }
+
+        return '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<title>Resume - Eduardo Gelain</title>\n' +
+            '<style>\nbody { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.35; color: #111; margin: 20mm; }\n' +
+            'h1 { font-size: 20pt; margin: 0 0 4pt 0; text-transform: uppercase; color: #000; letter-spacing: 0.5pt; }\n' +
+            '.subhead { font-size: 11pt; font-weight: bold; color: #222; margin-bottom: 4pt; }\n' +
+            '.contact { font-size: 9.5pt; color: #444; margin-bottom: 14pt; }\n' +
+            'h2 { font-size: 12pt; text-transform: uppercase; border-bottom: 1.5pt solid #222; padding-bottom: 2pt; margin: 12pt 0 6pt 0; color: #111; }\n' +
+            '.exp-item { margin-bottom: 8pt; }\n' +
+            '.exp-header { font-weight: bold; font-size: 10.5pt; color: #000; }\n' +
+            '.exp-date { float: right; font-weight: bold; color: #333; }\n' +
+            '.clear { clear: both; }\n' +
+            'p { margin: 2pt 0 4pt 0; }\n' +
+            'ul { margin: 2pt 0 6pt 18pt; padding: 0; }\n' +
+            'li { margin-bottom: 2pt; font-size: 10pt; line-height: 1.35; }\n' +
+            '</style>\n</head>\n<body>\n' +
+            '<h1>Eduardo Gelain</h1>\n' +
+            '<div class="subhead">Software & Game Engineer · Systems & Security</div>\n' +
+            '<div class="contact">Email: gelain15mj@gmail.com | GitHub: github.com/Spet001 | GitLab: gitlab.com/Spet001 | Portfolio: spet01.dev</div>\n' +
+            '<h2>Executive Summary</h2>\n' +
+            '<p>Software and game engineer specializing in C/C++, C#, Python, and TypeScript with focused expertise in game engine architecture (Unity and Unreal Engine 5), low-level systems, operating systems architecture (Win32, UWP/GDK), binary analysis and runtime instrumentation, infrastructure automation, and software quality assurance (QA). Proven track record on commercial Steam launches and open-source tooling.</p>\n' +
+            '<h2>Education</h2>\n' +
+            '<div class="exp-header">Bachelor\'s Degree in Computer Science<span class="exp-date">Higher Education</span></div>\n<div class="clear"></div>\n' +
+            '<p>Emphasis on Software Architecture, Algorithms & Data Structures, Operating Systems, Compilers, and Information Security.</p>\n' +
+            '<h2>Professional Experience</h2>\n' +
+            '<div class="exp-item">\n<div class="exp-header">Manual QA Analyst & Tester · Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)<span class="exp-date">2025 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Technical QA Analyst for the 3D platformer Sparky Rush, published commercially on Steam by Converting Minds.</li>\n' +
+            '<li>Systematically discovered, isolated, reliably reproduced, and documented 50+ critical bugs across physics, graphics, and gameplay logic.</li>\n' +
+            '<li>Conducted deductive code analysis in Unity (C#) assisting the core development team in diagnosing root causes and preventing regressions.</li>\n' +
+            '<li>Performed regression testing and build certification cycles ensuring launch stability.</li>\n</ul>\n</div>\n' +
+            '<div class="exp-item">\n<div class="exp-header">Gameplay & Systems Programmer · Commercial Game Projects & Independent R&D<span class="exp-date">2025 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Engineered core gameplay mechanics, physics, and interactive systems using Unity (C#) and Unreal Engine (C++).</li>\n' +
+            '<li>Programmed state machines for enemy AI, fluid character locomotion (FSM), and dynamic weapon management systems.</li>\n' +
+            '<li>Profiled and optimized rendering pipelines to sustain high framerates (144+ FPS).</li>\n' +
+            '<li>Authored and maintained modular game templates for the independent game development community.</li>\n</ul>\n</div>\n' +
+            '<div class="exp-item">\n<div class="exp-header">Systems & Security Research Engineer · Independent R&D / Open Source Security Research<span class="exp-date">2024 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Conducted advanced runtime security research, entitlement architecture analysis, and process sandboxing in UWP and Microsoft GDK.</li>\n' +
+            '<li>Engineered C/C++ custom runtimes and bytecode injectors enabling dynamic instrumentation and legacy asset preservation.</li>\n' +
+            '<li>Developed native DLL injection routines, dynamic memory signature pattern scanners, and VM bytecode hooks.</li>\n' +
+            '<li>Engineered Electron launchers and cross-platform modding toolkits delivering stable and crash-free execution.</li>\n</ul>\n</div>\n' +
+            '<div class="exp-item">\n<div class="exp-header">IT Support & Automation Specialist · Public Sector IT Infrastructure<span class="exp-date">2026 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Delivered operational IT infrastructure technical support in the public sector, managing local network topologies and workstations.</li>\n' +
+            '<li>Developed automation scripts in Python and PowerShell (.ps1) for preventative maintenance and rapid incident resolution.</li>\n' +
+            '<li>Executed hardware/software diagnostics, OS deployments, and direct end-user technical support.</li>\n</ul>\n</div>\n' +
+            '<h2>Featured Projects</h2>\n' +
+            '<ul>\n<li><strong>Outcaster - Retro FPS Templates (Unity 6 / C#):</strong> Complete retro FPS framework with live 3D HUD inspector preview, modular weapon mechanics, and high-framerate profiling.</li>\n' +
+            '<li><strong>UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32):</strong> Security research suite analyzing UWP/GDK process restrictions, featuring VM bytecode hooking and legacy asset preservation.</li>\n' +
+            '<li><strong>Proprietary Script Manager Decompilation & Bytecode Extraction (C# / C++):</strong> Static analysis, assembly decompilation, and script bytecode extraction for digital preservation.</li>\n' +
+            '<li><strong>Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python):</strong> Asynchronous low-latency UDP relay (<4ms) performing on-the-fly binary packet translation, checksum recalculation, and crossplay bridging.</li>\n' +
+            '<li><strong>Spet\'s Quick 3D Studio (Three.js / WebGL / TypeScript):</strong> Deterministic 2D-to-3D procedural mesh generator without AI, featuring contour vector extraction and binary .GLB/.GLTF export.</li>\n' +
+            '<li><strong>Sparky Rush Commercial QA:</strong> Technical auditing and regression testing for commercial release on Steam.</li>\n</ul>\n' +
+            '<h2>Technical Skills & Competencies</h2>\n' +
+            '<p><strong>Languages:</strong> C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.<br>\n' +
+            '<strong>Engines & Frameworks:</strong> Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.<br>\n' +
+            '<strong>Systems & Tools:</strong> Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.<br>\n' +
+            '<strong>Core Specialties:</strong> Low-Level Systems, P2P UDP Netcode, QA & Regression Testing, Memory Profiling, Reverse Engineering, Automation.</p>\n' +
+            '</body>\n</html>';
+    };
+
+    const getAtsPrintHtml = () => {
+        if (lang === 'pt') {
+            return '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<title>Curriculo - Eduardo Gelain</title>\n' +
+                '<style>\n' +
+                '@page { size: A4 portrait; margin: 12mm 15mm; }\n' +
+                '* { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }\n' +
+                'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 9.5pt; line-height: 1.35; color: #111; background: #fff; margin: 0; padding: 0; }\n' +
+                'h1 { font-size: 19pt; margin: 0 0 2pt 0; text-transform: uppercase; color: #000; letter-spacing: 0.5pt; font-weight: 700; }\n' +
+                '.subhead { font-size: 10.5pt; font-weight: 600; color: #222; margin-bottom: 3pt; }\n' +
+                '.contact { font-size: 8.5pt; color: #555; margin-bottom: 10pt; border-bottom: 1.5pt solid #222; padding-bottom: 4pt; }\n' +
+                'h2 { font-size: 11pt; text-transform: uppercase; border-bottom: 1pt solid #444; padding-bottom: 2pt; margin: 10pt 0 4pt 0; color: #111; letter-spacing: 0.3pt; font-weight: 700; }\n' +
+                '.exp-item { margin-bottom: 6pt; page-break-inside: avoid; }\n' +
+                '.exp-header { font-weight: 700; font-size: 9.5pt; color: #000; }\n' +
+                '.exp-date { float: right; font-weight: 600; color: #444; font-size: 9pt; }\n' +
+                '.clear { clear: both; }\n' +
+                'p { margin: 2pt 0 4pt 0; font-size: 9pt; color: #222; }\n' +
+                'ul { margin: 2pt 0 4pt 14pt; padding: 0; }\n' +
+                'li { margin-bottom: 2pt; font-size: 9pt; line-height: 1.35; color: #222; }\n' +
+                '</style>\n</head>\n<body>\n' +
+                '<h1>Eduardo Gelain</h1>\n' +
+                '<div class="subhead">Engenheiro de Software & Jogos · Sistemas & Segurança</div>\n' +
+                '<div class="contact">Email: gelain15mj@gmail.com | GitHub: github.com/Spet001 | GitLab: gitlab.com/Spet001 | Portfolio: spet01.dev</div>\n' +
+                '<h2>Resumo Profissional</h2>\n' +
+                '<p>Engenheiro de software e jogos com foco em C/C++, C#, Python e TypeScript. Especializado em arquitetura de motores (Unity e Unreal Engine 5), sistemas de baixo nível, arquitetura de sistemas operacionais (Win32, UWP/GDK), análise e instrumentação de binários, automação de infraestrutura e garantia de qualidade de software (QA). Experiência comprovada em lançamentos comerciais na Steam e desenvolvimento de ferramentas para a comunidade técnica.</p>\n' +
+                '<h2>Formação Acadêmica</h2>\n' +
+                '<div class="exp-header">Bacharelado em Ciência da Computação<span class="exp-date">Ensino Superior</span></div>\n<div class="clear"></div>\n' +
+                '<p>Ênfase em Arquitetura de Software, Algoritmos e Estruturas de Dados, Sistemas Operacionais, Compiladores e Segurança da Informação.</p>\n' +
+                '<h2>Experiência Profissional</h2>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Analista de Testes Manuais QA · Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)<span class="exp-date">2025 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Atuação técnica no ciclo de QA do jogo comercial 3D Sparky Rush, publicado na Steam pela Converting Minds.</li>\n' +
+                '<li>Identificação, reprodução rigorosa e documentação de mais de 50 bugs críticos de física, renderização e lógica de gameplay.</li>\n' +
+                '<li>Análise dedutiva de código em Unity (C#) auxiliando a equipe central a diagnosticar causas-raiz e mitigar regressões.</li>\n' +
+                '<li>Homologação de builds e testes contínuos de estabilidade pré-lançamento.</li>\n</ul>\n</div>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Programador de Jogos & Sistemas · Projetos Comerciais & Independent R&D<span class="exp-date">2025 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Desenvolvimento de mecânicas de gameplay, física e sistemas interativos utilizando Unity (C#) e Unreal Engine (C++).</li>\n' +
+                '<li>Programação de máquinas de estado para IA de inimigos, locomoção fluida de personagens (FSM) e sistemas dinâmicos de armas.</li>\n' +
+                '<li>Otimização de pipelines de renderização e profiling de performance para garantia de taxas de quadros acima de 144 FPS.</li>\n' +
+                '<li>Criação e manutenção de templates modulares reutilizáveis para a comunidade de desenvolvedores independentes.</li>\n</ul>\n</div>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Engenheiro de Sistemas & Pesquisa de Segurança · Independent R&D / Open Source Security Research<span class="exp-date">2024 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Pesquisa avançada em segurança de runtimes, arquitetura de entitlements e isolamento de processos no ecossistema UWP/GDK.</li>\n' +
+                '<li>Criação de ferramentas em C/C++ para instrumentação de bytecode e preservação de compatibilidade de assets legados.</li>\n' +
+                '<li>Desenvolvimento de rotinas de injeção de DLLs nativas, pattern scanning em memória dinâmica e hookings de dispatchers de VM.</li>\n' +
+                '<li>Desenvolvimento de launchers em Electron e utilitários multiplataforma focados em estabilidade e integridade de execução.</li>\n</ul>\n</div>\n' +
+                '<div class="exp-item">\n<div class="exp-header">Especialista em Suporte de TI & Automação · Public Sector IT Infrastructure<span class="exp-date">2026 - Presente</span></div>\n<div class="clear"></div>\n' +
+                '<ul>\n<li>Apoio técnico operacional de infraestrutura de TI no setor público, gerenciamento de redes locais e estações de trabalho.</li>\n' +
+                '<li>Desenvolvimento de scripts de automação em Python e PowerShell (.ps1) para manutenção preventiva e resolução ágil de incidentes.</li>\n' +
+                '<li>Diagnóstico de hardware/software, implantação de sistemas operacionais e suporte direto a usuários finais.</li>\n</ul>\n</div>\n' +
+                '<h2>Principais Projetos</h2>\n' +
+                '<ul>\n<li><strong>Outcaster - Retro FPS Templates (Unity 6 / C#):</strong> Framework completo de FPS retrô com live 3D HUD preview no Inspector, mecânicas modulares e profiling de alta taxa de quadros.</li>\n' +
+                '<li><strong>UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32):</strong> Pesquisa de segurança de runtimes UWP/GDK, com hooks de VM e compatibilidade de assets legados.</li>\n' +
+                '<li><strong>Descompilação Binária & Preservação de Scripts GSC (C# / C++):</strong> Análise estática, descompilação de assemblies e extração de scripts em bytecode para preservação técnica.</li>\n' +
+                '<li><strong>Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python):</strong> Relay assíncrono UDP de baixa latência (&lt;4ms) com tradução de pacotes binários, recálculo de somas de verificação e bridge crossplay.</li>\n' +
+                '<li><strong>Spet\'s Quick 3D Studio (Three.js / WebGL / TypeScript):</strong> Engine procedural 2D para 3D determinística sem IA, com extração de contornos vetoriais e exportação direta para .GLB/.GLTF binário.</li>\n' +
+                '<li><strong>Sparky Rush Commercial QA:</strong> Auditoria técnica e testes de regressão para publicação comercial na Steam.</li>\n</ul>\n' +
+                '<h2>Competências Técnicas</h2>\n' +
+                '<p><strong>Linguagens:</strong> C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.<br>\n' +
+                '<strong>Engines & Frameworks:</strong> Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.<br>\n' +
+                '<strong>Ferramentas & Ambientes:</strong> Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.<br>\n' +
+                '<strong>Especialidades:</strong> Sistemas de Baixo Nível, Netcode UDP P2P, QA & Testes de Regressão, Profiling de Memória, Engenharia Reversa, Automação.</p>\n' +
+                '</body>\n</html>';
+        }
+
+        return '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<title>Resume - Eduardo Gelain</title>\n' +
+            '<style>\n' +
+            '@page { size: A4 portrait; margin: 12mm 15mm; }\n' +
+            '* { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }\n' +
+            'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 9.5pt; line-height: 1.35; color: #111; background: #fff; margin: 0; padding: 0; }\n' +
+            'h1 { font-size: 19pt; margin: 0 0 2pt 0; text-transform: uppercase; color: #000; letter-spacing: 0.5pt; font-weight: 700; }\n' +
+            '.subhead { font-size: 10.5pt; font-weight: 600; color: #222; margin-bottom: 3pt; }\n' +
+            '.contact { font-size: 8.5pt; color: #555; margin-bottom: 10pt; border-bottom: 1.5pt solid #222; padding-bottom: 4pt; }\n' +
+            'h2 { font-size: 11pt; text-transform: uppercase; border-bottom: 1pt solid #444; padding-bottom: 2pt; margin: 10pt 0 4pt 0; color: #111; letter-spacing: 0.3pt; font-weight: 700; }\n' +
+            '.exp-item { margin-bottom: 6pt; page-break-inside: avoid; }\n' +
+            '.exp-header { font-weight: 700; font-size: 9.5pt; color: #000; }\n' +
+            '.exp-date { float: right; font-weight: 600; color: #444; font-size: 9pt; }\n' +
+            '.clear { clear: both; }\n' +
+            'p { margin: 2pt 0 4pt 0; font-size: 9pt; color: #222; }\n' +
+            'ul { margin: 2pt 0 4pt 14pt; padding: 0; }\n' +
+            'li { margin-bottom: 2pt; font-size: 9pt; line-height: 1.35; color: #222; }\n' +
+            '</style>\n</head>\n<body>\n' +
+            '<h1>Eduardo Gelain</h1>\n' +
+            '<div class="subhead">Software & Game Engineer · Systems & Security</div>\n' +
+            '<div class="contact">Email: gelain15mj@gmail.com | GitHub: github.com/Spet001 | GitLab: gitlab.com/Spet001 | Portfolio: spet01.dev</div>\n' +
+            '<h2>Executive Summary</h2>\n' +
+            '<p>Software and game engineer specializing in C/C++, C#, Python, and TypeScript with focused expertise in game engine architecture (Unity and Unreal Engine 5), low-level systems, operating systems architecture (Win32, UWP/GDK), binary analysis and runtime instrumentation, infrastructure automation, and software quality assurance (QA). Proven track record on commercial Steam launches and open-source tooling.</p>\n' +
+            '<h2>Education</h2>\n' +
+            '<div class="exp-header">Bachelor\'s Degree in Computer Science<span class="exp-date">Higher Education</span></div>\n<div class="clear"></div>\n' +
+            '<p>Emphasis on Software Architecture, Algorithms & Data Structures, Operating Systems, Compilers, and Information Security.</p>\n' +
+            '<h2>Professional Experience</h2>\n' +
+            '<div class="exp-item">\n<div class="exp-header">Manual QA Analyst & Tester · Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)<span class="exp-date">2025 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Technical QA Analyst for the 3D platformer Sparky Rush, published commercially on Steam by Converting Minds.</li>\n' +
+            '<li>Systematically discovered, isolated, reliably reproduced, and documented 50+ critical bugs across physics, graphics, and gameplay logic.</li>\n' +
+            '<li>Conducted deductive code analysis in Unity (C#) assisting the core development team in diagnosing root causes and preventing regressions.</li>\n' +
+            '<li>Performed regression testing and build certification cycles ensuring launch stability.</li>\n</ul>\n</div>\n' +
+            '<div class="exp-item">\n<div class="exp-header">Gameplay & Systems Programmer · Commercial Game Projects & Independent R&D<span class="exp-date">2025 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Engineered core gameplay mechanics, physics, and interactive systems using Unity (C#) and Unreal Engine (C++).</li>\n' +
+            '<li>Programmed state machines for enemy AI, fluid character locomotion (FSM), and dynamic weapon management systems.</li>\n' +
+            '<li>Profiled and optimized rendering pipelines to sustain high framerates (144+ FPS).</li>\n' +
+            '<li>Authored and maintained modular game templates for the independent game development community.</li>\n</ul>\n</div>\n' +
+            '<div class="exp-item">\n<div class="exp-header">Systems & Security Research Engineer · Independent R&D / Open Source Security Research<span class="exp-date">2024 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Conducted advanced runtime security research, entitlement architecture analysis, and process sandboxing in UWP and Microsoft GDK.</li>\n' +
+            '<li>Engineered C/C++ custom runtimes and bytecode injectors enabling dynamic instrumentation and legacy asset preservation.</li>\n' +
+            '<li>Developed native DLL injection routines, dynamic memory signature pattern scanners, and VM bytecode hooks.</li>\n' +
+            '<li>Engineered Electron launchers and cross-platform modding toolkits delivering stable and crash-free execution.</li>\n</ul>\n</div>\n' +
+            '<div class="exp-item">\n<div class="exp-header">IT Support & Automation Specialist · Public Sector IT Infrastructure<span class="exp-date">2026 - Present</span></div>\n<div class="clear"></div>\n' +
+            '<ul>\n<li>Delivered operational IT infrastructure technical support in the public sector, managing local network topologies and workstations.</li>\n' +
+            '<li>Developed automation scripts in Python and PowerShell (.ps1) for preventative maintenance and rapid incident resolution.</li>\n' +
+            '<li>Executed hardware/software diagnostics, OS deployments, and direct end-user technical support.</li>\n</ul>\n</div>\n' +
+            '<h2>Featured Projects</h2>\n' +
+            '<ul>\n<li><strong>Outcaster - Retro FPS Templates (Unity 6 / C#):</strong> Complete retro FPS framework with live 3D HUD inspector preview, modular weapon mechanics, and high-framerate profiling.</li>\n' +
+            '<li><strong>UWP/GDK Sandbox & Entitlement Architecture Analysis (C++ / Win32):</strong> Security research suite analyzing UWP/GDK process restrictions, featuring VM bytecode hooking and legacy asset preservation.</li>\n' +
+            '<li><strong>Proprietary Script Manager Decompilation & Bytecode Extraction (C# / C++):</strong> Static analysis, assembly decompilation, and script bytecode extraction for digital preservation.</li>\n' +
+            '<li><strong>Cross-Platform P2P Network Relay Engine (C++ / Npcap / Python):</strong> Asynchronous low-latency UDP relay (<4ms) performing on-the-fly binary packet translation, checksum recalculation, and crossplay bridging.</li>\n' +
+            '<li><strong>Spet\'s Quick 3D Studio (Three.js / WebGL / TypeScript):</strong> Deterministic 2D-to-3D procedural mesh generator without AI, featuring contour vector extraction and binary .GLB/.GLTF export.</li>\n' +
+            '<li><strong>Sparky Rush Commercial QA:</strong> Technical auditing and regression testing for commercial release on Steam.</li>\n</ul>\n' +
+            '<h2>Technical Skills & Competencies</h2>\n' +
+            '<p><strong>Languages:</strong> C, C++, C#, Python, TypeScript, JavaScript, PowerShell, GLSL, x86/x64 Assembly.<br>\n' +
+            '<strong>Engines & Frameworks:</strong> Unity, Unreal Engine 5, Three.js, React, Electron, Node.js, Cloudflare Workers.<br>\n' +
+            '<strong>Systems & Tools:</strong> Visual Studio, Git, IDA Pro, x64dbg, Npcap/Wireshark, Docker, Linux, Windows GDK/UWP.<br>\n' +
+            '<strong>Core Specialties:</strong> Low-Level Systems, P2P UDP Netcode, QA & Regression Testing, Memory Profiling, Reverse Engineering, Automation.</p>\n' +
+            '</body>\n</html>';
+    };
+
     const handlePrint = () => {
-        window.print();
+        playSoftClick();
+        try {
+            const printHtml = getAtsPrintHtml();
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            iframe.style.visibility = 'hidden';
+            document.body.appendChild(iframe);
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(printHtml);
+            doc.close();
+
+            iframe.contentWindow.focus();
+            setTimeout(() => {
+                try {
+                    iframe.contentWindow.print();
+                } catch (e) {
+                    console.error('Iframe print error:', e);
+                    window.print();
+                } finally {
+                    setTimeout(() => {
+                        if (iframe.parentNode) {
+                            iframe.parentNode.removeChild(iframe);
+                        }
+                    }, 2000);
+                }
+            }, 250);
+        } catch (err) {
+            console.error('Print error:', err);
+            window.print();
+        }
+    };
+
+    const handleExportDocx = () => {
+        playSoftClick();
+        const content = getAtsDocxHtml();
+        const fileName = lang === 'pt' ? 'Eduardo_Gelain_CV_ATS.doc' : 'Eduardo_Gelain_Resume_ATS.doc';
+        downloadFile(content, fileName, 'application/msword;charset=utf-8');
+    };
+
+    const handleExportMarkdown = () => {
+        playSoftClick();
+        const content = getAtsMarkdown();
+        const fileName = lang === 'pt' ? 'Eduardo_Gelain_CV_ATS.md' : 'Eduardo_Gelain_Resume_ATS.md';
+        downloadFile(content, fileName, 'text/markdown;charset=utf-8');
+    };
+
+    const handleExportTxt = () => {
+        playSoftClick();
+        const content = getAtsPlainText();
+        const fileName = lang === 'pt' ? 'Eduardo_Gelain_CV_ATS.txt' : 'Eduardo_Gelain_Resume_ATS.txt';
+        downloadFile(content, fileName, 'text/plain;charset=utf-8');
+    };
+
+    const handleCopyATS = () => {
+        playSoftClick();
+        const atsText = getAtsPlainText();
+
+        navigator.clipboard.writeText(atsText).then(() => {
+            setCopiedATS(true);
+            setTimeout(() => setCopiedATS(false), 2500);
+        }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = atsText;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            setCopiedATS(true);
+            setTimeout(() => setCopiedATS(false), 2500);
+        });
     };
 
     return (
@@ -8550,23 +9160,69 @@ const ResumeModal = ({ isOpen, onClose }) => {
             <div className="bg-[#050505]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-10 relative text-slate-200">
                 
                 {/* Header Actions */}
-                <div className="flex items-center justify-between pb-4 border-b border-white/[0.1] mb-6">
-                    <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/[0.08] mb-6 gap-3">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span className="text-[11px] font-mono text-slate-400 font-semibold mr-1 flex items-center gap-1.5">
+                            <i className="fas fa-file-export text-primary"></i>
+                            <span>{lang === 'pt' ? 'Exportar ATS:' : 'ATS Export:'}</span>
+                        </span>
+
                         <button
                             onClick={handlePrint}
-                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primaryHover transition-colors flex items-center gap-1.5 shadow-sm"
+                            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-primary hover:bg-primaryHover text-white shadow-sm shadow-primary/25 transition-all flex items-center gap-1.5 cursor-pointer"
+                            title={lang === 'pt' ? 'Imprimir ou Salvar como PDF' : 'Print or Save as PDF'}
                         >
-                            <i className="fas fa-print"></i>
-                            <span>{t('resumeModal.download')}</span>
+                            <i className="fas fa-file-pdf"></i>
+                            <span>PDF</span>
+                        </button>
+
+                        <button
+                            onClick={handleExportDocx}
+                            className="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                            title={lang === 'pt' ? 'Baixar documento Word (.doc) formatado para ATS' : 'Download Word (.doc) formatted for ATS'}
+                        >
+                            <i className="fas fa-file-word text-slate-400"></i>
+                            <span>Word (.doc)</span>
+                        </button>
+
+                        <button
+                            onClick={handleExportMarkdown}
+                            className="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                            title={lang === 'pt' ? 'Baixar currículo em formato Markdown (.md)' : 'Download resume in Markdown (.md)'}
+                        >
+                            <i className="fab fa-markdown text-slate-400"></i>
+                            <span>Markdown</span>
+                        </button>
+
+                        <button
+                            onClick={handleExportTxt}
+                            className="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                            title={lang === 'pt' ? 'Baixar em arquivo de Texto Limpo (.txt)' : 'Download as Plain Text (.txt)'}
+                        >
+                            <i className="fas fa-file-lines text-slate-400"></i>
+                            <span>Texto (.txt)</span>
+                        </button>
+
+                        <button
+                            onClick={handleCopyATS}
+                            className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm ${
+                                copiedATS
+                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                                    : 'bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2]'
+                            }`}
+                            title={lang === 'pt' ? 'Copiar currículo formatado para a área de transferência' : 'Copy clean formatted resume to clipboard'}
+                        >
+                            <i className={copiedATS ? "fas fa-check text-emerald-400" : "fas fa-clipboard-list text-slate-400"}></i>
+                            <span>{copiedATS ? (lang === 'pt' ? 'Copiado!' : 'Copied!') : (lang === 'pt' ? 'Copiar ATS' : 'Copy ATS')}</span>
                         </button>
                     </div>
 
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 rounded-full bg-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.15] flex items-center justify-center transition-colors"
+                        className="w-8 h-8 rounded-full bg-white/[0.06] text-slate-400 hover:text-white hover:bg-white/[0.12] flex items-center justify-center transition-colors cursor-pointer shrink-0 self-end sm:self-auto"
                         aria-label="Close"
                     >
-                        <i className="fas fa-times"></i>
+                        <i className="fas fa-times text-xs"></i>
                     </button>
                 </div>
 
@@ -8575,13 +9231,13 @@ const ResumeModal = ({ isOpen, onClose }) => {
                     <div>
                         <h2 className="text-3xl font-extrabold text-white tracking-tight">Eduardo Gelain</h2>
                         <div className="text-primary font-semibold text-base mt-1">
-                            {lang === 'pt' ? 'Desenvolvedor de Software & Jogos · Engenharia Reversa' : 'Software & Game Developer · Reverse Engineer'}
+                            {lang === 'pt' ? 'Engenheiro de Software & Jogos · Sistemas & Segurança' : 'Software & Game Engineer · Systems & Security'}
                         </div>
                         <div className="text-xs text-slate-400 font-mono mt-1 flex flex-wrap gap-3">
                             <span>gelain15mj@gmail.com</span>
                             <span>github.com/Spet001</span>
                             <span>gitlab.com/Spet001</span>
-                            <span>spet01.itch.io</span>
+                            <span>spet01.dev</span>
                         </div>
                     </div>
 
@@ -8592,12 +9248,32 @@ const ResumeModal = ({ isOpen, onClose }) => {
                         </h3>
                         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                             {lang === 'pt'
-                                ? 'Desenvolvedor focado em C/C++, C# e Python com especialização em desenvolvimento de jogos (Unity e Unreal Engine), sistemas de baixo nível, injeção de DLLs/scripts em ambientes restritos (UWP/GDK) e garantia de qualidade de software (QA).'
-                                : 'Software engineer specialized in C/C++, C#, and Python with expertise in game development (Unity and Unreal Engine), low-level systems, DLL/script injection in sandboxed environments (UWP/GDK), and software quality assurance.'}
+                                ? 'Engenheiro de software e jogos com sólida atuação em C/C++, C#, Python e TypeScript. Especializado em desenvolvimento de jogos (Unity e Unreal Engine 5), sistemas de baixo nível, arquitetura de sistemas operacionais (Win32, UWP/GDK), análise e instrumentação de binários, automação de infraestrutura e garantia de qualidade de software (QA). Experiência comprovada em lançamentos comerciais na Steam e ferramentas de pesquisa e preservação digital.'
+                                : 'Software and game engineer specializing in C/C++, C#, Python, and TypeScript. Proven expertise in game engine architecture (Unity and Unreal Engine 5), low-level systems, operating system architecture (Win32, UWP/GDK), binary analysis and runtime instrumentation, infrastructure automation, and software quality assurance (QA). Demonstrated commercial release experience on Steam and open-source tooling.'}
                         </p>
                     </div>
 
-                    {/* Experience (Correct Dates) */}
+                    {/* Education / Formação Acadêmica */}
+                    <div>
+                        <h3 className="text-xs font-mono uppercase tracking-wider text-primary font-bold border-b border-white/[0.08] pb-1 mb-2">
+                            {lang === 'pt' ? 'Formação Acadêmica' : 'Education'}
+                        </h3>
+                        <div className="flex justify-between items-start text-xs">
+                            <div>
+                                <strong className="text-white font-semibold">
+                                    {lang === 'pt' ? 'Bacharelado em Ciência da Computação' : "Bachelor's Degree in Computer Science"}
+                                </strong>
+                                <p className="text-slate-400 text-xs mt-0.5">
+                                    {lang === 'pt' ? 'Ênfase em Arquitetura de Software, Algoritmos, Sistemas Operacionais e Segurança.' : 'Emphasis on Software Architecture, Algorithms, Operating Systems, and Security.'}
+                                </p>
+                            </div>
+                            <span className="font-mono text-primary font-bold shrink-0 ml-4">
+                                {lang === 'pt' ? 'Ensino Superior' : 'Higher Education'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Experience (Correct Dates & Institutional Companies) */}
                     <div>
                         <h3 className="text-xs font-mono uppercase tracking-wider text-primary font-bold border-b border-white/[0.08] pb-1 mb-3">
                             {lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}
@@ -8607,7 +9283,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
                             <div>
                                 <div className="flex justify-between items-center text-xs">
                                     <strong className="text-white font-semibold">
-                                        {lang === 'pt' ? 'Analista de Testes Manuais QA' : 'Manual QA Analyst'} · Sparky Rush (Steam)
+                                        {lang === 'pt' ? 'Analista de Testes Manuais QA' : 'Manual QA Analyst'} · Converting Minds (Sparky Rush)
                                     </strong>
                                     <span className="font-mono text-primary font-bold">{lang === 'pt' ? '2025 - Presente' : '2025 - Present'}</span>
                                 </div>
@@ -8620,7 +9296,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
                             <div>
                                 <div className="flex justify-between items-center text-xs">
                                     <strong className="text-white font-semibold">
-                                        {lang === 'pt' ? 'Programador de Jogos' : 'Gameplay Programmer'} · {lang === 'pt' ? 'Desenvolvimento de Jogos' : 'Game Development'}
+                                        {lang === 'pt' ? 'Programador de Jogos & Sistemas' : 'Gameplay & Systems Programmer'} · {lang === 'pt' ? 'Projetos Comerciais & Independent R&D' : 'Commercial Projects & Independent R&D'}
                                     </strong>
                                     <span className="font-mono text-primary font-bold">{lang === 'pt' ? '2025 - Presente' : '2025 - Present'}</span>
                                 </div>
@@ -8633,20 +9309,20 @@ const ResumeModal = ({ isOpen, onClose }) => {
                             <div>
                                 <div className="flex justify-between items-center text-xs">
                                     <strong className="text-white font-semibold">
-                                        {lang === 'pt' ? 'Engenheiro de Sistemas & Modding' : 'Systems & Reverse Engineer'} · {lang === 'pt' ? 'Engenharia Reversa' : 'Reverse Engineering'}
+                                        {lang === 'pt' ? 'Engenheiro de Sistemas & Pesquisa de Segurança' : 'Systems & Security Research Engineer'} · Independent R&D
                                     </strong>
                                     <span className="font-mono text-primary font-bold">{lang === 'pt' ? '2024 - Presente' : '2024 - Present'}</span>
                                 </div>
                                 <ul className="text-xs text-slate-300 list-disc pl-4 space-y-1 mt-1">
-                                    <li>{lang === 'pt' ? 'Desenvolvimento de injetores GSC e rotinas de pattern scanning em C++ contornando sandboxes UWP/GDK.' : 'Built C++ GSC injectors and memory pattern scanners bypassing UWP/GDK process restrictions.'}</li>
-                                    <li>{lang === 'pt' ? 'Hooking de chamadas de VM e emulação de entitlements de DLCs para preservação de jogos.' : 'Hooked VM bytecode dispatch pointers and emulated DLC entitlement licensing.'}</li>
+                                    <li>{lang === 'pt' ? 'Pesquisa de segurança de runtime, arquitetura de entitlements e isolamento de processos UWP/GDK.' : 'Runtime security research, entitlement architecture analysis, and process sandboxing in UWP/GDK.'}</li>
+                                    <li>{lang === 'pt' ? 'Instrumentação dinâmica de bytecode GSC e interoperabilidade de assets legados.' : 'Dynamic GSC bytecode instrumentation and legacy asset preservation.'}</li>
                                 </ul>
                             </div>
 
                             <div>
                                 <div className="flex justify-between items-center text-xs">
                                     <strong className="text-white font-semibold">
-                                        {lang === 'pt' ? 'Suporte de TI & Automação' : 'IT Support & Automation'} · {lang === 'pt' ? 'Infraestrutura de TI' : 'IT Infrastructure'}
+                                        {lang === 'pt' ? 'Especialista em Suporte de TI & Automação' : 'IT Support & Automation Specialist'} · Public Sector IT Infrastructure
                                     </strong>
                                     <span className="font-mono text-primary font-bold">{lang === 'pt' ? '2026 - Presente' : '2026 - Present'}</span>
                                 </div>
@@ -12082,10 +12758,17 @@ const JournalComments = ({ articleSlug, articleTitle, lang }) => {
 };
 
 // --- FULL INTEGRATED TECHNICAL JOURNAL VIEW (SPA) ---
+const normalizePostId = (id) => {
+    if (!id) return id;
+    if (id === 'shame_for_the_leakers' || id === 'entry_0003') return 'Document-Explaining-Leaks';
+    if (id === 'UWPCOD-GDK-DLC-Unlocker' || id === 'entry_0006') return 'UWP-GDK-Sandbox-Entitlement-Analysis';
+    return id;
+};
+
 const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }) => {
     const { t, lang } = useContext(LanguageContext);
     const [entries, setEntries] = useState(PORTFOLIO_DATA.journalEntries || []);
-    const [selectedId, setSelectedId] = useState(activePostId || (PORTFOLIO_DATA.journalEntries[0]?.id || 'What-Is-GSC'));
+    const [selectedId, setSelectedId] = useState(normalizePostId(activePostId) || (PORTFOLIO_DATA.journalEntries[0]?.id || 'What-Is-GSC'));
     const [postContent, setPostContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -12098,7 +12781,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
     useEffect(() => {
         if (activePostId) {
             hasManualSelectRef.current = true;
-            setSelectedId(activePostId);
+            setSelectedId(normalizePostId(activePostId));
         }
     }, [activePostId]);
 
@@ -12198,10 +12881,11 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
     useEffect(() => {
         if (!selectedId) return;
 
+        const activeId = normalizePostId(selectedId);
         const entry = entries.find(e => 
-            e.id === selectedId || 
-            e.file === selectedId || 
-            (e.file && e.file.replace(/\.md$/, '') === selectedId)
+            e.id === activeId || 
+            e.file === activeId || 
+            (e.file && e.file.replace(/\.md$/, '') === activeId)
         );
 
         const locked = (
@@ -12224,7 +12908,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
             return;
         }
 
-        const filename = entry ? entry.file : `${selectedId}.md`;
+        const filename = entry ? entry.file : `${activeId}.md`;
         setLoading(true);
         setError(null);
 

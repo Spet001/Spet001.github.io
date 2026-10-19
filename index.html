@@ -476,6 +476,19 @@
         .text-glow-none {
             text-shadow: none !important;
         }
+        @media print {
+            #astro-assistant,
+            #astro-chat-window,
+            #custom-cursor,
+            #initial-loading-screen,
+            nav,
+            header,
+            footer,
+            canvas,
+            .no-print {
+                display: none !important;
+            }
+        }
     </style>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -554,10 +567,10 @@
                         Eduardo Gelain
                     </h1>
                     <p class="text-xl sm:text-2xl text-slate-300 font-medium leading-relaxed mb-6">
-                        Software & Game Developer specializing in low-level systems, C++, C#, Unity, and Reverse Engineering.
+                        Software & Game Engineer specializing in low-level systems, C++, C#, Unity, and Systems Security.
                     </p>
                     <p class="text-slate-400 text-base leading-relaxed mb-8">
-                        Building high-performance game mechanics, custom authoritative netcode, runtime memory pattern scanners, and bytecode virtual machines. Author of the SpetDev Technical Research Journal.
+                        Specialized in high-performance software engineering, operating system architecture (Win32, UWP/GDK), low-level systems interoperability, automation, and software quality assurance (QA). Author of the SpetDev Technical Research Journal.
                     </p>
                     <div class="flex flex-wrap gap-4 text-sm font-semibold text-glow-none">
                         <a href="#projects" class="px-6 py-3 rounded-xl bg-primary hover:bg-primaryHover text-white transition-all shadow-lg shadow-primary/20">
@@ -584,11 +597,26 @@
                     </div>
                     <div class="md:col-span-2 space-y-4 text-slate-300 text-base leading-relaxed">
                         <p>
-                            I am a versatile software and game engineer with a strong passion for low-level mechanics, memory manipulation, and commercial game engine architectures. My journey bridges the gap between high-level gameplay engineering in Unity and C#, and low-level binary analysis in C++ and x86/x64 assembly.
+                            I am a software and game engineer focused on systems engineering, software architecture, low-level computing, and technical quality assurance (QA). My engineering philosophy revolves around a simple principle: never treat software as a black box. From my earliest programming days, I have been driven by a relentless curiosity to understand what happens under the hood — how high-level code translates into machine instructions, how operating system memory is managed, and how complex subsystems coordinate in real time.
                         </p>
                         <p>
-                            Beyond building standalone games like <strong>Outcaster</strong> and contributing QA deductive code analysis to <strong>Sparky Rush</strong> on Steam, I conduct active research in reverse engineering proprietary game systems. This includes breaking through UWP and GDK sandbox restrictions, analyzing virtual machine bytecode dispatchers (such as Call of Duty's GSC engine), and building zero-dependency runtime memory injectors.
+                            Grounded in Computer Science foundations, I combine theoretical rigor in data structures, algorithms, and compilers with hands-on production engineering in C, C++, C#, Python, and TypeScript. My technical breadth spans modular gameplay systems in Unity and Unreal Engine 5, deep systems research within restricted OS environments (such as UWP/GDK sandboxes and native Win32 APIs), dynamic/static binary analysis, memory instrumentation, and infrastructure automation via diagnostic scripting.
                         </p>
+                        <p>
+                            Having actively contributed across the entire commercial release cycle of a published PC title on Steam, I bring first-hand discipline in shipping production-grade software under real-world constraints: conducting deterministic root-cause crash debugging, CPU/GPU frametime profiling, and rigorous regression validation. I prioritize decoupled testable architectures, permanent fixes at the source over superficial patches, and building clean developer tooling that empowers teams to deliver reliable, high-performance software.
+                        </p>
+                    </div>
+                    <div class="md:col-span-3 pt-6 border-t border-white/[0.08]">
+                        <h3 class="text-xs font-mono uppercase tracking-wider text-primary font-bold mb-3">
+                            Education / Formação Acadêmica
+                        </h3>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between text-sm">
+                            <div>
+                                <strong class="text-white font-semibold">Bachelor's Degree in Computer Science / Bacharelado em Ciência da Computação</strong>
+                                <p class="text-xs text-slate-400 mt-0.5">Emphasis on Software Architecture, Low-Level Systems, Operating Systems, Compilers, and Information Security.</p>
+                            </div>
+                            <span class="text-xs font-mono text-primary font-medium mt-1 sm:mt-0">Higher Education / Ensino Superior</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -599,29 +627,38 @@
                 <div class="space-y-6">
                     <article class="p-6 rounded-2xl glass-panel">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
-                            <h3 class="text-lg font-bold text-white">Manual QA Analyst · Sparky Rush (Steam)</h3>
+                            <h3 class="text-lg font-bold text-white">Manual QA Analyst · Converting Minds (Sparky Rush: Purrils in Pawsville - Steam)</h3>
                             <span class="text-xs font-mono text-primary">2025 - Present</span>
                         </div>
                         <p class="text-sm text-slate-300 mb-2">
-                            Executed comprehensive gameplay and physics regression testing on the Steam release of Sparky Rush. Documented 50+ critical bugs and conducted deductive Unity C# code inspection to help the core development team isolate root causes rapidly.
+                            Executed comprehensive gameplay and physics regression testing on the commercial Steam release of Sparky Rush by Converting Minds. Documented 50+ critical bugs and conducted deductive Unity C# code inspection to help the core development team isolate root causes rapidly.
                         </p>
                     </article>
                     <article class="p-6 rounded-2xl glass-panel">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
-                            <h3 class="text-lg font-bold text-white">Gameplay & Engine Programmer · Game Development</h3>
+                            <h3 class="text-lg font-bold text-white">Gameplay & Systems Programmer · Commercial Game Projects & Independent R&D</h3>
                             <span class="text-xs font-mono text-primary">2025 - Present</span>
                         </div>
                         <p class="text-sm text-slate-300 mb-2">
-                            Programmed player locomotion, combat mechanics, enemy artificial intelligence, and reusable gameplay templates in Unity (C#) and Unreal Engine 5 (C++). Built responsive character physics and netcode serialization layers.
+                            Programmed player locomotion, combat mechanics, enemy artificial intelligence (FSM), and reusable gameplay templates in Unity (C#) and Unreal Engine 5 (C++). Built responsive character physics and netcode serialization layers.
                         </p>
                     </article>
                     <article class="p-6 rounded-2xl glass-panel">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
-                            <h3 class="text-lg font-bold text-white">Systems & Reverse Engineer · Research & Tooling</h3>
+                            <h3 class="text-lg font-bold text-white">Systems & Security Research Engineer · Independent R&D / Open Source Security Research</h3>
                             <span class="text-xs font-mono text-primary">2024 - Present</span>
                         </div>
                         <p class="text-sm text-slate-300 mb-2">
-                            Authored open-source C++ injectors, dynamic sigscanners, and memory detour hooks for Windows UWP and GDK games. Transpiled legacy 32-bit calling conventions to 64-bit binaries and emulated DLC entitlement licensing.
+                            Authored open-source C++ injectors, dynamic sigscanners, and memory detour hooks for Windows UWP and GDK games. Conducted runtime security research into entitlement tokens and virtual machine bytecode dispatchers for legacy preservation.
+                        </p>
+                    </article>
+                    <article class="p-6 rounded-2xl glass-panel">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                            <h3 class="text-lg font-bold text-white">IT Support & Automation Specialist · Public Sector IT Infrastructure</h3>
+                            <span class="text-xs font-mono text-primary">2026 - Present</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-2">
+                            Technical IT infrastructure support in the public sector, managing local network topologies, OS deployments, and automated scheduled maintenance via Python and PowerShell.
                         </p>
                     </article>
                 </div>
@@ -684,10 +721,10 @@
 
                     <!-- Project 5 -->
                     <article class="p-6 rounded-2xl glass-panel hover:border-primary/40 transition-colors">
-                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-rose-500/10 text-rose-400 border border-rose-500/30 mb-3 inline-block">C++ · VM Hooking · DLC Unlocker</span>
-                        <h3 class="text-xl font-bold text-white mb-2">BO1 & BO2 MS Store Clients & GSC Injector</h3>
+                        <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-rose-500/10 text-rose-400 border border-rose-500/30 mb-3 inline-block">C++ · VM Hooking · Entitlement Analysis</span>
+                        <h3 class="text-xl font-bold text-white mb-2">UWP/GDK Sandbox & Entitlement Architecture Analysis</h3>
                         <p class="text-sm text-slate-300 mb-4">
-                            Complete C++ suite featuring custom client modification, real-time GSC script injector, and DLC unlocker for Black Ops 1 & 2 Windows Store.
+                            C++ systems security research suite featuring custom client modification, real-time bytecode instrumentation, and UWP/GDK entitlement architecture analysis for legacy software preservation.
                         </p>
                         <a href="https://gitlab.com/Spet001/msclients" target="_blank" rel="noreferrer" class="text-xs font-bold text-rose-400 hover:underline inline-flex items-center gap-1.5">
                             GitLab Repository <i class="fas fa-external-link-alt text-[10px]"></i>
@@ -770,14 +807,14 @@
                     <h2 class="text-2xl font-bold text-white">Developer Tools & 3D Utilities</h2>
                     <p class="text-sm text-slate-400 mt-1">Interactive in-browser utilities and procedural generators built for asset pipelines and gamedev.</p>
                 </div>
-                <div class="rounded-2xl glass-panel border border-white/[0.08] overflow-hidden">
+                <div class="rounded-2xl glass-panel border border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)] overflow-hidden transition-all duration-300">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
                         <div class="lg:col-span-7 bg-[#040612] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex items-center justify-center">
                             <img src="/assets/tool_quick_3d_studio.png" alt="Spet's Quick 3D Studio" class="w-full h-auto object-cover" loading="lazy" />
                         </div>
-                        <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
+                        <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-purple-950/20 via-black/40 to-transparent">
                             <div>
-                                <div class="text-[11px] font-mono text-primary font-semibold tracking-wider uppercase mb-1.5">
+                                <div class="text-[11px] font-mono text-purple-400 font-semibold tracking-wider uppercase mb-1.5">
                                     Procedural 3D Generator
                                 </div>
                                 <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's Quick 3D Studio</h3>
@@ -785,20 +822,20 @@
                                     Procedural engine built to convert logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models using deterministic contour extraction and mesh beveling — 100% code-driven without AI.
                                 </p>
                                 <div class="flex flex-wrap gap-1.5 mb-6">
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">Three.js</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">WebGL</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">Procedural 3D</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">GLTF / GLB Exporter</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">PBR</span>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.08]">Zero AI</span>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Three.js</span>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">WebGL</span>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Procedural 3D</span>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">GLTF / GLB Exporter</span>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">PBR</span>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-purple-200/90 border border-purple-500/20">Zero AI</span>
                                 </div>
                             </div>
                             <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
-                                <a href="/tools/image-to-3d/" class="px-5 py-2.5 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition-colors shadow-lg shadow-primary/25 flex items-center gap-2">
+                                <a href="/tools/image-to-3d/" class="px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-purple-600/30 flex items-center gap-2">
                                     <span>Open Quick 3D Studio</span>
                                     <i class="fas fa-arrow-right text-[10px]"></i>
                                 </a>
-                                <span class="text-[11px] font-mono text-slate-500">/tools/image-to-3d/</span>
+                                <span class="text-[11px] font-mono text-purple-400/80">/tools/image-to-3d/</span>
                             </div>
                         </div>
                     </div>

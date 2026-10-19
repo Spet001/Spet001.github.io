@@ -1,4 +1,4 @@
-# Bypassing MS Store / UWP License Checks for Call of Duty DLCs
+# UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)
 
 When the *Call of Duty* titles started appearing on the Microsoft Store (such as *Advanced Warfare* and *WWII*), the community quickly noticed a major shift in how DLCs were handled. In the Steam era, buying a DLC meant downloading gigabytes of new maps and assets. On the UWP / Microsoft Store ecosystem, the reality is entirely different.
 

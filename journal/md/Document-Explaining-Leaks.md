@@ -1,4 +1,4 @@
-# Leakers....Shame for you all
+# Document: Explaining Unauthorized Leaks & Network Architecture Analysis
 
 > **Public Integrity Notice & Declaration of Authorship:**
 > The **BO2 Crossplay Relay** project was strictly a confidential, proprietary research project and **100% CLOSED SOURCE**. Recently, my private GitLab account was unlawfully compromised (hacked), and the private repository was leaked and dumped to the public without authorization.
