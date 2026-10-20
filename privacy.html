@@ -189,6 +189,16 @@
 
     <!-- Custom CSS for base tweaks -->
     <style>
+        /* High-DPI Pixel-Art Sprite Rendering (prevents bilinear blur on 2K/4K & browser zoom) */
+        .pixelated,
+        img.pixelated,
+        .pixel-art {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
         html {
             scroll-behavior: smooth !important;
         }

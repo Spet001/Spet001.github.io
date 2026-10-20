@@ -3,20 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spet's Quick 3D Studio | Procedural 2D to 3D Extruder</title>
-    <meta name="description" content="100% code-based procedural 3D mesh engine and .GLB generator. Transform logos, collectible trading cards, emblems, and game assets into production-ready 3D models with PBR materials, custom backfaces, and instant GLTF/GLB binary export." />
-    <meta property="og:title" content="Spet's Quick 3D Studio | Procedural 2D to 3D Extruder" />
-    <meta property="og:description" content="100% code-based procedural 3D mesh engine and .GLB generator. Transform logos, collectible trading cards, emblems, and game assets into production-ready 3D models with PBR materials, custom backfaces, and instant GLTF/GLB binary export." />
+    <title>Spet's Quick 3D Studio — Procedural 2D-to-3D Mesh Generator & GLB Exporter | Eduardo Gelain</title>
+    <meta name="description" content="100% code-based procedural 3D mesh engine and .GLB generator running client-side via WebGL. Transform logos, collectible trading cards, emblems, and game assets into production-ready 3D models with PBR materials, custom backfaces, and instant GLTF/GLB binary export with zero server uploads." />
+    <meta name="keywords" content="SpetDev, Eduardo Gelain, Quick 3D Studio, Procedural 3D, 2D to 3D, GLB Exporter, GLTF, Three.js, WebGL 2.0, PBR Materials, Mesh Extrusion, Game Assets, Trading Cards 3D, Trading Card Game 3D Model, Yu-Gi-Oh 3D, Pokemon 3D" />
+    <meta name="author" content="Eduardo Gelain" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://spet01.dev/tools/image-to-3d/" />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://spet01.dev/tools/image-to-3d/" />
+    <meta property="og:title" content="Spet's Quick 3D Studio — Procedural 2D to 3D Extruder" />
+    <meta property="og:description" content="100% code-based procedural 3D mesh engine and .GLB generator. Transform logos, collectible trading cards, emblems, and game assets into production-ready 3D models with PBR materials and instant GLTF/GLB binary export." />
     <meta property="og:image" content="https://spet01.dev/assets/tool_quick_3d_studio.png" />
+    <meta property="og:site_name" content="Eduardo Gelain Portfolio" />
+
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://spet01.dev/tools/image-to-3d/" />
+    <meta name="twitter:title" content="Spet's Quick 3D Studio — Procedural 2D to 3D Extruder" />
+    <meta name="twitter:description" content="Procedural 2D-to-3D mesh engine and .GLB generator. Convert images and trading cards to production-ready 3D assets with zero server uploads." />
+    <meta name="twitter:image" content="https://spet01.dev/assets/tool_quick_3d_studio.png" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
     <!-- Fonts & Tailwind CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Spet's Quick 3D Studio",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "All modern web browsers (WebGL / Three.js)",
+      "url": "https://spet01.dev/tools/image-to-3d/",
+      "description": "Procedural 2D-to-3D mesh engine and .GLB generator. Convert logos, emblems, and collectible trading cards into production-ready 3D models with PBR shaders, bevel extrusion, and binary GLTF/GLB export with zero server uploads.",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
     <style>
       body {
         margin: 0;
@@ -25,10 +66,36 @@
         font-family: 'Inter', sans-serif;
         overflow: hidden;
       }
+      .pixelated, img.pixelated, .pixel-art {
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <header style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); background: #080c18;">
+        <h1 style="font-size: 1.35rem; font-weight: 700; color: #38bdf8; margin: 0 0 0.5rem 0; font-family: monospace;">Spet's Quick 3D Studio</h1>
+        <p style="font-size: 0.875rem; color: #94a3b8; margin: 0; line-height: 1.5;">Deterministic procedural 2D-to-3D mesh generator, vector contour extruder, and binary .GLB/.GLTF exporter running 100% locally in your browser.</p>
+      </header>
+      <main style="padding: 1.5rem; max-width: 900px; margin: 0 auto; font-family: monospace; line-height: 1.6; color: #cbd5e1;">
+        <section style="margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1.05rem; color: #f8fafc; margin-bottom: 0.5rem;">Deterministic Procedural 3D Without AI Hallucinations</h2>
+          <p style="font-size: 0.875rem; color: #94a3b8;">Transform logos, insignias, game sprites, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic: The Gathering) into production-ready 3D models. Uses exact vector contour tracing, constrained Delaunay triangulation, bevel extrusion, and custom backface mapping with zero external cloud dependencies or server uploads.</p>
+        </section>
+        <section style="margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1.05rem; color: #f8fafc; margin-bottom: 0.5rem;">Core Features & Engine Capabilities</h2>
+          <ul style="padding-left: 1.25rem; font-size: 0.875rem; color: #94a3b8; list-style: square;">
+            <li>100% Client-Side Processing: Powered by Three.js and WebGL 2.0 with instant preview and interactive lighting controls.</li>
+            <li>PBR Material Authoring: Real-time roughness, metalness, normal maps, and emissive materials.</li>
+            <li>Direct Export: Download industry-standard binary .GLB, .GLTF, or inspect polygon count and UV mapping immediately.</li>
+          </ul>
+        </section>
+        <p style="font-size: 0.75rem; color: #64748b;">Initializing 3D viewport and Three.js runtime...</p>
+      </main>
+    </div>
     <script type="module" src="./app.min.js"></script>
   </body>
 </html>

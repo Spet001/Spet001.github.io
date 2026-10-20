@@ -407,6 +407,32 @@ ${journalCardsHtml}
   <!-- Journal Articles (Canonical Static Prerendered SEO URLs Only) -->
 ${sitemapUrls.join('\n')}
 
+  <!-- Tools Suite -->
+  <url>
+    <loc>https://spet01.dev/tools/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/tools/easy-decompiler/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/tools/universal-file/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://spet01.dev/tools/image-to-3d/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Privacy Policy -->
   <url>
     <loc>https://spet01.dev/privacy.html</loc>
