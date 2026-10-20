@@ -3733,8 +3733,8 @@ const SpaceCanvasV3 = ({
         },
         {
             id: 'tools',
-            name: { pt: 'Setor de Ferramentas & Modding', en: 'Tools & Modding Sector' },
-            subtitle: { pt: 'Utilitários Electron, Mods & Fixes', en: 'Electron Utilities, Mods & Fixes' },
+            name: { pt: 'Setor Tools & Ferramentas', en: 'Tools & Utilities Sector' },
+            subtitle: { pt: 'Suíte Web (/tools), Utilitários Electron & Mods', en: 'In-Browser Web Tools (/tools), Electron & Modding' },
             track: 'tools',
             pos: new THREE.Vector3(18.5, 0, -11.5),
             color: 0xf59e0b,
@@ -3745,6 +3745,22 @@ const SpaceCanvasV3 = ({
                 c4: new THREE.Vector3(0.95, 0.82, 0.22)
             },
             planets: [
+                {
+                    id: 'spet_web_tools_suite',
+                    projectId: 'spet_web_tools_suite',
+                    name: "Spet's Web Tools & Reverse Engineering Suite",
+                    palette: 'gas_cyan',
+                    radius: 5.2,
+                    pos: new THREE.Vector3(18, -4, -185),
+                    hasRings: true,
+                    models: [{ path: '/3d/ram_stick.glb', scale: 3.5, orbitDist: 3.0, orbitAngleOffset: 0 }],
+                    rotSpeed: 0.35,
+                    desc: {
+                        pt: "Suíte WebAssembly (/tools): Descompilador C-like & Game File Opener (25+ Engines)",
+                        en: "In-Browser WASM Suite (/tools): C-like Decompiler & Game File Opener (25+ Engines)"
+                    },
+                    tags: ['WebAssembly', 'Rizin Core', 'Ghidra Sleigh', 'Game Archives', 'Three.js']
+                },
                 {
                     id: 'fable3_fixer',
                     projectId: 'fable3_fixer',
@@ -5714,6 +5730,30 @@ const SpaceCanvasV3 = ({
                     </button>
                 )}
 
+                {/* Quick Sector Switcher Pills */}
+                <div className="hidden md:flex items-center gap-1 bg-[#030712]/80 border border-cyan-500/30 px-1 py-1 rounded-sm backdrop-blur-md">
+                    {CLUSTERS.filter(c => !c.isSecret || unlockedSectors[c.id]).map(c => {
+                        const isActive = viewMode === 'SECTOR_FLIGHT' && activeClusterId === c.id;
+                        return (
+                            <button
+                                key={c.id}
+                                type="button"
+                                onClick={() => {
+                                    if (enterSectorFnRef.current) enterSectorFnRef.current(c.id);
+                                }}
+                                className={`px-2 py-0.5 text-[10px] font-mono transition-all cursor-pointer rounded-xs ${
+                                    isActive
+                                        ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/60 font-bold shadow-[0_0_8px_rgba(56,189,248,0.3)]'
+                                        : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                }`}
+                                title={typeof c.name === 'object' ? (c.name[lang] || c.name.pt) : c.name}
+                            >
+                                {c.id === 'tools' ? 'TOOLS' : (c.id === 'core' ? 'CORE' : (c.id === 'gamedev' ? 'GAMEDEV' : (c.id === 'reversing' ? 'REVERSING' : c.id.toUpperCase())))}
+                            </button>
+                        );
+                    })}
+                </div>
+
                 {isFullscreenGalaxyMode && (
                     <button
                         type="button"
@@ -6887,18 +6927,13 @@ const AboutSection = () => {
                     <div className="space-y-3 text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 max-w-3xl">
                         <p>
                             {lang === 'pt'
-                                ? "Sou desenvolvedor de software e jogos com foco em engenharia de sistemas, arquitetura de software, computação de baixo nível e garantia de qualidade (QA). Minha abordagem para a computação é guiada por uma regra fundamental: não tratar a tecnologia como uma caixa preta. Desde os primeiros passos na programação, sou movido por entender o que acontece sob o capô — como o código se traduz em instruções de máquina, como a memória do processo é gerenciada e como subsistemas de jogos e do sistema operacional interagem em tempo real."
-                                : "I am a software and game engineer focused on systems engineering, software architecture, low-level computing, and technical quality assurance (QA). My engineering philosophy revolves around a simple principle: never treat software as a black box. From my earliest programming days, I have been driven by a relentless curiosity to understand what happens under the hood — how high-level code translates into machine instructions, how operating system memory is managed, and how complex subsystems coordinate in real time."}
+                                ? "Sou desenvolvedor de software e jogos focado em engenharia de sistemas, computação de baixo nível e arquitetura técnica. Minha abordagem é guiada pela recusa em tratar tecnologia como caixa preta: busco entender a fundo o ciclo de execução na CPU, o gerenciamento de memória no SO e a interação entre subsistemas em tempo real, aplicando esse rigor tanto em C/C++, C# e Python quanto na pesquisa de sandboxes nativas (Win32, UWP/GDK) e engenharia reversa de binários."
+                                : "I am a software and game engineer focused on systems engineering, low-level computing, and technical architecture. My work is driven by a refusal to treat software as a black box: I strive to understand execution cycles on the CPU, OS memory management, and real-time subsystem coordination, applying this rigor across C/C++, C#, and Python, as well as native sandbox research (Win32, UWP/GDK) and binary reverse engineering."}
                         </p>
                         <p>
                             {lang === 'pt'
-                                ? "Com base sólida em Ciência da Computação, combino o rigor teórico em estruturas de dados, algoritmos e compiladores com a prática diária de desenvolvimento em C, C++, C#, Python e TypeScript. Minha experiência abrange desde a engenharia de gameplay e arquitetura desacoplada em Unity e Unreal Engine 5 até pesquisas aprofundadas em ambientes restritos (como sandboxes UWP/GDK e APIs nativas do Win32), análise estática e dinâmica de binários, instrumentação de memória e automação de infraestrutura com scripts de diagnóstico."
-                                : "Grounded in Computer Science foundations, I combine theoretical rigor in data structures, algorithms, and compilers with hands-on production engineering in C, C++, C#, Python, and TypeScript. My technical breadth spans modular gameplay systems in Unity and Unreal Engine 5, deep systems research within restricted OS environments (such as UWP/GDK sandboxes and native Win32 APIs), dynamic/static binary analysis, memory instrumentation, and infrastructure automation via diagnostic scripting."}
-                        </p>
-                        <p>
-                            {lang === 'pt'
-                                ? "Tendo participado ativamente de todo o ciclo de lançamento comercial de um título para PC distribuído na Steam, conheço a disciplina necessária para entregar software estável sob prazos reais: atuei no diagnóstico e isolamento de causa-raiz de falhas críticas, otimização de ciclos de CPU/GPU e testes rigorosos de regressão. Priorizo arquiteturas testáveis, resolução permanente de problemas na origem e o desenvolvimento de ferramentas eficientes que aumentem a produtividade e a robustez técnica do ecossistema onde atuo."
-                                : "Having actively contributed across the entire commercial release cycle of a published PC title on Steam, I bring first-hand discipline in shipping production-grade software under real-world constraints: conducting deterministic root-cause crash debugging, CPU/GPU frametime profiling, and rigorous regression validation. I prioritize decoupled testable architectures, permanent fixes at the source over superficial patches, and building clean developer tooling that empowers teams to deliver reliable, high-performance software."}
+                                ? "Com sólida formação em Ciência da Computação e experiência direta no ciclo comercial completo de um jogo publicado na Steam, uno a disciplina de QA técnico — diagnóstico determinístico de crash, profiling de frametime e testes de regressão — à construção de ferramentas e arquiteturas testáveis. Meu foco é sempre resolver problemas na raiz e desenvolver utilitários robustos que elevem a estabilidade e a produtividade de equipes de engenharia."
+                                : "With a solid Computer Science foundation and first-hand experience across the full commercial release lifecycle of a published Steam title, I bridge technical QA discipline — deterministic crash diagnosis, frametime profiling, and regression testing — with modular, testable architecture. My focus is delivering permanent root-cause fixes and high-performance developer tooling that strengthens software stability and team productivity."}
                         </p>
                     </div>
 

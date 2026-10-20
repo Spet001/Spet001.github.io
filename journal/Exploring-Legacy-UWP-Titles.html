@@ -7,7 +7,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain Technical Journal</title>
     <meta name="description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
-    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, MDPro Web, ProjectY, Jailson Mendes Mods, Doomjaja, Delicia DOOM, Galaxy Map, Three.js Galaxy Map, WebGL 3D Portfolio, online_tu17_mp.wad documentation, online_tu17_zm.wad documentation, online_tu14_mp_english.wad documentation, online_tu14_sp_english.wad documentation, Demonware WAD, T3WAD, 0x543377AB, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -484,8 +484,8 @@
 <p>An engineering case study on reverse engineering legacy Windows 10 UWP games (<em>Call of Duty: Infinite Warfare</em>), weaponizing UWP Dumper&#39;s suspended process lifecycle for AppContainer DLL injection, VMT hooking the undocumented <code>IStoreContextServer</code> COM interface, and analyzing the cryptographic limits of client-side Server-to-Server (S2S) entitlement spoofing.</p>
 <hr>
 <h2>1. Architectural Divergence: Legacy UWP (AppContainer) vs. Modern GDK</h2>
-<p>Modern PC releases on the Xbox App / Microsoft Store employ the <strong>Gaming Desktop Kernel (GDK)</strong>. In GDK games, the executable is essentially a standard Win32 binary (<code>.exe</code>) augmented with Microsoft Gaming Runtime services (<code>XStore</code>, <code>XUser</code>, <code>XGameSave</code>). Memory layout, thread scheduling, and debugger attachments behave like standard desktop processes, with entitlements queried via documented APIs such as <code>XStoreQueryGameLicenseAsync</code> or <code>XStoreQueryAssociatedProductsAsync</code>.</p>
-<p>In contrast, <strong>Legacy Windows 10 UWP</strong> titles (spanning from 2016 to 2019, including <em>Call of Duty: Infinite Warfare</em>, <em>Modern Warfare Remastered UWP</em>, <em>Gears of War 4</em>, and <em>Halo 5: Forge</em>) were built on pure Windows Runtime (WinRT) AppX application packaging:</p>
+<p>Modern PC releases on the Xbox App / Microsoft Store employ the <strong>Game Development Kit (GDK)</strong>. In GDK games, the executable is essentially a standard Win32 binary (<code>.exe</code>) augmented with Microsoft Gaming Runtime services (<code>XStore</code>, <code>XUser</code>, <code>XGameSave</code>). Packaging itself is flexible—modern GDK titles can be delivered in <code>.appx</code>, <code>.msixvc</code>, or loose virtual disks—but they execute with standard Win32 process integrity and communicate through documented APIs like <code>XStoreQueryGameLicenseAsync</code> and <code>XStoreQueryAssociatedProductsAsync</code>.</p>
+<p>In contrast, <strong>Legacy Windows 10 UWP</strong> titles (spanning from 2016 to 2019, including <em>Call of Duty: Infinite Warfare</em>, <em>Modern Warfare Remastered UWP</em>, <em>Gears of War 4</em>, and <em>Halo 5: Forge</em>) were built on pure Windows Runtime (WinRT) AppContainer sandboxes. <em>Infinite Warfare</em>, for instance, is packaged as a monolithic <strong><code>.appxbundle</code></strong> containing encrypted EFS virtual filesystems and enforcing strict capability manifests:</p>
 <table>
 <thead>
 <tr>
@@ -500,9 +500,9 @@
 <td align="left">Win32 Medium Integrity + Gaming Services</td>
 </tr>
 <tr>
-<td align="left"><strong>Binary Packaging</strong></td>
-<td align="left">Encrypted AppX / EFS VFS Container</td>
-<td align="left">Unpacked loose files / Virtual Disk Mounting</td>
+<td align="left"><strong>Packaging Target</strong></td>
+<td align="left">Monolithic <code>.appxbundle</code> / Encrypted VFS</td>
+<td align="left"><code>.msixvc</code> / <code>.appx</code> / Virtual Disk Mounting</td>
 </tr>
 <tr>
 <td align="left"><strong>Store Interface</strong></td>
@@ -523,7 +523,7 @@
 <p>Because Legacy UWP runs under an isolated <code>AppContainer</code>, traditional dynamic analysis tools fail outright: standard injection mechanisms are rejected by the Windows kernel security model, and loaded DLLs are blocked unless explicitly granted <code>ALL APPLICATION PACKAGES</code> access rights.</p>
 <hr>
 <h2>2. The Injection Vector: Repurposing UWP Dumper</h2>
-<p>To inject our research module (<code>ZeroProxy</code> / <code>client-iw7-store</code>) into the live game, standard injection (<code>OpenProcess</code> + <code>VirtualAllocEx</code> + <code>CreateRemoteThread</code>) was insufficient because of access restrictions enforced on AppContainer processes.</p>
+<p>To inject our research module (<code>ZPGDK</code> / <code>client-iw7-store</code>) into the live game, standard injection (<code>OpenProcess</code> + <code>VirtualAllocEx</code> + <code>CreateRemoteThread</code>) was insufficient because of access restrictions enforced on AppContainer processes.</p>
 <p>Instead of writing a complex kernel driver or token impersonation service, we repurposed the suspended process lifecycle vector popularized by <strong>UWP Dumper</strong> (<code>Woomer/UWP Dumper</code> by Wunkolo and emoose):</p>
 <pre><code class="language-text">[UWP Launcher]
        │
@@ -535,9 +535,9 @@ Target Game Process Spawned (SUSPENDED in AppContainer)
        │
        ├── Original UWP Dumper Action: Dump decrypted memory to disk
        │
-       └── Our Weaponized ZeroProxy Action:
+       └── Our Weaponized ZPGDK Action:
              1. Adjust Security Descriptor (Add &#39;ALL APPLICATION PACKAGES&#39; ACE)
-             2. QueueUserAPC / Remote Thread Injection of ZeroProxy.dll
+             2. QueueUserAPC / Remote Thread Injection of ZPGDK.dll
              3. ResumeProcess() -&gt; DllMain() executes before Game DRM activates
 </code></pre>
 <p>By intercepting the target process at the point of suspension, our DLL is injected directly into the game&#39;s virtual address space before any in-game anti-tamper or WinRT runtime initialization runs. Once mapped, <code>DllMain</code> delegates execution to a detached worker thread, ensuring the game&#39;s loader thread finishes without deadlocks:</p>
@@ -547,7 +547,7 @@ Target Game Process Spawned (SUSPENDED in AppContainer)
         DisableThreadLibraryCalls(hModule);
         
         HANDLE hThread = CreateThread(nullptr, 0, [](LPVOID) -&gt; DWORD {
-            init(); // ZeroProxy initialization routine
+            init(); // ZPGDK initialization routine
             return 0;
         }, nullptr, 0, nullptr);
         
@@ -604,11 +604,11 @@ utils::hook::detour ro_get_activation_factory_hook;
 }
 </code></pre>
 <hr>
-<h2>5. The Server-to-Server (S2S) Brick Wall: Why Local DLC Spoofing Fails</h2>
-<p>While we successfully intercepted license queries and catalog enumeration, attempting to spoof DLC ownership (e.g., unlocking the Season Pass or DLC map packs) via local memory patching hit an insurmountable obstacle: <strong>Server-to-Server (S2S) Cryptographic Verification</strong>.</p>
+<h2>5. The Server-to-Server (S2S) Brick Wall &amp; The Frontier of Store Emulation</h2>
+<p>While we successfully intercepted license queries and catalog enumeration, attempting to spoof online consumable ownership (such as COD Points or server-validated DLC playlists) via local memory patching hit an immediate obstacle: <strong>Server-to-Server (S2S) Cryptographic Verification</strong>.</p>
 <p><img src="/assets/journal/iw7_s2s_flow.png" alt="Server to Server Cryptographic Architecture"></p>
 <p>In older PC DRM schemes (such as SteamAPI or legacy SecuROM), modifying the return code of <code>BIsSubscribedApp</code> or patching local license structures in memory was sufficient because the game client itself made the final entitlement decision.</p>
-<p>In modern Microsoft Store architectures, local validation is intentionally bypassed:</p>
+<p>In modern Microsoft Store architectures integrated with external service backends (like Demonware), local validation is intentionally bypassed:</p>
 <ol>
 <li><strong>Signed Token Request</strong>: When the game client invokes <code>Method[6]</code> (<code>GetCustomerCollectionsId</code>), the OS Store service contacts Microsoft authentication servers and returns a cryptographically signed <strong>JSON Web Token (JWT)</strong>.</li>
 <li><strong>Off-Client Forwarding</strong>: The game does not evaluate this token locally. Instead, it packages the raw JWT into an RPC payload and transmits it over TLS to Activision / Demonware backend servers.</li>
@@ -621,14 +621,20 @@ utils::hook::detour ro_get_activation_factory_hook;
 [Demonware] ERROR: Signature verification failed (Invalid RSA PKCS#1 v1.5 padding)
 [Demonware] Entitlement rejected. Client DLC flags set to 0.
 </code></pre>
-<p>This explains why generic UWP game fixes (such as those by the online-fix team for games like <em>Gears of War 4</em>) require explicit hash parameters inside configuration files (<code>.ini</code> files with cryptographic identity payloads) and dedicated backend relay servers rather than simple client-side memory detours.</p>
+<h3>Breaking the Barrier: Online-Fix, ReUWP &amp; ZPGDK&#39;s Open-Source Objective</h3>
+<p>However, the store entitlement layer is not uniform across all titles, and breaking this barrier remains an active, evolving research frontier:</p>
+<ul>
+<li><strong>Closed-Source Precedents (Online-Fix)</strong>: Teams like Online-Fix have successfully bypassed store license barriers in legacy UWP titles such as <em>Gears of War 4</em>. However, these solutions remain strictly proprietary and closed-source, obscuring the internal WinRT mechanics behind compiled binaries and configuration hashes.</li>
+<li><strong>Specialized Open-Source Emulation (<a href="https://github.com/OptiJuegos/ReUWP">ReUWP</a>)</strong>: Recently, OptiJuegos developed <em>ReUWP</em> for <em>Minecraft Bedrock</em> (during its pre-GDK UWP lifecycle). ReUWP proved that full store license emulation is feasible by stubbing store methods in memory. However, its implementation relies on game-specific hardcoded offsets tailored solely to Minecraft&#39;s binary layout.</li>
+<li><strong>ZPGDK&#39;s Architectural Mission</strong>: The barrier we are actively working to dismantle with <strong>ZPGDK</strong> is decoupling store emulation from game-specific hacks. By reverse engineering and documenting the undocumented <code>IStoreContextServer</code> COM interfaces, VMT layouts, and <code>RoGetActivationFactory</code> hooks directly, ZPGDK aims to provide a <strong>clean, open-source, and generic API documentation layer</strong> for legacy Windows Store titles—bringing full transparency to an architecture that closed-source loaders have hidden for years.</li>
+</ul>
 <hr>
 <h2>6. Summary &amp; Technical Takeaways</h2>
 <ol>
 <li><strong>UWP Dumper as an Injection Tool</strong>: Repurposing <code>IPackageDebugSettings</code> allows arbitrary C++ instrumentation inside Windows 10 AppContainer sandboxes without triggering security violations.</li>
 <li><strong><code>IStoreContextServer</code> Interface</strong>: The core of Windows 10 UWP store communication is an unexported COM interface whose VTable can be dynamically detoured via <code>RoGetActivationFactory</code> interception.</li>
-<li><strong>S2S Security</strong>: Client-side memory hacking cannot bypass Server-to-Server authenticated entitlements when cryptographic validation is offloaded to remote server clusters.</li>
-<li><strong>Artifacts &amp; Reference Implementation</strong>: Complete research source code and hooks are documented in the <a href="https://gitlab.com/Spet001/msclients">ZeroProxy GDK</a> research repository under <code>src/client-iw7-store</code>.</li>
+<li><strong>S2S vs. Client Licensing</strong>: While purely offline or client-evaluated store queries can be emulated via COM interception (as demonstrated by ReUWP and Online-Fix), server-to-server authenticated systems (Demonware / Xbox Live multiplayer) reject forged client tokens upstream.</li>
+<li><strong>Democratizing UWP Research</strong>: Complete research source code, VMT hooks, and analysis tools are open-sourced in the <a href="https://gitlab.com/Spet001/msclients">ZPGDK</a> research repository under <code>src/client-iw7-store</code>.</li>
 </ol>
 
                 </div>
