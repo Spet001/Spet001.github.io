@@ -3357,7 +3357,7 @@ const CosmicTrackPlayer = ({
         core: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme' },
         gamedev: { id: 'KI58_0T07Vs', title: 'Starfield OST — Into the Starfield' },
         lowlevel: { id: 'UBLOvSb56Vc', title: 'Mass Effect 2 OST — The Illusive Man' },
-        tools: { id: '2HQaBWziYvY', title: 'Mass Effect — Normandy Theme' },
+        tools: { id: 'aWIG30thM_U', title: 'Mass Effect — The Normandy Theme' },
         solar: { id: 'BSsfjHCFosw', title: 'DOOM OST — At Doom\'s Gate (E1M1)' },
         delicia: { id: '9wVmCLtuUx0', title: 'Jailson Mendes — Música para Relaxar (Delícia Theme)' },
         chicken: { id: '0Wqo4RrT7F0', title: 'Mass Effect — Galaxy Map Theme' }
@@ -5729,30 +5729,6 @@ const SpaceCanvasV3 = ({
                         <span className="text-[10px] opacity-70">[ESC]</span>
                     </button>
                 )}
-
-                {/* Quick Sector Switcher Pills */}
-                <div className="hidden md:flex items-center gap-1 bg-[#030712]/80 border border-cyan-500/30 px-1 py-1 rounded-sm backdrop-blur-md">
-                    {CLUSTERS.filter(c => !c.isSecret || unlockedSectors[c.id]).map(c => {
-                        const isActive = viewMode === 'SECTOR_FLIGHT' && activeClusterId === c.id;
-                        return (
-                            <button
-                                key={c.id}
-                                type="button"
-                                onClick={() => {
-                                    if (enterSectorFnRef.current) enterSectorFnRef.current(c.id);
-                                }}
-                                className={`px-2 py-0.5 text-[10px] font-mono transition-all cursor-pointer rounded-xs ${
-                                    isActive
-                                        ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/60 font-bold shadow-[0_0_8px_rgba(56,189,248,0.3)]'
-                                        : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                                title={typeof c.name === 'object' ? (c.name[lang] || c.name.pt) : c.name}
-                            >
-                                {c.id === 'tools' ? 'TOOLS' : (c.id === 'core' ? 'CORE' : (c.id === 'gamedev' ? 'GAMEDEV' : (c.id === 'reversing' ? 'REVERSING' : c.id.toUpperCase())))}
-                            </button>
-                        );
-                    })}
-                </div>
 
                 {isFullscreenGalaxyMode && (
                     <button

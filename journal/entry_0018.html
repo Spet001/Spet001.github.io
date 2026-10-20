@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain Technical Journal</title>
-    <meta name="description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
+    <meta name="description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.">
     <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="noindex, follow">
@@ -20,7 +20,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/">
     <meta property="og:title" content="Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain">
-    <meta property="og:description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
+    <meta property="og:description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -35,7 +35,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/">
     <meta name="twitter:title" content="Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection | Eduardo Gelain">
-    <meta name="twitter:description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.">
+    <meta name="twitter:description" content="Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
@@ -45,7 +45,7 @@
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
-  "description": "Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.",
+  "description": "Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.",
   "datePublished": "Oct 19, 2026",
   "articleSection": "Reverse Engineering & Windows Internals",
   "url": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
@@ -478,10 +478,10 @@
                         <span><i class="far fa-folder mr-1"></i> Reverse Engineering & Windows Internals</span>
                     </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection</h1>
-                    <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side S2S DLC spoofing fails.</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="Exploring-Legacy-UWP-Titles">
-<p>An engineering case study on reverse engineering legacy Windows 10 UWP games (<em>Call of Duty: Infinite Warfare</em>), weaponizing UWP Dumper&#39;s suspended process lifecycle for AppContainer DLL injection, VMT hooking the undocumented <code>IStoreContextServer</code> COM interface, and analyzing the cryptographic limits of client-side Server-to-Server (S2S) entitlement spoofing.</p>
+<p>An engineering case study on reverse engineering legacy Windows 10 UWP games (<em>Call of Duty: Infinite Warfare</em>), weaponizing UWP Dumper&#39;s suspended process lifecycle for AppContainer DLL injection, VMT hooking the undocumented <code>IStoreContextServer</code> COM interface, and analyzing the cryptographic limits of client-side Server-to-Server entitlement spoofing.</p>
 <hr>
 <h2>1. Architectural Divergence: Legacy UWP (AppContainer) vs. Modern GDK</h2>
 <p>Modern PC releases on the Xbox App / Microsoft Store employ the <strong>Game Development Kit (GDK)</strong>. In GDK games, the executable is essentially a standard Win32 binary (<code>.exe</code>) augmented with Microsoft Gaming Runtime services (<code>XStore</code>, <code>XUser</code>, <code>XGameSave</code>). Packaging itself is flexible—modern GDK titles can be delivered in <code>.appx</code>, <code>.msixvc</code>, or loose virtual disks—but they execute with standard Win32 process integrity and communicate through documented APIs like <code>XStoreQueryGameLicenseAsync</code> and <code>XStoreQueryAssociatedProductsAsync</code>.</p>
@@ -604,8 +604,8 @@ utils::hook::detour ro_get_activation_factory_hook;
 }
 </code></pre>
 <hr>
-<h2>5. Client Spoofing vs. Server-to-Server (S2S): Why Local Emulation Hits a Wall</h2>
-<p>To understand why local license spoofing behaves differently across Windows Store titles, we must differentiate between <strong>Client-to-Store (S1S / Client-Side)</strong> checks and <strong>Server-to-Server (S2S)</strong> cryptographic validation.</p>
+<h2>5. Client Spoofing vs. Server-to-Server Verification: Why Local Emulation Hits a Wall</h2>
+<p>To understand why local license spoofing behaves differently across Windows Store titles, we must differentiate between <strong>Client-Side (Local OS)</strong> checks and <strong>Server-to-Server</strong> cryptographic validation.</p>
 <h3>How ZPGDK Spoofs Modern GDK Titles (Call of Duty: WWII)</h3>
 <p>In modern GDK environments, ZPGDK has already demonstrated successful client-side DLC unlocking (as implemented in <code>src/s2-store-dlc-unlocker-standalone</code> for <em>Call of Duty: WWII</em>). In those titles:</p>
 <ol>
@@ -614,19 +614,19 @@ utils::hook::detour ro_get_activation_factory_hook;
 <li>If the user lacks an official license, the OS service (<code>appxsvc</code> / <code>GamingServices</code>) aborts mounting with error <code>0x803F8001</code>.</li>
 <li><strong>ZPGDK&#39;s Spoof Solution</strong>: We detour <code>XPackageMountWithUiAsync</code> and <code>XPackageMountWithUiResult</code>. Instead of dispatching the request to the OS, we immediately trigger the game&#39;s asynchronous completion callback with a synthetic mount handle and hook <code>XPackageGetMountPath</code> to return the root executable path. Because the game engine evaluates mount success locally, it reads the pre-installed archives without any external server validation.</li>
 </ol>
-<h3>The S2S Brick Wall in Infinite Warfare (IW7)</h3>
-<p>In <em>Call of Duty: Infinite Warfare</em>, however, attempting local memory spoofing for online entitlements (such as COD Points or server-authenticated DLC playlists) hits an insurmountable barrier: <strong>Server-to-Server (S2S) Cryptographic Verification</strong>.</p>
+<h3>The Server-to-Server Brick Wall in Infinite Warfare (IW7)</h3>
+<p>In <em>Call of Duty: Infinite Warfare</em>, however, attempting local memory spoofing for online entitlements (such as COD Points or server-authenticated DLC playlists) hits an insurmountable barrier: <strong>Server-to-Server Cryptographic Verification</strong>.</p>
 <p><img src="/assets/journal/iw7_s2s_flow.png" alt="Server to Server Cryptographic Architecture"></p>
-<p>Unlike purely client-evaluated checks (S1S) where patching a local boolean or redirecting a filesystem handle suffices, S2S offloads the decision completely:</p>
+<p>Unlike purely client-evaluated checks where patching a local boolean or redirecting a filesystem handle suffices, remote Server-to-Server validation offloads the decision completely:</p>
 <ol>
 <li><strong>Signed Token Request</strong>: The game client calls <code>Method[6]</code> (<code>GetCustomerCollectionsId</code>) on the <code>IStoreContextServer</code> WinRT COM interface. The Windows Store service contacts Microsoft authentication servers and receives a cryptographically signed <strong>JSON Web Token (JWT)</strong>.</li>
 <li><strong>Off-Client Forwarding</strong>: The game does not inspect or validate this token locally. Instead, it serializes the raw JWT into an encrypted RPC payload and transmits it over TLS to Activision / Demonware backend servers.</li>
-<li><strong>Server-to-Server Validation</strong>: The Demonware server contacts Microsoft&#39;s Azure Store endpoint directly (S2S) to fetch Microsoft&#39;s public RSA signing keys and cryptographically verify the token&#39;s digital signature and claims.</li>
+<li><strong>Server-to-Server Validation</strong>: The Demonware server contacts Microsoft&#39;s Azure Store endpoint directly to fetch Microsoft&#39;s public RSA signing keys and cryptographically verify the token&#39;s digital signature and claims.</li>
 <li><strong>Entitlement Decision</strong>: Only if Microsoft&#39;s digital signature is valid and the authenticated Xbox Live identity holds legitimate purchase records does the server authorize the client&#39;s DLC playlists or allocate COD Points.</li>
 </ol>
 <p>Because the JWT is signed with Microsoft&#39;s private key, local memory modifications (such as injecting <code>{&quot;isActive&quot;: true}</code> or crafting a synthetic HSTRING payload) are rejected upstream:</p>
 <pre><code class="language-text">[Demonware] Ingested JWT payload from client
-[Demonware] Verifying signature against MS Store Public Key via S2S...
+[Demonware] Verifying signature against MS Store Public Key via Server-to-Server...
 [Demonware] ERROR: Signature verification failed (Invalid RSA PKCS#1 v1.5 padding)
 [Demonware] Entitlement rejected. Client DLC flags set to 0.
 </code></pre>
@@ -642,7 +642,7 @@ utils::hook::detour ro_get_activation_factory_hook;
 <ol>
 <li><strong>UWP Dumper as an Injection Tool</strong>: Repurposing <code>IPackageDebugSettings</code> allows arbitrary C++ instrumentation inside Windows 10 AppContainer sandboxes without triggering security violations.</li>
 <li><strong><code>IStoreContextServer</code> Interface</strong>: The core of Windows 10 UWP store communication is an unexported COM interface whose VTable can be dynamically detoured via <code>RoGetActivationFactory</code> interception.</li>
-<li><strong>S2S vs. Client/GDK Mount Spoofing</strong>: While modern GDK titles (such as WWII / S2) can have their DLC mounted locally by short-circuiting <code>XPackageMountWithUiAsync</code> and redirecting mount paths, titles governed by Server-to-Server (S2S) token validation (Demonware backend verifying Microsoft Store JWTs) reject forged client payloads upstream.</li>
+<li><strong>Server-to-Server vs. Client/GDK Mount Spoofing</strong>: While modern GDK titles (such as WWII / S2) can have their DLC mounted locally by short-circuiting <code>XPackageMountWithUiAsync</code> and redirecting mount paths, titles governed by Server-to-Server token validation (Demonware backend verifying Microsoft Store JWTs) reject forged client payloads upstream.</li>
 <li><strong>Democratizing UWP Research</strong>: Complete research source code, VMT hooks, and analysis tools are open-sourced in the <a href="https://gitlab.com/Spet001/msclients">ZPGDK</a> research repository under <code>src/client-iw7-store</code>.</li>
 </ol>
 
