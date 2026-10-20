@@ -604,20 +604,29 @@ utils::hook::detour ro_get_activation_factory_hook;
 }
 </code></pre>
 <hr>
-<h2>5. The Server-to-Server (S2S) Brick Wall &amp; The Frontier of Store Emulation</h2>
-<p>While we successfully intercepted license queries and catalog enumeration, attempting to spoof online consumable ownership (such as COD Points or server-validated DLC playlists) via local memory patching hit an immediate obstacle: <strong>Server-to-Server (S2S) Cryptographic Verification</strong>.</p>
-<p><img src="/assets/journal/iw7_s2s_flow.png" alt="Server to Server Cryptographic Architecture"></p>
-<p>In older PC DRM schemes (such as SteamAPI or legacy SecuROM), modifying the return code of <code>BIsSubscribedApp</code> or patching local license structures in memory was sufficient because the game client itself made the final entitlement decision.</p>
-<p>In modern Microsoft Store architectures integrated with external service backends (like Demonware), local validation is intentionally bypassed:</p>
+<h2>5. Client Spoofing vs. Server-to-Server (S2S): Why Local Emulation Hits a Wall</h2>
+<p>To understand why local license spoofing behaves differently across Windows Store titles, we must differentiate between <strong>Client-to-Store (S1S / Client-Side)</strong> checks and <strong>Server-to-Server (S2S)</strong> cryptographic validation.</p>
+<h3>How ZPGDK Spoofs Modern GDK Titles (Call of Duty: WWII)</h3>
+<p>In modern GDK environments, ZPGDK has already demonstrated successful client-side DLC unlocking (as implemented in <code>src/s2-store-dlc-unlocker-standalone</code> for <em>Call of Duty: WWII</em>). In those titles:</p>
 <ol>
-<li><strong>Signed Token Request</strong>: When the game client invokes <code>Method[6]</code> (<code>GetCustomerCollectionsId</code>), the OS Store service contacts Microsoft authentication servers and returns a cryptographically signed <strong>JSON Web Token (JWT)</strong>.</li>
-<li><strong>Off-Client Forwarding</strong>: The game does not evaluate this token locally. Instead, it packages the raw JWT into an RPC payload and transmits it over TLS to Activision / Demonware backend servers.</li>
-<li><strong>Server-Side Signature Check</strong>: The Demonware server retrieves Microsoft&#39;s public key from the official Azure/Store JWKS endpoint and verifies the digital signature.</li>
-<li><strong>Entitlement Grant</strong>: Only if Microsoft&#39;s digital signature matches the authenticated Xbox Live account does the game server transmit the decryption keys or playlist access permissions for the requested DLC.</li>
+<li>The game downloads all DLC assets (<code>.ff</code> and <code>.pak</code> files in the <code>zone/</code> and <code>video/</code> directories) directly within the monolithic 100GB+ base package from the Microsoft Store.</li>
+<li>The game calls <code>XPackageEnumeratePackages</code> followed by <code>XPackageMountWithUiAsync</code> to mount small &quot;activator&quot; packages.</li>
+<li>If the user lacks an official license, the OS service (<code>appxsvc</code> / <code>GamingServices</code>) aborts mounting with error <code>0x803F8001</code>.</li>
+<li><strong>ZPGDK&#39;s Spoof Solution</strong>: We detour <code>XPackageMountWithUiAsync</code> and <code>XPackageMountWithUiResult</code>. Instead of dispatching the request to the OS, we immediately trigger the game&#39;s asynchronous completion callback with a synthetic mount handle and hook <code>XPackageGetMountPath</code> to return the root executable path. Because the game engine evaluates mount success locally, it reads the pre-installed archives without any external server validation.</li>
 </ol>
-<p>Because the JWT is signed with Microsoft&#39;s private RSA key, forged local strings (such as injectively returning <code>{&quot;isActive&quot;: true}</code> in <code>Method[6]</code>) are rejected upstream by the backend server:</p>
+<h3>The S2S Brick Wall in Infinite Warfare (IW7)</h3>
+<p>In <em>Call of Duty: Infinite Warfare</em>, however, attempting local memory spoofing for online entitlements (such as COD Points or server-authenticated DLC playlists) hits an insurmountable barrier: <strong>Server-to-Server (S2S) Cryptographic Verification</strong>.</p>
+<p><img src="/assets/journal/iw7_s2s_flow.png" alt="Server to Server Cryptographic Architecture"></p>
+<p>Unlike purely client-evaluated checks (S1S) where patching a local boolean or redirecting a filesystem handle suffices, S2S offloads the decision completely:</p>
+<ol>
+<li><strong>Signed Token Request</strong>: The game client calls <code>Method[6]</code> (<code>GetCustomerCollectionsId</code>) on the <code>IStoreContextServer</code> WinRT COM interface. The Windows Store service contacts Microsoft authentication servers and receives a cryptographically signed <strong>JSON Web Token (JWT)</strong>.</li>
+<li><strong>Off-Client Forwarding</strong>: The game does not inspect or validate this token locally. Instead, it serializes the raw JWT into an encrypted RPC payload and transmits it over TLS to Activision / Demonware backend servers.</li>
+<li><strong>Server-to-Server Validation</strong>: The Demonware server contacts Microsoft&#39;s Azure Store endpoint directly (S2S) to fetch Microsoft&#39;s public RSA signing keys and cryptographically verify the token&#39;s digital signature and claims.</li>
+<li><strong>Entitlement Decision</strong>: Only if Microsoft&#39;s digital signature is valid and the authenticated Xbox Live identity holds legitimate purchase records does the server authorize the client&#39;s DLC playlists or allocate COD Points.</li>
+</ol>
+<p>Because the JWT is signed with Microsoft&#39;s private key, local memory modifications (such as injecting <code>{&quot;isActive&quot;: true}</code> or crafting a synthetic HSTRING payload) are rejected upstream:</p>
 <pre><code class="language-text">[Demonware] Ingested JWT payload from client
-[Demonware] Verifying signature against MS Store Public Key...
+[Demonware] Verifying signature against MS Store Public Key via S2S...
 [Demonware] ERROR: Signature verification failed (Invalid RSA PKCS#1 v1.5 padding)
 [Demonware] Entitlement rejected. Client DLC flags set to 0.
 </code></pre>
@@ -633,7 +642,7 @@ utils::hook::detour ro_get_activation_factory_hook;
 <ol>
 <li><strong>UWP Dumper as an Injection Tool</strong>: Repurposing <code>IPackageDebugSettings</code> allows arbitrary C++ instrumentation inside Windows 10 AppContainer sandboxes without triggering security violations.</li>
 <li><strong><code>IStoreContextServer</code> Interface</strong>: The core of Windows 10 UWP store communication is an unexported COM interface whose VTable can be dynamically detoured via <code>RoGetActivationFactory</code> interception.</li>
-<li><strong>S2S vs. Client Licensing</strong>: While purely offline or client-evaluated store queries can be emulated via COM interception (as demonstrated by ReUWP and Online-Fix), server-to-server authenticated systems (Demonware / Xbox Live multiplayer) reject forged client tokens upstream.</li>
+<li><strong>S2S vs. Client/GDK Mount Spoofing</strong>: While modern GDK titles (such as WWII / S2) can have their DLC mounted locally by short-circuiting <code>XPackageMountWithUiAsync</code> and redirecting mount paths, titles governed by Server-to-Server (S2S) token validation (Demonware backend verifying Microsoft Store JWTs) reject forged client payloads upstream.</li>
 <li><strong>Democratizing UWP Research</strong>: Complete research source code, VMT hooks, and analysis tools are open-sourced in the <a href="https://gitlab.com/Spet001/msclients">ZPGDK</a> research repository under <code>src/client-iw7-store</code>.</li>
 </ol>
 
