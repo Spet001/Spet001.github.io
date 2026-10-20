@@ -5697,7 +5697,7 @@ const SpaceCanvasV3 = ({
                                         className="w-7 h-7 rounded-md bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-white flex items-center justify-center transition-colors text-xs cursor-pointer"
                                         title="Technical Journal Article"
                                     >
-                                        <i className="fas fa-book text-[10px]"></i>
+                                        <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
                                     </button>
                                 )}
                             </div>
@@ -6610,14 +6610,12 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                             e.preventDefault();
                             if (onNavigateJournal) onNavigateJournal();
                         }}
-                        className={`hover:text-primary transition-colors font-semibold cursor-pointer inline-flex items-center gap-1.5 ${currentView === 'journal' ? 'text-primary' : 'text-slate-300'}`}
+                        className={`hover:text-primary transition-colors font-semibold cursor-pointer ${currentView === 'journal' ? 'text-primary' : 'text-slate-300'}`}
                     >
-                        <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
-                        <span>{t('nav.journal')}</span>
+                        {t('nav.journal')}
                     </a>
-                    <a href="#tools" onClick={(e) => handleSectionClick(e, 'tools')} className="hover:text-primary transition-colors font-semibold cursor-pointer inline-flex items-center gap-1.5 text-slate-300">
-                        <img src="/assets/icons/spet_sprites/green_chip.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
-                        <span>{t('nav.tools') || 'Tools'}</span>
+                    <a href="#tools" onClick={(e) => handleSectionClick(e, 'tools')} className="hover:text-primary transition-colors font-semibold cursor-pointer text-slate-300">
+                        {t('nav.tools') || 'Tools'}
                     </a>
                     <a href="#contact" onClick={(e) => handleSectionClick(e, 'contact')} className="hover:text-white transition-colors">{t('nav.contact')}</a>
                 </nav>
@@ -6630,17 +6628,17 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                         className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
                         title="Open SpetTerm CLI (Ctrl+K)"
                     >
-                        <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                        <i className="fas fa-terminal text-primary text-[11px]"></i>
                         <span>CLI</span>
                     </button>
 
                     {/* SETTINGS BUTTON */}
                     <button
                         onClick={onOpenSettings}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
                         title={lang === 'pt' ? 'Configurações' : 'Settings'}
                     >
-                        <img src="/assets/icons/gears-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                        <img src="/assets/icons/gears-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block shrink-0" />
                         <span className="hidden sm:inline">{lang === 'pt' ? 'Config' : 'Settings'}</span>
                     </button>
 
@@ -6648,7 +6646,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                         onClick={onOpenCV}
                         className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-md bg-primary text-white hover:bg-primaryHover transition-all shadow-sm shadow-primary/20 whitespace-nowrap"
                     >
-                        <img src="/assets/icons/spet_sprites/floppy_disk.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                        <img src="/assets/icons/spet_sprites/floppy_disk.png" alt="" className="w-3.5 h-3.5 pixelated inline-block shrink-0" />
                         <span>{t('nav.resume')}</span>
                     </button>
 
@@ -6683,22 +6681,20 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'experience'); }} href="#experience" className="block text-sm text-slate-300 hover:text-primary">{t('nav.experience')}</a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'projects'); }} href="#projects" className="block text-sm text-slate-300 hover:text-primary">{t('nav.projects')}</a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'skills'); }} href="#skills" className="block text-sm text-slate-300 hover:text-primary">{t('nav.skills')}</a>
-                    <a onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); if (onNavigateJournal) onNavigateJournal(); }} href="/journal" className="flex items-center gap-2 text-sm text-primary font-semibold">
-                        <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
-                        <span>{t('nav.journal')}</span>
+                    <a onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); if (onNavigateJournal) onNavigateJournal(); }} href="/journal" className="block text-sm text-primary font-semibold">
+                        {t('nav.journal')}
                     </a>
-                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'tools'); }} href="#tools" className="flex items-center gap-2 text-sm text-slate-300 hover:text-primary">
-                        <img src="/assets/icons/spet_sprites/green_chip.png" alt="" className="w-3.5 h-3.5 pixelated" />
-                        <span>{t('nav.tools') || 'Tools'}</span>
+                    <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'tools'); }} href="#tools" className="block text-sm text-slate-300 hover:text-primary">
+                        {t('nav.tools') || 'Tools'}
                     </a>
                     <a onClick={(e) => { setMobileMenuOpen(false); handleSectionClick(e, 'contact'); }} href="#contact" className="block text-sm text-slate-300 hover:text-primary">{t('nav.contact')}</a>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenPatreon(); }} className="w-full text-left text-sm text-[#FF424D] hover:text-[#e03640] flex items-center gap-2 font-bold mb-3"><i className="fab fa-patreon"></i> Login with Patreon</button>
                     <button onClick={() => { setMobileMenuOpen(false); onToggleTerminal(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
-                        <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-3.5 h-3.5 pixelated" />
+                        <i className="fas fa-terminal text-primary text-xs"></i>
                         <span>Terminal CLI</span>
                     </button>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenSettings(); }} className="w-full text-left text-sm text-slate-300 hover:text-primary flex items-center gap-2">
-                        <img src="/assets/icons/gears-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
+                        <img src="/assets/icons/gears-0.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
                         <span>{lang === 'pt' ? 'Configurações' : 'Settings'}</span>
                     </button>
                     <button onClick={() => { setMobileMenuOpen(false); onOpenEasterMenu(); }} className="w-full text-left text-sm text-slate-400 hover:text-white flex items-center gap-2">
@@ -6751,14 +6747,14 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                         className="px-5 py-3 rounded-lg bg-white/[0.04] border border-cyan-500/30 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/[0.06] text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer select-none"
                         title={lang === 'pt' ? 'Entrar na experiência espacial 3D interativa' : 'Enter interactive 3D space experience'}
                     >
-                        <img src="/assets/icons/spet_sprites/portal_wormhole.png" alt="" className="w-4 h-4 pixelated inline-block" />
+                        <i className="fas fa-compass text-cyan-400"></i>
                         <span>{lang === 'pt' ? 'Experiência Interativa: Galaxy Map' : 'Interactive Experience: Galaxy Map'}</span>
                     </button>
                     <a
                         href="#projects"
                         className="px-6 py-3 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primaryHover transition-colors shadow-lg shadow-primary/25 flex items-center gap-2"
                     >
-                        <img src="/assets/icons/spet_sprites/blue_folder.png" alt="" className="w-4 h-4 pixelated inline-block" />
+                        <i className="fas fa-layer-group"></i>
                         <span>{t('hero.ctaProjects')}</span>
                     </a>
                     
@@ -6775,7 +6771,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                         className="px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.08] text-slate-300 text-sm font-mono hover:text-white hover:border-slate-500 transition-colors flex items-center gap-2"
                         title="Open SpetTerm CLI"
                     >
-                        <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-4 h-4 pixelated inline-block" />
+                        <i className="fas fa-terminal text-primary"></i>
                         <span>CLI</span>
                     </button>
                 </div>
@@ -7528,7 +7524,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             }}
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25 cursor-pointer"
                         >
-                            <i className="fas fa-book-open"></i> {lang === 'pt' ? 'Explorar o Journal' : 'Explore Journal'}
+                            <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" /> {lang === 'pt' ? 'Explorar o Journal' : 'Explore Journal'}
                         </a>
                     )}
                     {project.id === "delicia_mod_doom" && (
@@ -7550,7 +7546,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             onClick={onOpen3DViewer}
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
                         >
-                            <i className="fas fa-cube"></i> {lang === 'pt' ? 'Ver Modelos' : 'View Models'}
+                            <img src="/assets/icons/paint_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" /> {lang === 'pt' ? 'Ver Modelos' : 'View Models'}
                         </button>
                     )}
                     {project.journalId && (
@@ -7563,7 +7559,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             }}
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-white/[0.04] border border-white/[0.08] text-primary hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
                         >
-                            <i className="fas fa-book-open"></i> {lang === 'pt' ? 'Artigo no Journal' : 'Journal Entry'}
+                            <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" /> {lang === 'pt' ? 'Artigo no Journal' : 'Journal Entry'}
                         </a>
                     )}
                 </div>
@@ -7954,7 +7950,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                                         className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs cursor-pointer"
                                                         title={lang === 'pt' ? 'Explorar o Journal' : 'Explore Journal'}
                                                     >
-                                                        <i className="fas fa-book-open"></i>
+                                                        <img src="/assets/icons/notepad_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
                                                     </a>
                                                 )}
                                                 {p.id === 'delicia_mod_doom' && (
@@ -7978,7 +7974,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                                         className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
                                                         title={lang === 'pt' ? 'Ver Modelos 3D' : 'View 3D Models'}
                                                     >
-                                                        <i className="fas fa-cube"></i>
+                                                        <img src="/assets/icons/paint_file-0.png" alt="" className="w-3.5 h-3.5 pixelated" />
                                                     </button>
                                                 )}
                                             </div>
@@ -8658,7 +8654,7 @@ const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigat
                 <div className="pt-6 border-t border-white/[0.06]">
                     <div className="max-w-md mx-auto p-5 rounded-xl glass-panel text-center space-y-3 shadow-2xl">
                         <div className="flex items-center justify-center gap-2 text-white font-semibold text-xs sm:text-sm">
-                            <i className="fas fa-newspaper text-primary"></i>
+                            <img src="/assets/icons/notepad_file-0.png" alt="" className="w-4 h-4 pixelated inline-block" />
                             <span>{t('footer.newsletter.title')}</span>
                         </div>
                         <p className="text-slate-400 text-[11px] leading-relaxed max-w-sm mx-auto">
@@ -11144,7 +11140,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                             <i className="fas fa-times text-[10px]"></i>
                         </button>
                         <div className="flex items-start gap-2.5 pr-3">
-                            <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-5 h-5 pixelated inline-block shrink-0 mt-0.5" />
+                            <span className="text-lg">👨‍🚀</span>
                             <div>
                                 <div className="font-semibold text-cyan-400 mb-0.5">Astro · Mascot</div>
                                 <p className="text-slate-300 leading-snug">
@@ -11220,7 +11216,7 @@ const MascotCompanion = ({ isOpen, setIsOpen, lang, disableWelcome = false, onTo
                     <div className="px-4 py-3.5 bg-black/60 border-b border-white/[0.1] flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="relative w-9 h-9 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-inner">
-                                <img src="/assets/icons/spet_sprites/crt_monitor.png" alt="" className="w-5 h-5 pixelated inline-block" />
+                                <span className="text-lg">👨‍🚀</span>
                                 <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary border border-slate-950"></span>
                             </div>
                             <div>
