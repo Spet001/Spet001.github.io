@@ -325,7 +325,8 @@
                     pwadCacheKey: 'project115_despair.wad',
                     pwadUrl: '/wads/project115.wad',
                     pwadRemoteUrl: 'https://github.com/Spet001/Project-115-Despair/releases/download/v1.0.0/Project115.wad',
-                    expectedPwadBytes: 511013754,
+                    pwadArchiveUrl: 'https://archive.org/download/project-115-despair-final/Project%20115%20-%20Despair%20Final.wad',
+                    expectedPwadBytes: 511016132,
                     extraArgs: [
                         '-nowidescreen',
                         '-iwad', '/wads/doom2.wad',
@@ -544,8 +545,6 @@
             }
 
             async function loadProject115Pwad() {
-                
-
                 logLine(` checking IndexedDB cache for ${cfg.pwadCacheKey}...`);
                 const cachedPwad = await getCachedWad(cfg.pwadCacheKey);
                 if (cachedPwad) {
@@ -560,14 +559,35 @@
                     return;
                 }
 
-                try {
-                    logLine(' fetch Project 115 PWAD (local / remote stream)...');
-                    let resp = await fetch(cfg.pwadUrl).catch(() => null);
-                    if ((!resp || !resp.ok) && cfg.pwadRemoteUrl) {
-                        logLine(' attempting fetch from release mirror: ' + cfg.pwadRemoteUrl, 'hl');
-                        resp = await fetch(cfg.pwadRemoteUrl).catch(() => null);
+                // Sources waterfall: local dev stream -> GitHub Releases -> Internet Archive mirror
+                const sources = [
+                    { label: 'local dev stream', url: cfg.pwadUrl },
+                    { label: 'GitHub Release', url: cfg.pwadRemoteUrl },
+                    { label: 'Internet Archive mirror', url: cfg.pwadArchiveUrl }
+                ].filter(s => Boolean(s.url));
+
+                let resp = null;
+                let activeSource = null;
+
+                for (const src of sources) {
+                    try {
+                        logLine(` attempting fetch from ${src.label}...`);
+                        const r = await fetch(src.url);
+                        if (r.ok) {
+                            resp = r;
+                            activeSource = src;
+                            logLine(` connected to ${src.label} (HTTP ${r.status})`, 'hl');
+                            break;
+                        } else {
+                            logLine(` ${src.label} returned HTTP ${r.status}, trying fallback...`, 'warn');
+                        }
+                    } catch (err) {
+                        logLine(` ${src.label} blocked/unreachable (${err.message || 'CORS/Net'}), trying fallback...`, 'warn');
                     }
-                    if (resp && resp.ok) {
+                }
+
+                if (resp && resp.ok) {
+                    try {
                         const total = Number(resp.headers.get('Content-Length')) || cfg.expectedPwadBytes;
                         const reader = resp.body.getReader();
                         const buf = new Uint8Array(total);
@@ -586,7 +606,7 @@
                             pwadPct = Math.min(100, (loaded / total) * 100);
                             const mbLoaded = (loaded / (1024 * 1024)).toFixed(1);
                             const mbTotal = (total / (1024 * 1024)).toFixed(1);
-                            updateOverallProgress(`Downloading Project 115 (${mbLoaded}/${mbTotal} MB)...`);
+                            updateOverallProgress(`Downloading Project 115 from ${activeSource ? activeSource.label : 'mirror'} (${mbLoaded}/${mbTotal} MB)...`);
                         }
 
                         if (chunks.length > 0 || loaded !== buf.byteLength) {
@@ -609,12 +629,13 @@
                         logLine(` adding ${cfg.pwadVfs}`, 'hl');
                         checkBothReady();
                         return;
+                    } catch (e) {
+                        console.error('[UZDoom] Stream read failed:', e);
+                        logLine('Erro ao processar stream: ' + e.message, 'warn');
                     }
-                } catch (e) {
-                    console.warn('[UZDoom] Auto-fetch of Project 115 failed, displaying file picker fallback:', e);
                 }
 
-                updateOverallProgress('Aguardando Project 115 WAD...');
+                updateOverallProgress('Erro ao carregar Project 115 WAD.');
             }
 
             
