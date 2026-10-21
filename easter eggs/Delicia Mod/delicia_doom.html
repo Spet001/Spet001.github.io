@@ -216,23 +216,23 @@
                 </div>
 
                 <div id="p115-fallback-box" style="display:none; margin-top: 10px; padding: 10px; background: rgba(0,20,10,0.6); border: 1px dashed #00aa66; border-radius: 4px; text-align: left;">
-                    <div style="font-size: 11px; color: #aaffcc; margin-bottom: 6px; line-height: 1.4;">
-                        ⚠️ <strong>Download Externo Bloqueado por CORS:</strong> O navegador impediu o download automático de 500 MB dos servidores externos.
+                    <div id="p115-fallback-msg" style="font-size: 11px; color: #aaffcc; margin-bottom: 6px; line-height: 1.4;">
+                        ⚠️ <strong>Download Automático Indisponível:</strong> O servidor de downloads atingiu o limite gratuito de hoje ou está ocupado.
                     </div>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
-                        <a id="p115-link-github" href="https://github.com/Spet001/Project-115-Despair/releases/download/v1.0.0/Project115.wad" target="_blank" rel="noopener noreferrer" class="dos-btn" style="text-decoration: none; font-size: 11px; padding: 4px 8px; background: #112233; color: #88ccff; border-color: #336699;">
-                            ⬇️ 1. Baixar do GitHub Releases (511 MB)
-                        </a>
                         <a id="p115-link-ia" href="https://archive.org/download/project-115-despair-final/Project%20115%20-%20Despair%20Final.wad" target="_blank" rel="noopener noreferrer" class="dos-btn" style="text-decoration: none; font-size: 11px; padding: 4px 8px; background: #222211; color: #ffffaa; border-color: #888833;">
-                            ⬇️ Ou Baixar do Internet Archive
+                            ⬇️ Internet Archive (511 MB)
+                        </a>
+                        <a id="p115-link-github" href="https://github.com/Spet001/Project-115-Despair/releases/download/v1.0.0/Project115.wad" target="_blank" rel="noopener noreferrer" class="dos-btn" style="text-decoration: none; font-size: 11px; padding: 4px 8px; background: #112233; color: #88ccff; border-color: #336699;">
+                            ⬇️ GitHub Releases (511 MB)
                         </a>
                     </div>
                     <button id="p115-pick-file-btn" type="button" class="dos-btn" style="width: 100%; background: #003322; border-color: #00aa66; color: #aaffcc; padding: 8px 10px; cursor: pointer; font-size: 11px;">
-                        📂 2. SELECIONAR "Project115.wad" (Ou arraste o arquivo aqui)
+                        📂 SELECIONAR "Project115.wad" (Ou arraste o arquivo aqui)
                     </button>
                     <input type="file" id="p115-file-input" accept=".wad,.pk3" style="display: none;" />
                     <div style="font-size: 10px; color: #669988; margin-top: 5px;">
-                        💡 O arquivo é lido em 0s e salvo no cache IndexedDB do navegador. Nas próximas vezes, o jogo abrirá instantaneamente sem baixar nada!
+                        💡 O arquivo é lido e salvo no cache IndexedDB do seu navegador. Nas próximas vezes, o jogo abrirá instantaneamente em 0s!
                     </div>
                 </div>
 
@@ -342,6 +342,7 @@
                     vfsIwad: '/wads/doom2.wad',
                     isDeliciaTC: false,
                     isProject115: true,
+                    pwadCloudflareUrl: 'https://p115-spet.gelain15mj.workers.dev',
                     pwadVfs: '/wads/project115.wad',
                     pwadCacheKey: 'project115_despair.wad',
                     pwadUrl: '/wads/project115.wad',
@@ -632,8 +633,9 @@
                     return;
                 }
 
-                // Sources waterfall: local dev stream -> GitHub Releases -> Internet Archive mirror
+                // Sources waterfall: Cloudflare Edge (direct CORS stream) -> local dev stream -> GitHub Releases -> Internet Archive mirror
                 const sources = [
+                    { label: 'Spet Edge Server (Cloudflare)', url: cfg.pwadCloudflareUrl },
                     { label: 'local dev stream', url: cfg.pwadUrl },
                     { label: 'GitHub Release', url: cfg.pwadRemoteUrl },
                     { label: 'Internet Archive mirror', url: cfg.pwadArchiveUrl }
@@ -641,6 +643,7 @@
 
                 let resp = null;
                 let activeSource = null;
+                let occupiedMsg = null;
 
                 for (const src of sources) {
                     try {
@@ -651,6 +654,15 @@
                             activeSource = src;
                             logLine(` connected to ${src.label} (HTTP ${r.status})`, 'hl');
                             break;
+                        } else if (r.status === 429) {
+                            try {
+                                const data = await r.json();
+                                if (data && data.message) occupiedMsg = data.message;
+                            } catch (e) {}
+                            if (!occupiedMsg) {
+                                occupiedMsg = 'Sorry, Spet servers are Occupied at the moment. Want to manually download and Play?';
+                            }
+                            logLine(` ${src.label} (HTTP 429): ${occupiedMsg}`, 'warn');
                         } else {
                             logLine(` ${src.label} returned HTTP ${r.status}, trying fallback...`, 'warn');
                         }
@@ -679,7 +691,7 @@
                             pwadPct = Math.min(100, (loaded / total) * 100);
                             const mbLoaded = (loaded / (1024 * 1024)).toFixed(1);
                             const mbTotal = (total / (1024 * 1024)).toFixed(1);
-                            updateOverallProgress(`Downloading Project 115 from ${activeSource ? activeSource.label : 'mirror'} (${mbLoaded}/${mbTotal} MB)...`);
+                            updateOverallProgress(`Downloading Project 115 from ${activeSource ? activeSource.label : 'server'} (${mbLoaded}/${mbTotal} MB)...`);
                         }
 
                         if (chunks.length > 0 || loaded !== buf.byteLength) {
@@ -709,10 +721,19 @@
                     }
                 }
 
-                logLine('W_Notice: Para jogar, baixe o WAD pelos links acima ou selecione o arquivo do seu computador.', 'hl');
+                if (occupiedMsg) {
+                    logLine(`W_Server: ${occupiedMsg}`, 'warn');
+                    updateOverallProgress('Servidor ocupado. Baixe manualmente para jogar.');
+                    const msgEl = document.getElementById('p115-fallback-msg');
+                    if (msgEl) {
+                        msgEl.innerHTML = `⚠️ <strong>${occupiedMsg}</strong>`;
+                    }
+                } else {
+                    logLine('W_Notice: Para jogar, baixe o WAD pelos links acima ou selecione o arquivo do seu computador.', 'hl');
+                    updateOverallProgress('Aguardando Project 115 WAD...');
+                }
+
                 if (fallbackBox) fallbackBox.style.display = 'block';
-                updateOverallProgress('Aguardando Project 115 WAD...');
-            }
 
             
 
