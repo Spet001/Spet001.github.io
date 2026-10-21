@@ -129,7 +129,7 @@
               "name": "BO1 & BO2 MS Store Clients & GSC Injector",
               "applicationCategory": "DeveloperApplication",
               "operatingSystem": "Windows",
-              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
+              "description": "Complete C++ suite with custom client, GSC script injector, and entitlement architecture analysis for Black Ops 1 & 2 on Windows Store."
             },
             {
               "@type": "SoftwareApplication",
@@ -506,7 +506,7 @@
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="custom-cursor"></div>
     <!-- Pre-hydration initial loading overlay -->
-    <div id="initial-loading-screen" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+    <div id="initial-loading-screen" data-nosnippet="true" aria-hidden="true" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
         <div class="flex items-center gap-2.5">
             <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
             <span class="text-slate-600">/</span>
@@ -566,7 +566,7 @@
 
                 <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-5xl mx-auto">
             <div class="mb-8">
-                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/" class="text-xs text-primary hover:underline font-mono">← Back to Home (SpetDev)</a>
             </div>
             <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md mb-8">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold mb-3">
@@ -574,9 +574,17 @@
                 </div>
                 <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">Technical Journal & Research Papers</h1>
                 <p class="text-slate-300 text-sm leading-relaxed max-w-2xl mb-8">
-                    Documentação profunda de pesquisas em engenharia reversa, análise do motor de bytecode GSC de Call of Duty, bypasses de sandbox UWP/GDK e arquiteturas de backend serverless.
+                    Deep-dive technical research papers covering reverse engineering, Call of Duty GSC bytecode VM architecture, UWP/GDK sandbox security analysis, and serverless edge backends.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 21, 2026</time>
+                        <h2 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/What-Is-ResurgeGDK/" class="hover:text-primary transition-colors">What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry</a>
+                        </h2>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.</p>
+                        <a href="/journal/What-Is-ResurgeGDK/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
                     <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 19, 2026</time>
                         <h2 class="text-base font-bold text-white mb-2">

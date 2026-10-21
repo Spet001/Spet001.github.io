@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'What-Is-ResurgeGDK': 'Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.',
+    'entry_0019': 'Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.',
     'Exploring-Legacy-UWP-Titles': 'Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.',
     'entry_0018': 'Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.',
     'Gamifying-A-Galactic-Portfolio-Galaxy-Map': 'Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors.',
@@ -68,7 +70,13 @@ function build() {
     }
     
     const entries = JSON.parse(fs.readFileSync(ENTRIES_FILE, 'utf8'));
-    const templateHtml = fs.readFileSync(ROOT_INDEX_FILE, 'utf8');
+    let templateHtml = fs.readFileSync(ROOT_INDEX_FILE, 'utf8');
+    if (!templateHtml.includes('id="initial-loading-screen" data-nosnippet="true" aria-hidden="true"')) {
+        templateHtml = templateHtml.replace(
+            '<div id="initial-loading-screen"',
+            '<div id="initial-loading-screen" data-nosnippet="true" aria-hidden="true"'
+        );
+    }
 
     let generatedCount = 0;
 
@@ -179,8 +187,8 @@ function build() {
             : '';
         const articleMainHtml = `        <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
             <div class="mb-8 flex items-center justify-between text-xs">
-                <a href="/" class="text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
-                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">Todos os Artigos →</a>
+                <a href="/" class="text-primary hover:underline font-mono">← Back to Home (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">All Articles →</a>
             </div>
             <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
                 <header class="mb-8 pb-6 border-b border-white/[0.08]">
@@ -293,7 +301,7 @@ ${articleHtml}
 
     const masterMainHtml = `        <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-5xl mx-auto">
             <div class="mb-8">
-                <a href="/" class="text-xs text-primary hover:underline font-mono">← Voltar ao Início (SpetDev)</a>
+                <a href="/" class="text-xs text-primary hover:underline font-mono">← Back to Home (SpetDev)</a>
             </div>
             <section class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md mb-8">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold mb-3">
@@ -301,7 +309,7 @@ ${articleHtml}
                 </div>
                 <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4">Technical Journal & Research Papers</h1>
                 <p class="text-slate-300 text-sm leading-relaxed max-w-2xl mb-8">
-                    Documentação profunda de pesquisas em engenharia reversa, análise do motor de bytecode GSC de Call of Duty, bypasses de sandbox UWP/GDK e arquiteturas de backend serverless.
+                    Deep-dive technical research papers covering reverse engineering, Call of Duty GSC bytecode VM architecture, UWP/GDK sandbox security analysis, and serverless edge backends.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 ${journalCardsHtml}

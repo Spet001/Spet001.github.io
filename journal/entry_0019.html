@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <meta name="author" content="Eduardo Gelain">
+    <meta name="robots" content="noindex, follow">
+
+    <!-- Canonical URL & Alternate Discovery -->
+    <link rel="canonical" href="https://spet01.dev/journal/What-Is-ResurgeGDK/">
+    <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spet01.dev/journal/What-Is-ResurgeGDK/">
+    <meta property="og:title" content="What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry | Eduardo Gelain">
+    <meta property="og:description" content="Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.">
+    <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1668">
+    <meta property="og:image:height" content="506">
+    <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+    <meta property="og:site_name" content="Eduardo Gelain Portfolio">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://spet01.dev/journal/What-Is-ResurgeGDK/">
+    <meta name="twitter:title" content="What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry | Eduardo Gelain">
+    <meta name="twitter:description" content="Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.">
+    <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
+    <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry",
+  "description": "Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.",
+  "datePublished": "Oct 21, 2026",
+  "articleSection": "Reverse Engineering & Systems Interop",
+  "url": "https://spet01.dev/journal/What-Is-ResurgeGDK/",
+  "mainEntityOfPage": "https://spet01.dev/journal/What-Is-ResurgeGDK/",
+  "author": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "alternateName": "SpetDev",
+    "url": "https://spet01.dev"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Eduardo Gelain",
+    "url": "https://spet01.dev"
+  }
+}
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown & Sanitizer for Mascot Chat & Technical Journal -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#00aaff',
+                        primaryHover: '#0077b6',
+                        dark: '#050505',
+                        darkPanel: 'rgba(5, 5, 5, 0.85)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for base tweaks -->
+    <style>
+        /* High-DPI Pixel-Art Sprite Rendering (prevents bilinear blur on 2K/4K & browser zoom) */
+        .pixelated,
+        img.pixelated,
+        .pixel-art {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        html {
+            scroll-behavior: smooth !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            cursor: none !important;
+            overflow-x: hidden;
+        }
+
+        a,
+        button,
+        .clickable { cursor: none !important; }
+
+        .glass-panel {
+            background: rgba(8, 10, 15, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Custom Scrollbar for Journal Entries */
+        .journal-entries-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.7);
+        }
+        .journal-entries-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+            margin: 4px 0;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+        }
+
+        .fade-in-section {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
+        /* Subtle Project Card Fade-In on Filter & Search */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .project-card-animate {
+            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
+        #projects article {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+            position: relative;
+        }
+
+        #projects article:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 170, 255, 0.6) !important;
+            box-shadow: 
+                inset 0 0 0 1px rgba(0, 170, 255, 0.45),
+                inset 0 0 22px rgba(0, 170, 255, 0.15),
+                0 16px 36px -8px rgba(0, 170, 255, 0.24),
+                0 12px 28px -6px rgba(0, 0, 0, 0.65) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-card-animate {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            #projects article:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Custom Cursor (GPU-composited via rAF-coalesced translate3d, zero style recalculation on 1000Hz mice) */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%) scale(1);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        #custom-cursor[data-hover="1"] {
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+        }
+
+        /* Mascot Companion styles */
+        @keyframes astroFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1.5deg); }
+        }
+        .astro-float {
+            animation: astroFloat 3.5s ease-in-out infinite;
+        }
+
+        /* Subtle bubble entrance animations and transitions */
+        @keyframes mascotBubbleIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes mascotAiGlow {
+            0% {
+                border-color: rgba(56, 189, 248, 0.75);
+                box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+            }
+            100% {
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        @keyframes typingCursorBlink {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0; transform: scaleY(0.7); }
+        }
+
+        .mascot-typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 15px;
+            background-color: #38bdf8;
+            margin-left: 3px;
+            vertical-align: -1px;
+            animation: typingCursorBlink 0.75s infinite ease-in-out;
+            border-radius: 1px;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+        }
+
+        .mascot-bubble-user {
+            animation: mascotBubbleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mascot-bubble-ai {
+            animation: mascotBubbleIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .mascot-bubble-ai.new-arrival {
+            animation: mascotBubbleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, mascotAiGlow 1.4s ease-out forwards;
+        }
+
+        @keyframes wavePulse {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .typing-dot-1 { animation: wavePulse 1.2s infinite ease-in-out 0s; }
+        .typing-dot-2 { animation: wavePulse 1.2s infinite ease-in-out 0.2s; }
+        .typing-dot-3 { animation: wavePulse 1.2s infinite ease-in-out 0.4s; }
+
+        .mascot-chat-content p { margin-bottom: 0.5rem; line-height: 1.5; }
+        .mascot-chat-content p:last-child { margin-bottom: 0; }
+        .mascot-chat-content ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content code { background: rgba(15, 23, 42, 0.85); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85em; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .mascot-chat-content pre { background: #080d1a; padding: 0.75rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mascot-chat-content pre code { background: transparent; padding: 0; color: #e2e8f0; border: none; }
+        .mascot-chat-content a { color: #38bdf8; text-decoration: underline; }
+        .mascot-chat-content strong { color: #fff; font-weight: 600; }
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        /* Journal Markdown Reader Styles */
+        .markdown-body h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff; }
+        .markdown-body h2 { font-size: 1.45rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .markdown-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e2e8f0; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+        .markdown-body a { color: #00aaff; text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-body a:hover { color: #38bdf8; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.35rem; }
+        .markdown-body blockquote { border-left: 4px solid #00aaff; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-bottom: 1.25rem; background: rgba(0, 170, 255, 0.05); padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body code { background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875em; color: #38bdf8; }
+        .markdown-body pre { background-color: rgba(5, 5, 5, 0.95); padding: 1.1rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .markdown-body pre code { background-color: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.85em; }
+        .markdown-body img { max-width: 100%; border-radius: 0.75rem; margin: 1.25rem 0; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .markdown-body hr { border-color: rgba(255, 255, 255, 0.08); margin: 2rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; text-align: left; }
+        .markdown-body th { background: rgba(255,255,255,0.05); color: #fff; }
+</style>
+
+    <!-- React & Three.js Libraries -->
+    <script>
+        // Fix Chromium bug on large internal blob: URLs in Three.js GLTFLoader (r128):
+        // ImageBitmapLoader fails with net::ERR_ABORTED ("TypeError: Failed to fetch") on large blobs (moon.glb & nebula0.glb).
+        // Forcing TextureLoader (HTMLImageElement) guarantees reliable loading across all browsers.
+        window.createImageBitmap = undefined;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style>
+        .text-glow {
+            text-shadow: 0px 2px 8px rgba(0,0,0,0.9), 0px 4px 20px rgba(0,0,0,0.8);
+        }
+        .text-glow-none {
+            text-shadow: none !important;
+        }
+        @media print {
+            #astro-assistant,
+            #astro-chat-window,
+            #custom-cursor,
+            #initial-loading-screen,
+            nav,
+            header,
+            footer,
+            canvas,
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+
+<body class="antialiased selection:bg-primary selection:text-white">
+    <div id="custom-cursor"></div>
+    <!-- Pre-hydration initial loading overlay -->
+    <div id="initial-loading-screen" data-nosnippet="true" aria-hidden="true" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+        <div class="flex items-center gap-2.5">
+            <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-xs text-slate-400">SpetDev</span>
+        </div>
+
+        <div class="max-w-xs w-full">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+                <span>Iniciando ambiente...</span>
+                <span>···</span>
+            </div>
+            <div class="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
+                <div class="h-full bg-primary/70 rounded-full w-1/3 animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.dismissInitialLoadingScreen = function() {
+            var el = document.getElementById('initial-loading-screen');
+            if (el && el.parentNode) {
+                el.style.transition = 'opacity 0.7s ease-out';
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    if (el && el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }, 700);
+            }
+        };
+    </script>
+    <div id="root">
+        <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
+        <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
+        <header class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
+                    <i class="fas fa-terminal text-primary"></i>
+                    <span>Spet<span class="text-primary">Dev</span></span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
+                    <a href="#tools" class="hover:text-primary transition-colors">Tools</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-book-open"></i> Technical Journal
+                    </a>
+                </div>
+            </div>
+        </header>
+
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Back to Home (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">All Articles →</a>
+            </div>
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Oct 21, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Reverse Engineering & Systems Interop</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="What-Is-ResurgeGDK">
+<p>An engineering investigation into the architecture of <strong>ResurgeGDK</strong>—a high-performance systems compatibility layer, runtime bridge, and preservation ecosystem for <em>Call of Duty: Black Ops III</em> (Treyarch T7 Engine) operating across the Microsoft Game Development Kit (GDK), Windows Store AppX environments, and the legacy Steamworks ecosystem.</p>
+<p>Official repository mirror: <a href="https://gitlab.com/Spet001/resurgegdkbackup">ResurgeGDK Mirror on GitLab</a></p>
+<hr>
+<h2>1. Overview &amp; Architectural Scope</h2>
+<p>When <em>Call of Duty: Black Ops III</em> was released in late 2015, the PC release was architected exclusively around the Win32 platform and Valve&#39;s Steamworks API. Over the following decade, the game accumulated one of the largest modding communities in PC gaming history, driven almost entirely by the Steam Workshop ecosystem—tens of thousands of custom Zombies maps, total conversion mods, and community asset packs.</p>
+<p>However, modern distribution on the Microsoft Store and Xbox PC app brought a fundamental platform fracture. Rather than relying on standard Win32 execution patterns, modern Store releases utilize the <strong>Microsoft Game Development Kit (GDK)</strong>. In this runtime environment:</p>
+<ul>
+<li>The executable is bound to Microsoft Gaming Services (<code>xgameruntime.dll</code>).</li>
+<li>User authentication and identity delegate to Xbox Live (<code>XUser</code>, <code>XStore</code>).</li>
+<li>Filesystem access is governed by AppX / MSIX packaging manifests and sandboxed virtual stores.</li>
+<li>Crucially, the build possesses <strong>zero native integration with the Steamworks SDK</strong> (<code>steam_api64.dll</code> is entirely absent).</li>
+</ul>
+<p>As a direct consequence, players running the Microsoft Store release were isolated: Steam Workshop mods could not be mounted, custom Zombies maps failed to load, and offline legacy preservation was impeded by missing telemetry endpoints and unauthenticated entitlement services.</p>
+<p><img src="/assets/resurge.png" alt="Resurge Client Interface"></p>
+<p><strong>ResurgeGDK</strong> was engineered to solve this platform divide. Rather than modifying the static <code>.text</code> segment of the game binary, ResurgeGDK acts as an in-memory <strong>systems compatibility layer and dynamic runtime bridge</strong>. It intercepts GDK runtime calls, virtualizes filesystem hierarchies, mounts Steam Workshop assets via an integrated VFS, emulates local telemetry services, and embeds community security fixes from the Ezz BOIII client alongside a native GSC bytecode injection engine.</p>
+<pre><code class="language-text">┌────────────────────────────────────────────────────────────────────────┐
+│                   Resurge Desktop Launcher (Electron)                  │
+│       [Steam Workshop Downloader] │ [GSC Compiler] │ [Console UI]       │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ IPC / Process Injection
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                     Target Process: BlackOps3.exe                      │
+│                                                                        │
+│   ┌────────────────────────────────────────────────────────────────┐   │
+│   │                     ResurgeGDK.dll Core                        │   │
+│   │                                                                │   │
+│   │  ┌───────────────────────┐          ┌───────────────────────┐  │   │
+│   │  │   GDK / COM Bridge    │          │  Workshop VFS Mount   │  │   │
+│   │  │  - QueryApiImpl Hook  │          │  - Path Virtualizer   │  │   │
+│   │  │  - XPackage Mounts    │          │  - DB_FindXAssetDetour│  │   │
+│   │  │  - Local Entitlements │          │  - BOIII Asset Ingest │  │   │
+│   │  └───────────────────────┘          └───────────────────────┘  │   │
+│   │  ┌───────────────────────┐          ┌───────────────────────┐  │   │
+│   │  │  Telemetry &amp; Loot     │          │  Ezz BOIII Security   │  │   │
+│   │  │  - Demonware Emulation│          │  - RCE Exploit Detours│  │   │
+│   │  │  - 999x Gum Inventory │          │  - P2P Net Hardening  │  │   │
+│   │  │  - Local State Cache  │          │  - GSC ParseTree VM   │  │   │
+│   │  └───────────────────────┘          └───────────────────────┘  │   │
+│   └────────────────────────────────────────────────────────────────┘   │
+│                                                                        │
+│   ┌────────────────────────────────────────────────────────────────┐   │
+│   │                Treyarch T7 Engine Subsystems                   │   │
+│   │  [FastFile Manager] [Script VM] [D3D11 Render] [Sound Engine]  │   │
+│   └────────────────────────────────────────────────────────────────┘   │
+└────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>2. Cross-Platform Conversion: Steam to GDK Runtime Bridge</h2>
+<p>The architectural gulf between the legacy Steam Win32 build and the modern GDK build is rooted in the platform initialization sequence. When the GDK executable starts, its entry point does not directly initialize engine subsystems; instead, it binds to the Gaming Runtime loader:</p>
+<pre><code class="language-text">Game EntryPoint -&gt; XGameRuntimeInitialize() -&gt; QueryApiImpl() -&gt; COM VTable Setup
+</code></pre>
+<p>If any link in this chain fails—such as an unauthenticated Xbox Live identity token or an invalid AppX sandbox boundary—the process terminates immediately.</p>
+<h3>Intercepting <code>QueryApiImpl</code> and Hooking the GDK COM Layer</h3>
+<p>To construct a transparent compatibility bridge, ResurgeGDK injects its core payload into the process address space during early process creation (before COM factory initialization completes). The injector locates the exported dispatch routine <code>QueryApiImpl</code> within <code>xgameruntime.dll</code>:</p>
+<pre><code class="language-cpp">#include &lt;windows.h&gt;
+#include &lt;cstdint&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+namespace resurge::gdk {
+
+    typedef HRESULT(__fastcall* QueryApiImpl_t)(
+        const GUID* api_guid,
+        uint32_t version,
+        void** api_out
+    );
+
+    inline QueryApiImpl_t original_query_api_impl = nullptr;
+
+    // Target interface GUIDs for XPackage, XStore, and XUser
+    static constexpr const char* GUID_XPACKAGE = &quot;af406016-e850-4aa8-a88d-2f3dcb9dac7e&quot;;
+    static constexpr const char* GUID_XSTORE   = &quot;4cf2a014-b154-4f0f-8c31-31422b406e22&quot;;
+    static constexpr const char* GUID_XUSER    = &quot;1e721a32-1596-419b-a316-2e861d8b9487&quot;;
+
+    HRESULT __fastcall Hooked_QueryApiImpl(
+        const GUID* api_guid,
+        uint32_t version,
+        void** api_out
+    ) {
+        // Delegate to original runtime implementation first
+        HRESULT hr = original_query_api_impl(api_guid, version, api_out);
+        if (FAILED(hr) || api_out == nullptr || *api_out == nullptr) {
+            return hr;
+        }
+
+        // Intercept and install shadow VTables on targeted subsystems
+        if (MatchGuid(api_guid, GUID_XPACKAGE)) {
+            InstallPackageHooks(*api_out);
+        } else if (MatchGuid(api_guid, GUID_XSTORE)) {
+            InstallStoreHooks(*api_out);
+        } else if (MatchGuid(api_guid, GUID_XUSER)) {
+            InstallUserHooks(*api_out);
+        }
+
+        return S_OK;
+    }
+}
+</code></pre>
+<h3>Identity Virtualization (<code>XUser</code>)</h3>
+<p>In environments where the game is executed offline or outside the standard Xbox Game Bar shell, calls to <code>XUserAddUserAsync</code> and <code>XUserGetId</code> frequently fail with error code <code>0x89235100</code> (User Not Signed In). </p>
+<p>ResurgeGDK detours these interfaces, instantiating a virtual local user identity block containing a deterministic 64-bit Xbox Live ID (<code>XUID: 0x00090000DEADBEEF</code>). The game engine receives a valid <code>XUserHandle</code> without communicating with Microsoft authentication servers, allowing local multiplayer, split-screen, and offline campaign/zombies modes to initialize cleanly.</p>
+<hr>
+<h2>3. Local Runtime Entitlements &amp; DLC Preservation</h2>
+<p>A major problem confronting preservationists studying modern Microsoft Store packages is asset fragmentation. In legacy Steam releases, DLCs were separate downloadable depots. On modern Store / GDK platforms, high-definition assets are either pre-installed within the base directory or delivered through encrypted <code>.msixvc</code> split-containers that require explicit runtime mounting.</p>
+<p>When the game requests DLC content (such as <em>Zombie Chronicles</em>, <em>The Giant</em>, or DLCs 1–4: <em>Der Eisendrache</em>, <em>Zetsubou No Shima</em>, <em>Gorod Krovi</em>, and <em>Revelations</em>), the engine queries two distinct API pipelines:</p>
+<ol>
+<li><strong><code>XPackageEnumeratePackages</code> / <code>XPackageMountWithUiAsync</code></strong>: Mounts the filesystem container.</li>
+<li><strong><code>XStoreQueryEntitledProductsAsync</code></strong>: Verifies product license ownership.</li>
+</ol>
+<h3>Spoofing Package Mounts</h3>
+<p>If the player&#39;s Microsoft Account lacks digital ownership tokens, <code>XPackageMountWithUiAsync</code> halts execution and throws <code>0x803F8001</code> (Unauthorized Game License). ResurgeGDK detours this entry point, preventing the query from reaching kernel services. It simulates asynchronous I/O completion and returns a synthetic mount handle:</p>
+<pre><code class="language-cpp">namespace resurge::entitlement {
+
+    struct FakeMountDescriptor {
+        uint64_t handle_id;
+        std::string mount_path;
+        bool is_valid;
+    };
+
+    static std::unordered_map&lt;void*, FakeMountDescriptor&gt; g_MountHandles;
+    static uint64_t g_NextHandleId = 0x8000;
+
+    HRESULT __fastcall Hooked_XPackageMountWithUiAsync(
+        void* package_identifier,
+        XPackageMountFlags flags,
+        XAsyncBlock* async_block
+    ) {
+        // Allocate a tracking pointer for the virtual mount
+        void* fake_handle = reinterpret_cast&lt;void*&gt;(++g_NextHandleId);
+        
+        FakeMountDescriptor desc{};
+        desc.handle_id = g_NextHandleId;
+        
+        // Resolve target base game physical directory
+        char module_path[MAX_PATH];
+        GetModuleFileNameA(nullptr, module_path, MAX_PATH);
+        std::string base_dir = std::string(module_path).substr(0, std::string(module_path).find_last_of(&quot;\\/&quot;));
+        desc.mount_path = base_dir;
+        desc.is_valid = true;
+
+        g_MountHandles[fake_handle] = desc;
+
+        // Populate the asynchronous completion structure
+        async_block-&gt;result = fake_handle;
+
+        // Dispatch immediate completion via asynchronous callback
+        if (async_block-&gt;callback != nullptr) {
+            async_block-&gt;callback(async_block);
+        }
+
+        return S_OK;
+    }
+}
+</code></pre>
+<h3>Path Redirection via <code>XPackageGetMountPath</code></h3>
+<p>Once the game receives the synthetic mount handle, it queries <code>XPackageGetMountPath</code> to locate the content files. ResurgeGDK intercepts this request and substitutes the virtual store path with the actual directory containing the unpacked FastFiles (<code>.ff</code>) and asset packages (<code>.xpak</code>):</p>
+<pre><code class="language-cpp">HRESULT __fastcall Hooked_XPackageGetMountPath(
+    void* handle,
+    size_t path_buffer_size,
+    char* path_buffer
+) {
+    auto it = g_MountHandles.find(handle);
+    if (it != g_MountHandles.end() &amp;&amp; it-&gt;second.is_valid) {
+        strncpy_s(path_buffer, path_buffer_size, it-&gt;second.mount_path.c_str(), _TRUNCATE);
+        return S_OK;
+    }
+
+    return original_get_mount_path(handle, path_buffer_size, path_buffer);
+}
+</code></pre>
+<p>By coupling this mount virtualization with a memory detour on <code>XStoreQueryEntitledProductsAsync</code> (which injects synthetic SKU records for all known Season Pass and Zombies Chronicles content IDs), the Treyarch T7 engine successfully loads all legacy maps without requiring active cloud verification.</p>
+<hr>
+<h2>4. Steam Workshop Modding on the Microsoft Store</h2>
+<p>The single greatest hurdle for the Microsoft Store release of Black Ops III was the total absence of Steam Workshop support. The engine is hardcoded to interact with Steam UGC (User Generated Content) APIs when querying custom maps or mods. On the GDK build, these APIs do not exist.</p>
+<h3>Interoperability with BOIII Workshop Downloader</h3>
+<p>To bridge this functionality, ResurgeGDK interfaces with the <strong>BOIII Workshop Downloader</strong> protocol. Rather than depending on a running Steam client, the downloader uses Valve&#39;s public WebAPI and SteamCMD protocols to download workshop items directly:</p>
+<pre><code class="language-text">Steam Workshop WebAPI -&gt; Workshop ID Retrieval -&gt; Direct Depot Stream -&gt; Local Cache:
+  ├─ workshop/content/311210/&lt;workshop_id&gt;/
+  │    ├─ zone/
+  │    │    ├─ &lt;map_name&gt;.ff
+  │    │    └─ &lt;map_name&gt;.xpak
+  │    └─ workshop.json
+</code></pre>
+<h3>Filesystem Path Mapping &amp; Asset Search Tree Injection</h3>
+<p>In Black Ops III, map loading relies on strict path conventions. The engine searches for level assets using two internal paths:</p>
+<ul>
+<li>Core game levels: <code>zone/all/&lt;mapname&gt;.ff</code></li>
+<li>Custom community maps: <code>usermaps/&lt;mapname&gt;/zone/&lt;mapname&gt;.ff</code></li>
+<li>Mod modifications: <code>mods/&lt;modname&gt;/zone/&lt;modname&gt;.ff</code></li>
+</ul>
+<p>ResurgeGDK detours Treyarch&#39;s low-level filesystem abstraction layer (<code>FS_FOpenFileRead</code>, <code>FS_ListFiles</code>, and <code>DB_FindXAssetHeader</code>). When the engine initializes or enumerates the custom map menu, our detour intercepts directory scans and dynamically injects entries downloaded into the Workshop directory:</p>
+<pre><code class="language-cpp">namespace resurge::vfs {
+
+    struct WorkshopItem {
+        std::string published_id;
+        std::string internal_map_name;
+        std::string physical_zone_path;
+    };
+
+    static std::vector&lt;WorkshopItem&gt; g_RegisteredWorkshopItems;
+
+    void ScanAndRegisterWorkshopDirectory(const std::string&amp; workshop_root) {
+        // Enumerate workshop/content/311210/*
+        for (const auto&amp; entry : std::filesystem::directory_iterator(workshop_root)) {
+            if (!entry.is_directory()) continue;
+
+            std::string manifest_path = entry.path().string() + &quot;/workshop.json&quot;;
+            if (std::filesystem::exists(manifest_path)) {
+                WorkshopItem item = ParseWorkshopManifest(manifest_path);
+                g_RegisteredWorkshopItems.push_back(item);
+                
+                // Map physical storage to virtual usermaps hierarchy
+                RegisterVirtualMapping(
+                    &quot;usermaps/&quot; + item.internal_map_name + &quot;/zone/&quot;,
+                    entry.path().string() + &quot;/zone/&quot;
+                );
+            }
+        }
+    }
+
+    // Hooked low-level file open routine
+    int64_t __fastcall Hooked_FS_FOpenFileRead(
+        const char* filename,
+        intptr_t* file_handle,
+        bool search_override
+    ) {
+        std::string resolved_path = ResolveVirtualPath(filename);
+        return original_fs_open_file_read(resolved_path.c_str(), file_handle, search_override);
+    }
+}
+</code></pre>
+<p>Through this Virtual File System (VFS) hook, the Microsoft Store build treats arbitrary Steam Workshop folders as native <code>usermaps</code> and <code>mods</code>. Custom community maps—ranging from small arena challenges to colossal custom campaigns like <em>Leviathan</em>—load natively with full lighting, sound banks, and script execution.</p>
+<hr>
+<h2>5. Local Telemetry &amp; GobbleGum Inventory Emulation</h2>
+<p>In <em>Black Ops III</em> Zombies, consumable GobbleGums (such as <em>Perkaholic</em>, <em>Shopping Free</em>, <em>Near Death Experience</em>, and <em>Reign Drops</em>) and Liquid Divinium are architected around a server-authoritative model. The game client periodically dispatches encrypted telemetry requests over UDP/TLS to Activision / Demonware backend services (<code>bdAuth</code>, <code>bdLobby</code>, and microtransaction inventory microservices).</p>
+<p>When playing offline, on private networks, or on builds severed from Demonware servers, the backend inventory returns an empty set. The player is restricted exclusively to the 5 baseline classic gums; Dr. Monty&#39;s Factory is locked, and Mega GobbleGums cannot be equipped or consumed.</p>
+<pre><code class="language-text">[Vanilla Flow (Fails Offline)]
+Client Engine ──(Demonware Request)──► [Remote Auth/Loot Server] ──► Fails (Zero Inventory)
+
+[ResurgeGDK Local Emulation Flow]
+Client Engine ──(Loot Request)──► [Resurge In-Memory Hook] ──► Returns Synthesized Inventory (999x)
+Client Gameplay ──(Consume Gum)──► [Loot_Consume Hook]     ──► Acknowledges Consumption, Count Preserved
+</code></pre>
+<h3>Reverse Engineering the In-Memory Loot Structure</h3>
+<p>By analyzing the memory space of <code>BlackOps3.exe</code> during inventory deserialization, we isolated the runtime structure responsible for tracking consumable gums:</p>
+<pre><code class="language-cpp">namespace resurge::telemetry {
+
+    #pragma pack(push, 1)
+    struct BGBItemEntry {
+        uint32_t item_id;       // Internal CRC32 or enumeration ID
+        uint32_t item_count;    // Total quantity available in player collection
+        uint32_t item_flags;    // State flags (0x1 = Unlocked, 0x2 = Consumable)
+        uint32_t padding;
+    };
+
+    struct BGBInventoryCache {
+        uint32_t signature;     // 0x54374C54 (&#39;T7LT&#39;)
+        uint32_t total_items;   // Count of distinct catalog entries
+        BGBItemEntry items[128];// Array of registered GobbleGum definitions
+    };
+    #pragma pack(pop)
+
+    // Known internal IDs for classic Mega GobbleGums
+    constexpr uint32_t BGB_ID_PERKAHOLIC     = 0x0001B4A1;
+    constexpr uint32_t BGB_ID_SHOPPING_FREE  = 0x0001B4B5;
+    constexpr uint32_t BGB_ID_NEAR_DEATH     = 0x0001B4C8;
+    constexpr uint32_t BGB_ID_ROUND_ROBBIN   = 0x0001B4DF;
+}
+</code></pre>
+<h3>Local State Spoofing: Unlocking 999x Consumables</h3>
+<p>Rather than attempting to spoof remote Demonware cryptographic envelopes over the wire, ResurgeGDK applies <strong>in-memory state virtualization</strong>.</p>
+<p>The compatibility layer hooks the inventory deserialization routine (<code>Loot_ParseInventoryResponse</code>). When the engine attempts to process the payload, our hook intercepts the empty response buffer and substitutes a fully hydrated <code>BGBInventoryCache</code>:</p>
+<pre><code class="language-cpp">void __fastcall Hooked_Loot_ParseInventoryResponse(void* response_ctx, BGBInventoryCache* cache_out) {
+    if (cache_out == nullptr) return;
+
+    // Initialize synthetic catalog
+    cache_out-&gt;signature = 0x54374C54;
+    cache_out-&gt;total_items = static_cast&lt;uint32_t&gt;(g_AllKnownBGBIds.size());
+
+    for (size_t i = 0; i &lt; g_AllKnownBGBIds.size(); ++i) {
+        cache_out-&gt;items[i].item_id = g_AllKnownBGBIds[i];
+        
+        // Local State Spoofing: Transform single base ownership into full 999 stockpile
+        cache_out-&gt;items[i].item_count = 999;
+        cache_out-&gt;items[i].item_flags = 0x03; // Unlocked &amp; Consumable
+    }
+
+    LOG(&quot;Telemetry&quot;, &quot;Synthesized 999x inventory across %u GobbleGums locally.&quot;, cache_out-&gt;total_items);
+}
+</code></pre>
+<h3>Intercepting the Consumption Callback (<code>Loot_ConsumeItem</code>)</h3>
+<p>In vanilla gameplay, taking a GobbleGum from the Lion-head dispenser invokes an in-engine consumption request: the engine decrements the local integer and queues a Demonware transaction to update the server. If that transaction fails or is denied, the game revokes the gum mid-match.</p>
+<p>ResurgeGDK detours <code>Loot_ConsumeItem</code>:</p>
+<pre><code class="language-cpp">bool __fastcall Hooked_Loot_ConsumeItem(uint32_t player_index, uint32_t item_id, uint32_t quantity) {
+    LOG(&quot;Telemetry&quot;, &quot;Intercepted consumption of item ID 0x%08X (Qty: %u). Enforcing preservation.&quot;, item_id, quantity);
+    
+    // Always return success to the game VM without decrementing the local 999 count
+    // and without sending remote microtransaction telemetry packets.
+    return true;
+}
+</code></pre>
+<p>This ensures that players can utilize the full spectrum of Zombie mechanics, mega abilities, and weapon kits in complete offline isolation, safeguarding the game&#39;s long-term playability.</p>
+<hr>
+<h2>6. Integrated Ecosystem: Built-in Ezz BOIII Client &amp; GSC Bytecode Injector</h2>
+<p>ResurgeGDK is not merely a background DLL; it is distributed as a unified desktop ecosystem combining an Electron front-end workstation with a low-level C++ injection engine.</p>
+<h3>Built-in Ezz BOIII Client Integration</h3>
+<p>By the time Black Ops III reached end-of-life status, several severe security vulnerabilities emerged in the game&#39;s peer-to-peer networking stack:</p>
+<ul>
+<li><strong>Buffer Overflow Remote Code Execution (RCE)</strong>: Malformed network packets sent to port 3074 could trigger stack overflows during packet deserialization.</li>
+<li><strong>Out-of-Bounds Crash Exploits</strong>: Invalid crash packets crafted by malicious actors could remotely terminate active lobby instances.</li>
+<li><strong>P2P IP Harvesting</strong>: Unencrypted voice and lobby packets exposed client public IP addresses to everyone in the session.</li>
+</ul>
+<p>ResurgeGDK natively embeds the core protection patches developed by the community&#39;s <strong>Ezz BOIII</strong> project. Upon process attachment, ResurgeGDK installs memory patches over known vulnerable deserializers (<code>MSG_ReadBits</code>, <code>NET_OutOfBandData</code>), strips malicious control frames, and enforces strict buffer length validation on all network packets.</p>
+<h3>Integrated GSC Script Injector</h3>
+<p>Unlike Black Ops 1 (which relies on plain-text zlib-compressed source code in <code>ASSET_TYPE_RAWFILE</code>), Black Ops III employs pre-compiled binary bytecode trees represented internally as <strong><code>ASSET_TYPE_SCRIPT_PARSETREE</code> (Asset Type <code>54</code> / <code>0x36</code>)</strong>.</p>
+<p>The ResurgeGDK launcher includes an integrated GSC compiler and in-memory injector, eliminating the need for third-party injection utilities:</p>
+<pre><code class="language-cpp">namespace resurge::gsc {
+
+    #pragma pack(push, 1)
+    struct ScriptParseTree {
+        const char* name;
+        int32_t buffer_size;
+        int32_t compressed_size;
+        const char* buffer; // Pointer to compiled GSC bytecode
+    };
+    #pragma pack(pop)
+
+    static std::unordered_map&lt;std::string, ScriptParseTree&gt; g_CustomScripts;
+
+    void* __fastcall Hooked_DB_FindXAssetHeader(int32_t asset_type, const char* asset_name, int32_t allow_default, int32_t flag) {
+        // Intercept Script ParseTree queries
+        if (asset_type == 54 &amp;&amp; asset_name != nullptr) {
+            std::string normalized_name = NormalizeScriptPath(asset_name);
+            auto it = g_CustomScripts.find(normalized_name);
+            if (it != g_CustomScripts.end()) {
+                LOG(&quot;GSC&quot;, &quot;Hot-swapping GSC bytecode for: %s&quot;, normalized_name.c_str());
+                return &amp;it-&gt;second;
+            }
+        }
+
+        return original_db_find_xasset_header(asset_type, asset_name, allow_default, flag);
+    }
+}
+</code></pre>
+<h3>Real-Time Developer Console Streaming</h3>
+<p>To provide a seamless developer experience, ResurgeGDK detours the engine&#39;s central logging facility (<code>Com_PrintMessage</code> at image offset <code>0x14028A140</code>). Log lines are intercepted, formatted with high-resolution timestamps, and streamed over a local named pipe (<code>\\.\pipe\ResurgeGDK_LogPipe</code>) back to the Electron desktop launcher. Mod authors can monitor script compilation errors, missing FastFile assets, and engine warnings in real time without attaching heavy external debuggers.</p>
+<hr>
+<h2>7. Comparative Architectural Matrix</h2>
+<p>The following matrix highlights the operational differences across the standard Steam release, the vanilla Microsoft Store build, and the unified ResurgeGDK environment:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Feature / Subsystem</th>
+<th align="left">Vanilla Steam PC</th>
+<th align="left">Vanilla MS Store (GDK)</th>
+<th align="left">ResurgeGDK Environment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Runtime Target</strong></td>
+<td align="left">Win32 / <code>steam_api64.dll</code></td>
+<td align="left">GDK / <code>xgameruntime.dll</code></td>
+<td align="left">Dynamic GDK-to-Steam ABI Bridge</td>
+</tr>
+<tr>
+<td align="left"><strong>Packaging Model</strong></td>
+<td align="left">Loose Win32 Folders</td>
+<td align="left">AppX / MSIX Sandbox</td>
+<td align="left">Virtualized AppX Container</td>
+</tr>
+<tr>
+<td align="left"><strong>DLC Entitlement</strong></td>
+<td align="left">Steam Store Depots</td>
+<td align="left">Cloud License Check (<code>0x803F8001</code>)</td>
+<td align="left">Local VFS Redirection &amp; Spoofing</td>
+</tr>
+<tr>
+<td align="left"><strong>Steam Workshop</strong></td>
+<td align="left">Native Steam Client UGC</td>
+<td align="left">Completely Unsupported</td>
+<td align="left">BOIII Downloader + Custom VFS Mount</td>
+</tr>
+<tr>
+<td align="left"><strong>GobbleGum / Loot</strong></td>
+<td align="left">Demonware Server-Tied</td>
+<td align="left">Inaccessible Offline</td>
+<td align="left">Local State Virtualization (999x)</td>
+</tr>
+<tr>
+<td align="left"><strong>Network Security</strong></td>
+<td align="left">Vulnerable to Legacy P2P RCE</td>
+<td align="left">Vulnerable to Legacy P2P RCE</td>
+<td align="left">Hardened via Ezz BOIII Exploits Patches</td>
+</tr>
+<tr>
+<td align="left"><strong>Script Modding</strong></td>
+<td align="left">External Compilers</td>
+<td align="left">Blocked by Sandbox</td>
+<td align="left">Integrated GSC Bytecode Injector</td>
+</tr>
+<tr>
+<td align="left"><strong>Log Streaming</strong></td>
+<td align="left">Console Window Only</td>
+<td align="left">Suppressed by Shell</td>
+<td align="left">Real-Time Named Pipe IPC to UI</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>8. Conclusion &amp; Legacy Preservation</h2>
+<p>The fragmentation of PC games across competing application stores and runtime models poses a severe risk to long-term digital preservation. When proprietary backends deprecate or when titles are ported to sandboxed ecosystems that omit fundamental modding infrastructure, players lose access to community creations and core gameplay systems.</p>
+<p><strong>ResurgeGDK</strong> demonstrates how low-level systems engineering—leveraging dynamic COM VTable hooking, in-memory state virtualization, virtual filesystem redirection, and community-driven security patches—can unify fragmented game runtimes. By transforming the Microsoft Store release into a fully extensible, secure, and mod-capable environment, ResurgeGDK preserves one of the most celebrated modding eras in PC gaming history for years to come.</p>
+
+                </div>
+            </article>
+        </main>
+
+        <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">
+            <p>Eduardo Gelain · SpetDev. All rights reserved.</p>
+            <p class="mt-1">
+                <a href="/sitemap.xml" class="hover:underline text-slate-400">Sitemap</a> · 
+                <a href="/llm.txt" class="hover:underline text-slate-400">LLM Context</a> · 
+                <a href="/privacy.html" class="hover:underline text-slate-400">Privacy Policy</a>
+            </p>
+        </footer>
+
+        <noscript>
+            <div class="p-6 bg-[#050505]/95 backdrop-blur-md border-t border-primary/40 text-center text-slate-300 text-sm">
+                <p><strong>Note:</strong> JavaScript is optional. All portfolio projects, technical skills, and research journal articles above are fully accessible without scripts.</p>
+            </div>
+        </noscript>
+    </div>
+
+    <script defer src="/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('custom-cursor');
+            if (!cursor) return;
+
+            let cx = -100, cy = -100;
+            let lastTarget = null;
+            let isHover = false;
+            let rafPending = false;
+
+            const updateCursor = () => {
+                rafPending = false;
+                const nextHover = Boolean(
+                    lastTarget &&
+                    lastTarget.closest &&
+                    lastTarget.closest('a, button, .clickable')
+                );
+                if (nextHover !== isHover) {
+                    isHover = nextHover;
+                    cursor.dataset.hover = isHover ? '1' : '0';
+                }
+                cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) scale(${isHover ? 1.5 : 1})`;
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                cx = e.clientX;
+                cy = e.clientY;
+                lastTarget = e.target;
+                if (!rafPending) {
+                    rafPending = true;
+                    requestAnimationFrame(updateCursor);
+                }
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>

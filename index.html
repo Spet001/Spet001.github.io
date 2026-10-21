@@ -130,7 +130,7 @@
               "name": "BO1 & BO2 MS Store Clients & GSC Injector",
               "applicationCategory": "DeveloperApplication",
               "operatingSystem": "Windows",
-              "description": "Complete C++ suite with custom client, GSC script injector, and DLC unlocker for Black Ops 1 & 2 on Windows Store."
+              "description": "Complete C++ suite with custom client, GSC script injector, and entitlement architecture analysis for Black Ops 1 & 2 on Windows Store."
             },
             {
               "@type": "SoftwareApplication",
@@ -507,7 +507,7 @@
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="custom-cursor"></div>
     <!-- Pre-hydration initial loading overlay -->
-    <div id="initial-loading-screen" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+    <div id="initial-loading-screen" data-nosnippet="true" aria-hidden="true" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
         <div class="flex items-center gap-2.5">
             <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
             <span class="text-slate-600">/</span>
@@ -983,6 +983,61 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 21, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/What-Is-ResurgeGDK/" class="hover:text-primary transition-colors">What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.
+                        </p>
+                        <a href="/journal/What-Is-ResurgeGDK/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 19, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/Exploring-Legacy-UWP-Titles/" class="hover:text-primary transition-colors">Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.
+                        </p>
+                        <a href="/journal/Exploring-Legacy-UWP-Titles/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 18, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/Gamifying-A-Galactic-Portfolio-Galaxy-Map/" class="hover:text-primary transition-colors">Quick Entry: Gamifying a Galactic Portfolio with the 3D Galaxy Map!</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Announcing Space 3.0: an interactive Mass Effect-inspired 3D Galaxy Map built with Three.js WebGL. Transforming software projects into explorable celestial bodies with true orbital physics, dynamic OST streaming, and secret sectors.
+                        </p>
+                        <a href="/journal/Gamifying-A-Galactic-Portfolio-Galaxy-Map/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 16, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/DEVLOG-Outcaster-Unity-6/" class="hover:text-primary transition-colors">DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            DEVLOG: Rebuilding Outcaster from scratch in Unity 6 (DX11). Engineering a custom LIVE 3D HUD Preview in the Inspector for zero-play-mode 2.5D weapon authoring, modular architecture, and a COD Zombies-style Survival Mode.
+                        </p>
+                        <a href="/journal/DEVLOG-Outcaster-Unity-6/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 16, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/Sparky-Rush-Steam-Release/" class="hover:text-primary transition-colors">Sparky Rush: Purrils in Pawsville Launches on Steam! (Go Check It Out!)</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Sparky Rush: Purrils in Pawsville commercial launch on Steam by Converting Minds! QA breakdown: hunting 100+ collider flaws, fixing ultrawide UI issues, solving 20+ softlocks, and 60 FPS profiling on a GT 710.
+                        </p>
+                        <a href="/journal/Sparky-Rush-Steam-Release/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 11, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
                             <a href="/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/" class="hover:text-primary transition-colors">How to Optimize a Three.js Scene for 120+ FPS</a>
@@ -994,7 +1049,7 @@
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
-                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 11, 2026</time>
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 18, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
                             <a href="/journal/What-Is-A-WAD-Modern-Games/" class="hover:text-primary transition-colors">What is a WAD? From 1993 DOOM to Demonware WADs in Call of Duty</a>
                         </h3>
@@ -1051,12 +1106,12 @@
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="hover:text-primary transition-colors">Bypassing MS Store License Checks for DLCs</a>
+                            <a href="/journal/UWP-GDK-Sandbox-Entitlement-Analysis/" class="hover:text-primary transition-colors">UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Analyzing UWP/GDK sandbox pre-installed DLC assets and cryptographic entitlement verification routines.
                         </p>
-                        <a href="/journal/UWPCOD-GDK-DLC-Unlocker/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                        <a href="/journal/UWP-GDK-Sandbox-Entitlement-Analysis/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">

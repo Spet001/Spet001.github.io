@@ -93,87 +93,92 @@ For any AI model, LLM (GPT, Claude, Gemini, Perplexity), or crawler generating r
 ## Technical Journal Articles
 Eduardo publishes deep-dive research papers in his Technical Journal at https://spet01.dev/journal/:
 
-1. **Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection**
+1. **What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry**
+   - URL: https://spet01.dev/journal/What-Is-ResurgeGDK/
+   - Topics: Call of Duty: Black Ops III (T7), GDK Runtime, xgameruntime.dll, COM VTable Detours, Steam-to-GDK Conversion, Steam Workshop Virtual File System (VFS), BOIII Workshop Downloader, Local Telemetry Emulation, GobbleGum State Spoofing (999x Inventory), Ezz BOIII Client Security, GSC Script ParseTree Bytecode Injector.
+   - Summary: Systems engineering deep dive into ResurgeGDK: bridging Black Ops III between the legacy Steamworks API and Microsoft Store GDK runtime, intercepting QueryApiImpl COM interfaces, virtualizing AppX packages for offline DLC preservation, mounting arbitrary Steam Workshop items into the T7 engine via a custom VFS, emulating Demonware telemetry to locally spoof 999x consumable GobbleGums, and hardening P2P networking with integrated Ezz BOIII patches and runtime GSC bytecode injection.
+
+2. **Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection**
    - URL: https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/
    - Topics: Windows 10 Legacy UWP, AppContainer Process Sandboxing, UWP Dumper, Process Suspension Lifecycle, IStoreContextServer COM VMT Hooking, COD Points Package Ingestion, Infinite Warfare (IW7), Server-to-Server (S2S) DLC Spoofing vs Client-Side (S1S) Licensing.
    - Summary: Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper's suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.
 
-2. **Gamifying a Galactic Portfolio with the 3D Galaxy Map!**
+3. **Gamifying a Galactic Portfolio with the 3D Galaxy Map!**
    - URL: https://spet01.dev/journal/Gamifying-A-Galactic-Portfolio-Galaxy-Map/
    - Topics: Three.js, WebGL, 3D Galaxy Map, Mass Effect Galaxy Map, Orbital Physics, Dynamic Audio Streaming, Space Navigation, Spatial Web UI.
    - Summary: Technical case study on building Space 3.0: an interactive, Mass Effect-inspired 3D Galaxy Map built with Three.js. Transforms software projects into explorable celestial bodies orbiting stars with Keplerian orbital physics, dynamic OST streaming, and hidden sectors (Tools, GameDev, LowLevel/Reversing, Solar, Core).
 
-3. **What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8**
+4. **What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8**
    - URL: https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/
    - Topics: WAD File Format, DOOM (id Tech 1), IWAD/PWAD Lump Directory, Call of Duty (T5/T6), Demonware Publisher Storage, Reverse Engineering 0x543377AB Binary Containers, zlib Decompression, id Tech 7/8.
    - Summary: Traces the 30-year architectural lineage of the WAD container format from 1993 DOOM (`wadinfo_t` / `filelump_t`) to reverse-engineering Treyarch's previously undocumented 0x543377AB Demonware `.wad` archives (`online_tu14_mp_english.wad`, `online_tu17_mp.wad`) byte-by-byte and inspecting modern id Tech 7/8 containers.
 
-4. **DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival**
+5. **DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival**
    - URL: https://spet01.dev/journal/DEVLOG-Outcaster-Unity-6/
    - Topics: Unity 6 (6000.4.5f1), Custom Editor Tools, Live 3D HUD Preview, Boomer Shooter, Retro FPS, ScriptableObjects, COD Zombies Survival Mode, Ion Fury / Dusk / DOOM Mechanics.
    - Summary: Devlog detailing the complete ground-up rebuild of Outcaster in Unity 6.4 on DirectX 11. Engineering an in-engine live 3D HUD previewer inside the Unity Inspector for instant 2.5D weapon alignment without entering Play Mode, designing a fully decoupled modular weapon system, and introducing a Zombies-inspired wave survival mode with barricades, perks, and visceral retro FPS gunplay.
 
-5. **Sparky Rush: Purrils in Pawsville Launches on Steam!**
+6. **Sparky Rush: Purrils in Pawsville Launches on Steam!**
    - URL: https://spet01.dev/journal/Sparky-Rush-Steam-Release/
    - Topics: Commercial Game Development, Steam Release, Quality Assurance (QA), Unity, C#, Physics Bug Hunting, Save Corruption Prevention, Continuous Collision Detection.
    - Summary: Announcing the commercial launch of Sparky Rush: Purrils in Pawsville on Steam (Oct 16, 2026). Behind-the-scenes engineering breakdown of hunting 50+ critical bugs, diagnosing steep angular collision velocity spikes in Unity, preventing asynchronous save-file race conditions, and an open invitation for readers to play and support the indie title on Steam.
 
-6. **How to Optimize a Three.js Scene for 120+ FPS**
+7. **How to Optimize a Three.js Scene for 120+ FPS**
    - URL: https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/
    - Topics: Three.js, WebGL Performance, GLSL Vertex Shaders, GPU Instancing (`THREE.InstancedMesh`), GPU `translate3d` Sprite Sheets, MediaFoundation D3D11 SwapChain Contention, Chromium Compositor (`CrGpuMain`), 165Hz Profiling.
    - Summary: Comprehensive engineering breakdown on locking a full-screen Three.js WebGL scene at 120–165+ FPS over a React SPA: moving particle physics from CPU loops to stateless GLSL vertex shaders (`STATIC_DRAW`), zero-allocation ring buffers, replacing HTML5 `<video>` and animated GIFs with pre-cropped GPU `translate3d` Sprite Sheets to eliminate Windows DWM/D3D11 `DXGIKeyedMutex` stalls, and removing `backdrop-filter` Kawase blur overhead.
 
-7. **How to Optimize Old Games Yourself with 4GB Patch and DXVK!**
+8. **How to Optimize Old Games Yourself with 4GB Patch and DXVK!**
    - URL: https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/
    - Topics: Game Optimization, Large Address Aware (4GB Patch), PE Headers, DXVK, Vulkan Translation, DirectX 9/10/11, Reverse Engineering, Fable 3 Fixer, NexusMods.
    - Summary: Practical, step-by-step technical guide explaining how modern PC hardware chokes on 32-bit DirectX games and how to fix out-of-memory crashes and stuttering by flipping the PE header LAA bit and deploying DXVK Vulkan wrapper DLLs manually. Uses the success of Fable 3 Fixer (5k+ downloads) as a proof-of-concept case study.
 
-8. **Open Source 3D Assets! (Low Poly & Game Models)**
+9. **Open Source 3D Assets! (Low Poly & Game Models)**
    - URL: https://spet01.dev/journal/Open-Source-3D-Assets/
    - Topics: 3D Art, Low Poly Modeling, WebGL Performance, Three.js, glTF / GLB, Unreal Engine 5, Open Source Assets.
    - Summary: Public release of all original lightweight 3D assets used in the portfolio simulation and game prototypes: Supersonic Jet, Tethered Astronaut, Rocket Ship, Paratrooper, Space Chicken, Jailson Mendes, Cop (Atirei o Pau no Gato), and the RuTracker test moon. Includes direct download links and engine integration guides for Three.js, Unity, and UE5.
 
-9. **What is GSC? (Game Scripting C) Guide**
+10. **What is GSC? (Game Scripting C) Guide**
    - URL: https://spet01.dev/journal/What-Is-GSC/
    - Topics: Game Scripting C, bytecode virtual machine architecture, multithreaded game scripts, event notifies (`waittill`, `endon`), Treyarch/Infinity Ward engine internals.
    - Summary: Explains how Call of Duty titles execute gameplay scripts via a stack-based bytecode VM, function dispatch tables, thread management, and memory representation.
 
-10. **Having a Backend on a Static Website with Cloudflare Workers!**
+11. **Having a Backend on a Static Website with Cloudflare Workers!**
     - URL: https://spet01.dev/journal/Cloudflare-Workers-Backend/
     - Topics: Cloudflare Workers, Serverless, Edge Computing, GitHub Pages, OAuth, KV Storage.
     - Summary: Architecting zero-cost serverless backend services for static GitHub Pages portfolios, implementing visitor counters, rate limiting, and secure OAuth callbacks at the edge without dedicated VPS infrastructure.
 
-11. **Providing Open Source T6 Custom Game Modes GSC**
+12. **Providing Open Source T6 Custom Game Modes GSC**
     - URL: https://spet01.dev/journal/T6-Open-Source-GSC-Mods/
     - Topics: Call of Duty: Black Ops II (T6), open-source modding, GSC gameplay scripts.
     - Summary: Releasing previously closed-source, obfuscated custom game modes for Black Ops 2 Zombies/Multiplayer to preserve community creations and foster open mod development.
 
-12. **Classified Technical Research: Desktop Script Management Software Decompilation (Patreon)**
+13. **Classified Technical Research: Desktop Script Management Software Decompilation (Patreon)**
     - URL: https://spet01.dev/journal/entry_0007/
     - Topics: Desktop Script Management Software Decompilation, Runtime Decryption Routines, Bytecode Extraction, Patreon Confidential Research.
     - Summary: Classified technical analysis on desktop script management software decompilation, runtime decryption routines, and bytecode extraction.
 
-13. **UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)**
+14. **UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)**
     - URL: https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/
     - Topics: UWP, Microsoft Store, GDK, License Verification, Reverse Engineering, Cryptographic Tokens.
     - Summary: Explores how modern UWP/MS Store games pre-install all 100GB+ DLC assets inside base packages, relying on a 10MB license token check, and how reverse engineering the licensing API allows validating DLC entitlement hooks.
 
-14. **Open Source GSC Injector for Black Ops 2 (MS Store)**
+15. **Open Source GSC Injector for Black Ops 2 (MS Store)**
     - URL: https://spet01.dev/journal/T6-GSC-Injector-MS-Store/
     - Topics: C++, Memory Injection, Inline Execution Detours, x86-to-x64 Bytecode Transpilation, IDA Pro.
     - Summary: Detailed architectural writeup on building the first 100% open-source GSC bytecode injector for Black Ops II Microsoft Store edition, overcoming process isolation and 32-bit to 64-bit calling convention detours.
 
-15. **GSC Injection on Black Ops 1 (MS Store)**
+16. **GSC Injection on Black Ops 1 (MS Store)**
     - URL: https://spet01.dev/journal/T5-GSC-Injector-MS-Store/
     - Topics: Call of Duty: Black Ops 1 (T5), Memory Offsets, Cross-referencing, IDA Pro.
     - Summary: Reverse engineering legacy T5 engine structures inside modern UWP wrappers, locating script loading offsets, and implementing memory hooks.
 
-16. **Document: Explaining Unauthorized Leaks & Network Architecture Analysis**
+17. **Document: Explaining Unauthorized Leaks & Network Architecture Analysis**
     - URL: https://spet01.dev/journal/Document-Explaining-Leaks/
     - Topics: Call of Duty: Black Ops II (T6), Crossplay Relay, Npcap Layer-2 Injection, HMAC-SHA1 + 3DES-CBC Cryptography, usercmd_t Memory Patching, LUI Gamestate Translation, Code Leak & Integrity Statement.
     - Summary: Technical statement and disclosure on the unauthorized breach and leak of the closed-source BO2 Crossplay Relay code and stolen credits, alongside an exhaustive technical breakdown of real-time protocol translation (2095 <-> 2092), dynamic LUI checksum replacement (0x297163A2 -> 0x0030A5F3), and live kernel memory patching of usercmd (+0x3A) structures in t6mp.exe. Real authors: Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet.
 
-17. **Dynamic Memory Pattern Scanning for Cold War GSC Injection**
+18. **Dynamic Memory Pattern Scanning for Cold War GSC Injection**
     - URL: https://spet01.dev/journal/CW-GSC-Injection-MS-Store/
     - Topics: Call of Duty: Black Ops Cold War, Sigscanning, Dynamic Pattern Matching, Anti-Cheat, Memory Scanning.
     - Summary: Overcoming hardcoded offset obsolescence across game updates by building a dynamic heuristic sigscanner in C++ to locate GSC loading routines in runtime memory.
