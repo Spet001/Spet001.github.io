@@ -215,6 +215,27 @@
                     </button>
                 </div>
 
+                <div id="p115-fallback-box" style="display:none; margin-top: 10px; padding: 10px; background: rgba(0,20,10,0.6); border: 1px dashed #00aa66; border-radius: 4px; text-align: left;">
+                    <div style="font-size: 11px; color: #aaffcc; margin-bottom: 6px; line-height: 1.4;">
+                        ⚠️ <strong>Download Externo Bloqueado por CORS:</strong> O navegador impediu o download automático de 500 MB dos servidores externos.
+                    </div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+                        <a id="p115-link-github" href="https://github.com/Spet001/Project-115-Despair/releases/download/v1.0.0/Project115.wad" target="_blank" rel="noopener noreferrer" class="dos-btn" style="text-decoration: none; font-size: 11px; padding: 4px 8px; background: #112233; color: #88ccff; border-color: #336699;">
+                            ⬇️ 1. Baixar do GitHub Releases (511 MB)
+                        </a>
+                        <a id="p115-link-ia" href="https://archive.org/download/project-115-despair-final/Project%20115%20-%20Despair%20Final.wad" target="_blank" rel="noopener noreferrer" class="dos-btn" style="text-decoration: none; font-size: 11px; padding: 4px 8px; background: #222211; color: #ffffaa; border-color: #888833;">
+                            ⬇️ Ou Baixar do Internet Archive
+                        </a>
+                    </div>
+                    <button id="p115-pick-file-btn" type="button" class="dos-btn" style="width: 100%; background: #003322; border-color: #00aa66; color: #aaffcc; padding: 8px 10px; cursor: pointer; font-size: 11px;">
+                        📂 2. SELECIONAR "Project115.wad" (Ou arraste o arquivo aqui)
+                    </button>
+                    <input type="file" id="p115-file-input" accept=".wad,.pk3" style="display: none;" />
+                    <div style="font-size: 10px; color: #669988; margin-top: 5px;">
+                        💡 O arquivo é lido em 0s e salvo no cache IndexedDB do navegador. Nas próximas vezes, o jogo abrirá instantaneamente sem baixar nada!
+                    </div>
+                </div>
+
                 <div class="dos-footer">
                     <span id="dos-footer-copy">DOOM II (c) 1994 id Software | Engine: UZDoom (GPLv3)</span>
                     <a href="./NOTICE.MD" target="_blank" rel="noopener noreferrer">NOTICE.MD</a>
@@ -544,7 +565,58 @@
                 }
             }
 
+                        function handleP115File(file) {
+                if (!file) return;
+                logLine(`W_File: Lendo ${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)...`, 'hl');
+                updateOverallProgress('Lendo WAD local...');
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    pwadBytes = new Uint8Array(e.target.result);
+                    pwadPct = 100;
+                    pwadReady = true;
+                    logLine(`W_File: ${file.name} carregado com sucesso!`, 'hl');
+                    await setCachedWad(cfg.pwadCacheKey, pwadBytes);
+                    logLine(`W_Cache: Salvo no cache IndexedDB para inicializações futuras instantâneas (0s).`, 'hl');
+                    logLine(` adding ${cfg.pwadVfs}`, 'hl');
+                    const fb = document.getElementById('p115-fallback-box');
+                    if (fb) fb.style.display = 'none';
+                    updateOverallProgress('Project 115 WAD pronto.');
+                    checkBothReady();
+                };
+                reader.onerror = (err) => {
+                    logLine(`Erro ao ler arquivo: ${err}`, 'warn');
+                    updateOverallProgress('Erro ao ler arquivo local.');
+                };
+                reader.readAsArrayBuffer(file);
+            }
+
             async function loadProject115Pwad() {
+                const fallbackBox = document.getElementById('p115-fallback-box');
+                const pickBtn = document.getElementById('p115-pick-file-btn');
+                const fileInput = document.getElementById('p115-file-input');
+
+                if (pickBtn && fileInput && !pickBtn.__hasHandler) {
+                    pickBtn.__hasHandler = true;
+                    pickBtn.addEventListener('click', () => fileInput.click());
+                    fileInput.addEventListener('change', (e) => {
+                        const f = e.target.files && e.target.files[0];
+                        if (f) handleP115File(f);
+                    });
+                }
+
+                // Global drag & drop on DOS overlay
+                if (overlay && !overlay.__hasDropHandler) {
+                    overlay.__hasDropHandler = true;
+                    overlay.addEventListener('dragover', (e) => { e.preventDefault(); });
+                    overlay.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+                        if (f && (f.name.toLowerCase().endsWith('.wad') || f.name.toLowerCase().endsWith('.pk3'))) {
+                            handleP115File(f);
+                        }
+                    });
+                }
+
                 logLine(` checking IndexedDB cache for ${cfg.pwadCacheKey}...`);
                 const cachedPwad = await getCachedWad(cfg.pwadCacheKey);
                 if (cachedPwad) {
@@ -554,6 +626,7 @@
                     const mbCached = (cachedPwad.byteLength / (1024 * 1024)).toFixed(1);
                     logLine(`W_Cache: Loaded ${cfg.pwadCacheKey} from local IndexedDB (${mbCached} MB).`, 'hl');
                     logLine(` adding ${cfg.pwadVfs}`, 'hl');
+                    if (fallbackBox) fallbackBox.style.display = 'none';
                     updateOverallProgress('Project 115 WAD pronto.');
                     checkBothReady();
                     return;
@@ -627,6 +700,7 @@
                         await setCachedWad(cfg.pwadCacheKey, pwadBytes);
                         logLine(`W_Cache: Salvo ${cfg.pwadCacheKey} no IndexedDB (${(pwadBytes.byteLength / (1024 * 1024)).toFixed(1)} MB).`, 'hl');
                         logLine(` adding ${cfg.pwadVfs}`, 'hl');
+                        if (fallbackBox) fallbackBox.style.display = 'none';
                         checkBothReady();
                         return;
                     } catch (e) {
@@ -635,7 +709,9 @@
                     }
                 }
 
-                updateOverallProgress('Erro ao carregar Project 115 WAD.');
+                logLine('W_Notice: Para jogar, baixe o WAD pelos links acima ou selecione o arquivo do seu computador.', 'hl');
+                if (fallbackBox) fallbackBox.style.display = 'block';
+                updateOverallProgress('Aguardando Project 115 WAD...');
             }
 
             
