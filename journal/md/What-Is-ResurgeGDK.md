@@ -45,10 +45,10 @@ As a direct consequence, players on the Microsoft Store release were isolated: S
 │   │                      Core Engine Bridges                       │   │
 │   │                                                                │   │
 │   │  ┌───────────────────────┐          ┌───────────────────────┐  │   │
-│   │  │   GDK / COM Bridge    │          │  BOIIIWD & Mod Manager│  │   │
+│   │  │   GDK / COM Bridge    │          │  BOIIIWD & Mod Mount  │  │   │
 │   │  │  - QueryApiImpl Hook  │          │  - Steam Workshop UGC │  │   │
-│   │  │  - XPackage Mounts    │          │  - workshop.json Fixer│  │   │
-│   │  │  - Local Entitlements │          │  - mods / usermaps VFS│  │   │
+│   │  │  - XPackage Mounts    │          │  - mods/ & usermaps/  │  │   │
+│   │  │  - Local Entitlements │          │  - zm_xxxxx Naming    │  │   │
 │   │  └───────────────────────┘          └───────────────────────┘  │   │
 │   │  ┌───────────────────────┐          ┌───────────────────────┐  │   │
 │   │  │ Demonware Interception│          │  T7 Patch Hardening   │  │   │
@@ -156,8 +156,8 @@ Because the Microsoft Store version does not interface with the Steam client, it
 ### Steam Workshop Content via BOIIIWD Companion
 
 1. **Standalone BOIIIWD Utility**: Players can download custom Zombies maps, weapon packs, and total-conversion mods directly from Steam Workshop CDN endpoints using **BOIIIWD** (BOIII Workshop Downloader), which is downloaded separately by the user.
-2. **Mod Manager & `workshop.json` Resolver**: Once downloaded, Resurge's Mod Manager parses the item's `workshop.json` manifest. It detects whether the content is a `mod` or a `map`, automatically sanitizes zone folder paths, and routes assets directly into `mods/` or `usermaps/` inside the shared game directory.
-3. **In-Engine Selection**: Custom levels and community fastfiles mount transparently into the game's Custom Games / Zombies selection menus.
+2. **Directory Structure & Folder Naming Convention**: Resurge loads custom assets natively from `mods/` and `usermaps/`. Because the client does not parse `workshop.json` manifests, the downloaded folder must be named to match the internal definition specified within the manifest (such as `zm_xxxxx` for Zombies maps, or the mod's internal identifier for gameplay overhauls).
+3. **In-Engine Selection**: Once placed in the correctly named directory, custom levels and community fastfiles mount transparently into the game's Custom Games / Zombies selection menus.
 
 ### Bundled Ezz BOIII Client & Multi-Server Matchmaking
 

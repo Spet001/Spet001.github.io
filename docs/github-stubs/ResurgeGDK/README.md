@@ -32,7 +32,7 @@ While modern PC modding ecosystems primarily target standard Win32 Steam release
 
 ### 2. Steam Workshop Modding via BOIIIWD & Multi-Server Matchmaking
 * **Steam Workshop UGC via BOIIIWD:** Players can download custom Zombies maps, weapons, and community mods directly from Steam Workshop CDN endpoints using the standalone **BOIIIWD** (BOIII Workshop Downloader) companion utility (downloaded separately by the user).
-* **Mod Manager & Folder Structuring:** Resurge automatically resolves and fixes `workshop.json` manifests, organizing and mounting assets directly into `mods/` and `usermaps/` inside the game directory.
+* **Folder Structure & Mod Mounting (`mods/` & `usermaps/`):** Resurge mounts custom content directly from standard `mods/` and `usermaps/` directories. Because the client does not read or parse `workshop.json` manifests, the downloaded folder must be named to match the mod/map's internal identifier (e.g., `zm_xxxxx` for custom Zombies maps).
 * **Bundled Ezz BOIII Client:** Bundles the **Ezz BOIII** client alongside Steam dependencies, giving players full flexibility across 3 distinct server environments:
   1. **Steam Dedicated Servers** (if player owns a Steam license)
   2. **Community Dedicated Servers & Server Browser** (via bundled Ezz BOIII)
