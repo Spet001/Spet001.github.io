@@ -1,8 +1,0 @@
-name = "spet01-gateway"
-main = "worker.js"
-compatibility_date = "2024-09-23"
-
-# Bindings
-# kv_namespaces = [
-#   { binding = "PORTFOLIO_KV", id = "<YOUR_KV_NAMESPACE_ID>" }
-# ]

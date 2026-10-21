@@ -1,4 +1,4 @@
-# Fable 3 Fixer — Legacy Preservation & High-Refresh-Rate Compatibility Layer
+# Fable 3 Fixer — Legacy Preservation, High-Refresh Uncap & Modern Visuals
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Nexus Mods](https://img.shields.io/badge/Nexus_Mods-5.2k%2B_Downloads-orange.svg)](https://www.nexusmods.com/fableIII/mods/27)
@@ -17,27 +17,31 @@
 
 **Fable 3 Fixer** is an all-in-one legacy preservation suite and compatibility runtime designed for *Fable III* (Lionhead Studios) on modern Windows operating systems (Windows 10 / Windows 11). 
 
-Classic 32-bit PC titles developed during the DirectX 9 era frequently encounter critical runtime failures on modern multicore hardware and high-refresh-rate displays. These issues manifest as micro-stutters, driver-level pipeline stalls, frame pacing degradation, and immediate crash-to-desktop (CTD) events triggered by virtual address space exhaustion. Fable 3 Fixer bundles low-level binary modifications, translation wrappers, and subsystem bridges to restore stability, fluid rendering, and archival longevity to the game.
+Classic 32-bit PC titles developed during the DirectX 9 era frequently encounter critical runtime failures on modern multicore hardware and high-refresh-rate displays. These issues manifest as micro-stutters, driver-level pipeline stalls, frame pacing degradation, and crash-to-desktop (CTD) events triggered by virtual address space exhaustion. Fable 3 Fixer bundles low-level binary modifications, translation wrappers, GFWL subsystem preservation, and custom visual tuning to restore stability, fluid rendering, and archival longevity to the game.
 
 ---
 
 ## Key Technical Features
 
 ### 1. 4GB Large Address Aware (LAA) Memory Expansion
-* **The Problem:** By default, 32-bit Windows executables allocate a maximum of 2GB of Virtual Address Space (VAS). As high-resolution assets stream into memory, the process quickly exhausts available address space, triggering `0xC0000005` (Access Violation / Out of Memory) crashes.
+* **The Problem:** By default, 32-bit Windows executables allocate a maximum of 2GB of Virtual Address Space (VAS). As assets stream into memory, the process quickly exhausts available address space, triggering `0xC0000005` (Access Violation / Out of Memory) crashes.
 * **The Mitigation:** Toggles the `IMAGE_FILE_LARGE_ADDRESS_AWARE` (`0x0020`) flag within the Portable Executable (PE) header. On 64-bit Windows kernels, this expands the application's user-mode virtual address space to 4GB, eliminating memory-pressure termination.
 
 ### 2. DXVK Vulkan Translation Runtime
 * **The Problem:** Modern GPU architectures (NVIDIA Ada/Blackwell, AMD RDNA, Intel Arc) possess heavily optimized explicit graphics pipelines (Vulkan / Direct3D 12), while legacy Direct3D 9 hardware pipelines have been deprecated or routed through high-overhead emulation layers.
 * **The Mitigation:** Integrates a tuned [DXVK](https://github.com/doitsujin/dxvk) runtime layer that translates Direct3D 9 commands directly into low-overhead Vulkan calls in real time. This resolves draw-call bottlenecks, eliminates pipeline stalls, and ensures consistent frame pacing.
 
-### 3. High-Refresh-Rate & 180 FPS Framerate Scaling
-* **The Problem:** The vanilla engine couples internal physics ticks and rendering pipelines to fixed 30/60 Hz refresh intervals, causing frame pacing anomalies and visual judder on modern 144Hz–240Hz monitors.
-* **The Mitigation:** Implements dynamic framerate scaling patches that allow smooth rendering up to 180 FPS without destabilizing physics simulations, scripting threads, or character animation event hooks.
+### 3. Framerate Uncap (60+ FPS Scaling)
+* **The Problem:** The vanilla engine enforces a rigid 30 FPS cap and frame pacing limits that produce noticeable stutter on modern 60Hz, 120Hz, and 144Hz displays.
+* **The Mitigation:** Implements an engine framerate uncap that allows smooth 60+ FPS gameplay. While internal engine constraints govern the upper bound (the exact maximum framerate varies depending on scene complexity and hardware), this patch provides fluid rendering without breaking game logic.
 
-### 4. Legacy Subsystem & GFWL Decoupling
-* **The Problem:** Dependencies on the deprecated Games for Windows Live (GFWL) runtime cause continuous startup crashes, network hanging states, and save-file corruption on modern Windows installations.
-* **The Mitigation:** Decouples the engine from dormant GFWL communication layers, establishing a local persistence layer for seamless campaign progression and DLC asset accessibility.
+### 4. Games for Windows Live (GFWL) Subsystem Preservation
+* **The Goal:** Rather than discarding Games for Windows Live, the fixer ensures the native GFWL subsystem functions reliably on modern Windows 10 and Windows 11 environments.
+* **The Mitigation:** Resolves runtime connection faults, DLL dependency errors, and save-game loading hangs, allowing players to utilize GFWL profiles, save synchronizations, and co-op features stably on modern OS versions.
+
+### 5. Lightweight Custom ReShade Visual Preset
+* **The Enhancement:** Includes a tailored, lightweight ReShade preset engineered to subtly modernize the game's visuals—refining color grading, clarity, and contrast.
+* **Zero Performance Hit:** Designed with zero-impact shaders to preserve peak framerate performance across all configurations.
 
 ---
 
@@ -58,11 +62,3 @@ Detailed architectural writeups and step-by-step guides for applying these techn
 * **Systems Research Portal:** [https://spet01.dev/journal/](https://spet01.dev/journal/)
 * **Main Portfolio & Engineering Workbench:** [https://spet01.dev/](https://spet01.dev/)
 * **In-Browser Web Reverse Engineering Tools:** [https://spet01.dev/tools/](https://spet01.dev/tools/)
-
----
-
-## Author & Licensing
-
-* **Author:** Eduardo Gelain (SpetDev / Spet001)
-* **Primary Website:** [spet01.dev](https://spet01.dev)
-* **License:** MIT License. Distributed for legacy software preservation and compatibility research purposes.
