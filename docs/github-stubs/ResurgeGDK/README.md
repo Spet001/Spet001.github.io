@@ -30,17 +30,21 @@ While modern PC modding ecosystems primarily target standard Win32 Steam release
   - **`Resurge Beta.exe`** for Microsoft Store / GDK Xbox PC runtime.
   - **`BlackOps3.exe`** for standard Steam / Win32 runtime.
 
-### 2. Steam Workshop Modding on the Microsoft Store
-* Features an integrated bridge to the **BOIII Workshop Downloader**, allowing players to download, unpack, and load Steam Workshop community content (custom Zombies maps, weapons, gameplay modifications) on the Microsoft Store version.
-* Dynamically virtualizes workshop asset directories and mounts fastfiles into the engine's search hierarchy.
+### 2. Steam Workshop Modding via BOIIIWD & Multi-Server Matchmaking
+* **BOIIIWD Integration:** Built-in integration with **BOIIIWD** (BOIII Workshop Downloader) to query and download custom Zombies maps, weapons, and community mods directly from Steam Workshop CDN endpoints.
+* **Mod Manager & Folder Structuring:** Automatically resolves and fixes `workshop.json` manifests, mounting assets directly into `mods/` and `usermaps/`.
+* **Bundled BOIII Client:** Bundles the **BOIII client** (`boiii-free` / `BOIII-ReImagined`) alongside Steam dependencies, giving players full flexibility across 3 distinct server environments:
+  1. **Steam Dedicated Servers** (if player owns a Steam license)
+  2. **Community Dedicated Servers & Server Browser** (via bundled BOIII)
+  3. **Xbox PC / Microsoft Store Servers** (via GDK `xgameruntime` multiplayer)
 
 ### 3. Online Demonware Telemetry Interception & Inventory Unlock
-* **Online Intact:** Retains full online connectivity to Xbox PC servers.
-* **GobbleGum Multiplier:** Intercepts outgoing Demonware transaction requests when obtaining a GobbleGum, reporting to the server that 999 units were received.
-* **Black Market Cosmetic Unlock:** Unlocks all Black Market cosmetic assets (camos, calling cards, reticles, gestures) while intentionally preserving gameplay balance (excluding DLC weapons).
+* **Online Intact:** Retains full online connectivity to official Xbox PC servers.
+* **999x GobbleGum Memory Deception:** Synchronizes local memory and hooks internal entitlement interfaces (`Engine.GetEntitlementInfo`) so outgoing Demonware transactions validate and register 999 units upon obtaining a GobbleGum.
+* **Black Market Cosmetic Unlock:** Unlocks all Black Market cosmetic assets (camos, calling cards, emblems, reticles, gestures, bribes) while intentionally preserving gameplay balance (excluding DLC weapons).
 
-### 4. T7 Patch Security Hardening
-* Integrates protections based on the community **T7 Patch** to defend against known legacy peer-to-peer exploits, buffer overflow vulnerabilities, and crash exploits present in unpatched multiplayer sessions.
+### 4. Serious' T7 Patch Security Hardening
+* Integrates protections based on Serious' community **T7 Patch** to defend against known legacy peer-to-peer exploits, buffer overflow vulnerabilities, and crash exploits present in unpatched multiplayer sessions.
 
 ### 5. Integrated GSC Injector
 * Integrates a dedicated **GSC** script injection engine into the launcher interface.

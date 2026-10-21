@@ -12,8 +12,8 @@
 > For in-depth engineering documentation, architecture analyses, and technical deep-dives into modernizing 32-bit legacy titles, visit **[Eduardo Gelain's Technical Journal](https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/)**.
 
 > [!NOTE]
-> **Nota do Autor / Author's Note:**  
-> Esta ferramenta foi criada no início da minha trajetória, quando eu ainda estava aprendendo modding e engenharia de compatibilidade. A interface pode ser rústica, o uso pode ter suas peculiaridades e podem existir pequenos bugs — mas ela funciona, cumpre rigorosamente o que promete e resolveu problemas únicos para a comunidade de *Fable III* que nenhuma outra solução disponibilizou.
+> **Author's Note:**  
+> This tool was created early in my career while I was first learning modding and compatibility engineering. The interface might be unpolished, setup may have its quirks, and occasional minor bugs can exist—but it works, strictly delivers what it promises, and solved unique stability and framerate issues for the *Fable III* community that no other solution addressed at the time.
 
 ---
 

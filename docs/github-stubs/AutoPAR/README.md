@@ -12,8 +12,8 @@
 > For client-side web tools and systems engineering publications, visit **[Eduardo Gelain's Portfolio](https://spet01.dev/)**.
 
 > [!NOTE]
-> **Nota do Autor / Author's Note:**  
-> Esta ferramenta foi criada no início dos meus estudos de modding e automação de arquivos. A interface pode ser simples, a usabilidade pode exigir atenção e podem existir bugs pontuais — mas ela funciona, entrega o que promete com segurança e foi um utilitário pioneiro e único para a comunidade de modding da franquia Yakuza / Like a Dragon.
+> **Author's Note:**  
+> This tool was created early in my journey while I was first learning modding and file automation. The interface may be simple, usability might require patience, and occasional edge bugs can occur—but it works reliably, delivers on its promises safely, and was a pioneering, unique utility created specifically for the Yakuza / Like a Dragon modding community when no alternatives existed.
 
 ---
 

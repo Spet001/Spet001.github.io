@@ -167,6 +167,12 @@ const PORTFOLIO_DATA = {
                 sectionGeneral: "Interface & Mascote",
                 sectionVisual: "Aparência & Simulação",
                 sectionAudio: "Áudio & Easter Eggs",
+                siteColor: "Cor do Site",
+                siteColorDesc: "Paleta de cores e superfícies da interface",
+                siteColorDefault: "Padrão",
+                siteColorDefaultSub: "Cosmic Dark (#050505)",
+                siteColorPitch: "Pitch Black",
+                siteColorPitchSub: "Preto Absoluto OLED (#000000)",
                 companionBot: "Mascote Astro",
                 companionBotDesc: "Assistente interativo e guia técnico no canto inferior",
                 disableWelcome: "Desativar mensagem de boas-vindas",
@@ -329,6 +335,12 @@ const PORTFOLIO_DATA = {
                 sectionGeneral: "Interface & Mascot",
                 sectionVisual: "Appearance & Simulation",
                 sectionAudio: "Audio & Easter Eggs",
+                siteColor: "Site Color",
+                siteColorDesc: "Background and surface color palette",
+                siteColorDefault: "Default",
+                siteColorDefaultSub: "Cosmic Dark (#050505)",
+                siteColorPitch: "Pitch Black",
+                siteColorPitchSub: "Pure OLED Black (#000000)",
                 companionBot: "Astro Companion Bot",
                 companionBotDesc: "Interactive technical assistant and guide in bottom corner",
                 disableWelcome: "Disable Welcome Message",
@@ -4913,11 +4925,15 @@ const SpaceCanvasV3 = ({
 
         // Rocket Thruster Fire Particles (Instanced Mesh)
         const particleCount = 60;
-        const pGeo = new THREE.SphereGeometry(0.28, 6, 6);
-        const pMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.85 });
+        const pGeo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+        const pMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, depthWrite: false });
         const fireInstMesh = new THREE.InstancedMesh(pGeo, pMat, particleCount);
+        fireInstMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        fireInstMesh.frustumCulled = false;
         scene.add(fireInstMesh);
 
+        const _colorFire1 = new THREE.Color(0xff4400);
+        const _colorFire2 = new THREE.Color(0xffaa00);
         const particles = [];
         const _instMatrix = new THREE.Matrix4();
         const _instQuat = new THREE.Quaternion();
@@ -4929,12 +4945,15 @@ const SpaceCanvasV3 = ({
                 pos: new THREE.Vector3(),
                 velocity: new THREE.Vector3(),
                 life: 0,
-                maxLife: 20
+                maxLife: 1
             });
             fireInstMesh.setMatrixAt(i, _zeroMatrix);
+            fireInstMesh.setColorAt(i, _colorFire1);
         }
         fireInstMesh.instanceMatrix.needsUpdate = true;
+        if (fireInstMesh.instanceColor) fireInstMesh.instanceColor.needsUpdate = true;
         let pIndex = 0;
+        let fireSpawnAccum = 0;
 
         // Astronaut Oxygen Bubbles (Hardware GPU Instanced Mesh)
         const oxCount = 40;
@@ -5276,34 +5295,50 @@ const SpaceCanvasV3 = ({
             _tailPos.copy(rocketGroup.position).add(_tailOffset);
             _tailDir.set(0, -1, 0).applyQuaternion(rocketGroup.quaternion).normalize();
 
+            let fireColorDirty = false;
+            let fireMatrixDirty = false;
+
             // Spawn Fire Particles from Rocket Thrusters
-            const p = particles[pIndex];
-            p.life = Math.random() * 15 + 10;
-            p.maxLife = p.life;
-            p.pos.copy(_tailPos);
-            p.velocity.set(
-                _tailDir.x * 0.28 + (Math.random() - 0.5) * 0.05,
-                _tailDir.y * 0.28 + (Math.random() - 0.5) * 0.05,
-                _tailDir.z * 0.28 + (Math.random() - 0.5) * 0.05
-            );
-            pIndex = (pIndex + 1) % particleCount;
+            fireSpawnAccum += dtScale;
+            if (fireSpawnAccum >= 0.85) {
+                fireSpawnAccum = 0;
+                const p = particles[pIndex];
+                p.life = Math.random() * 15 + 10;
+                p.maxLife = p.life;
+                p.pos.set(
+                    _tailPos.x + (Math.random() - 0.5) * 0.3,
+                    _tailPos.y + (Math.random() - 0.5) * 0.3,
+                    _tailPos.z + (Math.random() - 0.5) * 0.3
+                );
+                fireInstMesh.setColorAt(pIndex, Math.random() > 0.5 ? _colorFire1 : _colorFire2);
+                fireColorDirty = true;
+                p.velocity.set(
+                    _tailDir.x * 0.2 + (Math.random() - 0.5) * 0.05,
+                    _tailDir.y * 0.2 + (Math.random() - 0.5) * 0.05,
+                    _tailDir.z * 0.2 + (Math.random() - 0.5) * 0.05
+                );
+                pIndex = (pIndex + 1) % particleCount;
+            }
 
             for (let i = 0; i < particleCount; i++) {
                 const pt = particles[i];
                 if (pt.life > 0) {
                     pt.life -= dtScale;
+                    fireMatrixDirty = true;
                     if (pt.life <= 0) {
+                        pt.life = 0;
                         fireInstMesh.setMatrixAt(i, _zeroMatrix);
                     } else {
                         pt.pos.addScaledVector(pt.velocity, dtScale);
-                        const sc = (pt.life / pt.maxLife) * 1.4;
+                        const sc = (pt.life / pt.maxLife) * 1.5;
                         _instScale.set(sc, sc, sc);
                         _instMatrix.compose(pt.pos, _instQuat, _instScale);
                         fireInstMesh.setMatrixAt(i, _instMatrix);
                     }
                 }
             }
-            fireInstMesh.instanceMatrix.needsUpdate = true;
+            if (fireMatrixDirty) fireInstMesh.instanceMatrix.needsUpdate = true;
+            if (fireColorDirty && fireInstMesh.instanceColor) fireInstMesh.instanceColor.needsUpdate = true;
 
             // Astronaut Spring Tether Physics
             _diff.copy(_tailPos).sub(astronautGroup.position);
@@ -9873,27 +9908,6 @@ const SettingsModal = ({
                             <div className="grid grid-cols-2 gap-2 pt-1">
                                 <button
                                     type="button"
-                                    onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space3')}
-                                    disabled={window.IS_LOW_END}
-                                    className={`p-2.5 rounded-lg text-left border transition-all ${
-                                        window.IS_LOW_END ? 'opacity-50 cursor-not-allowed bg-black/50 border-white/[0.08] text-slate-500' :
-                                        settings.theme === 'space3'
-                                            ? 'bg-[#050505]/90 border-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.25)]'
-                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
-                                    }`}
-                                    title={window.IS_LOW_END ? (lang === 'pt' ? 'Indisponível em dispositivos móveis/básicos' : 'Unavailable on mobile/basic devices') : ''}
-                                >
-                                    <div className="flex items-center justify-between font-medium text-xs">
-                                        <span className="text-cyan-400">{lang === 'pt' ? 'Espaço 3.0 (Beta)' : 'Space 3.0 (Beta)'}</span>
-                                        {settings.theme === 'space3' && <i className="fas fa-check text-[10px] text-cyan-400"></i>}
-                                    </div>
-                                    <div className="text-[10px] text-slate-400 mt-0.5">
-                                        {lang === 'pt' ? 'Galaxy Map 3D & 55k Estrelas' : '3D Galaxy Map & 55k Stars'}
-                                    </div>
-                                </button>
-
-                                <button
-                                    type="button"
                                     onClick={() => !window.IS_LOW_END && onUpdateSetting('theme', 'space2')}
                                     disabled={window.IS_LOW_END}
                                     className={`p-2.5 rounded-lg text-left border transition-all ${
@@ -9988,8 +10002,54 @@ const SettingsModal = ({
                                         ))}
                                     </div>
                                 )}
+                        </div>
 
+                        {/* Site Color Palette / Pitch Black OLED */}
+                        <div className="py-2 border-b border-white/[0.06] space-y-2">
+                            <div>
+                                <div className="font-medium text-slate-200">{t('settings.siteColor')}</div>
+                                <div className="text-[11px] text-slate-400 mt-0.5">{t('settings.siteColorDesc')}</div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 pt-1">
+                                <button
+                                    type="button"
+                                    onClick={() => onUpdateSetting('siteColor', 'default')}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        (!settings.siteColor || settings.siteColor === 'default')
+                                            ? 'bg-[#050505]/90 border-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                                            : 'bg-black/50 border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span>{t('settings.siteColorDefault')}</span>
+                                        {(!settings.siteColor || settings.siteColor === 'default') && <i className="fas fa-check text-[10px] text-cyan-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {t('settings.siteColorDefaultSub')}
+                                    </div>
+                                </button>
 
+                                <button
+                                    type="button"
+                                    onClick={() => onUpdateSetting('siteColor', 'pitch-black')}
+                                    className={`p-2.5 rounded-lg text-left border transition-all ${
+                                        settings.siteColor === 'pitch-black'
+                                            ? 'bg-black border-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                                            : 'bg-black border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between font-medium text-xs">
+                                        <span className="text-white flex items-center gap-1.5">
+                                            <span className="w-2 h-2 rounded-full bg-black border border-white/40"></span>
+                                            {t('settings.siteColorPitch')}
+                                        </span>
+                                        {settings.siteColor === 'pitch-black' && <i className="fas fa-check text-[10px] text-cyan-400"></i>}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-0.5">
+                                        {t('settings.siteColorPitchSub')}
+                                    </div>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -13880,7 +13940,8 @@ const App = () => {
         defaultLang: 'pt',
         theme: 'space2',
         skyboxIndex: 0,
-        easterEggSign: false
+        easterEggSign: false,
+        siteColor: 'default'
     };
 
     const [settings, setSettings] = useState(() => {
@@ -13898,9 +13959,10 @@ const App = () => {
                     musicPlayer: parsed.musicPlayer !== undefined ? parsed.musicPlayer : DEFAULT_SETTINGS.musicPlayer,
                     musicAutoPlay: parsed.musicAutoPlay !== undefined ? parsed.musicAutoPlay : DEFAULT_SETTINGS.musicAutoPlay,
                     defaultLang: parsed.defaultLang || parsed.defaultLanguage || DEFAULT_SETTINGS.defaultLang,
-                    theme: (!parsed.theme || parsed.theme === 'space') ? DEFAULT_SETTINGS.theme : parsed.theme,
+                    theme: (!parsed.theme || parsed.theme === 'space' || parsed.theme === 'space3') ? DEFAULT_SETTINGS.theme : parsed.theme,
                     skyboxIndex: parsed.skyboxIndex !== undefined ? parsed.skyboxIndex : DEFAULT_SETTINGS.skyboxIndex,
-                    easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign
+                    easterEggSign: parsed.easterEggSign !== undefined ? parsed.easterEggSign : DEFAULT_SETTINGS.easterEggSign,
+                    siteColor: parsed.siteColor || DEFAULT_SETTINGS.siteColor
                 };
             } else if (astroWelcomeSaved !== null) {
                 return {
@@ -13938,7 +14000,19 @@ const App = () => {
         return () => window.removeEventListener('spet:open-project-modal', handleOpenProjModal);
     }, []);
 
-    const [isGalaxyMapActive, setIsGalaxyMapActive] = useState(() => settings.theme === 'space3');
+    const [isGalaxyMapActive, setIsGalaxyMapActive] = useState(false);
+
+    // Sync Site Color (Pitch Black OLED vs Default)
+    useEffect(() => {
+        const isPitchBlack = settings.siteColor === 'pitch-black';
+        if (isPitchBlack) {
+            document.documentElement.setAttribute('data-site-color', 'pitch-black');
+            document.body.classList.add('pitch-black');
+        } else {
+            document.documentElement.removeAttribute('data-site-color');
+            document.body.classList.remove('pitch-black');
+        }
+    }, [settings.siteColor]);
     const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
     const [galaxyLoading, setGalaxyLoading] = useState({
         active: false,

@@ -210,6 +210,30 @@
             }
         }
 
+        
+        /* High-contrast OLED Pitch Black Theme Override */
+        [data-site-color="pitch-black"],
+        [data-site-color="pitch-black"] body,
+        body.pitch-black {
+            background-color: #000000 !important;
+        }
+        [data-site-color="pitch-black"] .glass-panel {
+            background: rgba(0, 0, 0, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.85) !important;
+        }
+        [data-site-color="pitch-black"] header.scrolled,
+        [data-site-color="pitch-black"] .bg-\[\#05070c\]\/95 {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+        }
+        [data-site-color="pitch-black"] footer,
+        [data-site-color="pitch-black"] ::-webkit-scrollbar-track,
+        [data-site-color="pitch-black"] .bg-\[\#050505\]\/95,
+        [data-site-color="pitch-black"] .bg-\[\#080808\],
+        [data-site-color="pitch-black"] .bg-\[\#0e1424\] {
+            background-color: #000000 !important;
+        }
+
         body {
             background-color: #050505;
             color: #e2e8f0;
@@ -502,6 +526,14 @@
     </style>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script>
+        try {
+            var _cfg = JSON.parse(localStorage.getItem('spet_portfolio_settings') || '{}');
+            if (_cfg.siteColor === 'pitch-black') {
+                document.documentElement.setAttribute('data-site-color', 'pitch-black');
+            }
+        } catch (e) {}
+    </script>
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white">

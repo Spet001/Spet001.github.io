@@ -120,6 +120,30 @@
             }
         }
 
+        
+        /* High-contrast OLED Pitch Black Theme Override */
+        [data-site-color="pitch-black"],
+        [data-site-color="pitch-black"] body,
+        body.pitch-black {
+            background-color: #000000 !important;
+        }
+        [data-site-color="pitch-black"] .glass-panel {
+            background: rgba(0, 0, 0, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.85) !important;
+        }
+        [data-site-color="pitch-black"] header.scrolled,
+        [data-site-color="pitch-black"] .bg-\[\#05070c\]\/95 {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+        }
+        [data-site-color="pitch-black"] footer,
+        [data-site-color="pitch-black"] ::-webkit-scrollbar-track,
+        [data-site-color="pitch-black"] .bg-\[\#050505\]\/95,
+        [data-site-color="pitch-black"] .bg-\[\#080808\],
+        [data-site-color="pitch-black"] .bg-\[\#0e1424\] {
+            background-color: #000000 !important;
+        }
+
         body {
             background-color: #050505;
             color: #e2e8f0;
@@ -412,6 +436,14 @@
     </style>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script>
+        try {
+            var _cfg = JSON.parse(localStorage.getItem('spet_portfolio_settings') || '{}');
+            if (_cfg.siteColor === 'pitch-black') {
+                document.documentElement.setAttribute('data-site-color', 'pitch-black');
+            }
+        } catch (e) {}
+    </script>
 </head>
 
 <body class="antialiased selection:bg-primary selection:text-white">
@@ -503,12 +535,12 @@
 <li>Filesystem access operates within AppX packaging manifests and sandboxed virtual stores.</li>
 <li>Crucially, the build possesses <strong>zero native integration with the Steamworks SDK</strong> (<code>steam_api64.dll</code> is absent by default).</li>
 </ul>
-<p>As a direct consequence, players on the Microsoft Store release were isolated: Steam Workshop mods could not be mounted, custom Zombies maps could not be natively selected, and asset management was fragmented.</p>
+<p>As a direct consequence, players on the Microsoft Store release were isolated: Steam Workshop mods could not be mounted, custom Zombies maps could not be natively selected, and matchmaking across servers was fragmented.</p>
 <p><img src="/assets/resurge.png" alt="Resurge Client Interface"></p>
-<p><strong>ResurgeGDK</strong> was engineered to eliminate this platform divide. Rather than requiring separate, redundant game installations, ResurgeGDK establishes <strong>cross-platform file compatibility</strong>: it packages the necessary Steam dependencies (<code>steam_api64.dll</code>) alongside native GDK libraries, installing both the GDK executable (<code>Resurge Beta.exe</code>) and the standard Steam executable (<code>BlackOps3.exe</code>). This dual-runtime model allows players to run either the GDK Xbox PC version or the Steam version from a single shared directory, while integrating Steam Workshop downloads, Demonware telemetry interception, T7 Patch security protections, and an integrated GSC script injector.</p>
+<p><strong>ResurgeGDK</strong> was engineered to eliminate this platform divide. Rather than requiring separate, redundant game installations, ResurgeGDK establishes <strong>cross-platform file compatibility</strong>: it packages the necessary Steam dependencies (<code>steam_api64.dll</code>) alongside native GDK libraries, installing both the GDK executable (<code>Resurge Beta.exe</code>) and the standard Steam executable (<code>BlackOps3.exe</code>). This dual-runtime model allows players to run either the GDK Xbox PC version, the standard Steam version, or community dedicated servers via the bundled BOIII client from a single shared directory—while integrating <strong>BOIIIWD</strong> for Steam Workshop downloads, Demonware telemetry interception for 999x GobbleGums, Serious&#39; T7 Patch security protections, and an integrated GSC script injector.</p>
 <pre><code class="language-text">┌────────────────────────────────────────────────────────────────────────┐
 │                        Resurge Desktop Launcher                        │
-│             [Steam Workshop Downloader] │ [GSC Injector]               │
+│          [BOIIIWD Workshop Downloader] │ [GSC Injector]                │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │ Launch &amp; Coordination
                                     ▼
@@ -516,9 +548,10 @@
 │                     Shared Game Installation Tree                      │
 │                                                                        │
 │   ┌────────────────────────────────────────────────────────────────┐   │
-│   │                 Dual-Runtime Executable Pair                   │   │
-│   │   - Resurge Beta.exe  (Microsoft Store / GDK / Xbox PC)        │   │
-│   │   - BlackOps3.exe     (Standard Steam / Win32 Environment)    │   │
+│   │                 Triple-Target Execution Pipeline               │   │
+│   │   1. Xbox PC Servers     -&gt; Resurge Beta.exe (GDK / Store)     │   │
+│   │   2. Steam Servers       -&gt; BlackOps3.exe (Steam License)      │   │
+│   │   3. Community Dedicated -&gt; Bundled BOIII Client               │   │
 │   │   - steam_api64.dll + xgameruntime.dll (Coexisting Libraries)  │   │
 │   └────────────────────────────────────────────────────────────────┘   │
 │                                                                        │
@@ -526,16 +559,16 @@
 │   │                      Core Engine Bridges                       │   │
 │   │                                                                │   │
 │   │  ┌───────────────────────┐          ┌───────────────────────┐  │   │
-│   │  │   GDK / COM Bridge    │          │  Workshop VFS Mount   │  │   │
-│   │  │  - QueryApiImpl Hook  │          │  - BOIII Downloader   │  │   │
-│   │  │  - XPackage Mounts    │          │  - Virtual Path Map   │  │   │
-│   │  │  - Local Entitlements │          │  - FastFile Indexing  │  │   │
+│   │  │   GDK / COM Bridge    │          │  BOIIIWD &amp; Mod Manager│  │   │
+│   │  │  - QueryApiImpl Hook  │          │  - Steam Workshop UGC │  │   │
+│   │  │  - XPackage Mounts    │          │  - workshop.json Fixer│  │   │
+│   │  │  - Local Entitlements │          │  - mods / usermaps VFS│  │   │
 │   │  └───────────────────────┘          └───────────────────────┘  │   │
 │   │  ┌───────────────────────┐          ┌───────────────────────┐  │   │
-│   │  │  Demonware &amp; Cosmetics│          │  T7 Patch Hardening   │  │   │
-│   │  │  - Online Telemetry   │          │  - Community Protections│ │
-│   │  │  - 999x Gum Intercept │          │  - Buffer Overflow Fix│  │   │
-│   │  │  - Black Market Unlock│          │  - Integrated GSC VM  │  │   │
+│   │  │ Demonware Interception│          │  T7 Patch Hardening   │  │   │
+│   │  │  - Online Maintained  │          │  - Serious&#39; T7 Patch  │  │   │
+│   │  │  - 999x Gum Memory    │          │  - Buffer Overflow Fix│  │   │
+│   │  │  - Cosmetic Unlocks   │          │  - Integrated GSC VM  │  │   │
 │   │  └───────────────────────┘          └───────────────────────┘  │   │
 │   └────────────────────────────────────────────────────────────────┘   │
 └────────────────────────────────────────────────────────────────────────┘
@@ -544,7 +577,7 @@
 <h2>2. Cross-Platform Coexistence: Dual-Runtime Compatibility</h2>
 <p>The primary challenge of porting and maintaining Black Ops III across both ecosystems is avoiding asset duplication while maintaining stability. The vanilla Microsoft Store package and the Steam package share 90%+ identical data assets (<code>zone/</code>, <code>video/</code>, <code>sound/</code>), but differ fundamentally in their entrypoint executables and runtime dependencies.</p>
 <h3>Dual-Executable Architecture</h3>
-<p>ResurgeGDK resolves this by establishing a unified runtime file tree where both execution models coexist:</p>
+<p>ResurgeGDK resolves this by establishing a unified runtime file tree where both execution models coexist side-by-side:</p>
 <ol>
 <li><strong><code>Resurge Beta.exe</code></strong>: Built specifically for the Microsoft Store / GDK environment. It binds to <code>xgameruntime.dll</code> and routes user authentication through the local Xbox PC identity subsystem.</li>
 <li><strong><code>BlackOps3.exe</code></strong>: Retained for the standard Win32 environment, loading <code>steam_api64.dll</code> and connecting to standard Steam client services.</li>
@@ -611,44 +644,73 @@ namespace resurge::gdk {
 </code></pre>
 <p>This ensures that pre-installed DLC maps and assets load without container initialization faults.</p>
 <hr>
-<h2>4. Steam Workshop Modding on the Microsoft Store</h2>
-<p>Because the Microsoft Store version does not interface with the Steam client, it lacks access to the native Steam Workshop subscription system. ResurgeGDK overcomes this limitation by integrating the <strong>BOIII Workshop Downloader</strong>:</p>
+<h2>4. Steam Workshop via BOIIIWD &amp; Bundled BOIII Client</h2>
+<p>Because the Microsoft Store version does not interface with the Steam client, it lacks native access to the Steam Workshop subscription API. Furthermore, official server matchmaking is fragmented across platforms. ResurgeGDK overcomes both challenges through a dual integration:</p>
+<h3>BOIIIWD (BOIII Workshop Downloader) Integration</h3>
+<p>Resurge incorporates <strong>BOIIIWD</strong> directly into its workflow:</p>
 <ol>
-<li><strong>Automated UGC Download</strong>: The desktop launcher fetches custom Zombies maps, weapons, and mod packages directly from Steam Workshop CDN repositories.</li>
-<li><strong>Virtual Filesystem Redirection</strong>: Mods are placed into the <code>mods/</code> and <code>usermaps/</code> subdirectories. ResurgeGDK&#39;s runtime layer virtualizes search path queries within the engine&#39;s asset loader, ensuring that custom fastfiles (<code>zone/</code>) are recognized as valid level packages.</li>
-<li><strong>In-Game Selection</strong>: Community maps and mods appear directly in the in-game Custom Games / Zombies selection menus, exactly as they do on the native Steam version.</li>
+<li><strong>Automated UGC Download</strong>: Users can search and download custom Zombies maps, weapon packs, and total-conversion mods directly from Steam Workshop CDN endpoints via BOIIIWD.</li>
+<li><strong>Mod Manager &amp; <code>workshop.json</code> Resolver</strong>: Once downloaded, Resurge&#39;s Mod Manager parses the item&#39;s <code>workshop.json</code> manifest. It detects whether the content is a <code>mod</code> or a <code>map</code>, automatically sanitizes zone folder paths, and routes assets directly into <code>mods/</code> or <code>usermaps/</code> inside the shared game directory.</li>
+<li><strong>In-Engine Selection</strong>: Custom levels and community fastfiles mount transparently into the game&#39;s Custom Games / Zombies selection menus.</li>
+</ol>
+<h3>Bundled BOIII Client &amp; Multi-Server Matchmaking</h3>
+<p>Rather than restricting players to a single platform, Resurge bundles the <strong>BOIII client</strong> (<code>boiii-free</code> by Ezzboiii / <code>BOIII-ReImagined</code>) alongside standard Steam dependencies. This provides players with complete freedom across three matchmaking targets:</p>
+<ol>
+<li><strong>Steam Dedicated Servers</strong>: Accessible when launching via <code>BlackOps3.exe</code> (requires a valid Steam license).</li>
+<li><strong>Community Dedicated Servers</strong>: Accessible via the bundled <strong>BOIII client</strong>, connecting to community-hosted dedicated servers with an in-game server browser, independent of official platform matchmaking.</li>
+<li><strong>Xbox PC / Microsoft Store Servers</strong>: Accessible via <code>Resurge Beta.exe</code>, matching against players in the official Xbox Live / Microsoft Store PC matchmaking pool.</li>
 </ol>
 <hr>
-<h2>5. Demonware Telemetry Interception &amp; Cosmetic Unlocks (Online Intact)</h2>
-<p>Unlike offline emulators that disable network connectivity, <strong>ResurgeGDK keeps the game&#39;s online functionality fully active</strong>. Players can connect to online servers and play cooperative multiplayer sessions on Xbox PC servers.</p>
-<h3>Intercepting Demonware for 999x GobbleGums</h3>
-<p>In Black Ops III, consumable GobbleGums are tracked by Activision&#39;s <strong>Demonware</strong> server backend. In vanilla gameplay, obtaining gums through Dr. Monty’s factory sends transactional telemetry packets to Demonware:</p>
+<h2>5. Demonware Telemetry Interception &amp; 999x GobbleGums (Online Intact)</h2>
+<p>A core design principle of ResurgeGDK is that <strong>online functionality remains fully active</strong>. The mod does not isolate the player in an offline sandbox; users can connect to Xbox PC servers and play cooperative multiplayer matches normally.</p>
+<h3>Local State Deception Tricking Remote Demonware</h3>
+<p>In Black Ops III, consumable GobbleGums are validated and tracked by Activision&#39;s <strong>Demonware</strong> server backend. Rather than attempting to crack remote server-side databases over the wire, Resurge operates through <strong>local state deception</strong>:</p>
 <ul>
-<li>ResurgeGDK hooks the outgoing Demonware transaction handler.</li>
-<li>Whenever the player triggers a gum transaction, the hook modifies the outgoing payload data, reporting to the Demonware server that <strong>999 units</strong> of the obtained GobbleGum were received.</li>
-<li>The Demonware server acknowledges and records the quantity, providing the player with a complete stockpile of Mega and Ultra-Rare GobbleGums while maintaining valid online session state.</li>
+<li><strong>Continuous Memory Synchronization (<code>GobbleGumHackThread</code>)</strong>: Resurge runs a background thread that continuously reads <code>gobblegum_value</code> (default: <strong>999</strong>) and writes this integer directly into the active memory addresses for player inventory slots:<pre><code class="language-cpp">// Thread to continuously set GobbleGum values in memory
+DWORD WINAPI GobbleGumHackThread(LPVOID lpParam) {
+    int gobbleGumValue = ReadIniInt(&quot;Hacks&quot;, &quot;gobblegum_value&quot;, 999);
+    while (true) {
+        if (g_gobbleGumHackEnabled) {
+            for (size_t i = 0; i &lt; g_gobbleGumOffsetsCount; i++) {
+                uint64_t addr = REBASE(g_gobbleGumOffsets[i]);
+                if (addr) *(int32_t*)addr = gobbleGumValue;
+            }
+        }
+        Sleep(100);
+    }
+    return 0;
+}
+</code></pre>
+</li>
+<li><strong>LUI Engine Entitlement Hooking</strong>: Resurge detours the engine&#39;s internal entitlement callback:<pre><code class="language-lua">Engine.GetEntitlementInfo = function(itemId, entitlementType)
+    return { entitled = true, locked = false, new = false, count = 999 }
+end
+</code></pre>
+</li>
+<li><strong>Demonware Acceptance</strong>: Because the local game client is deceived into asserting ownership of 999 units of each obtained gum, outgoing transaction validation packets report this hydrated state to Demonware. The remote backend accepts and reflects the count, granting players a complete 999x stockpile of Mega, Rare, and Ultra-Rare GobbleGums online without requiring microtransactions.</li>
+<li><strong>Currencies Maximized</strong>: CryptoKeys (<code>CRYPTOKEYS_VALUE_DEFAULT = 99999</code>) and Liquid Divinium (<code>LIQUID_DIVINIUM_VALUE_DEFAULT = 99999</code>) are similarly initialized to their maximum values.</li>
 </ul>
 <h3>Black Market Cosmetics Unlock</h3>
-<p>In addition to GobbleGum telemetry interception, ResurgeGDK hooks the catalog response parser for cosmetic items:</p>
+<p>Resurge incorporates automated unlocks for in-game cosmetics:</p>
 <ul>
-<li><strong>Unlocked Assets</strong>: Automatically unlocks all Black Market weapon camos, calling cards, reticles, specialist themes, and gesture animations.</li>
-<li><strong>Gameplay Balance Preservation</strong>: The unlock hook intentionally <strong>excludes DLC black market weapons</strong>, preserving core weapon progression and multiplayer fairness.</li>
+<li><strong>Unlocked Items</strong>: Unlocks weapon camouflages, calling cards, emblems (<code>emblem_unlock_all 1</code>), reticles, specialist outfits, and Black Market bribes (<code>bm_bribes_unlimited 1</code>, <code>ui_enable_bribes 1</code>).</li>
+<li><strong>Multiplayer Balance Preservation</strong>: The unlock hook specifically <strong>excludes DLC black market weapons</strong>, preserving weapon sandbox balance in online multiplayer lobbies.</li>
 </ul>
 <hr>
-<h2>6. Security Hardening via T7 Patch &amp; Integrated GSC Injector</h2>
-<h3>T7 Patch Protection Integration</h3>
-<p>As Call of Duty: Black Ops III aged, several critical security vulnerabilities were discovered in its peer-to-peer networking code:</p>
+<h2>6. Security Hardening via Serious&#39; T7 Patch &amp; Integrated GSC Injector</h2>
+<h3>Serious&#39; T7 Patch Integration</h3>
+<p>Legacy Call of Duty: Black Ops III multiplayer code suffers from several severe peer-to-peer security vulnerabilities:</p>
 <ul>
-<li><strong>Buffer Overflow Exploits</strong>: Malformed packets could cause memory corruption on unpatched clients.</li>
-<li><strong>Crash Exploits</strong>: Malicious network packets crafted by bad actors could forcibly close game sessions.</li>
+<li><strong>Buffer Overflow Remote Code Execution (RCE)</strong>: Malformed network packets sent to game ports could trigger memory corruption on unpatched clients.</li>
+<li><strong>Denial of Service &amp; Crash Exploits</strong>: Malicious network packets crafted by bad actors could forcibly terminate lobbies and disconnect players.</li>
 </ul>
-<p>Rather than relying on proprietary closed patches, ResurgeGDK incorporates the community-proven protections from Serious&#39; <strong>T7 Patch</strong>. These patches validate packet lengths, sanitize incoming string buffers, and safeguard active lobbies from remote crash vectors during online sessions.</p>
+<p>Resurge integrates the security hardening measures from Serious&#39; <strong>T7 Patch</strong>. These community patches inspect packet boundaries, sanitize incoming serialized strings, and neutralize remote crash packets, allowing players to enjoy public and private games securely.</p>
 <h3>Integrated GSC Script Injector</h3>
-<p>Black Ops III scripts are compiled into bytecode structures categorized internally as <strong><code>ASSET_TYPE_SCRIPT_PARSETREE</code></strong>.</p>
-<p>The ResurgeGDK launcher includes a built-in <strong>GSC</strong> script injector:</p>
+<p>Black Ops III custom game scripts are compiled into bytecode structures categorized internally as <strong><code>ASSET_TYPE_SCRIPT_PARSETREE</code></strong>.</p>
+<p>The Resurge launcher includes a native <strong>GSC</strong> injector:</p>
 <ul>
-<li>Eliminates the need for external third-party memory injection software.</li>
-<li>Allows developers and mod creators to inject and hot-reload compiled <code>.gsc</code> scripts directly into runtime memory during private matches and custom Zombies games.</li>
+<li>Rebuilt in Node.js / C# directly inside the launcher, eliminating the need for suspicious third-party cheat injection tools.</li>
+<li>Enables developers and modders to inject and hot-reload compiled <code>.gsc</code> scripts directly into game memory during private matches and custom Zombies sessions.</li>
 </ul>
 <hr>
 <h2>7. Comparative Architectural Matrix</h2>
@@ -671,7 +733,13 @@ namespace resurge::gdk {
 <td align="left"><strong>Executable Support</strong></td>
 <td align="left">Steam Client Required</td>
 <td align="left">Xbox App Required</td>
-<td align="left"><strong>Both Executables from Same Shared Files</strong></td>
+<td align="left"><strong>Both Executables from Same Shared Directory</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Server Options</strong></td>
+<td align="left">Steam Servers Only</td>
+<td align="left">Xbox PC Servers Only</td>
+<td align="left"><strong>Triple-Option: Steam / Community (BOIII) / Xbox PC</strong></td>
 </tr>
 <tr>
 <td align="left"><strong>DLC Entitlement</strong></td>
@@ -683,7 +751,7 @@ namespace resurge::gdk {
 <td align="left"><strong>Steam Workshop</strong></td>
 <td align="left">Native Steam Client UGC</td>
 <td align="left">Completely Unsupported</td>
-<td align="left"><strong>BOIII Workshop Downloader + VFS Mapping</strong></td>
+<td align="left"><strong>BOIIIWD (Downloader) + Mod Manager <code>workshop.json</code></strong></td>
 </tr>
 <tr>
 <td align="left"><strong>Online Status</strong></td>
@@ -695,31 +763,31 @@ namespace resurge::gdk {
 <td align="left"><strong>GobbleGums / Loot</strong></td>
 <td align="left">Demonware Server-Tied</td>
 <td align="left">Inaccessible / Fragmented</td>
-<td align="left"><strong>Demonware Interception (999x on Obtain)</strong></td>
+<td align="left"><strong>Local Deception -&gt; Remote Demonware Sync (999x)</strong></td>
 </tr>
 <tr>
 <td align="left"><strong>Black Market</strong></td>
 <td align="left">Microtransactions</td>
 <td align="left">Inaccessible / Fragmented</td>
-<td align="left"><strong>All Cosmetics Unlocked (Excl. DLC Weapons)</strong></td>
+<td align="left"><strong>Cosmetics &amp; Bribes Unlocked (Excl. DLC Weapons)</strong></td>
 </tr>
 <tr>
 <td align="left"><strong>Network Security</strong></td>
 <td align="left">Vulnerable to Legacy P2P Exploits</td>
 <td align="left">Vulnerable to Legacy P2P Exploits</td>
-<td align="left"><strong>Hardened via T7 Patch Protections</strong></td>
+<td align="left"><strong>Hardened via Serious&#39; T7 Patch</strong></td>
 </tr>
 <tr>
 <td align="left"><strong>Script Modding</strong></td>
 <td align="left">External Tools</td>
 <td align="left">Blocked by Container</td>
-<td align="left"><strong>Integrated GSC Script Injector</strong></td>
+<td align="left"><strong>Integrated GSC Script Injector in Launcher</strong></td>
 </tr>
 </tbody></table>
 <hr>
 <h2>8. Conclusion &amp; Legacy Preservation</h2>
 <p>The fragmentation of PC games across different digital distribution platforms often isolates player communities and threatens the long-term survival of user-generated content. When modern ports operate inside sandboxed runtimes that lack modding hooks, decades of community-crafted maps and tools are left behind.</p>
-<p><strong>ResurgeGDK</strong> provides a clean, unified architectural solution: sharing game data between the Microsoft Store and Steam runtimes, mounting Steam Workshop creations without the Steam client, and protecting active lobbies with T7 Patch hardening. By keeping online play fully intact while solving entitlement and modding barriers, ResurgeGDK safeguards the legacy of Black Ops III modding across modern PC platforms.</p>
+<p><strong>ResurgeGDK</strong> provides a clean, unified architectural solution: sharing game data between the Microsoft Store, Steam, and community runtimes, mounting Steam Workshop creations via BOIIIWD, giving players freedom between Xbox PC, Steam, and community BOIII servers, and protecting active lobbies with Serious&#39; T7 Patch hardening. By keeping online play fully intact while solving entitlement and modding barriers, ResurgeGDK safeguards the legacy of Black Ops III modding across modern PC platforms.</p>
 
                 </div>
             </article>
