@@ -11,6 +11,10 @@
 > 
 > For low-level systems engineering articles, GDK runtime analyses, and client-side web tools, visit **[Eduardo Gelain's Portfolio](https://spet01.dev/)**.
 
+> [!NOTE]
+> **Nota do Autor / Author's Note:**  
+> Esta ferramenta foi criada no início da minha trajetória, quando eu ainda estava aprendendo modding e engenharia reversa. A interface pode ser simples, a usabilidade pode exigir alguma paciência e podem ocorrer pequenos bugs — mas ela funciona, faz exatamente o que promete e é uma solução única para os jogadores de Final Fantasy XIII no ecossistema Game Pass / MS Store.
+
 ---
 
 ## Overview

@@ -10,7 +10,7 @@
 > This project was formerly known as **`BOIII-ReImagined-UWP`**. Source code development, active branches, and community releases are hosted on our official GitLab mirror:  
 > **[https://gitlab.com/Spet001/resurgegdkbackup](https://gitlab.com/Spet001/resurgegdkbackup)**  
 > 
-> In-depth architectural writeups and reverse engineering technical papers are published on **[Eduardo Gelain's Technical Journal](https://spet01.dev/journal/What-Is-ResurgeGDK/)**.
+> In-depth architectural writeups and technical research papers are published on **[Eduardo Gelain's Technical Journal](https://spet01.dev/journal/What-Is-ResurgeGDK/)**.
 
 ---
 
@@ -24,24 +24,27 @@ While modern PC modding ecosystems primarily target standard Win32 Steam release
 
 ## Key Architectural Modules
 
-### 1. Steam-to-GDK Runtime Conversion & Compatibility
-* Operates within the Windows Gaming Desktop container, creating a translation bridge between traditional Win32 process execution and Xbox PC runtime services.
-* Handles non-invasive entrypoint detours during early process initialization, resolving containerized path virtualization hurdles.
+### 1. Dual-Runtime File Compatibility (Steam + GDK Coexistence)
+* Structures file dependencies so that native Steam binaries (`steam_api64.dll`, etc.) coexist cleanly side-by-side with Microsoft Store GDK libraries (`xgameruntime.dll`).
+* Installs and coordinates both executables simultaneously from a single installation directory:
+  - **`Resurge Beta.exe`** for Microsoft Store / GDK Xbox PC runtime.
+  - **`BlackOps3.exe`** for standard Steam / Win32 runtime.
 
 ### 2. Steam Workshop Modding on the Microsoft Store
 * Features an integrated bridge to the **BOIII Workshop Downloader**, allowing players to download, unpack, and load Steam Workshop community content (custom Zombies maps, weapons, gameplay modifications) on the Microsoft Store version.
 * Dynamically virtualizes workshop asset directories and mounts fastfiles into the engine's search hierarchy.
 
-### 3. Local Telemetry & GobbleGum Inventory Emulation
-* Emulates local backend telemetry states to provide complete access to GobbleGums during local and private cooperative sessions.
-* Replaces legacy server microtransaction queries with an offline in-memory state emulator, ensuring long-term game preservation.
+### 3. Online Demonware Telemetry Interception & Inventory Unlock
+* **Online Intact:** Retains full online connectivity to Xbox PC servers.
+* **GobbleGum Multiplier:** Intercepts outgoing Demonware transaction requests when obtaining a GobbleGum, reporting to the server that 999 units were received.
+* **Black Market Cosmetic Unlock:** Unlocks all Black Market cosmetic assets (camos, calling cards, reticles, gestures) while intentionally preserving gameplay balance (excluding DLC weapons).
 
-### 4. Integrated Ezz BOIII Client Backend
-* Directly incorporates community-standard Ezz BOIII client functionality for enhanced networking stability, custom server browser connectivity, and security patches against known legacy network vulnerabilities.
+### 4. T7 Patch Security Hardening
+* Integrates protections based on the community **T7 Patch** to defend against known legacy peer-to-peer exploits, buffer overflow vulnerabilities, and crash exploits present in unpatched multiplayer sessions.
 
-### 5. Built-in GSC Bytecode Injector
-* Integrates a dedicated Treyarch Game Scripting C (GSC) bytecode injection engine into the launcher interface.
-* Allows developers and modders to dynamically inject and execute compiled GSC scripts into runtime memory without external third-party tools.
+### 5. Integrated GSC Injector
+* Integrates a dedicated **GSC** script injection engine into the launcher interface.
+* Allows developers and modders to dynamically inject and run compiled GSC scripts directly into runtime memory without needing external third-party injectors.
 
 ---
 
@@ -52,7 +55,7 @@ While modern PC modding ecosystems primarily target standard Win32 Steam release
   - [What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry](https://spet01.dev/journal/What-Is-ResurgeGDK/)
   - [UWP & GDK Sandbox Entitlement Analysis](https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/)
   - [Exploring Legacy UWP Titles: Hooking WinRT Store APIs & Runtime Injection](https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/)
-  - [Treyarch Game Scripting C (GSC) VM Architecture](https://spet01.dev/journal/What-Is-GSC/)
+  - [Treyarch GSC VM Architecture](https://spet01.dev/journal/What-Is-GSC/)
 * **Eduardo Gelain's Engineering Portfolio:** [https://spet01.dev/](https://spet01.dev/)
 * **In-Browser Web Reverse Engineering Tools:** [https://spet01.dev/tools/](https://spet01.dev/tools/)
 
