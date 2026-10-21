@@ -151,6 +151,7 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Jogar Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Imitando a GSC Engine dentro de um HTML!",
+                project115: "PROJECT 115: DESPAIR (COD Zombies no DOOM — Fabysk)",
                 deliciaDoom: "DELICIA DOOM (Jailson Mendes Total Conversion)",
                 music: "Tocador de OST",
                 exit: "Sair do Jogo",
@@ -319,6 +320,7 @@ const PORTFOLIO_DATA = {
                 title: "Easter Egg Vault",
                 quake: "Play Quake 1 (NetQuake)",
                 zombies: "COD Zombies Errius: Emulating the GSC Engine inside HTML!",
+                project115: "PROJECT 115: DESPAIR (COD Zombies in DOOM — Fabysk)",
                 deliciaDoom: "DELICIA DOOM (Jailson Mendes Total Conversion)",
                 music: "OST Player",
                 exit: "Exit Game",
@@ -9650,6 +9652,17 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                         </button>
 
                         <button
+                            onClick={() => onSelectGame('project115')}
+                            className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-red-500/50 hover:bg-red-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <i className="fas fa-biohazard text-red-400"></i>
+                                <span>{t('easter.project115')}</span>
+                            </span>
+                            <i className="fas fa-play text-[10px] text-slate-400"></i>
+                        </button>
+
+                        <button
                             onClick={() => onSelectGame('delicia_doom')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-orange-500/50 hover:bg-orange-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
@@ -9693,6 +9706,10 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
     } else if (activeGame === 'zombies') {
         iframeSrc = '/easter eggs/GSC VM/gsc_classic.html';
         gameTitle = 'COD Zombies Errius / GSC VM';
+    } else if (activeGame === 'project115') {
+        persistDoomMode('project115');
+        iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?mode=project115#project115';
+        gameTitle = 'PROJECT 115: DESPAIR (COD Zombies in DOOM · UZDoom)';
     } else if (activeGame === 'delicia_doom') {
         persistDoomMode('delicia');
         iframeSrc = '/easter eggs/Delicia Mod/delicia_doom.html?mode=delicia#delicia';
@@ -10415,6 +10432,25 @@ Celestial Mega-Chicken recalled. Natural lunar orbit and gravitational tides res
             return;
         }
 
+        // Secret PROJECT 115 (COD Zombies in DOOM) Command
+        const isProject115 = (
+            cleanCmd === '115' ||
+            cleanCmd === '/115' ||
+            cleanCmd === 'project115' ||
+            cleanCmd === 'project 115' ||
+            cleanCmd === 'element 115' ||
+            cleanCmd === 'elemento 115' ||
+            cleanCmd === 'cod zombies doom' ||
+            cleanCmd === 'doom zombies' ||
+            cleanCmd === 'zombies doom'
+        );
+
+        if (isProject115) {
+            onOpenEaster('project115');
+            onClose();
+            return;
+        }
+
         // Secret DELICIA DOOM Easter Egg Command (NOT listed in 'help' command)
         const isDeliciaDoom = (
             cleanCmd === 'delicia doom' ||
@@ -10775,6 +10811,7 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
   MORE       - (While chicken! active) Turn the Moon into a giant spinning Chicken!
   models     - Open 3D model viewer (or 'preview chicken')
   settings   - Open preferences & configuration panel
+  115        - Easter Egg: PROJECT 115 (COD Zombies in DOOM via UZDoom)
   quake      - Launch Quake 1 in browser
   cv         - Open curriculum vitae (resume)
   clear      - Clear terminal screen
@@ -10815,6 +10852,12 @@ Scripting: Python, PowerShell, Electron, Git`
                 if (onOpenSettings) onOpenSettings();
                 onClose();
                 return;
+            case '115':
+            case 'project115':
+                onOpenEaster('project115');
+                onClose();
+                return;
+
             case 'quake':
                 onOpenEaster('quake');
                 onClose();
@@ -14327,6 +14370,9 @@ const App = () => {
             if (path.includes('doomjaja') || hash.includes('doomjaja') || params.get('game') === 'delicia_doom' || params.get('game') === 'doomjaja') {
                 return 'delicia_doom';
             }
+            if (path.includes('115') || hash.includes('115') || params.get('game') === 'project115') {
+                return 'project115';
+            }
         } catch (e) {}
         return null;
     });
@@ -14339,6 +14385,8 @@ const App = () => {
                 const params = new URLSearchParams(window.location.search);
                 if (path.includes('doomjaja') || hash.includes('doomjaja') || params.get('game') === 'delicia_doom' || params.get('game') === 'doomjaja') {
                     setEasterGame('delicia_doom');
+                } else if (path.includes('115') || hash.includes('115') || params.get('game') === 'project115') {
+                    setEasterGame('project115');
                 }
             } catch (e) {}
         };

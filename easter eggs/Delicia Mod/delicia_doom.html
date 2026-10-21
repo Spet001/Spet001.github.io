@@ -215,6 +215,13 @@
                     </button>
                 </div>
 
+                <div id="p115-picker-row" style="display:none; margin-top: 10px; width: 100%;">
+                    <button id="p115-pick-file-btn" type="button" class="dos-btn" style="width:100%; background:#003322; border-color:#00aa66; color:#aaffcc; padding: 8px 12px; cursor: pointer;">
+                        [ 📂 CARREGAR WAD LOCAL: "Project 115 - Despair Final.wad" (INSTANTÂNEO 0s) ]
+                    </button>
+                    <input type="file" id="p115-file-input" accept=".wad,.pk3" style="display:none;" />
+                </div>
+
                 <div class="dos-footer">
                     <span id="dos-footer-copy">DOOM II (c) 1994 id Software | Engine: UZDoom (GPLv3)</span>
                     <a href="./NOTICE.MD" target="_blank" rel="noopener noreferrer">NOTICE.MD</a>
@@ -309,6 +316,29 @@
                     vfsIwad: '/wads/doom2.wad',
                     isDeliciaTC: false,
                     extraArgs: ['-iwad', '/wads/doom2.wad', '-skill', '3', '-warp', '1', '+map', 'MAP01']
+                },
+                project115: {
+                    title: 'PROJECT 115: DESPAIR (COD Zombies in DOOM · UZDoom)',
+                    header: 'PROJECT 115: DESPAIR FINAL - COD Zombies in DOOM (UZDoom v4.12)',
+                    footer: 'Project 115: Despair (c) 2016-2018 Fabysk | Engine: UZDoom (GPLv3) | id Software',
+                    wadUrl: './doom2.WAD',
+                    wadLabel: 'doom2.WAD (DOOM II Base IWAD)',
+                    cacheKey: null,
+                    expectedBytes: 17825477,
+                    vfsIwad: '/wads/doom2.wad',
+                    isDeliciaTC: false,
+                    isProject115: true,
+                    pwadVfs: '/wads/project115.wad',
+                    pwadCacheKey: 'project115_despair.wad',
+                    pwadUrl: '/wads/project115.wad',
+                    expectedPwadBytes: 511016132,
+                    extraArgs: [
+                        '-nowidescreen',
+                        '-iwad', '/wads/doom2.wad',
+                        '-file', '/wads/project115.wad',
+                        '-skill', '1',
+                        '+map', 'MAP01'
+                    ]
                 }
             };
 
@@ -330,10 +360,13 @@
 
             let enginePct = 0;
             let wadPct = 0;
+            let pwadPct = 0;
             let engineReady = false;
             let wadReady = false;
+            let pwadReady = !cfg.isProject115;
             let engineInstance = null;
             let wadBytes = null;
+            let pwadBytes = null;
             let hasLaunched = false;
             let autoLaunchRequested = false;
 
@@ -404,7 +437,12 @@
             logLine('W_Init: Init WADfiles.');
 
             function updateOverallProgress(customMsg) {
-                const total = Math.min(100, Math.round(enginePct * 0.6 + wadPct * 0.4));
+                let total = 0;
+                if (cfg.isProject115) {
+                    total = Math.min(100, Math.round(enginePct * 0.2 + wadPct * 0.1 + pwadPct * 0.7));
+                } else {
+                    total = Math.min(100, Math.round(enginePct * 0.6 + wadPct * 0.4));
+                }
                 progressFill.style.width = total + '%';
                 progressPct.textContent = total + '%';
                 if (customMsg) {
@@ -413,7 +451,7 @@
             }
 
             function checkBothReady() {
-                if (engineReady && wadReady && !hasLaunched) {
+                if (engineReady && wadReady && pwadReady && !hasLaunched) {
                     logLine('R_Init: Init DOOM refresh daemon - Complete.');
                     logLine('P_Init: Init Playloop state.');
                     logLine('S_Init: Setting up sound (OGG Vorbis / FluidSynth).');
@@ -440,72 +478,176 @@
                             logLine(`W_Cache: Loaded ${cfg.cacheKey} from local IndexedDB (${mbCached} MB).`, 'hl');
                             logLine(` adding ${cfg.vfsIwad}`, 'hl');
                             updateOverallProgress(`Loaded ${cfg.cacheKey} from cache.`);
-                            checkBothReady();
-                            return;
                         }
                     }
 
-                    logLine(` fetch ${cfg.wadLabel}...`);
-                    const resp = await fetch(cfg.wadUrl);
-                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                    const total = Number(resp.headers.get('Content-Length')) || cfg.expectedBytes;
-                    const reader = resp.body.getReader();
-                    const buf = new Uint8Array(total);
-                    let loaded = 0;
-                    let chunks = [];
+                    if (!wadReady) {
+                        logLine(` fetch ${cfg.wadLabel}...`);
+                        const resp = await fetch(cfg.wadUrl);
+                        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                        const total = Number(resp.headers.get('Content-Length')) || cfg.expectedBytes;
+                        const reader = resp.body.getReader();
+                        const buf = new Uint8Array(total);
+                        let loaded = 0;
+                        let chunks = [];
 
-                    for (;;) {
-                        const { value, done } = await reader.read();
-                        if (done) break;
-                        if (loaded + value.byteLength <= buf.byteLength) {
-                            buf.set(value, loaded);
+                        for (;;) {
+                            const { value, done } = await reader.read();
+                            if (done) break;
+                            if (loaded + value.byteLength <= buf.byteLength) {
+                                buf.set(value, loaded);
+                            } else {
+                                chunks.push(value);
+                            }
+                            loaded += value.byteLength;
+                            wadPct = Math.min(100, (loaded / total) * 100);
+                            const mbLoaded = (loaded / (1024 * 1024)).toFixed(1);
+                            const mbTotal = (total / (1024 * 1024)).toFixed(1);
+                            updateOverallProgress(`Downloading base IWAD (${mbLoaded}/${mbTotal} MB)...`);
+                        }
+
+                        if (chunks.length > 0 || loaded !== buf.byteLength) {
+                            const full = new Uint8Array(loaded);
+                            full.set(buf.subarray(0, Math.min(loaded, buf.byteLength)), 0);
+                            let offset = Math.min(loaded, buf.byteLength);
+                            for (const c of chunks) {
+                                full.set(c, offset);
+                                offset += c.byteLength;
+                            }
+                            wadBytes = full;
                         } else {
-                            chunks.push(value);
+                            wadBytes = buf;
                         }
-                        loaded += value.byteLength;
-                        wadPct = Math.min(100, (loaded / total) * 100);
-                        const mbLoaded = (loaded / (1024 * 1024)).toFixed(1);
-                        const mbTotal = (total / (1024 * 1024)).toFixed(1);
-                        updateOverallProgress(`Downloading ${cfg.cacheKey || 'doom2.WAD'} (${mbLoaded}/${mbTotal} MB)...`);
-                    }
 
-                    if (chunks.length > 0 || loaded !== buf.byteLength) {
-                        const full = new Uint8Array(loaded);
-                        full.set(buf.subarray(0, Math.min(loaded, buf.byteLength)), 0);
-                        let offset = Math.min(loaded, buf.byteLength);
-                        for (const c of chunks) {
-                            full.set(c, offset);
-                            offset += c.byteLength;
+                        if (wadBytes.length > 4) {
+                            wadBytes[0] = 73; // 'I'
+                            wadBytes[1] = 87; // 'W'
+                            wadBytes[2] = 65; // 'A'
+                            wadBytes[3] = 68; // 'D'
                         }
-                        wadBytes = full;
-                    } else {
-                        wadBytes = buf;
+
+                        if (cfg.cacheKey) {
+                            await setCachedWad(cfg.cacheKey, wadBytes);
+                            logLine(`W_Cache: Saved ${cfg.cacheKey} to browser IndexedDB.`, 'hl');
+                        }
+
+                        wadPct = 100;
+                        wadReady = true;
+                        logLine(` adding ${cfg.vfsIwad}`, 'hl');
+                        if (cfg.isDeliciaTC) {
+                            logLine(' adding /wads/delicia.wad (PWAD override)', 'hl');
+                        }
                     }
 
-                    if (wadBytes.length > 4) {
-                        wadBytes[0] = 73; // 'I'
-                        wadBytes[1] = 87; // 'W'
-                        wadBytes[2] = 65; // 'A'
-                        wadBytes[3] = 68; // 'D'
-                    }
-
-                    if (cfg.cacheKey) {
-                        await setCachedWad(cfg.cacheKey, wadBytes);
-                        logLine(`W_Cache: Saved ${cfg.cacheKey} to browser IndexedDB.`, 'hl');
-                    }
-
-                    wadPct = 100;
-                    wadReady = true;
-                    logLine(` adding ${cfg.vfsIwad}`, 'hl');
-                    if (cfg.isDeliciaTC) {
-                        logLine(' adding /wads/delicia.wad (PWAD override)', 'hl');
-                    }
                     checkBothReady();
+
+                    if (cfg.isProject115) {
+                        await loadProject115Pwad();
+                    }
                 } catch (err) {
                     console.error('[UZDoom] WAD fetch failed:', err);
                     logLine('W_Init Error: ' + err.message, 'warn');
                     progressText.textContent = 'Error loading WAD: ' + err.message;
                 }
+            }
+
+            async function loadProject115Pwad() {
+                const pickerRow = document.getElementById('p115-picker-row');
+                if (pickerRow) pickerRow.style.display = 'block';
+
+                logLine(` checking IndexedDB cache for ${cfg.pwadCacheKey}...`);
+                const cachedPwad = await getCachedWad(cfg.pwadCacheKey);
+                if (cachedPwad) {
+                    pwadBytes = cachedPwad;
+                    pwadPct = 100;
+                    pwadReady = true;
+                    const mbCached = (cachedPwad.byteLength / (1024 * 1024)).toFixed(1);
+                    logLine(`W_Cache: Loaded ${cfg.pwadCacheKey} from local IndexedDB (${mbCached} MB).`, 'hl');
+                    logLine(` adding ${cfg.pwadVfs}`, 'hl');
+                    updateOverallProgress('Project 115 WAD pronto.');
+                    checkBothReady();
+                    return;
+                }
+
+                try {
+                    logLine(' fetch Project 115 PWAD (local / remote stream)...');
+                    const resp = await fetch(cfg.pwadUrl);
+                    if (resp.ok) {
+                        const total = Number(resp.headers.get('Content-Length')) || cfg.expectedPwadBytes;
+                        const reader = resp.body.getReader();
+                        const buf = new Uint8Array(total);
+                        let loaded = 0;
+                        let chunks = [];
+
+                        for (;;) {
+                            const { value, done } = await reader.read();
+                            if (done) break;
+                            if (loaded + value.byteLength <= buf.byteLength) {
+                                buf.set(value, loaded);
+                            } else {
+                                chunks.push(value);
+                            }
+                            loaded += value.byteLength;
+                            pwadPct = Math.min(100, (loaded / total) * 100);
+                            const mbLoaded = (loaded / (1024 * 1024)).toFixed(1);
+                            const mbTotal = (total / (1024 * 1024)).toFixed(1);
+                            updateOverallProgress(`Downloading Project 115 (${mbLoaded}/${mbTotal} MB)...`);
+                        }
+
+                        if (chunks.length > 0 || loaded !== buf.byteLength) {
+                            const full = new Uint8Array(loaded);
+                            full.set(buf.subarray(0, Math.min(loaded, buf.byteLength)), 0);
+                            let offset = Math.min(loaded, buf.byteLength);
+                            for (const c of chunks) {
+                                full.set(c, offset);
+                                offset += c.byteLength;
+                            }
+                            pwadBytes = full;
+                        } else {
+                            pwadBytes = buf;
+                        }
+
+                        pwadPct = 100;
+                        pwadReady = true;
+                        await setCachedWad(cfg.pwadCacheKey, pwadBytes);
+                        logLine(`W_Cache: Salvo ${cfg.pwadCacheKey} no IndexedDB (${(pwadBytes.byteLength / (1024 * 1024)).toFixed(1)} MB).`, 'hl');
+                        logLine(` adding ${cfg.pwadVfs}`, 'hl');
+                        checkBothReady();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('[UZDoom] Auto-fetch of Project 115 failed, displaying file picker fallback:', e);
+                }
+
+                logLine('W_Notice: Para jogar sem download, clique em [CARREGAR WAD LOCAL] para selecionar "Project 115 - Despair Final.wad" do seu PC.', 'warn');
+                updateOverallProgress('Aguardando Project 115 WAD...');
+            }
+
+            const p115PickBtn = document.getElementById('p115-pick-file-btn');
+            const p115FileInput = document.getElementById('p115-file-input');
+            if (p115PickBtn && p115FileInput) {
+                p115PickBtn.addEventListener('click', () => {
+                    p115FileInput.click();
+                });
+                p115FileInput.addEventListener('change', async (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    logLine(`W_File: Carregando ${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)...`, 'hl');
+                    updateOverallProgress(`Lendo arquivo local...`);
+                    try {
+                        const buf = await file.arrayBuffer();
+                        pwadBytes = new Uint8Array(buf);
+                        pwadPct = 100;
+                        pwadReady = true;
+                        logLine(`W_File: Arquivo ${file.name} carregado com sucesso!`, 'hl');
+                        await setCachedWad(cfg.pwadCacheKey, pwadBytes);
+                        logLine(`W_Cache: Salvo no cache IndexedDB para inicialização instantânea no futuro.`, 'hl');
+                        logLine(` adding ${cfg.pwadVfs}`, 'hl');
+                        checkBothReady();
+                    } catch (err) {
+                        logLine(`Erro ao ler arquivo: ${err.message}`, 'warn');
+                    }
+                });
             }
 
             async function bootstrapEngine() {
@@ -601,6 +743,11 @@
                     }
                     M.FS.writeFile('/wads/delicia.wad', pwadBytes);
                     try { M.FS.unlink('/uzdoom/game_widescreen_gfx.pk3'); } catch (e) {}
+                }
+
+                if (cfg.isProject115 && pwadBytes) {
+                    M.FS.writeFile('/wads/project115.wad', pwadBytes);
+                    pwadBytes = null;
                 }
                 wadBytes = null;
 
