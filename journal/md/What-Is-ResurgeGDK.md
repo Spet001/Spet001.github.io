@@ -21,12 +21,12 @@ As a direct consequence, players on the Microsoft Store release were isolated: S
 
 ![Resurge Client Interface](/assets/resurge.png)
 
-**ResurgeGDK** was engineered to eliminate this platform divide. Rather than requiring separate, redundant game installations, ResurgeGDK establishes **cross-platform file compatibility**: it packages the necessary Steam dependencies (`steam_api64.dll`) alongside native GDK libraries, installing both the GDK executable (`Resurge Beta.exe`) and the standard Steam executable (`BlackOps3.exe`). This dual-runtime model allows players to run either the GDK Xbox PC version, the standard Steam version, or community dedicated servers via the bundled BOIII client from a single shared directory—while integrating **BOIIIWD** for Steam Workshop downloads, Demonware telemetry interception for 999x GobbleGums, Serious' T7 Patch security protections, and an integrated GSC script injector.
+**ResurgeGDK** was engineered to eliminate this platform divide. Rather than requiring separate, redundant game installations, ResurgeGDK establishes **cross-platform file compatibility**: it packages the necessary Steam dependencies (`steam_api64.dll`) alongside native GDK libraries, installing both the GDK executable (`Resurge Beta.exe`) and the standard Steam executable (`BlackOps3.exe`). This dual-runtime model allows players to run either the GDK Xbox PC version, the standard Steam version, or community dedicated servers via the bundled Ezz BOIII client from a single shared directory—while supporting Steam Workshop content via the BOIIIWD companion tool, Demonware telemetry interception for 999x GobbleGums, Serious' T7 Patch security protections, and an integrated GSC script injector.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        Resurge Desktop Launcher                        │
-│          [BOIIIWD Workshop Downloader] │ [GSC Injector]                │
+│          [BOIIIWD Companion Tool]      │ [GSC Injector]                │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │ Launch & Coordination
                                     ▼
@@ -37,7 +37,7 @@ As a direct consequence, players on the Microsoft Store release were isolated: S
 │   │                 Triple-Target Execution Pipeline               │   │
 │   │   1. Xbox PC Servers     -> Resurge Beta.exe (GDK / Store)     │   │
 │   │   2. Steam Servers       -> BlackOps3.exe (Steam License)      │   │
-│   │   3. Community Dedicated -> Bundled BOIII Client               │   │
+│   │   3. Community Dedicated -> Bundled Ezz BOIII Client           │   │
 │   │   - steam_api64.dll + xgameruntime.dll (Coexisting Libraries)  │   │
 │   └────────────────────────────────────────────────────────────────┘   │
 │                                                                        │
@@ -149,24 +149,22 @@ This ensures that pre-installed DLC maps and assets load without container initi
 
 ---
 
-## 4. Steam Workshop via BOIIIWD & Bundled BOIII Client
+## 4. Steam Workshop via BOIIIWD & Bundled Ezz BOIII Client
 
-Because the Microsoft Store version does not interface with the Steam client, it lacks native access to the Steam Workshop subscription API. Furthermore, official server matchmaking is fragmented across platforms. ResurgeGDK overcomes both challenges through a dual integration:
+Because the Microsoft Store version does not interface with the Steam client, it lacks native access to the Steam Workshop subscription API. Furthermore, official server matchmaking is fragmented across platforms. ResurgeGDK overcomes both challenges through community tooling and client bundling:
 
-### BOIIIWD (BOIII Workshop Downloader) Integration
+### Steam Workshop Content via BOIIIWD Companion
 
-Resurge incorporates **BOIIIWD** directly into its workflow:
-
-1. **Automated UGC Download**: Users can search and download custom Zombies maps, weapon packs, and total-conversion mods directly from Steam Workshop CDN endpoints via BOIIIWD.
+1. **Standalone BOIIIWD Utility**: Players can download custom Zombies maps, weapon packs, and total-conversion mods directly from Steam Workshop CDN endpoints using **BOIIIWD** (BOIII Workshop Downloader), which is downloaded separately by the user.
 2. **Mod Manager & `workshop.json` Resolver**: Once downloaded, Resurge's Mod Manager parses the item's `workshop.json` manifest. It detects whether the content is a `mod` or a `map`, automatically sanitizes zone folder paths, and routes assets directly into `mods/` or `usermaps/` inside the shared game directory.
 3. **In-Engine Selection**: Custom levels and community fastfiles mount transparently into the game's Custom Games / Zombies selection menus.
 
-### Bundled BOIII Client & Multi-Server Matchmaking
+### Bundled Ezz BOIII Client & Multi-Server Matchmaking
 
-Rather than restricting players to a single platform, Resurge bundles the **BOIII client** (`boiii-free` by Ezzboiii / `BOIII-ReImagined`) alongside standard Steam dependencies. This provides players with complete freedom across three matchmaking targets:
+Rather than restricting players to a single platform, Resurge bundles the community **Ezz BOIII** client alongside standard Steam dependencies. This provides players with complete freedom across three matchmaking targets:
 
 1. **Steam Dedicated Servers**: Accessible when launching via `BlackOps3.exe` (requires a valid Steam license).
-2. **Community Dedicated Servers**: Accessible via the bundled **BOIII client**, connecting to community-hosted dedicated servers with an in-game server browser, independent of official platform matchmaking.
+2. **Community Dedicated Servers**: Accessible via the bundled **Ezz BOIII** client, connecting to community-hosted dedicated servers with an in-game server browser, independent of official platform matchmaking.
 3. **Xbox PC / Microsoft Store Servers**: Accessible via `Resurge Beta.exe`, matching against players in the official Xbox Live / Microsoft Store PC matchmaking pool.
 
 ---

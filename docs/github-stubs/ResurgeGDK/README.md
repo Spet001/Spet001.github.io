@@ -31,11 +31,11 @@ While modern PC modding ecosystems primarily target standard Win32 Steam release
   - **`BlackOps3.exe`** for standard Steam / Win32 runtime.
 
 ### 2. Steam Workshop Modding via BOIIIWD & Multi-Server Matchmaking
-* **BOIIIWD Integration:** Built-in integration with **BOIIIWD** (BOIII Workshop Downloader) to query and download custom Zombies maps, weapons, and community mods directly from Steam Workshop CDN endpoints.
-* **Mod Manager & Folder Structuring:** Automatically resolves and fixes `workshop.json` manifests, mounting assets directly into `mods/` and `usermaps/`.
-* **Bundled BOIII Client:** Bundles the **BOIII client** (`boiii-free` / `BOIII-ReImagined`) alongside Steam dependencies, giving players full flexibility across 3 distinct server environments:
+* **Steam Workshop UGC via BOIIIWD:** Players can download custom Zombies maps, weapons, and community mods directly from Steam Workshop CDN endpoints using the standalone **BOIIIWD** (BOIII Workshop Downloader) companion utility (downloaded separately by the user).
+* **Mod Manager & Folder Structuring:** Resurge automatically resolves and fixes `workshop.json` manifests, organizing and mounting assets directly into `mods/` and `usermaps/` inside the game directory.
+* **Bundled Ezz BOIII Client:** Bundles the **Ezz BOIII** client alongside Steam dependencies, giving players full flexibility across 3 distinct server environments:
   1. **Steam Dedicated Servers** (if player owns a Steam license)
-  2. **Community Dedicated Servers & Server Browser** (via bundled BOIII)
+  2. **Community Dedicated Servers & Server Browser** (via bundled Ezz BOIII)
   3. **Xbox PC / Microsoft Store Servers** (via GDK `xgameruntime` multiplayer)
 
 ### 3. Online Demonware Telemetry Interception & Inventory Unlock
