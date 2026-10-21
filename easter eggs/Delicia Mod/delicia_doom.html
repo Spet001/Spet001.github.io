@@ -335,10 +335,10 @@
                     title: 'PROJECT 115: DESPAIR (COD Zombies in DOOM · UZDoom)',
                     header: 'PROJECT 115: DESPAIR FINAL - COD Zombies in DOOM (UZDoom v4.12)',
                     footer: 'Project 115: Despair (c) 2016-2018 Fabysk | Engine: UZDoom (GPLv3) | id Software',
-                    wadUrl: './doom2.WAD',
-                    wadLabel: 'doom2.WAD (DOOM II Base IWAD)',
-                    cacheKey: null,
-                    expectedBytes: 17825477,
+                    wadUrl: 'https://raw.githubusercontent.com/Akbar30Bill/DOOM_wads/master/doom2.wad',
+                    wadLabel: 'doom2.wad (DOOM II: Hell on Earth IWAD)',
+                    cacheKey: 'doom2_vanilla.wad',
+                    expectedBytes: 14604584,
                     vfsIwad: '/wads/doom2.wad',
                     isDeliciaTC: false,
                     isProject115: true,
@@ -352,7 +352,8 @@
                     extraArgs: [
                         '-nowidescreen',
                         '-iwad', '/wads/doom2.wad',
-                        '-file', '/wads/project115.wad'
+                        '-file', '/wads/project115.wad',
+                        '+map', 'MAP01'
                     ]
                 }
             };
@@ -846,6 +847,15 @@
                     'vid_fullscreen=false',
                     'gl_texture_filter=0',
                     'gl_texture_filter_anisotropic=1',
+                    'gl_multisample=0',
+                    'gl_bloom=false',
+                    'gl_tonemap=0',
+                    'gl_particles_style=0',
+                    'r_drawfuzz=0',
+                    'gl_dynlight_samples=1',
+                    'r_shadowmapsize=256',
+                    'vid_vsync=false',
+                    'cl_capfps=0',
                     ''
                 ].join('\n');
                 try {
@@ -857,9 +867,17 @@
                     M.FS.writeFile(HOME + '/uzdoom.ini', defaultIni, { encoding: 'utf8' });
                 }
 
-                const dpr = window.devicePixelRatio || 1;
-                let w = Math.round(Math.max(640, Math.min(1920, window.innerWidth * dpr)));
-                let h = Math.round(Math.max(400, Math.min(1080, window.innerHeight * dpr)));
+                // Optimal WebAssembly render resolution (960x540 gives locked 60 FPS without potato lag)
+                const aspect = (window.innerWidth && window.innerHeight) ? (window.innerWidth / window.innerHeight) : (16 / 9);
+                let baseH = 540;
+                let w = Math.round(baseH * aspect);
+                let h = baseH;
+                if (w > 1280) {
+                    w = 1280;
+                    h = Math.round(1280 / aspect);
+                }
+                if (w < 640) w = 640;
+                if (h < 360) h = 360;
                 if (w & 1) w--;
                 if (h & 1) h--;
                 canvas.width = w;
@@ -877,6 +895,15 @@
                     '+set', 'vid_fullscreen', '0',
                     '+set', 'gl_texture_filter', '0',
                     '+set', 'gl_texture_filter_anisotropic', '1',
+                    '+set', 'gl_multisample', '0',
+                    '+set', 'gl_bloom', '0',
+                    '+set', 'gl_tonemap', '0',
+                    '+set', 'gl_particles_style', '0',
+                    '+set', 'r_drawfuzz', '0',
+                    '+set', 'gl_dynlight_samples', '1',
+                    '+set', 'r_shadowmapsize', '256',
+                    '+set', 'vid_vsync', '0',
+                    '+set', 'cl_capfps', '0',
                     '-width', String(w),
                     '-height', String(h),
                     ...cfg.extraArgs
