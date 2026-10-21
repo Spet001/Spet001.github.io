@@ -215,13 +215,6 @@
                     </button>
                 </div>
 
-                <div id="p115-picker-row" style="display:none; margin-top: 10px; width: 100%;">
-                    <button id="p115-pick-file-btn" type="button" class="dos-btn" style="width:100%; background:#003322; border-color:#00aa66; color:#aaffcc; padding: 8px 12px; cursor: pointer;">
-                        [ 📂 CARREGAR WAD LOCAL: "Project 115 - Despair Final.wad" (INSTANTÂNEO 0s) ]
-                    </button>
-                    <input type="file" id="p115-file-input" accept=".wad,.pk3" style="display:none;" />
-                </div>
-
                 <div class="dos-footer">
                     <span id="dos-footer-copy">DOOM II (c) 1994 id Software | Engine: UZDoom (GPLv3)</span>
                     <a href="./NOTICE.MD" target="_blank" rel="noopener noreferrer">NOTICE.MD</a>
@@ -331,13 +324,12 @@
                     pwadVfs: '/wads/project115.wad',
                     pwadCacheKey: 'project115_despair.wad',
                     pwadUrl: '/wads/project115.wad',
-                    expectedPwadBytes: 511016132,
+                    pwadRemoteUrl: 'https://github.com/Spet001/Project-115-Despair/releases/download/v1.0.0/Project115.wad',
+                    expectedPwadBytes: 511013754,
                     extraArgs: [
                         '-nowidescreen',
                         '-iwad', '/wads/doom2.wad',
-                        '-file', '/wads/project115.wad',
-                        '-skill', '1',
-                        '+map', 'MAP01'
+                        '-file', '/wads/project115.wad'
                     ]
                 }
             };
@@ -552,8 +544,7 @@
             }
 
             async function loadProject115Pwad() {
-                const pickerRow = document.getElementById('p115-picker-row');
-                if (pickerRow) pickerRow.style.display = 'block';
+                
 
                 logLine(` checking IndexedDB cache for ${cfg.pwadCacheKey}...`);
                 const cachedPwad = await getCachedWad(cfg.pwadCacheKey);
@@ -571,8 +562,12 @@
 
                 try {
                     logLine(' fetch Project 115 PWAD (local / remote stream)...');
-                    const resp = await fetch(cfg.pwadUrl);
-                    if (resp.ok) {
+                    let resp = await fetch(cfg.pwadUrl).catch(() => null);
+                    if ((!resp || !resp.ok) && cfg.pwadRemoteUrl) {
+                        logLine(' attempting fetch from release mirror: ' + cfg.pwadRemoteUrl, 'hl');
+                        resp = await fetch(cfg.pwadRemoteUrl).catch(() => null);
+                    }
+                    if (resp && resp.ok) {
                         const total = Number(resp.headers.get('Content-Length')) || cfg.expectedPwadBytes;
                         const reader = resp.body.getReader();
                         const buf = new Uint8Array(total);
@@ -619,36 +614,10 @@
                     console.warn('[UZDoom] Auto-fetch of Project 115 failed, displaying file picker fallback:', e);
                 }
 
-                logLine('W_Notice: Para jogar sem download, clique em [CARREGAR WAD LOCAL] para selecionar "Project 115 - Despair Final.wad" do seu PC.', 'warn');
                 updateOverallProgress('Aguardando Project 115 WAD...');
             }
 
-            const p115PickBtn = document.getElementById('p115-pick-file-btn');
-            const p115FileInput = document.getElementById('p115-file-input');
-            if (p115PickBtn && p115FileInput) {
-                p115PickBtn.addEventListener('click', () => {
-                    p115FileInput.click();
-                });
-                p115FileInput.addEventListener('change', async (e) => {
-                    const file = e.target.files && e.target.files[0];
-                    if (!file) return;
-                    logLine(`W_File: Carregando ${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)...`, 'hl');
-                    updateOverallProgress(`Lendo arquivo local...`);
-                    try {
-                        const buf = await file.arrayBuffer();
-                        pwadBytes = new Uint8Array(buf);
-                        pwadPct = 100;
-                        pwadReady = true;
-                        logLine(`W_File: Arquivo ${file.name} carregado com sucesso!`, 'hl');
-                        await setCachedWad(cfg.pwadCacheKey, pwadBytes);
-                        logLine(`W_Cache: Salvo no cache IndexedDB para inicialização instantânea no futuro.`, 'hl');
-                        logLine(` adding ${cfg.pwadVfs}`, 'hl');
-                        checkBothReady();
-                    } catch (err) {
-                        logLine(`Erro ao ler arquivo: ${err.message}`, 'warn');
-                    }
-                });
-            }
+            
 
             async function bootstrapEngine() {
                 try {
