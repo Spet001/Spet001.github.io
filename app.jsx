@@ -179,7 +179,7 @@ const PORTFOLIO_DATA = {
                 disableWelcome: "Desativar mensagem de boas-vindas",
                 disableWelcomeDesc: "Oculta a saudação automática do Astro ao carregar o portfólio",
                 musicPlayer: "Tocador de OST",
-                musicPlayerDesc: "Stream de temas de batalha e menus (FF Battle & COD Menu) via Jukebox",
+                musicPlayerDesc: "Stream de trilhas clássicas (FF Battle, COD Menu & Mass Effect OST) via Jukebox",
                 musicAutoPlay: "Reprodução automática ao iniciar",
                 musicAutoPlayDesc: "Inicia o tocador minimizado na barra inferior ao carregar o portfólio",
                 defaultLang: "Idioma da interface",
@@ -348,7 +348,7 @@ const PORTFOLIO_DATA = {
                 disableWelcome: "Disable Welcome Message",
                 disableWelcomeDesc: "Suppresses Astro's automatic greeting teaser on page load",
                 musicPlayer: "OST Player",
-                musicPlayerDesc: "Stream battle and menu themes (FF Battle & COD Menu) via background Jukebox",
+                musicPlayerDesc: "Stream classic soundtracks (FF Battle, COD Menu & Mass Effect OST) via background Jukebox",
                 musicAutoPlay: "Toggle Auto-Play",
                 musicAutoPlayDesc: "Begin playback in minimized dock player upon page load",
                 defaultLang: "Interface Language",
@@ -1179,6 +1179,22 @@ const PORTFOLIO_DATA = {
 
     // JOURNAL ARTICLES - Authentic posts matching /journal
     journalEntries: [
+        {
+            id: "Tribute-To-BioWare-And-Mass-Effect",
+            title: "Farewell, BioWare: A Tribute to Mass Effect & How the Normandy Shaped This Portfolio",
+            date: "Oct 22, 2026",
+            file: "Tribute-To-BioWare-And-Mass-Effect.md",
+            category: "Tribute & Game Design",
+            excerpt: "A tribute to BioWare and the Mass Effect trilogy following EA's closure of BioWare and cancellation of the new Mass Effect: how the Systems Alliance HUD and Normandy CIC Galaxy Map shaped the 3D design of spet01.dev, plus the new Mass Effect OST Jukebox tab and /shepard CLI protocol."
+        },
+        {
+            id: "What-Is-ResurgeGDK",
+            title: "What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry",
+            date: "Oct 21, 2026",
+            file: "What-Is-ResurgeGDK.md",
+            category: "Reverse Engineering & Systems Interop",
+            excerpt: "Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods, and emulating local GobbleGum telemetry."
+        },
         {
             id: "Exploring-Legacy-UWP-Titles",
             title: "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
@@ -10270,8 +10286,35 @@ const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand
             return;
         }
 
+        // Commander Shepard / BioWare & Mass Effect Tribute Command
+        if (cleanCmd === 'sheppard' || cleanCmd === '/sheppard' || cleanCmd === 'shepard' || cleanCmd === '/shepard' || cleanCmd === 'bioware' || cleanCmd === '/bioware' || cleanCmd === 'n7' || cleanCmd === '/n7') {
+            if (typeof playCosmicSfx === 'function') playCosmicSfx('terminal');
+            const track = onMusicCommand ? onMusicCommand('me', 0) : null;
+            newHistory.push({
+                type: 'output',
+                text: `[ALLIANCE NETWORK // N7 SPECTRE TERMINAL — COMMANDER SHEPARD]
+============================================================
+"Does this unit have a soul?" — Keelah se'lai, BioWare (1995–2026)
+
+Em tributo à BioWare e à trilogia Mass Effect:
+• Todo o design visual do spet01.dev (paleta de cores, HUD de telemetria, áudio procedural Web Audio API e atmosfera espacial) foi profundamente inspirado em Mass Effect.
+• Construímos até mesmo um GALAXY MAP 3D interativo imitando o mapa galáctico da SSV Normandy SR-2! (Pressione [Q] ou digite '/galaxymap' para explorar).
+• Leia a entrada especial de tributo no Technical Journal:
+  ➔ /journal/Tribute-To-BioWare-And-Mass-Effect/
+
+[🎵 N7 OST JUKEBOX INITIALIZED — 13 CLASSIC TRACKS]:
+▶ Playing: "${track ? track.title : 'Uncharted Worlds (Galaxy Map Theme)'}"
+  Game: ${track ? track.game : 'Mass Effect'} (${track ? track.year : '2007'}) · Composer: ${track ? track.composer : 'Jack Wall & Sam Hulick'}
+  Inclui: Uncharted Worlds (Galaxy Map), Leaving Earth, The Illusive Man, Suicide Mission, Vigil, An End Once and For All, Normandy, M4 Part II & mais!
+  Controles: 'music next', 'music prev', 'music random', 'music list'`
+            });
+            setHistory(newHistory);
+            setInputVal('');
+            return;
+        }
+
         // Galaxy Map Mode Toggle Command (always opens galaxy map from anywhere)
-        if (cleanCmd === 'galaxymap' || cleanCmd === '/galaxymap' || cleanCmd === 'galaxy map' || cleanCmd === '/galaxy map' || cleanCmd === 'space3' || cleanCmd === '/space3') {
+        if (cleanCmd === 'galaxymap' || cleanCmd === '/galaxymap' || cleanCmd === 'galaxy map' || cleanCmd === '/galaxy map' || cleanCmd === 'space3' || cleanCmd === '/space3' || cleanCmd === 'galaxy' || cleanCmd === 'normandy') {
             window.dispatchEvent(new CustomEvent('spet:open-galaxy-map'));
             if (typeof playCosmicSfx === 'function') playCosmicSfx('warp');
             onClose();
@@ -10653,11 +10696,12 @@ Comandos extras:
         }
 
         // Check for music easter egg command
-        if (cleanCmd === 'music' || cleanCmd.startsWith('music ') || cleanCmd === 'ost' || cleanCmd === 'ff' || cleanCmd === 'cod') {
+        if (cleanCmd === 'music' || cleanCmd.startsWith('music ') || cleanCmd === 'ost' || cleanCmd === 'ff' || cleanCmd === 'cod' || cleanCmd === 'me') {
             const parts = cleanCmd.split(' ');
             let sub = parts[1] || '';
             if (cleanCmd === 'ff') sub = 'ff';
             if (cleanCmd === 'cod') sub = 'cod';
+            if (cleanCmd === 'me') sub = 'me';
             if (!sub && (cleanCmd === 'music' || cleanCmd === 'ost')) sub = 'play';
 
             if (sub === 'ff') {
@@ -10669,7 +10713,7 @@ Comandos extras:
 Game: ${track ? track.game : 'Final Fantasy VII'} (${track ? track.year : '1997'})
 Composer: ${track ? track.composer : 'Nobuo Uematsu'}
 Track [${(track?.index ?? 0) + 1}/15] · Playlist: Final Fantasy Battle OST
-CLI Controls: 'music next', 'music prev', 'music random', 'music cod', 'music list'`
+CLI Controls: 'music next', 'music prev', 'music random', 'music cod', 'music me', 'music list'`
                 });
             } else if (sub === 'cod') {
                 const track = onMusicCommand ? onMusicCommand('cod') : null;
@@ -10680,20 +10724,31 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music cod', 'music li
 Game: ${track ? track.game : 'Call of Duty: Black Ops 4'} (${track ? track.year : '2018'})
 Composer: ${track ? track.composer : 'Jack Wall'}
 Track [${(track?.index ?? 0) + 1}/7] · Playlist: Call of Duty Menu OST
-CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music list'`
+CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music me', 'music list'`
+                });
+            } else if (sub === 'me' || sub === 'masseffect' || sub === 'n7') {
+                const track = onMusicCommand ? onMusicCommand('me') : null;
+                newHistory.push({
+                    type: 'output',
+                    text: `[AUDIO // MASS EFFECT OST (N7 TRIBUTE) INITIALIZED]
+▶ Playing: "${track ? track.title : 'Uncharted Worlds (Galaxy Map Theme)'}"
+Game: ${track ? track.game : 'Mass Effect'} (${track ? track.year : '2007'})
+Composer: ${track ? track.composer : 'Jack Wall & Sam Hulick'}
+Track [${(track?.index ?? 0) + 1}/13] · Playlist: Mass Effect Trilogy OST
+CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music cod', 'music list'`
                 });
             } else if (sub === 'toggle') {
                 const track = onMusicCommand ? onMusicCommand('togglePlaylist') : null;
-                const isCod = track?.playlist === 'cod';
+                const plName = track?.playlist === 'cod' ? 'COD Menu OST' : track?.playlist === 'me' ? 'Mass Effect OST' : 'FF Battle OST';
                 newHistory.push({
                     type: 'output',
-                    text: `[AUDIO] Switched Playlist to: ${isCod ? 'COD Menu OST' : 'FF Battle OST'}
+                    text: `[AUDIO] Switched Playlist to: ${plName}
 ▶ Playing: "${track ? track.title : ''}" (${track ? track.game : ''} - ${track ? track.composer : ''})`
                 });
             } else if (sub === 'list') {
                 newHistory.push({
                     type: 'output',
-                    text: `OST Jukebox Playlists (FF Battle OST & COD Menu OST)
+                    text: `OST Jukebox Playlists (FF Battle OST, COD Menu OST & Mass Effect OST)
 
 === [FF BATTLE OST (15 Tracks)] ===
 [1]  Those Who Fight Further (Fight On!) - Final Fantasy VII (1997)
@@ -10721,7 +10776,22 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music ff', 'music lis
 [6]  Cold War (Main Theme) - Call of Duty: Black Ops Cold War (2020)
 [7]  Infinite Warfare (Main Theme) - Call of Duty: Infinite Warfare (2016)
 
-Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', 'music random', 'music stop'`
+=== [MASS EFFECT TRILOGY OST — BIOWARE TRIBUTE (13 Tracks)] ===
+[1]  Uncharted Worlds (Galaxy Map Theme) - Mass Effect (2007)
+[2]  Leaving Earth - Mass Effect 3 (2012)
+[3]  The Illusive Man - Mass Effect 2 (2010)
+[4]  Suicide Mission - Mass Effect 2 (2010)
+[5]  Vigil (Main Menu / Ilos Theme) - Mass Effect (2007)
+[6]  An End, Once and For All - Mass Effect 3 (2012)
+[7]  Mass Effect Theme (Main Theme) - Mass Effect (2007)
+[8]  The Normandy - Mass Effect (2007)
+[9]  Spectre Induction - Mass Effect (2007)
+[10] The End Run - Mass Effect 2 (2010)
+[11] I Was Lost Without You - Mass Effect 3 (2012)
+[12] A Future for the Krogan - Mass Effect 3 (2012)
+[13] M4 Part II (End Credits) - Mass Effect / Faunts (2007)
+
+Commands: 'music ff', 'music cod', 'music me', 'music toggle', 'music next', 'music prev', 'music random', 'music stop'`
                 });
             } else if (sub === 'stop' || sub === 'pause') {
                 if (onMusicCommand) onMusicCommand('stop');
@@ -10731,8 +10801,8 @@ Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', '
                 });
             } else if (sub === 'next') {
                 const nextTrack = onMusicCommand ? onMusicCommand('next') : null;
-                const totalTracks = nextTrack?.playlist === 'cod' ? 7 : 15;
-                const badge = nextTrack?.playlist === 'cod' ? '[COD]' : '[FF]';
+                const totalTracks = nextTrack?.playlist === 'cod' ? 7 : nextTrack?.playlist === 'me' ? 13 : 15;
+                const badge = nextTrack?.playlist === 'cod' ? '[COD]' : nextTrack?.playlist === 'me' ? '[N7]' : '[FF]';
                 newHistory.push({
                     type: 'output',
                     text: nextTrack
@@ -10741,8 +10811,8 @@ Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', '
                 });
             } else if (sub === 'prev') {
                 const prevTrack = onMusicCommand ? onMusicCommand('prev') : null;
-                const totalTracks = prevTrack?.playlist === 'cod' ? 7 : 15;
-                const badge = prevTrack?.playlist === 'cod' ? '[COD]' : '[FF]';
+                const totalTracks = prevTrack?.playlist === 'cod' ? 7 : prevTrack?.playlist === 'me' ? 13 : 15;
+                const badge = prevTrack?.playlist === 'cod' ? '[COD]' : prevTrack?.playlist === 'me' ? '[N7]' : '[FF]';
                 newHistory.push({
                     type: 'output',
                     text: prevTrack
@@ -10751,8 +10821,8 @@ Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', '
                 });
             } else if (sub === 'random' || sub === 'shuffle') {
                 const randTrack = onMusicCommand ? onMusicCommand('random') : null;
-                const totalTracks = randTrack?.playlist === 'cod' ? 7 : 15;
-                const badge = randTrack?.playlist === 'cod' ? '[COD]' : '[FF]';
+                const totalTracks = randTrack?.playlist === 'cod' ? 7 : randTrack?.playlist === 'me' ? 13 : 15;
+                const badge = randTrack?.playlist === 'cod' ? '[COD]' : randTrack?.playlist === 'me' ? '[N7]' : '[FF]';
                 newHistory.push({
                     type: 'output',
                     text: randTrack
@@ -10762,15 +10832,15 @@ Commands: 'music ff', 'music cod', 'music toggle', 'music next', 'music prev', '
             } else {
                 // start playing music immediately in minimized dock state
                 const track = onMusicCommand ? onMusicCommand('playMinimized', 0) : null;
-                const isCod = track?.playlist === 'cod';
+                const plLabel = track?.playlist === 'cod' ? 'COD MENU' : track?.playlist === 'me' ? 'MASS EFFECT' : 'FF BATTLE';
                 newHistory.push({
                     type: 'output',
-                    text: `[AUDIO // ${isCod ? 'COD MENU' : 'FF BATTLE'} OST JUKEBOX ACTIVATED]
+                    text: `[AUDIO // ${plLabel} OST JUKEBOX ACTIVATED]
 ▶ Playing: "${track ? track.title : 'Those Who Fight Further (Fight On!)'}"
 Game: ${track ? track.game : 'Final Fantasy VII'}
 Composer: ${track ? track.composer : 'Nobuo Uematsu'}
 YouTube Jukebox initiated (dock player active in background).
-Toggle Playlists: 'music ff' or 'music cod'
+Toggle Playlists: 'music ff', 'music cod', or 'music me'
 CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music list'`
                 });
             }
@@ -10806,7 +10876,8 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
   skills     - List low-level tech stack
   journal    - Read research papers in Technical Journal
   fps        - Toggle real-time FPS & GPU telemetry HUD (top-right)
-  music      - Play OST Jukebox ('music ff' or 'music cod')
+  music      - Play OST Jukebox ('music ff', 'music cod', 'music me')
+  /shepard   - Tribute to BioWare & Mass Effect + N7 OST Jukebox
   chicken!   - Easter Egg: Transform asteroids into Space Chickens!
   MORE       - (While chicken! active) Turn the Moon into a giant spinning Chicken!
   models     - Open 3D model viewer (or 'preview chicken')
@@ -11861,6 +11932,139 @@ const COD_MENU_TRACKS = [
     }
 ];
 
+const MASS_EFFECT_TRACKS = [
+    {
+        id: "0Wqo4RrT7F0",
+        title: "Uncharted Worlds (Galaxy Map Theme)",
+        originalTitle: "Uncharted Worlds",
+        game: "Mass Effect",
+        year: "2007",
+        composer: "Jack Wall & Sam Hulick",
+        duration: "4:52",
+        youtubeUrl: "https://www.youtube.com/watch?v=0Wqo4RrT7F0"
+    },
+    {
+        id: "KGHA9oO1Ybg",
+        title: "Leaving Earth",
+        originalTitle: "Leaving Earth",
+        game: "Mass Effect 3",
+        year: "2012",
+        composer: "Clint Mansell",
+        duration: "2:02",
+        youtubeUrl: "https://www.youtube.com/watch?v=KGHA9oO1Ybg"
+    },
+    {
+        id: "UBLOvSb56Vc",
+        title: "The Illusive Man",
+        originalTitle: "The Illusive Man",
+        game: "Mass Effect 2",
+        year: "2010",
+        composer: "Jack Wall",
+        duration: "2:23",
+        youtubeUrl: "https://www.youtube.com/watch?v=UBLOvSb56Vc"
+    },
+    {
+        id: "VTsD2FjmLsw",
+        title: "Suicide Mission",
+        originalTitle: "Suicide Mission",
+        game: "Mass Effect 2",
+        year: "2010",
+        composer: "Jack Wall",
+        duration: "4:45",
+        youtubeUrl: "https://www.youtube.com/watch?v=VTsD2FjmLsw"
+    },
+    {
+        id: "Ea1eWarxdxQ",
+        title: "Vigil (Main Menu / Ilos Theme)",
+        originalTitle: "Vigil",
+        game: "Mass Effect",
+        year: "2007",
+        composer: "Jack Wall & Sam Hulick",
+        duration: "1:44",
+        youtubeUrl: "https://www.youtube.com/watch?v=Ea1eWarxdxQ"
+    },
+    {
+        id: "x5JvbD2Zc9I",
+        title: "An End, Once and For All",
+        originalTitle: "An End, Once and For All",
+        game: "Mass Effect 3",
+        year: "2012",
+        composer: "Clint Mansell & Sam Hulick",
+        duration: "2:50",
+        youtubeUrl: "https://www.youtube.com/watch?v=x5JvbD2Zc9I"
+    },
+    {
+        id: "yVm_ljDSdwA",
+        title: "Mass Effect Theme (Main Theme)",
+        originalTitle: "Mass Effect Theme",
+        game: "Mass Effect",
+        year: "2007",
+        composer: "Jack Wall & Sam Hulick",
+        duration: "2:21",
+        youtubeUrl: "https://www.youtube.com/watch?v=yVm_ljDSdwA"
+    },
+    {
+        id: "D6O-2R3FARA",
+        title: "The Normandy",
+        originalTitle: "The Normandy",
+        game: "Mass Effect",
+        year: "2007",
+        composer: "Sam Hulick",
+        duration: "1:35",
+        youtubeUrl: "https://www.youtube.com/watch?v=D6O-2R3FARA"
+    },
+    {
+        id: "m22aozY23uI",
+        title: "Spectre Induction",
+        originalTitle: "Spectre Induction",
+        game: "Mass Effect",
+        year: "2007",
+        composer: "Jack Wall & Sam Hulick",
+        duration: "1:55",
+        youtubeUrl: "https://www.youtube.com/watch?v=m22aozY23uI"
+    },
+    {
+        id: "ZCk4RiKH9H0",
+        title: "The End Run",
+        originalTitle: "The End Run",
+        game: "Mass Effect 2",
+        year: "2010",
+        composer: "Jack Wall",
+        duration: "2:57",
+        youtubeUrl: "https://www.youtube.com/watch?v=ZCk4RiKH9H0"
+    },
+    {
+        id: "CnoRlKzeIaI",
+        title: "I Was Lost Without You",
+        originalTitle: "I Was Lost Without You",
+        game: "Mass Effect 3",
+        year: "2012",
+        composer: "Sam Hulick",
+        duration: "2:33",
+        youtubeUrl: "https://www.youtube.com/watch?v=CnoRlKzeIaI"
+    },
+    {
+        id: "fQ3BaMg60nc",
+        title: "A Future for the Krogan",
+        originalTitle: "A Future for the Krogan",
+        game: "Mass Effect 3",
+        year: "2012",
+        composer: "Christopher Lennertz",
+        duration: "3:28",
+        youtubeUrl: "https://www.youtube.com/watch?v=fQ3BaMg60nc"
+    },
+    {
+        id: "NcrDWAuyqtc",
+        title: "M4 Part II (End Credits)",
+        originalTitle: "M4 (Part II)",
+        game: "Mass Effect",
+        year: "2007",
+        composer: "Faunts",
+        duration: "8:18",
+        youtubeUrl: "https://www.youtube.com/watch?v=NcrDWAuyqtc"
+    }
+];
+
 const OST_PLAYLISTS = {
     ff: {
         id: 'ff',
@@ -11895,6 +12099,23 @@ const OST_PLAYLISTS = {
         trackNumberBg: 'bg-amber-500 text-black',
         trackActiveBorder: 'bg-amber-950/40 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/40',
         tracks: COD_MENU_TRACKS
+    },
+    me: {
+        id: 'me',
+        name: 'Mass Effect OST',
+        title: 'Mass Effect Trilogy OST (BioWare Tribute)',
+        shortName: 'N7',
+        badge: 'N7 // BIOWARE',
+        composerSubtitle: 'BioWare · Jack Wall, Sam Hulick, Clint Mansell, Christopher Lennertz & Faunts',
+        icon: 'fa-shuttle-space',
+        color: 'rose',
+        borderClass: 'border-rose-500/40',
+        activePill: 'bg-rose-950/90 text-rose-300 border-rose-400/60 shadow-[0_0_15px_rgba(244,63,94,0.25)]',
+        inactivePill: 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border-transparent',
+        tagBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+        trackNumberBg: 'bg-rose-500 text-white',
+        trackActiveBorder: 'bg-rose-950/40 border-rose-400/60 shadow-[0_0_15px_rgba(244,63,94,0.15)] ring-1 ring-rose-400/40',
+        tracks: MASS_EFFECT_TRACKS
     }
 };
 
@@ -11922,7 +12143,7 @@ const FinalFantasyJukebox = ({
     const [isMuted, setIsMuted] = React.useState(false);
     const [isPlaying, setIsPlaying] = React.useState(true);
 
-    const activePlaylistKey = state.playlist === 'cod' ? 'cod' : 'ff';
+    const activePlaylistKey = OST_PLAYLISTS[state.playlist] ? state.playlist : 'ff';
     const activePlaylist = OST_PLAYLISTS[activePlaylistKey];
     const trackList = activePlaylist.tracks;
     const currentTrack = trackList[state.trackIndex] || trackList[0];
@@ -12121,16 +12342,19 @@ const FinalFantasyJukebox = ({
     if (!state.isActive) return null;
 
     const isCod = activePlaylistKey === 'cod';
+    const isMe = activePlaylistKey === 'me';
+    const nextPlaylistKey = activePlaylistKey === 'ff' ? 'cod' : activePlaylistKey === 'cod' ? 'me' : 'ff';
+    const nextPlaylistName = nextPlaylistKey === 'cod' ? 'COD Menu OST' : nextPlaylistKey === 'me' ? 'Mass Effect OST' : 'FF Battle OST';
 
     return (
         <>
             {/* Minimized floating dock player */}
             {state.isMinimized && (
                 <div className={`fixed bottom-6 left-6 z-50 bg-[#050505]/95 border rounded-xl p-3 shadow-2xl backdrop-blur-xl flex items-center gap-3 text-xs max-w-lg border-l-4 select-none animate-fadeIn ${
-                    isCod ? 'border-amber-500/40 border-l-amber-400' : 'border-white/[0.12] border-l-cyan-400'
+                    isCod ? 'border-amber-500/40 border-l-amber-400' : isMe ? 'border-rose-500/40 border-l-rose-500' : 'border-white/[0.12] border-l-cyan-400'
                 }`}>
                     <div className={`w-10 h-10 rounded-lg border flex items-center justify-center shrink-0 shadow-inner overflow-hidden relative ${
-                        isCod ? 'bg-amber-950/70 border-amber-500/30 text-amber-400' : 'bg-cyan-950/70 border-cyan-500/30 text-cyan-400'
+                        isCod ? 'bg-amber-950/70 border-amber-500/30 text-amber-400' : isMe ? 'bg-rose-950/70 border-rose-500/30 text-rose-400' : 'bg-cyan-950/70 border-cyan-500/30 text-cyan-400'
                     }`}>
                         <img src={`https://img.youtube.com/vi/${currentTrack.id}/default.jpg`} className="w-full h-full object-cover opacity-80" alt="thumbnail" />
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -12139,24 +12363,25 @@ const FinalFantasyJukebox = ({
                     </div>
                     <div className="overflow-hidden min-w-0 flex-1">
                         <div className="font-bold text-white truncate flex items-center gap-1.5">
-                            <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? (isCod ? 'bg-amber-400 animate-ping' : 'bg-cyan-400 animate-ping') : 'bg-slate-500'}`}></span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? (isCod ? 'bg-amber-400 animate-ping' : isMe ? 'bg-rose-400 animate-ping' : 'bg-cyan-400 animate-ping') : 'bg-slate-500'}`}></span>
                             <span className="truncate">{currentTrack.title}</span>
                             <button
                                 type="button"
-                                onClick={() => onSwitchPlaylist && onSwitchPlaylist(isCod ? 'ff' : 'cod')}
-                                title={`Toggle Playlist: Currently playing ${activePlaylist.name}. Click to switch to ${isCod ? 'FF Battle OST' : 'COD Menu OST'}`}
+                                onClick={() => onSwitchPlaylist && onSwitchPlaylist(nextPlaylistKey)}
+                                title={`Toggle Playlist: Currently playing ${activePlaylist.name}. Click to switch to ${nextPlaylistName}`}
                                 className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold border transition-all cursor-pointer shrink-0 flex items-center gap-1 shadow-sm ${
                                     isCod
                                         ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 hover:bg-amber-500/30'
+                                        : isMe
+                                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 hover:bg-rose-500/30'
                                         : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 hover:bg-cyan-500/30'
                                 }`}
                             >
-                                
-                                <span>{isCod ? 'COD Menu' : 'FF Battle'}</span>
+                                <span>{isCod ? 'COD Menu' : isMe ? 'Mass Effect' : 'FF Battle'}</span>
                                 <i className="fas fa-arrows-rotate text-[7px] opacity-75"></i>
                             </button>
                         </div>
-                        <div className={`text-[11px] truncate ${isCod ? 'text-amber-300/80' : 'text-cyan-300/80'}`}>
+                        <div className={`text-[11px] truncate ${isCod ? 'text-amber-300/80' : isMe ? 'text-rose-300/80' : 'text-cyan-300/80'}`}>
                             {currentTrack.game} • {currentTrack.composer}
                         </div>
                     </div>
@@ -12167,7 +12392,7 @@ const FinalFantasyJukebox = ({
                             title={isPlaying ? "Pause music" : "Play music"}
                             className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
                         >
-                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} ${isCod ? 'text-amber-400' : 'text-cyan-400'} text-xs`}></i>
+                            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} ${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'} text-xs`}></i>
                         </button>
                         {/* Prev/Next */}
                         <button onClick={onPrev} title="Previous track" className="p-1.5 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer">
@@ -12191,9 +12416,9 @@ const FinalFantasyJukebox = ({
                             <button
                                 onClick={toggleMute}
                                 title={isMuted ? "Unmute" : "Mute"}
-                                className={`text-slate-400 hover:${isCod ? 'text-amber-400' : 'text-cyan-400'} transition-colors focus:outline-none cursor-pointer`}
+                                className={`text-slate-400 hover:${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'} transition-colors focus:outline-none cursor-pointer`}
                             >
-                                <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? (isCod ? 'fa-volume-low text-amber-400' : 'fa-volume-low text-cyan-400') : (isCod ? 'fa-volume-high text-amber-400' : 'fa-volume-high text-cyan-400')} text-xs`}></i>
+                                <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? (isCod ? 'fa-volume-low text-amber-400' : isMe ? 'fa-volume-low text-rose-400' : 'fa-volume-low text-cyan-400') : (isCod ? 'fa-volume-high text-amber-400' : isMe ? 'fa-volume-high text-rose-400' : 'fa-volume-high text-cyan-400')} text-xs`}></i>
                             </button>
                             <input
                                 type="range"
@@ -12201,7 +12426,7 @@ const FinalFantasyJukebox = ({
                                 max="100"
                                 value={isMuted ? 0 : volume}
                                 onChange={(e) => handleVolumeChange(e.target.value)}
-                                className={`w-14 sm:w-18 h-1 bg-slate-700 rounded appearance-none cursor-pointer ${isCod ? 'accent-amber-400' : 'accent-cyan-400'}`}
+                                className={`w-14 sm:w-18 h-1 bg-slate-700 rounded appearance-none cursor-pointer ${isCod ? 'accent-amber-400' : isMe ? 'accent-rose-500' : 'accent-cyan-400'}`}
                                 aria-label="Volume slider"
                                 title={`Volume: ${isMuted ? 0 : volume}%`}
                             />
@@ -12211,7 +12436,7 @@ const FinalFantasyJukebox = ({
                         </div>
 
                         {/* Expand player */}
-                        <button onClick={onExpand} title="Expand player" className={`p-1.5 hover:${isCod ? 'text-amber-400' : 'text-cyan-400'} hover:bg-white/10 rounded transition-colors cursor-pointer`}>
+                        <button onClick={onExpand} title="Expand player" className={`p-1.5 hover:${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'} hover:bg-white/10 rounded transition-colors cursor-pointer`}>
                             <i className="fas fa-up-right-and-down-left-from-center text-xs"></i>
                         </button>
                         {/* Stop music */}
@@ -12231,6 +12456,8 @@ const FinalFantasyJukebox = ({
                 <div className={`bg-[#050505]/95 backdrop-blur-xl border rounded-2xl max-w-2xl w-full overflow-hidden flex flex-col my-auto max-h-[92vh] ${
                     isCod
                         ? 'border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.25)]'
+                        : isMe
+                        ? 'border-rose-500/30 shadow-[0_0_50px_rgba(244,63,94,0.25)]'
                         : 'border-white/[0.12] shadow-2xl'
                 }`}>
                     
@@ -12238,7 +12465,7 @@ const FinalFantasyJukebox = ({
                     <div className="bg-black/60 border-b border-white/[0.08] px-4 py-3 flex items-center justify-between shrink-0">
                         <div className="flex items-center gap-2.5">
                             <div className={`w-8 h-8 rounded-lg border flex items-center justify-center shadow-sm relative overflow-hidden ${
-                                isCod ? 'bg-amber-950/80 border-amber-500/40 text-amber-400' : 'bg-cyan-950/80 border-cyan-500/40 text-cyan-400'
+                                isCod ? 'bg-amber-950/80 border-amber-500/40 text-amber-400' : isMe ? 'bg-rose-950/80 border-rose-500/40 text-rose-400' : 'bg-cyan-950/80 border-cyan-500/40 text-cyan-400'
                             }`}>
                                 <img src={`https://img.youtube.com/vi/${currentTrack.id}/default.jpg`} className="absolute inset-0 w-full h-full object-cover opacity-30" alt="" />
                                 
@@ -12247,12 +12474,12 @@ const FinalFantasyJukebox = ({
                                 <div className="text-sm font-bold text-white flex items-center gap-2 font-mono">
                                     <span>{activePlaylist.title} Jukebox</span>
                                     <div className="flex items-end gap-0.5 h-3">
-                                        <span className={`w-0.5 ${isCod ? 'bg-amber-400' : 'bg-cyan-400'} ${isPlaying ? 'animate-pulse' : ''} h-2`}></span>
-                                        <span className={`w-0.5 ${isCod ? 'bg-orange-300' : 'bg-sky-300'} ${isPlaying ? 'animate-pulse' : ''} h-3`}></span>
-                                        <span className={`w-0.5 ${isCod ? 'bg-yellow-400' : 'bg-blue-400'} ${isPlaying ? 'animate-pulse' : ''} h-1.5`}></span>
+                                        <span className={`w-0.5 ${isCod ? 'bg-amber-400' : isMe ? 'bg-rose-500' : 'bg-cyan-400'} ${isPlaying ? 'animate-pulse' : ''} h-2`}></span>
+                                        <span className={`w-0.5 ${isCod ? 'bg-orange-300' : isMe ? 'bg-red-400' : 'bg-sky-300'} ${isPlaying ? 'animate-pulse' : ''} h-3`}></span>
+                                        <span className={`w-0.5 ${isCod ? 'bg-yellow-400' : isMe ? 'bg-rose-300' : 'bg-blue-400'} ${isPlaying ? 'animate-pulse' : ''} h-1.5`}></span>
                                     </div>
                                 </div>
-                                <div className={`text-[11px] font-mono truncate max-w-sm ${isCod ? 'text-amber-300/80' : 'text-cyan-300/80'}`}>
+                                <div className={`text-[11px] font-mono truncate max-w-sm ${isCod ? 'text-amber-300/80' : isMe ? 'text-rose-300/80' : 'text-cyan-300/80'}`}>
                                     {activePlaylist.composerSubtitle} • YouTube Audio Stream
                                 </div>
                             </div>
@@ -12305,6 +12532,18 @@ const FinalFantasyJukebox = ({
                                 <span>COD Menu OST</span>
                                 <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-mono">7</span>
                             </button>
+                            <button
+                                type="button"
+                                onClick={() => onSwitchPlaylist && onSwitchPlaylist('me')}
+                                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer border ${
+                                    activePlaylistKey === 'me'
+                                        ? 'bg-rose-950/80 text-rose-300 border-rose-400/60 shadow-[0_0_15px_rgba(244,63,94,0.25)]'
+                                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border-transparent'
+                                }`}
+                            >
+                                <span>Mass Effect OST</span>
+                                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 font-mono">13</span>
+                            </button>
                         </div>
 
                         {/* YouTube Video Player (Single persistent instance, using youtube-nocookie to prevent Error 153 on custom domains) */}
@@ -12350,7 +12589,7 @@ const FinalFantasyJukebox = ({
                                     className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                                     title={isPlaying ? "Pause music" : "Play music"}
                                 >
-                                    <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} ${isCod ? 'text-amber-400' : 'text-cyan-400'} text-xs`}></i>
+                                    <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} ${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'} text-xs`}></i>
                                     <span className="hidden sm:inline">{isPlaying ? 'Pause' : 'Play'}</span>
                                 </button>
 
@@ -12366,7 +12605,7 @@ const FinalFantasyJukebox = ({
                                 <button
                                     onClick={onNext}
                                     className={`px-3 py-1.5 rounded-lg text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md cursor-pointer ${
-                                        isCod ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-900/50' : 'bg-cyan-600 hover:bg-cyan-500 shadow-cyan-900/50'
+                                        isCod ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-900/50' : isMe ? 'bg-rose-600 hover:bg-rose-500 shadow-rose-900/50' : 'bg-cyan-600 hover:bg-cyan-500 shadow-cyan-900/50'
                                     }`}
                                     title="Next track"
                                 >
@@ -12380,7 +12619,7 @@ const FinalFantasyJukebox = ({
                                     className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.1] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                                     title="Play a random track from current playlist"
                                 >
-                                    <i className={`fas fa-shuffle ${isCod ? 'text-amber-400' : 'text-cyan-400'}`}></i>
+                                    <i className={`fas fa-shuffle ${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'}`}></i>
                                     <span className="hidden sm:inline">Randomize</span>
                                 </button>
 
@@ -12389,11 +12628,11 @@ const FinalFantasyJukebox = ({
                                     <button
                                         type="button"
                                         onClick={toggleMute}
-                                        className={`text-slate-400 hover:${isCod ? 'text-amber-400' : 'text-cyan-400'} transition-colors focus:outline-none cursor-pointer`}
+                                        className={`text-slate-400 hover:${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'} transition-colors focus:outline-none cursor-pointer`}
                                         title={isMuted ? "Unmute" : "Mute"}
                                         aria-label="Toggle mute"
                                     >
-                                        <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? (isCod ? 'fa-volume-low text-amber-400' : 'fa-volume-low text-cyan-400') : (isCod ? 'fa-volume-high text-amber-400' : 'fa-volume-high text-cyan-400')} text-xs`}></i>
+                                        <i className={`fas ${isMuted || volume === 0 ? 'fa-volume-xmark text-rose-400' : volume < 50 ? (isCod ? 'fa-volume-low text-amber-400' : isMe ? 'fa-volume-low text-rose-400' : 'fa-volume-low text-cyan-400') : (isCod ? 'fa-volume-high text-amber-400' : isMe ? 'fa-volume-high text-rose-400' : 'fa-volume-high text-cyan-400')} text-xs`}></i>
                                     </button>
                                     <input
                                         type="range"
@@ -12401,7 +12640,7 @@ const FinalFantasyJukebox = ({
                                         max="100"
                                         value={isMuted ? 0 : volume}
                                         onChange={(e) => handleVolumeChange(e.target.value)}
-                                        className={`w-20 sm:w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer ${isCod ? 'accent-amber-400' : 'accent-cyan-400'}`}
+                                        className={`w-20 sm:w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer ${isCod ? 'accent-amber-400' : isMe ? 'accent-rose-500' : 'accent-cyan-400'}`}
                                         aria-label="Volume slider"
                                         title={`Volume: ${isMuted ? 0 : volume}%`}
                                     />
@@ -12434,6 +12673,8 @@ const FinalFantasyJukebox = ({
                                         className={`px-2.5 py-1 rounded border text-[11px] font-mono font-semibold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer ${
                                             isCod
                                                 ? 'bg-amber-950/80 hover:bg-amber-900 border-amber-500/40 text-amber-300 hover:text-white'
+                                                : isMe
+                                                ? 'bg-rose-950/80 hover:bg-rose-900 border-rose-500/40 text-rose-300 hover:text-white'
                                                 : 'bg-cyan-950/80 hover:bg-cyan-900 border-cyan-500/40 text-cyan-300 hover:text-white'
                                         }`}
                                         title="Pick and play a random track from the playlist"
@@ -12455,6 +12696,8 @@ const FinalFantasyJukebox = ({
                                                 isCurrent
                                                     ? (isCod
                                                         ? 'bg-amber-950/40 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/40'
+                                                        : isMe
+                                                        ? 'bg-rose-950/40 border-rose-400/60 shadow-[0_0_15px_rgba(244,63,94,0.15)] ring-1 ring-rose-400/40'
                                                         : 'bg-cyan-950/40 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40')
                                                     : 'bg-white/[0.03] border-white/[0.08] hover:border-white/[0.2] hover:bg-white/[0.06]'
                                             }`}
@@ -12462,7 +12705,7 @@ const FinalFantasyJukebox = ({
                                             <div className="flex items-center gap-2.5 min-w-0">
                                                 <div className={`w-7 h-7 rounded-md flex items-center justify-center font-mono text-xs font-bold shrink-0 overflow-hidden relative ${
                                                     isCurrent
-                                                        ? (isCod ? 'bg-amber-500 text-black' : 'bg-cyan-500 text-black')
+                                                        ? (isCod ? 'bg-amber-500 text-black' : isMe ? 'bg-rose-500 text-white' : 'bg-cyan-500 text-black')
                                                         : 'bg-white/[0.08] text-slate-400'
                                                 }`}>
                                                     <img src={`https://img.youtube.com/vi/${track.id}/default.jpg`} className="absolute inset-0 w-full h-full object-cover opacity-40" alt="" />
@@ -12472,7 +12715,7 @@ const FinalFantasyJukebox = ({
                                                 </div>
                                                 <div className="min-w-0">
                                                     <div className={`text-xs font-semibold truncate ${
-                                                        isCurrent ? (isCod ? 'text-amber-300 font-bold' : 'text-cyan-300 font-bold') : 'text-slate-200'
+                                                        isCurrent ? (isCod ? 'text-amber-300 font-bold' : isMe ? 'text-rose-300 font-bold' : 'text-cyan-300 font-bold') : 'text-slate-200'
                                                     }`}>
                                                         {track.title}
                                                     </div>
@@ -12483,7 +12726,7 @@ const FinalFantasyJukebox = ({
                                             </div>
                                             <div className="text-slate-400 shrink-0">
                                                 {isCurrent ? (
-                                                    <span className={`text-[10px] font-mono uppercase font-bold tracking-wider ${isCod ? 'text-amber-400' : 'text-cyan-400'}`}>
+                                                    <span className={`text-[10px] font-mono uppercase font-bold tracking-wider ${isCod ? 'text-amber-400' : isMe ? 'text-rose-400' : 'text-cyan-400'}`}>
                                                         {isPlaying ? 'Playing' : 'Paused'}
                                                     </span>
                                                 ) : (
@@ -14153,15 +14396,22 @@ const App = () => {
         }
     }, [settings, lang]);
 
-    // Handle spet:open-galaxy-map event
+    // Handle spet:open-galaxy-map and spet:toggle-galaxy-map events
     useEffect(() => {
         const handleOpenGalaxyMap = (e) => {
             const targetSec = e.detail?.targetSector || null;
             triggerGalaxyMapTransition(true, targetSec);
         };
+        const handleToggleGalaxyMap = () => {
+            triggerGalaxyMapTransition(!isGalaxyMapActive);
+        };
         window.addEventListener('spet:open-galaxy-map', handleOpenGalaxyMap);
-        return () => window.removeEventListener('spet:open-galaxy-map', handleOpenGalaxyMap);
-    }, [triggerGalaxyMapTransition]);
+        window.addEventListener('spet:toggle-galaxy-map', handleToggleGalaxyMap);
+        return () => {
+            window.removeEventListener('spet:open-galaxy-map', handleOpenGalaxyMap);
+            window.removeEventListener('spet:toggle-galaxy-map', handleToggleGalaxyMap);
+        };
+    }, [triggerGalaxyMapTransition, isGalaxyMapActive]);
 
     // Global Key Listener for (Q) and (ESC)
     useEffect(() => {
@@ -14491,8 +14741,8 @@ const App = () => {
     }, []);
 
     const handleMusicCommand = (action, payload) => {
-        const currentPl = ffMusicState.playlist === 'cod' ? 'cod' : 'ff';
-        const getTrackList = (pl) => pl === 'cod' ? COD_MENU_TRACKS : FF_CLASSIC_TRACKS;
+        const currentPl = OST_PLAYLISTS[ffMusicState.playlist] ? ffMusicState.playlist : 'ff';
+        const getTrackList = (pl) => pl === 'cod' ? COD_MENU_TRACKS : pl === 'me' ? MASS_EFFECT_TRACKS : FF_CLASSIC_TRACKS;
 
         if (action === 'ff') {
             const list = FF_CLASSIC_TRACKS;
@@ -14532,8 +14782,27 @@ const App = () => {
                 return prev;
             });
             return { ...list[targetIdx], playlist: 'cod', index: targetIdx };
+        } else if (action === 'me') {
+            const list = MASS_EFFECT_TRACKS;
+            const targetIdx = typeof payload === 'number' && payload >= 0 && payload < list.length ? payload : 0;
+            setFfMusicState({
+                isActive: true,
+                isOpen: false,
+                isMinimized: true,
+                playlist: 'me',
+                trackIndex: targetIdx
+            });
+            setSettings(prev => {
+                if (!prev.musicPlayer) {
+                    const next = { ...prev, musicPlayer: true };
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch (e) {}
+                    return next;
+                }
+                return prev;
+            });
+            return { ...list[targetIdx], playlist: 'me', index: targetIdx };
         } else if (action === 'switchPlaylist') {
-            const targetPl = payload === 'cod' ? 'cod' : 'ff';
+            const targetPl = OST_PLAYLISTS[payload] ? payload : 'ff';
             const list = getTrackList(targetPl);
             setFfMusicState(prev => ({
                 ...prev,
@@ -14543,7 +14812,7 @@ const App = () => {
             }));
             return { ...list[0], playlist: targetPl, index: 0 };
         } else if (action === 'togglePlaylist') {
-            const nextPl = currentPl === 'cod' ? 'ff' : 'cod';
+            const nextPl = currentPl === 'ff' ? 'cod' : currentPl === 'cod' ? 'me' : 'ff';
             const list = getTrackList(nextPl);
             setFfMusicState(prev => ({
                 ...prev,
@@ -14579,7 +14848,7 @@ const App = () => {
         } else if (action === 'next') {
             let nextTrackObj = null;
             setFfMusicState(prev => {
-                const currentPl = prev.playlist === 'cod' ? 'cod' : 'ff';
+                const currentPl = OST_PLAYLISTS[prev.playlist] ? prev.playlist : 'ff';
                 const list = getTrackList(currentPl);
                 const nextIdx = (prev.trackIndex + 1) % list.length;
                 nextTrackObj = { ...list[nextIdx], playlist: currentPl, index: nextIdx };
@@ -14593,7 +14862,7 @@ const App = () => {
         } else if (action === 'prev') {
             let prevTrackObj = null;
             setFfMusicState(prev => {
-                const currentPl = prev.playlist === 'cod' ? 'cod' : 'ff';
+                const currentPl = OST_PLAYLISTS[prev.playlist] ? prev.playlist : 'ff';
                 const list = getTrackList(currentPl);
                 const prevIdx = (prev.trackIndex - 1 + list.length) % list.length;
                 prevTrackObj = { ...list[prevIdx], playlist: currentPl, index: prevIdx };
@@ -14607,7 +14876,7 @@ const App = () => {
         } else if (action === 'random' || action === 'shuffle') {
             let randTrackObj = null;
             setFfMusicState(prev => {
-                const currentPl = prev.playlist === 'cod' ? 'cod' : 'ff';
+                const currentPl = OST_PLAYLISTS[prev.playlist] ? prev.playlist : 'ff';
                 const list = getTrackList(currentPl);
                 let nextIdx = Math.floor(Math.random() * list.length);
                 if (list.length > 1 && nextIdx === prev.trackIndex) {
@@ -15008,7 +15277,7 @@ const App = () => {
                     onOpenCV={() => setIsCVOpen(true)}
                     onOpenEaster={(game) => setEasterGame(game)}
                     onMusicCommand={handleMusicCommand}
-                    activeMusicTrack={ffMusicState.isActive ? (ffMusicState.playlist === 'cod' ? COD_MENU_TRACKS[ffMusicState.trackIndex] : FF_CLASSIC_TRACKS[ffMusicState.trackIndex]) : null}
+                    activeMusicTrack={ffMusicState.isActive ? ((OST_PLAYLISTS[ffMusicState.playlist] || OST_PLAYLISTS.ff).tracks[ffMusicState.trackIndex]) : null}
                     onOpenSettings={() => setIsSettingsOpen(true)}
                     onNavigateJournal={(id) => navigateTo('journal', id)}
                     onOpen3DViewer={(modelId) => {

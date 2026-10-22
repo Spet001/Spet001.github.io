@@ -1,5 +1,12 @@
 [
     {
+        "id": "entry_0020",
+        "title": "Farewell, BioWare: A Tribute to Mass Effect & How the Normandy Shaped This Portfolio",
+        "date": "Oct 22, 2026",
+        "category": "Tribute & Game Design",
+        "file": "Tribute-To-BioWare-And-Mass-Effect.md"
+    },
+    {
         "id": "entry_0019",
         "title": "What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry",
         "date": "Oct 21, 2026",
