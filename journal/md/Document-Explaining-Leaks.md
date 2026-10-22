@@ -24,7 +24,7 @@
 >
 > ---
 >
-> ### **Update (October 15, 2026): Documenting Stolen Code Usage, Forum Takedowns & Opportunistic Bad Actors**
+> ### **Update (October 2026): Documenting Stolen Code Usage, Commercial Cheat Exploits & Forum Takedowns**
 > As time progresses, bad actors and opportunistic leechers continue to weaponize the compromised private repository. We are actively documenting each violation and enforcing authorship rights across platforms:
 >
 > 1. **UnknownCheats Post Takedown (Post #4821403):**  
@@ -34,6 +34,11 @@
 >    A YouTuber and bad actor operating under the alias **B33 AI** has published multiple videos ([Watch Evidence Video](https://www.youtube.com/watch?v=e9-UFJnv6CY)) showcasing the Crossplay Relay.  
 >    **Every single one of their videos is running our original, stolen Relay code verbatim.** The only modification they made was slapping a generic Real-Time Modding (RTM) tool interface over our proprietary network translation pipeline and memory patches, claiming the achievement as their own while completely scrubbing the names of the real creators (**Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet**).  
 >    Wrapping someone else's stolen protocol translation engine and memory patcher in a basic RTM UI does **not** make you an engineer, and it does **not** grant you authorship.
+>
+> 3. **Twitter/X Exploitation, RTM Tool Wrapper & Paid Cheat Distribution — `@stevemoddz`:**  
+>    In a newly uncovered public video on Twitter/X ([View Evidence Post](https://x.com/stevemoddz/status/2112625464967581881?s=20)), an account operating under the handle **@stevemoddz** explicitly advertises our stolen network bridge under the title **"BO2 CROSSPLAY"**.  
+>    This individual is yet another bad actor who took our leaked, proprietary networking code, slapped a generic Real-Time Modding (RTM) tool interface on top, and is now actively **monetizing and selling cheats** while using the crossplay bridge to cheat in live lobbies.  
+>    **Let this be stated with absolute clarity: The fundamental purpose, engineering ethos, and vision behind the BO2 Crossplay Relay was NEVER to enable cheats, commercialize exploits, or disrupt public matches.** The project was conceived purely as a technical breakthrough in platform interop and game preservation — allowing friends on PC (Microsoft Store / GDK) and consoles (PlayStation 4/5, Xbox 360) to connect and play custom games together legitimately. Hijacking low-level network engineering research to peddle paid cheat tools to script kiddies is the lowest form of parasitic behavior.
 
 ---
 
