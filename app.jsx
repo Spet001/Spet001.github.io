@@ -110,7 +110,11 @@ const PORTFOLIO_DATA = {
                 universalFileTitle: "Spet's Universal Game File Opener",
                 universalFileBadge: "Inspetor & Carvedor Universal de Games",
                 universalFileDesc: "Inspetor e extrator de sistemas de arquivos virtuais de games no browser. Suporte a mais de 25 formatos de engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs) e CoD FastFiles (.ff).",
-                universalFileOpen: "Abrir File Opener"
+                universalFileOpen: "Abrir File Opener",
+                reshadeStudioTitle: "Spet's ReShade Studio",
+                reshadeStudioBadge: "Estúdio Determinístico de ReShade & 3D LUT (100% Math)",
+                reshadeStudioDesc: "Bancada client-side 100% matemática (zero IA) para criação de presets ReShade 6.8.0 e texturas 3D LUT (1024×32). Calcula transferência estatística de cor no espaço CIE LAB (algoritmo de Reinhard) entre duas imagens, inclui filtros dedicados (PSX 15-bit RGB555 Bayer Dither, Anti-Piss 7ª Geração e Next-Gen PBR ACES), resolve a API gráfica do jogo automaticamente (d3d9/d3d11/d3d12/opengl/vulkan) e exporta o pacote .ZIP completo com DLL, .ini, SpetLUT.png e shaders HLSL (.fx).",
+                reshadeStudioOpen: "Abrir ReShade Studio"
             },
             terminal: {
                 title: "Console Interativo (SpetTerm)",
@@ -279,7 +283,11 @@ const PORTFOLIO_DATA = {
                 universalFileTitle: "Spet's Universal Game File Opener",
                 universalFileBadge: "Universal Game Archive & Stream Carver",
                 universalFileDesc: "In-browser virtual filesystem inspector and carver supporting 25+ PC and console game engines: Bethesda (BSA/BA2), Ubisoft (FORGE), Rockstar RAGE (.rpf), Minecraft mods (.jar), PlayStation (.pkg), CRIWARE (.awb/.usm), FromSoftware (.bnd/.dcx), Square Enix (.sdat/.pfs), Call of Duty FastFiles (.ff), and raw Zlib streams.",
-                universalFileOpen: "Open Game File Opener"
+                universalFileOpen: "Open Game File Opener",
+                reshadeStudioTitle: "Spet's ReShade Studio",
+                reshadeStudioBadge: "Deterministic ReShade Preset & 3D LUT Studio (100% Math)",
+                reshadeStudioDesc: "100% mathematical client-side workbench (zero AI) for generating ReShade 6.8.0 presets and 3D LUTs (1024×32). Computes CIE LAB Reinhard statistical color transfers between source and reference frames, features standalone hardware filters (PSX 15-bit RGB555 Bayer Dither, 7th-Gen Anti-Piss & Next-Gen PBR ACES), auto-detects target game graphics APIs (d3d9/d3d11/d3d12/opengl/vulkan), and exports ready-to-play .ZIP bundles with DLL, .ini, SpetLUT.png, and HLSL (.fx) shaders.",
+                reshadeStudioOpen: "Open ReShade Studio"
             },
             terminal: {
                 title: "Interactive Console (SpetTerm)",
@@ -662,16 +670,17 @@ const PORTFOLIO_DATA = {
             image: "/assets/tool_easy_decompiler.png",
             caseStudyImages: [
                 "/assets/tool_easy_decompiler.png",
-                "/assets/tool_universal_file.png"
+                "/assets/tool_universal_file.png",
+                "/assets/tool_reshade_studio.jpg"
             ],
             title: { pt: "Suíte de Ferramentas Web & Engenharia Reversa", en: "Web Tools & Reverse Engineering Suite" },
             featured: true,
             live: "/tools/",
             liveLabel: { pt: "Explorar Ferramentas", en: "Open Tools Suite" },
-            tags: ["WebAssembly", "Rizin Core", "Ghidra Sleigh", "Game Archives", "Three.js", "AST Decompilation", "25+ Formats"],
+            tags: ["WebAssembly", "Rizin Core", "Ghidra Sleigh", "Game Archives", "Three.js", "AST Decompilation", "25+ Formats", "ReShade 3D LUT"],
             description: {
-                pt: "Suíte completa de utilitários e analisadores de engenharia reversa executados no browser: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines: Bethesda, id Tech, Ubisoft, Rockstar, PlayStation) e Quick 3D Studio.",
-                en: "Comprehensive reverse engineering and archive extraction suite running client-side: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ game engines), and Quick 3D Studio."
+                pt: "Suíte completa de utilitários e analisadores de engenharia reversa executados no browser: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines: Bethesda, id Tech, Ubisoft, Rockstar, PlayStation), ReShade Studio (CIE LAB & 3D LUT Compiler) e Quick 3D Studio.",
+                en: "Comprehensive reverse engineering and archive extraction suite running client-side: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ game engines), ReShade Studio (CIE LAB & 3D LUT Compiler), and Quick 3D Studio."
             },
             caseStudy: {
                 challenge: {
@@ -8299,6 +8308,30 @@ const ToolsSection = () => {
                     <img
                         src="/assets/tool_universal_file.png"
                         alt="Spet's Universal Game File Opener"
+                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
+                </div>
+            )
+        },
+        {
+            id: 'reshade-studio',
+            url: '/tools/reshade-studio/',
+            title: t('tools.reshadeStudioTitle') || "Spet's ReShade Studio",
+            badge: t('tools.reshadeStudioBadge') || "Deterministic ReShade Preset & 3D LUT Studio (100% Math)",
+            icon: '/assets/icons/spet_sprites/crt_monitor.png',
+            desc: t('tools.reshadeStudioDesc') || "100% mathematical client-side workbench for generating ReShade 6.8.0 presets and 1024x32 3D LUTs via CIE LAB Reinhard statistical color transfer.",
+            openText: t('tools.reshadeStudioOpen') || "Open ReShade Studio",
+            accentBorder: "border-[#E05A3A]/40 hover:border-[#E05A3A]/75 shadow-[0_8px_30px_rgba(224,90,58,0.14)]",
+            badgeColor: "text-[#FF9472] border-[#E05A3A]/30",
+            buttonBg: "bg-[#E05A3A] hover:bg-[#EC6443] shadow-[#E05A3A]/30 text-white font-bold",
+            pathColor: "text-[#FF9472]/80",
+            tags: ['CIE LAB Reinhard', '3D LUT (1024×32)', 'PSX RGB555 Dither', 'Anti-Piss Filter', 'ReShade 6.8.0 ZIP', 'HLSL Shaders (.fx)', 'Auto Game API DB'],
+            preview: (
+                <div className="relative w-full h-full min-h-[220px] bg-[#0B0F17] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                    <img
+                        src="/assets/tool_reshade_studio.jpg"
+                        alt="Spet's ReShade Studio"
                         className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
