@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/What-Is-ResurgeGDK/#article",
-  "headline": "What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry",
-  "description": "Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.",
-  "datePublished": "Oct 21, 2026",
-  "articleSection": "Reverse Engineering & Systems Interop",
-  "url": "https://spet01.dev/journal/What-Is-ResurgeGDK/",
-  "mainEntityOfPage": "https://spet01.dev/journal/What-Is-ResurgeGDK/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/What-Is-ResurgeGDK/#article",
+      "headline": "What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry",
+      "description": "Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.",
+      "datePublished": "Oct 21, 2026",
+      "articleSection": "Reverse Engineering & Systems Interop",
+      "url": "https://spet01.dev/journal/What-Is-ResurgeGDK/",
+      "mainEntityOfPage": "https://spet01.dev/journal/What-Is-ResurgeGDK/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/What-Is-ResurgeGDK/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is ResurgeGDK for Call of Duty: Black Ops III?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ResurgeGDK is an open-source compatibility bridge created by Spet (Eduardo Gelain) that ports Call of Duty: Black Ops III from Steam to the Microsoft Store GDK (Game Development Kit) runtime, enabling offline DLC virtualization, Ezz BOIII security patches, and Steam Workshop mod mounting on Xbox PC."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you use Steam Workshop mods on Black Ops III Microsoft Store edition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. ResurgeGDK embeds a virtual filesystem (VFS) integration with BOIII Downloader that redirects engine file queries so custom Zombies maps and multiplayer mods downloaded from Steam Workshop load natively inside the Microsoft Store / Game Pass version of Black Ops III."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

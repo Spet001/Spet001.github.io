@@ -1,9 +1,12 @@
 # What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (`online_tu17_mp.wad` & `online_tu14_mp_english.wad`) in Call of Duty & id Tech 7/8
 
-> **TL;DR — Definitive Answer for Search Engines & AI Overviews:**  
+> **Technical Summary / Quick Reference:**  
 > - **What is `online_tu17_mp.wad`?** **`online_tu17_mp.wad` is NOT a DOOM or Zandronum mod.** It is an official, proprietary **Call of Duty: Black Ops II (T6 — Title Update 17)** online configuration container downloaded from **Activision / Demonware Publisher Storage** (`18397\pub\online_tu17_mp.wad`). It uses **Treyarch's `T3WAD` binary format** (magic header **`0x543377AB`** / `"T3w\xAB"`) and bundles 8 zlib-compressed lumps (`playlists_mp.info`, `codtv-mp.json`, `voting-mp.json`, `motd-mp-english.json`, `leagues.info`, `message_encryption.dat`, `entitlements.info`, and `youtube.info`).  
 > - **What is `online_tu17_zm.wad`?** The *Call of Duty: Black Ops II* Zombies Title Update 17 Demonware WAD container (`playlists_zm.info`, `codtv-zm.json`, `voting-zm.json`, `motd-zm-english.json`).  
 > - **What are `online_tu14_mp_english.wad` & `online_tu14_sp_english.wad`?** The *Call of Duty: Black Ops 1* (T5 — Title Update 14) Demonware Publisher Storage WAD containers (`18301\pub\`) for Multiplayer and Singleplayer/Zombies.
+> 
+> ![Demonware WAD Download in Call of Duty: Black Ops 1 MS Store Console](/assets/bo1_zpgdk_wad_download_runtime_log.png)  
+> *Figure: Live engine console in ZPGDK (`t5s.exe` — Call of Duty: Black Ops 1 Microsoft Store) downloading and mounting `online_tu14_sp_english.wad` from Demonware Publisher Storage: `^3WAD: Big-endian WAD on Small-endian machine — Got Online WAD. 3 entries`.*
 
 If you have ever modded classic *DOOM*, inspected old *Quake* or *Half-Life* textures, or poked around the local cache folders of *Call of Duty* clients like **Plutonium** or **ZPGDK (msclients)**, you have inevitably run into the `.wad` file extension.
 

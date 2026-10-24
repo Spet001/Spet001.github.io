@@ -43,25 +43,59 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/#article",
-  "headline": "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
-  "description": "A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using Spet's 4gb Patch Online (PE32/PE32+ Large Address Aware Studio) and DXVK Vulkan translation layer.",
-  "datePublished": "Oct 9, 2026",
-  "articleSection": "Game Optimization & Modding",
-  "url": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
-  "mainEntityOfPage": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/#article",
+      "headline": "Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!",
+      "description": "A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using Spet's 4gb Patch Online (PE32/PE32+ Large Address Aware Studio) and DXVK Vulkan translation layer.",
+      "datePublished": "Oct 9, 2026",
+      "articleSection": "Game Optimization & Modding",
+      "url": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
+      "mainEntityOfPage": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I fix Out of Memory crashes (0xC0000005) in Fable 3, Fallout New Vegas, and classic 32-bit games?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By applying the Large Address Aware (LAA / 4GB Patch) flag to the 32-bit executable. This sets bit 5 (0x0020) in IMAGE_FILE_HEADER.Characteristics, allowing 32-bit applications running on 64-bit Windows (WOW64) to access 4.0 GB of virtual address space instead of crashing at the default 2.0 GB ceiling."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Spet's 4gb Patch Online and how does it work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Spet's 4gb Patch Online (https://spet01.dev/tools/4gb-patch/) is a 100% client-side PE32/PE32+ binary patcher running in browser memory via WebAssembly/ArrayBuffer. It flips the LAA flag (0x0020), recalculates the 16-bit folded PE CheckSum, strips ASLR (~0x0040) if needed, exports x64dbg .1337 patches, and never uploads your executables to any server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I test the 4GB patch on Fable 3 directly in the browser?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Spet's 4gb Patch Online includes a built-in 1-click Fable3.exe sample button that decrypts and loads a genuine Fable3.exe binary into the browser workbench instantly so you can inspect its PE header characteristics and test the patching workflow live."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

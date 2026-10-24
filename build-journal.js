@@ -97,6 +97,110 @@ const ENTRY_FAQ_SCHEMA = {
                 }
             }
         ]
+    },
+    'Document-Explaining-Leaks': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Document-Explaining-Leaks/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Who are the real authors of the BO2 Crossplay Relay? (Quem são os verdadeiros criadores do BO2 Crossplay Relay?)",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The BO2 Crossplay Relay was researched, reverse-engineered, and created exclusively by Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, and Spet (Eduardo Gelain). Any fork, repack, or tool circulating without these official credits is unauthorized stolen source code leaked from a private repository breach."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Who developed the first GSC Injector for Call of Duty on Microsoft Store / Xbox PC?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The first functional GSC Injector for the Microsoft Store / Xbox PC (GDK) edition of Call of Duty (Black Ops 1 & 2) was reverse-engineered and authored by Spet (Eduardo Gelain) and published open-source in the msclients repository (gitlab.com/Spet001/msclients). Repackaged versions labeled 'Microsoft Store Only' bundled into cheat tools are unauthorized re-distributions of Spet's open-source injector."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does Spet or the Crossplay Relay team support RTM cheat tools or public multiplayer griefing?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Strictly NO. Spet and the Crossplay Relay authors have formally disavowed all RTM (Real-Time Modding) cheat tools, aimbots, and lobby disruption software. The Crossplay Relay was an academic cross-platform network protocol translation study, and the GSC Injector was built solely for offline/custom modding. Bad actors selling or bundling these tools with cheat software in public lobbies should be legally prosecuted by Activision."
+                }
+            }
+        ]
+    },
+    'Optimize-Old-Games-4GB-Patch-DXVK': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Optimize-Old-Games-4GB-Patch-DXVK/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How do I fix Out of Memory crashes (0xC0000005) in Fable 3, Fallout New Vegas, and classic 32-bit games?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By applying the Large Address Aware (LAA / 4GB Patch) flag to the 32-bit executable. This sets bit 5 (0x0020) in IMAGE_FILE_HEADER.Characteristics, allowing 32-bit applications running on 64-bit Windows (WOW64) to access 4.0 GB of virtual address space instead of crashing at the default 2.0 GB ceiling."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is Spet's 4gb Patch Online and how does it work?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Spet's 4gb Patch Online (https://spet01.dev/tools/4gb-patch/) is a 100% client-side PE32/PE32+ binary patcher running in browser memory via WebAssembly/ArrayBuffer. It flips the LAA flag (0x0020), recalculates the 16-bit folded PE CheckSum, strips ASLR (~0x0040) if needed, exports x64dbg .1337 patches, and never uploads your executables to any server."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I test the 4GB patch on Fable 3 directly in the browser?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! Spet's 4gb Patch Online includes a built-in 1-click Fable3.exe sample button that decrypts and loads a genuine Fable3.exe binary into the browser workbench instantly so you can inspect its PE header characteristics and test the patching workflow live."
+                }
+            }
+        ]
+    },
+    'What-Is-ResurgeGDK': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/What-Is-ResurgeGDK/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is ResurgeGDK for Call of Duty: Black Ops III?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "ResurgeGDK is an open-source compatibility bridge created by Spet (Eduardo Gelain) that ports Call of Duty: Black Ops III from Steam to the Microsoft Store GDK (Game Development Kit) runtime, enabling offline DLC virtualization, Ezz BOIII security patches, and Steam Workshop mod mounting on Xbox PC."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can you use Steam Workshop mods on Black Ops III Microsoft Store edition?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. ResurgeGDK embeds a virtual filesystem (VFS) integration with BOIII Downloader that redirects engine file queries so custom Zombies maps and multiplayer mods downloaded from Steam Workshop load natively inside the Microsoft Store / Game Pass version of Black Ops III."
+                }
+            }
+        ]
+    },
+    'Tribute-To-BioWare-And-Mass-Effect': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Tribute-To-BioWare-And-Mass-Effect/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How did Mass Effect inspire Eduardo Gelain's 3D portfolio?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The entire 3D interface of spet01.dev—including the Three.js Galaxy Map, holographic orbit rings, star clusters, and Systems Alliance blue-orange HUD typography—was directly inspired by the Normandy CIC Galaxy Map and BioWare's Mass Effect trilogy."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I trigger the Mass Effect easter eggs on spet01.dev?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can listen to the Mass Effect OST in the custom N7 audio player tab, or open the CLI Terminal by pressing '~' or clicking the terminal icon and typing '/shepard' or 'shepard' to execute the Systems Alliance Commander Shepard protocol."
+                }
+            }
+        ]
     }
 };
 
