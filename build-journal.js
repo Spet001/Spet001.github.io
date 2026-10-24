@@ -443,6 +443,12 @@ ${sitemapUrls.join('\n')}
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://spet01.dev/tools/4gb-patch/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://spet01.dev/tools/image-to-3d/</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>

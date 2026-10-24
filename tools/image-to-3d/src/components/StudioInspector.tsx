@@ -98,7 +98,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'extrude' | 'shading' | 'materials'>('extrude');
 
-  // Extruder parameters
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [extrudeDepth, setExtrudeDepth] = useState<number>(0.14);
   const [extrudeBevel, setExtrudeBevel] = useState<number>(0.012);
@@ -109,7 +108,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
   const [backgroundTolerance, setBackgroundTolerance] = useState<number>(0.18);
   const [addPedestal, setAddPedestal] = useState<boolean>(false);
 
-  // Backface parameters
   const [backMode, setBackMode] = useState<BackFaceMode>('repeat_front');
   const [backColor, setBackColor] = useState<string>('#18181b');
   const [backImage, setBackImage] = useState<string | null>(null);
@@ -117,7 +115,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
   const [backRoughness, setBackRoughness] = useState<number>(0.4);
   const [backMetalness, setBackMetalness] = useState<number>(0.2);
 
-  // Sync blueprint state
   useEffect(() => {
     if (!blueprint) return;
     if (blueprint.sourceImage && !uploadedImage) {
@@ -152,7 +149,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
     }
   }, [blueprint]);
 
-  // Handle uploaded file
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -242,7 +238,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
 
   return (
     <aside className="w-80 h-full flex flex-col bg-gradient-to-b from-[#07081b]/95 via-[#0e0a29]/95 to-[#160731]/95 border-l border-purple-500/25 text-zinc-100 select-none shrink-0 z-10 backdrop-blur-xl shadow-[-12px_0_40px_rgba(0,0,0,0.7)]">
-      {/* Tab Switcher - Clean typographic tabs */}
+
       <div className="flex items-center border-b border-purple-500/25 bg-[#050616]/90 px-2.5 py-2 gap-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
         <button
           onClick={() => setActiveTab('extrude')}
@@ -276,12 +272,11 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
         </button>
       </div>
 
-      {/* Panel Scrollable Content (CSS Selector 2) - Galaxy multi-colored sections */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs scrollbar-thin scrollbar-thumb-purple-900/50">
-        {/* TAB 1: 2D-TO-3D EXTRUDER */}
+
         {activeTab === 'extrude' && (
           <div className="space-y-4">
-            {/* Section 1: Source Image */}
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-mono tracking-wider uppercase text-pink-300">
@@ -322,7 +317,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                 />
               </label>
 
-              {/* Title input */}
               <div className="space-y-1 pt-1">
                 <label className="text-[10px] font-mono uppercase text-pink-300/80 block">
                   Asset Title
@@ -340,7 +334,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Section 2: Geometry Type */}
             <div className="space-y-1.5 border-t border-purple-500/25 pt-3">
               <span className="text-[11px] font-mono tracking-wider uppercase text-cyan-300 block">
                 Mesh Geometry
@@ -372,7 +365,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Section 3: Background Removal */}
             <div className="space-y-1.5 border-t border-purple-500/25 pt-3">
               <span className="text-[11px] font-mono tracking-wider uppercase text-emerald-300 block">
                 Background Cleanup
@@ -406,13 +398,11 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Section 4: Dimensions & Bevel */}
             <div className="space-y-2.5 border-t border-purple-500/25 pt-3">
               <span className="text-[11px] font-mono tracking-wider uppercase text-violet-300 block">
                 Extrusion & Bevel
               </span>
 
-              {/* Depth */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-zinc-400">Extrusion Depth</span>
@@ -433,7 +423,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                 />
               </div>
 
-              {/* Bevel */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-zinc-400">Bevel Radius</span>
@@ -454,7 +443,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                 />
               </div>
 
-              {/* Edge Finish Color - Starlight Palette */}
               <div className="flex items-center justify-between p-2 rounded bg-gradient-to-r from-[#140d33]/80 to-[#220c3a]/80 border border-violet-500/30">
                 <span className="text-xs text-violet-200">Bevel Wall Color</span>
                 <div className="flex items-center gap-1.5">
@@ -495,7 +483,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Section 5: Back Face Configuration */}
             <div className="space-y-2 border-t border-purple-500/25 pt-3">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-mono tracking-wider uppercase text-amber-300">
@@ -685,7 +672,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               )}
             </div>
 
-            {/* Rebuild Button - Galaxy Cosmic Gradient */}
             <div className="border-t border-purple-500/25 pt-3">
               <button
                 type="button"
@@ -712,10 +698,9 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
           </div>
         )}
 
-        {/* TAB 2: SHADING & VIEWPORT */}
         {activeTab === 'shading' && (
           <div className="space-y-4">
-            {/* Shading Mode */}
+
             <div className="space-y-1.5">
               <span className="text-[11px] font-mono tracking-wider uppercase text-cyan-300 block">
                 Render Mode
@@ -744,7 +729,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Lighting Rig */}
             <div className="space-y-1.5 border-t border-purple-500/25 pt-3">
               <span className="text-[11px] font-mono tracking-wider uppercase text-violet-300 block">
                 Lighting Environment
@@ -771,7 +755,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Camera Views */}
             <div className="space-y-1.5 border-t border-purple-500/25 pt-3">
               <span className="text-[11px] font-mono tracking-wider uppercase text-pink-300 block">
                 Camera Presets
@@ -822,7 +805,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               </div>
             </div>
 
-            {/* Exploded View Slider */}
             <div className="space-y-1.5 border-t border-purple-500/25 pt-3">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="text-zinc-300 uppercase">Exploded Assembly</span>
@@ -839,7 +821,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               />
             </div>
 
-            {/* Viewport Toggles */}
             <div className="space-y-1.5 border-t border-purple-500/25 pt-3">
               <span className="text-[11px] font-mono tracking-wider uppercase text-cyan-300 block">
                 Viewport Overlays
@@ -877,7 +858,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
           </div>
         )}
 
-        {/* TAB 3: PARTS & MATERIALS */}
         {activeTab === 'materials' && (
           <div className="space-y-4">
             {!blueprint ? (
@@ -998,7 +978,6 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
         )}
       </div>
 
-      {/* Footer Export Action - Galactic Multi-Color Gradients */}
       <div className="p-3 border-t border-purple-500/25 bg-[#050616]/95 space-y-2">
         <button
           onClick={onExportGlb}

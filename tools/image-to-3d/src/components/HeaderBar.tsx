@@ -19,7 +19,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 }) => {
   return (
     <header className="h-12 w-full flex items-center justify-between px-4 bg-gradient-to-r from-[#060719]/95 via-[#0f0b2a]/95 via-[#180930]/95 to-[#0b0c22]/95 border-b border-purple-500/25 backdrop-blur-xl text-zinc-100 select-none shrink-0 z-20 shadow-[0_4px_30px_rgba(139,92,246,0.15)]">
-      {/* Brand & Project Name */}
+
       <div className="flex items-center gap-3">
         <a
           href="/"
@@ -41,7 +41,6 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
         </span>
       </div>
 
-      {/* Galaxy Technical Stats with diverse cosmic colors (cyan, violet, fuchsia, amber) */}
       {blueprint && stats.triangles > 0 ? (
         <div className="hidden md:flex items-center gap-3 text-xs font-mono">
           <span className="text-cyan-400 font-medium">{stats.triangles.toLocaleString()} tris</span>
@@ -58,7 +57,6 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
         </div>
       ) : null}
 
-      {/* Primary Actions with Galaxy Gradient & Glow */}
       <div className="flex items-center gap-2">
         {onUploadClick && (
           <button

@@ -22,14 +22,14 @@ export type PatternType =
 
 export interface PartMaterial {
   name: string;
-  color: string; // hex #rrggbb
-  roughness: number; // 0.0 - 1.0
-  metalness: number; // 0.0 - 1.0
-  emissive?: string; // hex #rrggbb
-  emissiveIntensity?: number; // 0.0 - 5.0
-  opacity?: number; // 0.0 - 1.0
+  color: string;
+  roughness: number;
+  metalness: number;
+  emissive?: string;
+  emissiveIntensity?: number;
+  opacity?: number;
   transparent?: boolean;
-  clearcoat?: number; // 0.0 - 1.0
+  clearcoat?: number;
   pattern?: PatternType;
 }
 
@@ -43,17 +43,17 @@ export interface PartGeometryParams {
   radialSegments?: number;
   tubularSegments?: number;
   tubeRadius?: number;
-  // Prism
+
   sides?: number;
-  // Extrude Polygon
+
   polygonPoints?: [number, number][];
   extrudeDepth?: number;
   bevelEnabled?: boolean;
   bevelThickness?: number;
   bevelSize?: number;
-  // Lathe
+
   lathePoints?: [number, number][];
-  // Tube curve
+
   pathPoints?: [number, number, number][];
 }
 
@@ -64,9 +64,9 @@ export interface Part3D {
   geometryType: GeometryType;
   params: PartGeometryParams;
   position: [number, number, number];
-  rotation: [number, number, number]; // in degrees
+  rotation: [number, number, number];
   scale: [number, number, number];
-  symmetrical: boolean; // if true, mirrored across X axis
+  symmetrical: boolean;
   material: PartMaterial;
 }
 

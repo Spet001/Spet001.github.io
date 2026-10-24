@@ -73,7 +73,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
   const [hoveredPartName, setHoveredPartName] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
 
-  // Setup Three.js scene once
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
@@ -81,13 +80,11 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     const width = container.clientWidth;
     const height = container.clientHeight;
 
-    // Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050716); // deep galaxy cosmic night
+    scene.background = new THREE.Color(0x050716);
     scene.fog = new THREE.FogExp2(0x050716, 0.022);
     sceneRef.current = scene;
 
-    // Cosmic Galaxy Starfield
     const starCount = 1200;
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
@@ -130,12 +127,10 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     const starField = new THREE.Points(starGeo, starMat);
     scene.add(starField);
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(4, 3, 5);
     cameraRef.current = camera;
 
-    // Renderer
     const isHeadless =
       typeof navigator !== 'undefined' &&
       (navigator.webdriver || /HeadlessChrome/i.test(navigator.userAgent));
@@ -161,16 +156,14 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
 
-      // Room Environment for PBR reflection
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
       pmremGenerator.dispose();
 
-      // Orbit Controls
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
-      controls.maxPolarAngle = Math.PI / 2 + 0.05; // don't go below ground
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
       controls.minDistance = 1;
       controls.maxDistance = 30;
       controls.target.set(0, 1.0, 0);
@@ -179,7 +172,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
       console.warn('WebGL Renderer could not be initialized:', e);
     }
 
-    // Galaxy 3-Point Lighting Rig
     const hemiLight = new THREE.HemisphereLight(0x00f0ff, 0x180b2b, 0.75);
     scene.add(hemiLight);
     hemiLightRef.current = hemiLight;
@@ -206,13 +198,11 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     scene.add(rimLight);
     rimLightRef.current = rimLight;
 
-    // Grid Floor
     const grid = new THREE.GridHelper(18, 36, 0x00f0ff, 0x162044);
     grid.position.y = -0.005;
     scene.add(grid);
     gridHelperRef.current = grid;
 
-    // Soft Contact Shadow Plane Grounding
     const shadowGeo = new THREE.PlaneGeometry(12, 12);
     const shadowMat = new THREE.ShadowMaterial({ opacity: 0.45 });
     const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
@@ -221,7 +211,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     scene.add(shadowPlane);
     contactShadowPlaneRef.current = shadowPlane;
 
-    // Resize handler
     const handleResize = () => {
       if (!container || !rendererRef.current || !camera) return;
       const w = container.clientWidth;
@@ -232,7 +221,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     };
     window.addEventListener('resize', handleResize);
 
-    // Animation Loop
     let animId: number;
     const clock = new THREE.Clock();
 
@@ -263,7 +251,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     };
   }, []);
 
-  // Update controls auto-turntable
   useEffect(() => {
     if (controlsRef.current) {
       controlsRef.current.autoRotate = autoTurntable;
@@ -271,12 +258,10 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   }, [autoTurntable]);
 
-  // Build model when blueprint changes
   useEffect(() => {
     const scene = sceneRef.current;
     if (!scene) return;
 
-    // Clean up previous model
     if (buildResultRef.current) {
       scene.remove(buildResultRef.current.rootGroup);
       buildResultRef.current.rootGroup.traverse((child) => {
@@ -304,20 +289,16 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
       return;
     }
 
-    // Build new model
     const result = buildModelFromBlueprint(blueprint);
     buildResultRef.current = result;
     rootGroupRef.current = result.rootGroup;
     scene.add(result.rootGroup);
 
-    // Apply initial render mode and exploded view
     applyRenderMode(result.rootGroup, renderMode, showWireframeOverlay);
     updateExplodedView(result.partsMap, result.basePositions, explodedFactor);
 
-    // Notify parent about stats
     onStatsUpdated(result.stats);
 
-    // Re-frame camera to fit new model
     const bbox = new THREE.Box3().setFromObject(result.rootGroup);
     const center = new THREE.Vector3();
     const size = new THREE.Vector3();
@@ -340,12 +321,10 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   }, [blueprint]);
 
-  // Update Render Mode and Wireframe Overlay
   useEffect(() => {
     if (buildResultRef.current) {
       applyRenderMode(buildResultRef.current.rootGroup, renderMode, showWireframeOverlay);
 
-      // Handle Collision & Sockets visibility
       if (buildResultRef.current.collisionGroup) {
         buildResultRef.current.collisionGroup.visible = renderMode === 'collision';
       }
@@ -355,7 +334,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   }, [renderMode, showWireframeOverlay]);
 
-  // Update Exploded View
   useEffect(() => {
     if (buildResultRef.current) {
       updateExplodedView(
@@ -366,7 +344,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   }, [explodedFactor]);
 
-  // Update Lighting Presets
   useEffect(() => {
     if (!keyLightRef.current || !hemiLightRef.current || !rimLightRef.current || !sceneRef.current)
       return;
@@ -414,7 +391,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   }, [lightingPreset]);
 
-  // Update Grid & Shadows
   useEffect(() => {
     if (gridHelperRef.current) {
       gridHelperRef.current.visible = showGrid;
@@ -424,7 +400,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   }, [showGrid, showShadows]);
 
-  // Highlight selected part
   useEffect(() => {
     if (!buildResultRef.current) return;
 
@@ -437,7 +412,7 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
             mat.emissive = new THREE.Color(0x00f0ff);
             mat.emissiveIntensity = 2.0;
           } else {
-            // Restore blueprint material emissive
+
             const orig = mesh.userData.originalMaterial;
             if (orig) {
               mat.emissive.copy(orig.emissive || new THREE.Color(0x000000));
@@ -449,7 +424,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     });
   }, [selectedPartId]);
 
-  // Raycasting for Click / Hover part inspection
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!mountRef.current || !cameraRef.current || !buildResultRef.current) return;
 
@@ -470,7 +444,7 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     if (hit && hit.object.userData.partId) {
       onSelectPart(hit.object.userData.partId);
     } else {
-      // Don't deselect if dragging camera
+
     }
   };
 
@@ -497,7 +471,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
     }
   };
 
-  // Camera Presets
   const setCameraPreset = (preset: 'hero' | 'front' | 'back' | 'side' | 'top' | 'iso') => {
     if (!controlsRef.current || !cameraRef.current || !buildResultRef.current) return;
 
@@ -567,7 +540,7 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Three.js Canvas Container */}
+
       <div
         ref={mountRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
@@ -575,10 +548,8 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
         onPointerMove={handlePointerMove}
       />
 
-      {/* Subtle Stardust Celestial Animation Canvas Overlay */}
       <StardustCanvas />
 
-      {/* Drag & Drop Visual Scrim */}
       {isDragOver && (
         <div className="absolute inset-0 z-30 bg-[#080518]/85 backdrop-blur-md border-2 border-dashed border-pink-400 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-100 shadow-[inset_0_0_60px_rgba(236,72,153,0.3)]">
           <Upload className="w-10 h-10 text-pink-300 mb-2 animate-bounce drop-shadow-[0_0_12px_rgba(236,72,153,0.8)]" />
@@ -587,7 +558,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
         </div>
       )}
 
-      {/* Empty Viewport Center Prompt (When no model is loaded) */}
       {!blueprint && (
         <div className="absolute inset-0 z-20 flex items-center justify-center p-6 pointer-events-none">
           <div className="max-w-md w-full bg-gradient-to-b from-[#0e0a29]/95 via-[#140b36]/95 to-[#0b0822]/95 border border-purple-500/30 rounded-2xl p-8 text-center shadow-[0_15px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(168,85,247,0.2)] backdrop-blur-md pointer-events-auto">
@@ -622,7 +592,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
         </div>
       )}
 
-      {/* Camera View Toolbar (Top-Left) */}
       <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
         <div className="flex items-center gap-0.5 bg-[#0b0c24]/90 border border-purple-500/25 rounded-md p-0.5 text-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md">
           <button
@@ -670,7 +639,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
 
           <span className="w-px h-3.5 bg-purple-500/30 mx-0.5" />
 
-          {/* Turntable Auto-Rotate Toggle */}
           <button
             onClick={() => setAutoTurntable(!autoTurntable)}
             className={`p-1 rounded transition-colors ${
@@ -687,7 +655,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
           </button>
         </div>
 
-        {/* Hovered / Inspected Part Indicator */}
         {hoveredPartName && (
           <div className="bg-[#121215]/90 border border-[#27272a] rounded px-2 py-1 text-[10px] font-mono text-zinc-300 shadow-md flex items-center gap-1.5">
             <Info className="w-3 h-3 text-zinc-400" />
@@ -696,7 +663,6 @@ export const Viewport3D: React.FC<Viewport3DProps> = ({
         )}
       </div>
 
-      {/* Orbit Navigation Guide (Bottom-Left) */}
       <div className="absolute bottom-3 left-3 z-10 pointer-events-none hidden sm:block">
         <div className="bg-[#121215]/80 border border-[#27272a]/80 rounded px-2 py-1 text-[10px] font-mono text-zinc-500 flex items-center gap-3">
           <span>LMB: Rotate</span>

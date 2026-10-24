@@ -540,7 +540,16 @@
 </ul>
 <p>On a 64-bit operating system, when this bit is enabled, the Windows memory manager immediately grants the 32-bit process <strong>the full 4GB Virtual Address Space</strong> (an extra 2GB of headroom). This completely eliminates out-of-memory crashes for modded and memory-heavy classics.</p>
 <h3>How to Apply It Manually:</h3>
-<h4>Option A: Standalone 4GB Patch Utility (Easiest)</h4>
+<h4>Option A: Spet&#39;s 4gb Patch Online — Zero-Install In-Browser Patcher (Fastest)</h4>
+<p>You don&#39;t even need to download an external <code>.exe</code> tool anymore! I built <a href="/tools/4gb-patch/"><strong>Spet&#39;s 4gb Patch Online</strong></a> right into this website:</p>
+<ol>
+<li>Open <strong><a href="https://spet01.dev/tools/4gb-patch/">https://spet01.dev/tools/4gb-patch/</a></strong> in your browser.</li>
+<li><strong>Drag and drop</strong> your game&#39;s executable (e.g., <code>Fable3.exe</code>, <code>FalloutNV.exe</code>, <code>Oblivion.exe</code>, <code>DAO.exe</code>) into the dropzone — or click <strong>&quot;Load real sample: Fable3.exe (27.7 MB) →&quot;</strong> to test the live PE32 patcher directly on <em>Fable III</em>&#39;s executable!</li>
+<li>Everything runs <strong>100% locally in your browser memory via <code>ArrayBuffer</code></strong> (zero server uploads — your file never leaves your PC).</li>
+<li>Ensure <strong>4GB Patch (Large Address Aware — <code>0x0020</code>)</strong> and <strong>Recalculate PE Checksum</strong> are checked. You can also inspect the exact byte diff (<code>FILE_HEADER.Characteristics</code> + <code>OPTIONAL_HEADER.CheckSum</code>), browse the PE sections/hex editor, or save an unmodified <code>.bak</code> backup copy with 1 click.</li>
+<li>Click <strong>Download Patched .EXE</strong> and replace your original executable in the game folder.</li>
+</ol>
+<h4>Option B: Classic Standalone 4GB Patch Utility (Desktop)</h4>
 <ol>
 <li>Download Daniel Pistelli&#39;s classic standalone <strong>4GB Patch tool</strong> (from NTCore or mod repositories).</li>
 <li><strong>Make a backup</strong> of your game&#39;s original <code>.exe</code> (e.g., copy <code>Game.exe</code> to <code>Game.exe.bak</code>).</li>
@@ -549,7 +558,7 @@
 <li>Click <strong>Open</strong>. A dialog box will immediately confirm:<br><code>&quot;Executable successfully patched!&quot;</code></li>
 <li>That&#39;s it! The tool automatically flips the PE header bit and creates a <code>.Backup</code> file.</li>
 </ol>
-<h4>Option B: Developer Command Line (Visual Studio <code>editbin</code>)</h4>
+<h4>Option C: Developer Command Line (Visual Studio <code>editbin</code>)</h4>
 <p>If you have Visual Studio or the Windows SDK installed, you can toggle the flag from developer PowerShell / CMD without external GUI tools:</p>
 <pre><code class="language-powershell"># Apply Large Address Aware flag
 editbin.exe /LARGEADDRESSAWARE &quot;C:\Games\YourGame\Game.exe&quot;
@@ -638,7 +647,7 @@ info:  Device: NVIDIA GeForce RTX ... (or AMD / Intel)
 <tbody><tr>
 <td align="left"><strong>4GB Patch (LAA)</strong></td>
 <td align="left">Out-of-memory crashes, texture pop-in, crash to desktop (CTD)</td>
-<td align="left">Run <code>4gb_patch.exe</code> on the game binary to flip the <code>IMAGE_FILE_LARGE_ADDRESS_AWARE</code> flag</td>
+<td align="left">Patch your <code>.exe</code> in-browser with <strong><a href="/tools/4gb-patch/">Spet&#39;s 4gb Patch Online</a></strong> (or <code>4gb_patch.exe</code>) to flip <code>IMAGE_FILE_LARGE_ADDRESS_AWARE</code> (<code>0x0020</code>)</td>
 </tr>
 <tr>
 <td align="left"><strong>DXVK</strong></td>

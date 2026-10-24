@@ -8,12 +8,11 @@ export async function exportToGlb(
 ): Promise<Blob> {
   const exporter = new GLTFExporter();
 
-  // Find the model meshes group (exclude helper gizmos)
   const exportGroup = new THREE.Group();
   exportGroup.name = filename.replace(/\.(glb|gltf)$/i, '');
 
   rootGroup.traverse((child) => {
-    // Only include real meshes that are part of the asset
+
     if (child instanceof THREE.Mesh && child.userData.partId) {
       const clonedMesh = child.clone();
       clonedMesh.material = Array.isArray(child.material) ? child.material.slice() : child.material;
@@ -35,7 +34,7 @@ export async function exportToGlb(
           const blob = new Blob([result], { type: 'model/gltf-binary' });
           resolve(blob);
         } else {
-          // If returned as JSON object
+
           const jsonString = JSON.stringify(result, null, 2);
           const blob = new Blob([jsonString], { type: 'application/json' });
           resolve(blob);
@@ -112,10 +111,8 @@ export function exportToObj(
 
       output += `o ${child.name || 'Part'}\n`;
 
-      // World matrix transformation
       const matrix = child.matrixWorld;
 
-      // Vertices
       const v = new THREE.Vector3();
       for (let i = 0; i < positionAttr.count; i++) {
         v.fromBufferAttribute(positionAttr, i);
@@ -123,14 +120,12 @@ export function exportToObj(
         output += `v ${v.x.toFixed(4)} ${v.y.toFixed(4)} ${v.z.toFixed(4)}\n`;
       }
 
-      // UVs
       if (uvAttr) {
         for (let i = 0; i < uvAttr.count; i++) {
           output += `vt ${uvAttr.getX(i).toFixed(4)} ${uvAttr.getY(i).toFixed(4)}\n`;
         }
       }
 
-      // Normals
       if (normalAttr) {
         const normalMatrix = new THREE.Matrix3().getNormalMatrix(matrix);
         const n = new THREE.Vector3();
@@ -141,7 +136,6 @@ export function exportToObj(
         }
       }
 
-      // Faces
       output += `s 1\n`;
       if (indexAttr) {
         for (let i = 0; i < indexAttr.count; i += 3) {
@@ -204,13 +198,13 @@ export function generateManifestJson(
     sockets: blueprint.sockets,
     gameEngineGuidance: {
       unrealEngine: {
-        importScale: 100, // Meters to Centimeters (UE standard)
+        importScale: 100,
         forwardAxis: 'X',
         upAxis: 'Z',
         socketUsage: 'Sockets can be converted directly into StaticMesh Sockets in UE5 Mesh Editor.',
       },
       unity: {
-        importScale: 1, // Unity uses 1 unit = 1 meter
+        importScale: 1,
         forwardAxis: 'Z',
         upAxis: 'Y',
       },

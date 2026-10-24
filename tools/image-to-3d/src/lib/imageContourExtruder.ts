@@ -11,22 +11,22 @@ import {
 export type { ShapeMode, BackgroundMode, BackFaceMode };
 
 export interface ExtrusionOptions {
-  depth: number; // 0.04 to 1.5
-  bevelSize: number; // 0.005 to 0.15
-  edgeColor: string; // hex color for bevel side walls
+  depth: number;
+  bevelSize: number;
+  edgeColor: string;
   edgeMetalness: number;
   edgeRoughness: number;
-  shapeMode?: ShapeMode; // 'auto' | 'card' | 'contour' | 'plaque'
-  backgroundMode?: BackgroundMode; // 'auto' | 'transparent' | 'remove_white' | 'remove_black' | 'remove_corner' | 'keep_all'
-  backgroundTolerance?: number; // 0.05 to 0.5 (default 0.18)
-  cardCornerRadius?: number; // 0 to 0.2
-  // Back Face Options
+  shapeMode?: ShapeMode;
+  backgroundMode?: BackgroundMode;
+  backgroundTolerance?: number;
+  cardCornerRadius?: number;
+
   backMode: BackFaceMode;
-  backColor?: string; // hex color for solid fill
+  backColor?: string;
   backRoughness?: number;
   backMetalness?: number;
-  backImageSource?: string | null; // data URL or image for back face
-  backMirror?: boolean; // whether to mirror UV horizontally for physical stencil punch-through
+  backImageSource?: string | null;
+  backMirror?: boolean;
   addPedestal?: boolean;
 }
 
@@ -41,10 +41,6 @@ interface Point2D {
   y: number;
 }
 
-/**
- * Transforms any uploaded 2D image, game logo, trading card, or intricate medallion
- * into a high-fidelity 3D extruded mesh with beveled PBR edges and clean multi-material grouping.
- */
 export async function create3DFromImage(
   imageSource: string | HTMLImageElement,
   title: string = '3D Extruded Asset',
@@ -65,7 +61,6 @@ export async function create3DFromImage(
 ): Promise<ExtrusionResult> {
   const img = await loadImage(imageSource);
 
-  // 1. High Resolution Canvas Inspection (512px for crisp sub-pixel curve fidelity)
   const inspectDim = 512;
   const scale = Math.min(inspectDim / Math.max(img.width, 1), inspectDim / Math.max(img.height, 1), 1);
   const w = Math.max(32, Math.round(img.width * scale));
@@ -81,7 +76,6 @@ export async function create3DFromImage(
   const imgData = ctx.getImageData(0, 0, w, h);
   const data = imgData.data;
 
-  // 2. Alpha Transparency & Corner Background Analysis
   let transparentCount = 0;
   const totalPixels = w * h;
   for (let i = 3; i < data.length; i += 4) {
@@ -91,7 +85,6 @@ export async function create3DFromImage(
   }
   const transparentRatio = transparentCount / totalPixels;
 
-  // Smart 4-corner sample to detect uniform solid background
   const cornerSize = Math.max(3, Math.min(14, Math.floor(Math.min(w, h) * 0.06)));
   let cornerRSum = 0;
   let cornerGSum = 0;
@@ -137,7 +130,6 @@ export async function create3DFromImage(
   const isWhiteCorner = avgCornerR > 215 && avgCornerG > 215 && avgCornerB > 215;
   const isBlackCorner = avgCornerR < 40 && avgCornerG < 40 && avgCornerB < 40;
 
-  // 3. Effective Background Segmentation Mode
   const userBgMode = options.backgroundMode ?? 'auto';
   let effectiveBgMode: 'transparent' | 'remove_white' | 'remove_black' | 'remove_corner' | 'keep_all';
 
@@ -153,14 +145,13 @@ export async function create3DFromImage(
         effectiveBgMode = 'remove_corner';
       }
     } else {
-      // Non-uniform corners (e.g. trading card or photographic background)
+
       effectiveBgMode = 'keep_all';
     }
   } else {
     effectiveBgMode = userBgMode;
   }
 
-  // 4. Build Binary Foreground Grid & Detect Content Bounding Box
   const grid: Float32Array[] = Array.from({ length: h }, () => new Float32Array(w));
   const tolerance = (options.backgroundTolerance ?? 0.18) * 441.67;
 
@@ -216,7 +207,6 @@ export async function create3DFromImage(
     }
   }
 
-  // 5. Determine Effective Shape Mode
   const foregroundRatio = foregroundCount / totalPixels;
   let effectiveShapeMode: 'card' | 'contour' | 'plaque';
 
@@ -227,7 +217,7 @@ export async function create3DFromImage(
   } else if (options.shapeMode === 'contour') {
     effectiveShapeMode = 'contour';
   } else {
-    // Auto Mode: if background was kept or foreground is almost the entire frame, treat as card
+
     if (effectiveBgMode === 'keep_all' || foregroundRatio > 0.94) {
       effectiveShapeMode = 'card';
     } else {
@@ -235,7 +225,6 @@ export async function create3DFromImage(
     }
   }
 
-  // 6. Content Trimming (Auto-Crop) to Eliminate Empty Margins
   const hasValidBounds = maxContentX >= minContentX && maxContentY >= minContentY;
   const isTrimmable = effectiveShapeMode !== 'card' && hasValidBounds;
 
@@ -250,7 +239,6 @@ export async function create3DFromImage(
   const cropW = Math.max(16, cropR - cropX + 1);
   const cropH = Math.max(16, cropB - cropY + 1);
 
-  // Target 3D dimensions based on true trimmed content aspect ratio
   const targetWidth = 3.2;
   const contentAspect = cropH / Math.max(cropW, 1);
   const targetHeight = targetWidth * contentAspect;
@@ -287,7 +275,6 @@ export async function create3DFromImage(
     }
   }
 
-  // 7. Textures & Materials
   const texture = new THREE.Texture(img);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.minFilter = THREE.LinearMipmapLinearFilter;
@@ -343,7 +330,7 @@ export async function create3DFromImage(
       });
     }
   } else {
-    // repeat_front
+
     backMaterial = new THREE.MeshStandardMaterial({
       map: texture,
       roughness: options.backRoughness ?? 0.35,
@@ -355,7 +342,6 @@ export async function create3DFromImage(
   const rootGroup = new THREE.Group();
   rootGroup.name = 'Extruded_Asset_3D';
 
-  // Adaptive Bevel: Clamp bevel for delicate contours so thin spokes/rings never self-intersect
   const safeDepth = Math.max(0.04, options.depth);
   const maxBevelContour = effectiveShapeMode === 'contour' ? 0.016 : safeDepth * 0.45;
   const safeBevel = Math.min(options.bevelSize, maxBevelContour);
@@ -369,7 +355,6 @@ export async function create3DFromImage(
     bevelThickness: safeBevel,
   };
 
-  // 8. Extrude All Shapes Simultaneously
   let rawExtrudeGeometry: THREE.BufferGeometry;
   try {
     rawExtrudeGeometry = new THREE.ExtrudeGeometry(threeShapes, extrudeSettings);
@@ -379,7 +364,6 @@ export async function create3DFromImage(
     rawExtrudeGeometry = new THREE.ExtrudeGeometry(fallbackShape, extrudeSettings);
   }
 
-  // Compute unshifted center for 100% precision UV mapping
   rawExtrudeGeometry.computeBoundingBox();
   const centerShift = new THREE.Vector3();
   if (rawExtrudeGeometry.boundingBox) {
@@ -388,10 +372,6 @@ export async function create3DFromImage(
   rawExtrudeGeometry.center();
   rawExtrudeGeometry.computeVertexNormals();
 
-  // 9. Reorder & Partition Geometry into 3 Clean Multi-Material Groups:
-  // Material 0: Front Lid (with sub-pixel image UVs)
-  // Material 1: Bevel & Side Walls (with edgeColor metallic finish)
-  // Material 2: Back Lid (with readable or stencil-aligned UVs)
   const unifiedGeometry = reorderAndPartitionExtrusion(
     rawExtrudeGeometry,
     centerShift,
@@ -418,7 +398,6 @@ export async function create3DFromImage(
 
   rootGroup.add(mainMesh);
 
-  // 10. Optional Plaque Backing (Shield / Trophy relief base)
   if (effectiveShapeMode === 'plaque') {
     const plaqueMargin = 0.16;
     const plaqueW = targetWidth + plaqueMargin * 2;
@@ -447,7 +426,6 @@ export async function create3DFromImage(
     rootGroup.add(plaqueMesh);
   }
 
-  // 11. Optional Studio Pedestal Mount
   if (options.addPedestal) {
     const baseW = targetWidth * 0.85;
     const baseH = 0.22;
@@ -465,7 +443,6 @@ export async function create3DFromImage(
     rootGroup.add(pedestalMesh);
   }
 
-  // 12. Blueprint Parts and Stats
   const posAttr = unifiedGeometry.getAttribute('position');
   const vertCount = posAttr ? posAttr.count : 0;
   const triCount = Math.round(vertCount / 3);
@@ -562,9 +539,6 @@ export async function create3DFromImage(
   };
 }
 
-/**
- * Creates a smooth rounded card shape
- */
 export function createRoundedCardShape(width: number, height: number, radius: number): THREE.Shape {
   const shape = new THREE.Shape();
   const hw = width / 2;
@@ -585,10 +559,6 @@ export function createRoundedCardShape(width: number, height: number, radius: nu
   return shape;
 }
 
-/**
- * Traces 2D contours using Marching Squares isoline extraction with topological hole assignment.
- * Generates 100% water-tight, non-self-intersecting vector loops with RDP simplification.
- */
 function traceMarchingSquaresContours(
   grid: Float32Array[],
   w: number,
@@ -600,11 +570,10 @@ function traceMarchingSquaresContours(
   targetWidth: number,
   targetHeight: number
 ): THREE.Shape[] {
-  // 1. Generate directed boundary segments from Marching Squares
+
   const segments = extractMarchingSquaresSegments(grid, w, h);
   if (segments.length === 0) return [];
 
-  // 2. Link directed segments into closed loops
   const rawLoops = linkSegmentsToLoops(segments);
   if (rawLoops.length === 0) return [];
 
@@ -620,21 +589,17 @@ function traceMarchingSquaresContours(
   for (const loop of rawLoops) {
     if (loop.length < 4) continue;
     const area = calculateSignedPolygonArea(loop);
-    if (Math.abs(area) < 16) continue; // filter out single-pixel noise
+    if (Math.abs(area) < 16) continue;
 
-    // Simplify with Ramer-Douglas-Peucker to keep straight edges true and right angles crisp
     const simplified = simplifyRDP(loop, 0.55);
     if (simplified.length < 3) continue;
 
-    // Convert pixel coordinates to 3D shape units
     const pts3D = simplified.map((p) => {
       const nx = ((p.x - cropX) / cropW - 0.5) * targetWidth;
       const ny = (0.5 - (p.y - cropY) / cropH) * targetHeight;
       return new THREE.Vector2(nx, ny);
     });
 
-    // In Marching Squares with directed edges (inside on right):
-    // In screen space (y downwards), outer boundary has negative signed area; hole has positive signed area.
     const isHole = area > 0;
 
     analyzed.push({
@@ -647,17 +612,15 @@ function traceMarchingSquaresContours(
 
   if (analyzed.length === 0) return [];
 
-  // 3. Separate into Outer Shapes and Holes
   const outerContours = analyzed.filter((c) => !c.isHole);
   const holeContours = analyzed.filter((c) => c.isHole);
 
   if (outerContours.length === 0 && holeContours.length > 0) {
-    // Inverted image fallback
+
     outerContours.push(...holeContours.map((h) => ({ ...h, isHole: false })));
     holeContours.length = 0;
   }
 
-  // Sort outer contours by absolute area descending
   outerContours.sort((a, b) => Math.abs(b.signedArea) - Math.abs(a.signedArea));
 
   const shapes: THREE.Shape[] = [];
@@ -665,7 +628,7 @@ function traceMarchingSquaresContours(
 
   for (const outer of outerContours) {
     const shape = new THREE.Shape();
-    // In Three.js, outer shapes must be Counter-Clockwise (positive area)
+
     const pts = ensureWinding(outer.pts3D, true);
     shape.moveTo(pts[0].x, pts[0].y);
     for (let k = 1; k < pts.length; k++) {
@@ -677,7 +640,6 @@ function traceMarchingSquaresContours(
     shapeMap.set(outer, shape);
   }
 
-  // 4. Assign each hole to the enclosing outer shape with smallest area (tightest parent)
   for (const hole of holeContours) {
     const testPoint = hole.rawPts[0];
     let bestParent: AnalyzedContour | null = null;
@@ -698,7 +660,7 @@ function traceMarchingSquaresContours(
     if (bestParent && shapeMap.has(bestParent)) {
       const parentShape = shapeMap.get(bestParent)!;
       const holePath = new THREE.Path();
-      // In Three.js, holes must be Clockwise (negative area)
+
       const pts = ensureWinding(hole.pts3D, false);
       holePath.moveTo(pts[0].x, pts[0].y);
       for (let k = 1; k < pts.length; k++) {
@@ -712,9 +674,6 @@ function traceMarchingSquaresContours(
   return shapes;
 }
 
-/**
- * Marching Squares directed segment table (inside on the right).
- */
 function extractMarchingSquaresSegments(grid: Float32Array[], w: number, h: number): [Point2D, Point2D][] {
   const segments: [Point2D, Point2D][] = [];
 
@@ -785,9 +744,6 @@ function extractMarchingSquaresSegments(grid: Float32Array[], w: number, h: numb
   return segments;
 }
 
-/**
- * Links directed Marching Squares segments into continuous closed loops.
- */
 function linkSegmentsToLoops(segments: [Point2D, Point2D][]): Point2D[][] {
   const pKey = (p: Point2D) => p.x.toFixed(2) + '_' + p.y.toFixed(2);
   const headMap = new Map<string, number[]>();
@@ -843,14 +799,6 @@ function linkSegmentsToLoops(segments: [Point2D, Point2D][]): Point2D[][] {
   return loops;
 }
 
-/**
- * Reorders triangles and constructs 3 clean, multi-material groups for ExtrudeGeometry:
- * - Group 0: Front face (Material 0)
- * - Group 1: Side / Bevel walls (Material 1)
- * - Group 2: Back face (Material 2)
- *
- * Also computes sub-pixel planar UV coordinates with horizontal orientation handling.
- */
 function reorderAndPartitionExtrusion(
   rawGeo: THREE.BufferGeometry,
   centerShift: THREE.Vector3,
@@ -913,7 +861,6 @@ function reorderAndPartitionExtrusion(
       newNorm[outIdx + 1] = norm.array[inIdx + 1];
       newNorm[outIdx + 2] = norm.array[inIdx + 2];
 
-      // Unshifted original coordinate for exact UV mapping
       const origX = x + centerShift.x;
       const origY = y + centerShift.y;
 
@@ -924,20 +871,15 @@ function reorderAndPartitionExtrusion(
       const vFront = 1.0 - (cropY + (1.0 - Math.max(0, Math.min(1, vRel))) * cropH) / fullH;
 
       if (outT < frontTris.length) {
-        // Front Face: exact texture alignment
+
         uvs[uvIdx] = uFront;
         uvs[uvIdx + 1] = vFront;
       } else if (outT < frontTris.length + sideTris.length) {
-        // Side & Bevel Walls: mapped to edge color
+
         uvs[uvIdx] = 0.5;
         uvs[uvIdx + 1] = 0.5;
       } else {
-        // Back Face:
-        // By default (mirrorBack === false):
-        // Direct silhouette projection (uBack = uFront, vBack = vFront).
-        // Each 3D letter, glyph, character, or detail gets its exact authentic texture on both front and back!
-        // If mirrorBack === true:
-        // Inverted horizontal projection across the content bounding box
+
         const uRelBack = mirrorBack ? 1.0 - uRel : uRel;
         const uBack = (cropX + Math.max(0, Math.min(1, uRelBack)) * cropW) / fullW;
         uvs[uvIdx] = uBack;
@@ -952,16 +894,13 @@ function reorderAndPartitionExtrusion(
   geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
   geometry.clearGroups();
-  geometry.addGroup(0, frontCount, 0); // Front Face (Material 0)
-  geometry.addGroup(frontCount, sideCount, 1); // Side / Bevel Walls (Material 1)
-  geometry.addGroup(frontCount + sideCount, backCount, 2); // Back Face (Material 2)
+  geometry.addGroup(0, frontCount, 0);
+  geometry.addGroup(frontCount, sideCount, 1);
+  geometry.addGroup(frontCount + sideCount, backCount, 2);
 
   return geometry;
 }
 
-/**
- * Ensures a Vector2 loop has the desired winding order (counter-clockwise or clockwise).
- */
 function ensureWinding(pts: THREE.Vector2[], counterClockwise: boolean): THREE.Vector2[] {
   let signedArea = 0;
   for (let i = 0; i < pts.length; i++) {
@@ -975,9 +914,6 @@ function ensureWinding(pts: THREE.Vector2[], counterClockwise: boolean): THREE.V
   return pts;
 }
 
-/**
- * Point-in-polygon ray-casting test
- */
 function isPointInsidePolygon(point: Point2D, vs: Point2D[]): boolean {
   const x = point.x;
   const y = point.y;
@@ -996,9 +932,6 @@ function isPointInsidePolygon(point: Point2D, vs: Point2D[]): boolean {
   return inside;
 }
 
-/**
- * Calculates signed polygon area in screen coordinates
- */
 function calculateSignedPolygonArea(pts: Point2D[]): number {
   let area = 0;
   for (let i = 0; i < pts.length; i++) {
@@ -1009,9 +942,6 @@ function calculateSignedPolygonArea(pts: Point2D[]): number {
   return area / 2;
 }
 
-/**
- * Ramer-Douglas-Peucker line simplification
- */
 function simplifyRDP(points: Point2D[], epsilon: number): Point2D[] {
   if (points.length <= 2) return points;
 
@@ -1044,9 +974,6 @@ function perpendicularDistance(p: Point2D, p1: Point2D, p2: Point2D): number {
   return Math.abs(dy * p.x - dx * p.y + p2.x * p1.y - p2.y * p1.x) / mag;
 }
 
-/**
- * Loads an image from a URL or HTMLImageElement
- */
 function loadImage(source: string | HTMLImageElement): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     if (typeof source !== 'string') {
@@ -1063,7 +990,7 @@ function loadImage(source: string | HTMLImageElement): Promise<HTMLImageElement>
     img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
     img.onerror = () => {
-      // If external fetch fails, gracefully fall back to locally cached official asset
+
       if (source.includes('encrypted-tbn0.gstatic.com')) {
         img.src = '/card_backs/yugioh_back.jpg';
       } else if (source.includes('wixmp.com')) {
@@ -1078,9 +1005,6 @@ function loadImage(source: string | HTMLImageElement): Promise<HTMLImageElement>
   });
 }
 
-/**
- * Updates the back material of the main extruded mesh in realtime without re-extruding.
- */
 export async function updateBackMaterialInGroup(
   group: THREE.Group,
   options: {
@@ -1126,4 +1050,3 @@ export async function updateBackMaterialInGroup(
     }
   });
 }
-

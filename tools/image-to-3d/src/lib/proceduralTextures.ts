@@ -23,7 +23,6 @@ export function getProceduralTexture(
     return fallback;
   }
 
-  // Parse base color
   const threeColor = new THREE.Color(baseColorHex);
   const r = Math.floor(threeColor.r * 255);
   const g = Math.floor(threeColor.g * 255);
@@ -34,11 +33,10 @@ export function getProceduralTexture(
 
   switch (pattern) {
     case 'panel_lines': {
-      // Sci-fi armor panel seams and rivets
+
       ctx.strokeStyle = `rgba(${Math.max(0, r - 70)}, ${Math.max(0, g - 70)}, ${Math.max(0, b - 70)}, 0.8)`;
       ctx.lineWidth = 3;
 
-      // Draw grid panels
       const gridSize = 128;
       for (let x = 0; x <= 512; x += gridSize) {
         ctx.beginPath();
@@ -52,7 +50,6 @@ export function getProceduralTexture(
         ctx.stroke();
       }
 
-      // Panel bevel highlight
       ctx.strokeStyle = `rgba(${Math.min(255, r + 50)}, ${Math.min(255, g + 50)}, ${Math.min(255, b + 50)}, 0.4)`;
       ctx.lineWidth = 1;
       for (let x = 1; x <= 512; x += gridSize) {
@@ -62,7 +59,6 @@ export function getProceduralTexture(
         ctx.stroke();
       }
 
-      // Corner rivets
       ctx.fillStyle = `rgba(${Math.max(0, r - 90)}, ${Math.max(0, g - 90)}, ${Math.max(0, b - 90)}, 0.9)`;
       for (let x = gridSize; x < 512; x += gridSize) {
         for (let y = gridSize; y < 512; y += gridSize) {
@@ -78,7 +74,7 @@ export function getProceduralTexture(
     }
 
     case 'carbon_fiber': {
-      // 2x2 carbon weave
+
       const step = 8;
       for (let x = 0; x < 512; x += step) {
         for (let y = 0; y < 512; y += step) {
@@ -93,7 +89,7 @@ export function getProceduralTexture(
     }
 
     case 'hex_grid': {
-      // Futuristic honeycomb lattice
+
       ctx.strokeStyle = `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 90)}, ${Math.min(255, b + 100)}, 0.75)`;
       ctx.lineWidth = 2;
       const hexRadius = 24;
@@ -112,7 +108,7 @@ export function getProceduralTexture(
     }
 
     case 'brushed_metal': {
-      // Fine linear streaks
+
       ctx.lineWidth = 1;
       for (let i = 0; i < 400; i++) {
         const y = Math.random() * 512;
@@ -130,12 +126,12 @@ export function getProceduralTexture(
     }
 
     case 'hazard_stripes': {
-      // High-contrast industrial yellow & black hazard stripes
+
       const stripeWidth = 32;
-      ctx.fillStyle = '#facc15'; // vivid hazard yellow
+      ctx.fillStyle = '#facc15';
       ctx.fillRect(0, 0, 512, 512);
 
-      ctx.fillStyle = '#18181b'; // dark zinc black
+      ctx.fillStyle = '#18181b';
       ctx.beginPath();
       for (let x = -512; x < 1024; x += stripeWidth * 2) {
         ctx.moveTo(x, 0);
@@ -149,7 +145,7 @@ export function getProceduralTexture(
     }
 
     case 'circuit': {
-      // Cyber PCB circuit tracks
+
       ctx.strokeStyle = `rgba(${Math.min(255, r + 90)}, ${Math.min(255, g + 110)}, ${Math.min(255, b + 120)}, 0.65)`;
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
@@ -171,7 +167,6 @@ export function getProceduralTexture(
         }
         ctx.stroke();
 
-        // Node dots
         ctx.fillStyle = '#00f0ff';
         const start = track[0];
         const end = track[track.length - 1];
@@ -186,13 +181,12 @@ export function getProceduralTexture(
     }
 
     case 'rune_glow': {
-      // Magical glowing runes
+
       ctx.strokeStyle = `rgba(${Math.min(255, r + 100)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 120)}, 0.8)`;
       ctx.lineWidth = 3;
       ctx.shadowColor = baseColorHex;
       ctx.shadowBlur = 12;
 
-      // Draw mystical circles
       ctx.beginPath();
       ctx.arc(256, 256, 180, 0, Math.PI * 2);
       ctx.stroke();
@@ -200,7 +194,6 @@ export function getProceduralTexture(
       ctx.arc(256, 256, 140, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Inscribed star
       for (let i = 0; i < 6; i++) {
         const angle = (i * Math.PI) / 3;
         ctx.beginPath();
@@ -212,7 +205,7 @@ export function getProceduralTexture(
     }
 
     default:
-      // Clean smooth surface
+
       break;
   }
 
@@ -245,7 +238,6 @@ export function getUvCheckerTexture(): THREE.CanvasTexture {
         ctx.fillStyle = isOdd ? '#27272a' : '#e4e4e7';
         ctx.fillRect(x, y, size, size);
 
-        // Print coordinates
         ctx.fillStyle = isOdd ? '#71717a' : '#a1a1aa';
         ctx.font = 'bold 12px monospace';
         ctx.fillText(`U${x / size}V${y / size}`, x + 6, y + 20);

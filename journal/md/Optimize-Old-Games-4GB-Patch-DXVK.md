@@ -27,7 +27,15 @@ On a 64-bit operating system, when this bit is enabled, the Windows memory manag
 
 ### How to Apply It Manually:
 
-#### Option A: Standalone 4GB Patch Utility (Easiest)
+#### Option A: Spet's 4gb Patch Online — Zero-Install In-Browser Patcher (Fastest)
+You don't even need to download an external `.exe` tool anymore! I built [**Spet's 4gb Patch Online**](/tools/4gb-patch/) right into this website:
+1. Open **[https://spet01.dev/tools/4gb-patch/](https://spet01.dev/tools/4gb-patch/)** in your browser.
+2. **Drag and drop** your game's executable (e.g., `Fable3.exe`, `FalloutNV.exe`, `Oblivion.exe`, `DAO.exe`) into the dropzone — or click **"Load real sample: Fable3.exe (27.7 MB) →"** to test the live PE32 patcher directly on *Fable III*'s executable!
+3. Everything runs **100% locally in your browser memory via `ArrayBuffer`** (zero server uploads — your file never leaves your PC).
+4. Ensure **4GB Patch (Large Address Aware — `0x0020`)** and **Recalculate PE Checksum** are checked. You can also inspect the exact byte diff (`FILE_HEADER.Characteristics` + `OPTIONAL_HEADER.CheckSum`), browse the PE sections/hex editor, or save an unmodified `.bak` backup copy with 1 click.
+5. Click **Download Patched .EXE** and replace your original executable in the game folder.
+
+#### Option B: Classic Standalone 4GB Patch Utility (Desktop)
 1. Download Daniel Pistelli's classic standalone **4GB Patch tool** (from NTCore or mod repositories).
 2. **Make a backup** of your game's original `.exe` (e.g., copy `Game.exe` to `Game.exe.bak`).
 3. Run `4gb_patch.exe`.
@@ -36,7 +44,7 @@ On a 64-bit operating system, when this bit is enabled, the Windows memory manag
    `"Executable successfully patched!"`
 6. That's it! The tool automatically flips the PE header bit and creates a `.Backup` file.
 
-#### Option B: Developer Command Line (Visual Studio `editbin`)
+#### Option C: Developer Command Line (Visual Studio `editbin`)
 If you have Visual Studio or the Windows SDK installed, you can toggle the flag from developer PowerShell / CMD without external GUI tools:
 ```powershell
 # Apply Large Address Aware flag
@@ -133,7 +141,7 @@ If you want modern post-processing (ambient occlusion, sharpening, bloom, film g
 
 | Optimization | What It Solves | How to Do It |
 | :--- | :--- | :--- |
-| **4GB Patch (LAA)** | Out-of-memory crashes, texture pop-in, crash to desktop (CTD) | Run `4gb_patch.exe` on the game binary to flip the `IMAGE_FILE_LARGE_ADDRESS_AWARE` flag |
+| **4GB Patch (LAA)** | Out-of-memory crashes, texture pop-in, crash to desktop (CTD) | Patch your `.exe` in-browser with **[Spet's 4gb Patch Online](/tools/4gb-patch/)** (or `4gb_patch.exe`) to flip `IMAGE_FILE_LARGE_ADDRESS_AWARE` (`0x0020`) |
 | **DXVK** | Low FPS, CPU single-thread bottlenecks, frame drops on modern GPUs | Drop `d3d9.dll` (from DXVK `x32`) into the game folder next to `.exe` |
 
 By spending 2 minutes copying `d3d9.dll` and running the 4GB patch, you can transform almost any abandoned 2000s or 2010s PC game from a stuttery, crashing mess into a fluid, rock-solid 60/120+ FPS modern experience.

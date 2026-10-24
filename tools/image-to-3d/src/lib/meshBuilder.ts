@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { Model3DBlueprint, Part3D, RenderMode, ViewportStats } from '../types/model3d';
 import { getProceduralTexture, getUvCheckerTexture } from './proceduralTextures';
 
-// Shared materials for special render modes
 let normalMaterial: THREE.MeshNormalMaterial | null = null;
 let clayMaterial: THREE.MeshStandardMaterial | null = null;
 let uvCheckerMaterial: THREE.MeshBasicMaterial | null = null;
@@ -37,7 +36,7 @@ function getSpecialMaterial(mode: RenderMode): THREE.Material | null {
 
 export interface BuildResult {
   rootGroup: THREE.Group;
-  partsMap: Map<string, THREE.Mesh[]>; // part id -> meshes (including mirrored)
+  partsMap: Map<string, THREE.Mesh[]>;
   basePositions: Map<THREE.Mesh, THREE.Vector3>;
   collisionGroup: THREE.Group;
   socketsGroup: THREE.Group;
@@ -92,7 +91,6 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
       mesh.castShadow = true;
       mesh.receiveShadow = true;
 
-      // Position, rotation, scale
       mesh.position.set(part.position[0], part.position[1], part.position[2]);
       mesh.rotation.set(
         THREE.MathUtils.degToRad(part.rotation[0]),
@@ -114,7 +112,6 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
 
       const meshesList = [mesh];
 
-      // Compute stats
       const triCount = geometry.index
         ? geometry.index.count / 3
         : geometry.attributes.position.count / 3;
@@ -122,7 +119,6 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
       totalVertices += geometry.attributes.position.count;
       drawCalls++;
 
-      // Handle Symmetry (duplicate across X axis)
       if (part.symmetrical && Math.abs(part.position[0]) > 0.001) {
         const mirrorGeo = geometry.clone();
         const mirrorMat = material.clone();
@@ -160,18 +156,15 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
     });
   }
 
-  // Calculate Bounding Box
   const bbox = new THREE.Box3().setFromObject(modelContent);
   const size = new THREE.Vector3();
   bbox.getSize(size);
 
-  // Center the model slightly so its base sits on ground level
   const min = bbox.min;
   if (min.y < 0) {
     modelContent.position.y = -min.y;
   }
 
-  // Create Collision Hull visualization group
   const collisionGroup = new THREE.Group();
   collisionGroup.name = 'Collision_Visualizers';
   collisionGroup.visible = false;
@@ -204,7 +197,6 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
     collisionGroup.add(cMesh);
   }
 
-  // Create Sockets visualization group
   const socketsGroup = new THREE.Group();
   socketsGroup.name = 'Sockets_Visualizers';
   socketsGroup.visible = false;
@@ -225,7 +217,6 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
     });
   }
 
-  // Estimate GLB size (approx 32 bytes per vertex + indices + material buffers)
   const estimatedGlbKb = Math.max(8, Math.round((totalVertices * 40 + totalTriangles * 6) / 1024));
 
   const stats: ViewportStats = {
@@ -263,7 +254,7 @@ export function updateExplodedView(
       if (explodeFactor <= 0.001) {
         mesh.position.copy(basePos);
       } else {
-        // Move outward from origin
+
         const dir = basePos.clone();
         if (dir.length() < 0.1) {
           dir.set(0, 1, 0);
@@ -291,7 +282,7 @@ export function applyRenderMode(
         if (specialMat) {
           child.material = specialMat;
         } else {
-          // Restore original material
+
           const orig = child.userData.originalMaterial;
           if (orig) {
             if (Array.isArray(orig)) {
@@ -377,7 +368,7 @@ function createGeometry(part: Part3D): THREE.BufferGeometry {
         }
         shape.closePath();
       } else {
-        // Fallback diamond/wedge profile
+
         shape.moveTo(-0.5, -0.5);
         shape.lineTo(0.5, -0.5);
         shape.lineTo(0.7, 0.2);
@@ -405,7 +396,7 @@ function createGeometry(part: Part3D): THREE.BufferGeometry {
       if (p.lathePoints && p.lathePoints.length >= 2) {
         lathePoints = p.lathePoints.map(([x, y]) => new THREE.Vector2(x, y));
       } else {
-        // Default turbine / vase curve
+
         lathePoints = [
           new THREE.Vector2(0.1, -0.5),
           new THREE.Vector2(0.4, -0.3),
@@ -422,7 +413,7 @@ function createGeometry(part: Part3D): THREE.BufferGeometry {
       if (p.pathPoints && p.pathPoints.length >= 2) {
         curvePoints = p.pathPoints.map(([x, y, z]) => new THREE.Vector3(x, y, z));
       } else {
-        // Smooth curved arch
+
         curvePoints = [
           new THREE.Vector3(-0.5, 0, 0),
           new THREE.Vector3(-0.3, 0.4, 0.1),
@@ -461,7 +452,6 @@ function createMaterial(part: Part3D): THREE.MeshStandardMaterial {
     matConfig.emissiveIntensity = m.emissiveIntensity ?? 1.5;
   }
 
-  // Apply procedural pattern texture if defined
   if (m.pattern && m.pattern !== 'clean') {
     const tex = getProceduralTexture(m.pattern, m.color || '#94a3b8');
     matConfig.map = tex;

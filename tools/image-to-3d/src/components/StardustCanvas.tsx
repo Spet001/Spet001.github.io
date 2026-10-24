@@ -15,12 +15,12 @@ interface StardustParticle {
 }
 
 const COSMIC_COLORS = [
-  '56, 189, 248', // Stellar Cyan
-  '168, 85, 247', // Nebula Violet
-  '236, 72, 153', // Cosmic Rose
-  '251, 191, 36', // Solar Amber
-  '129, 140, 248', // Deep Indigo
-  '248, 250, 252', // Celestial White
+  '56, 189, 248',
+  '168, 85, 247',
+  '236, 72, 153',
+  '251, 191, 36',
+  '129, 140, 248',
+  '248, 250, 252',
 ];
 
 export const StardustCanvas: React.FC = () => {
@@ -37,7 +37,6 @@ export const StardustCanvas: React.FC = () => {
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
-    // Initialize stardust particles
     const particleCount = Math.min(85, Math.floor((width * height) / 10000) + 35);
     const particles: StardustParticle[] = [];
 
@@ -53,13 +52,12 @@ export const StardustCanvas: React.FC = () => {
         twinkleSpeed: 0.012 + Math.random() * 0.025,
         phase: Math.random() * Math.PI * 2,
         vx: (Math.random() - 0.48) * 0.18,
-        vy: -0.06 - Math.random() * 0.18, // subtle floating celestial drift upward
+        vy: -0.06 - Math.random() * 0.18,
         color,
         glow: radius > 1.4,
       });
     }
 
-    // Resize handler
     const handleResize = () => {
       if (!canvas || !canvas.parentElement) return;
       width = canvas.width = canvas.parentElement.clientWidth;
@@ -72,11 +70,10 @@ export const StardustCanvas: React.FC = () => {
       resizeObserver.observe(canvas.parentElement);
     }
 
-    // Animation render loop
     let lastTime = performance.now();
 
     const render = (time: number) => {
-      const delta = Math.min((time - lastTime) / 16.667, 2.5); // normalized frame delta
+      const delta = Math.min((time - lastTime) / 16.667, 2.5);
       lastTime = time;
 
       ctx.clearRect(0, 0, width, height);
@@ -84,22 +81,18 @@ export const StardustCanvas: React.FC = () => {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Update position
         p.x += p.vx * delta;
         p.y += p.vy * delta;
         p.phase += p.twinkleSpeed * delta;
 
-        // Wrap around screen boundaries seamlessly
         if (p.x < -10) p.x = width + 10;
         else if (p.x > width + 10) p.x = -10;
 
         if (p.y < -10) p.y = height + 10;
         else if (p.y > height + 10) p.y = -10;
 
-        // Twinkle sinusoidal pulsation
         p.alpha = Math.max(0.08, p.baseAlpha + Math.sin(p.phase) * 0.28);
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;

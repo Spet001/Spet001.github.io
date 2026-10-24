@@ -114,7 +114,11 @@ const PORTFOLIO_DATA = {
                 reshadeStudioTitle: "Spet's ReShade Studio",
                 reshadeStudioBadge: "Estúdio Determinístico de ReShade & 3D LUT (100% Math)",
                 reshadeStudioDesc: "Bancada client-side 100% matemática (zero IA) para criação de presets ReShade 6.8.0 e texturas 3D LUT (1024×32). Calcula transferência estatística de cor no espaço CIE LAB (algoritmo de Reinhard) entre duas imagens, inclui filtros dedicados (PSX 15-bit RGB555 Bayer Dither, Anti-Piss 7ª Geração e Next-Gen PBR ACES), resolve a API gráfica do jogo automaticamente (d3d9/d3d11/d3d12/opengl/vulkan) e exporta o pacote .ZIP completo com DLL, .ini, SpetLUT.png e shaders HLSL (.fx).",
-                reshadeStudioOpen: "Abrir ReShade Studio"
+                reshadeStudioOpen: "Abrir ReShade Studio",
+                pePatcherTitle: "Spet's 4gb Patch",
+                pePatcherBadge: "Patcher PE32/PE32+ & 4GB LAA Studio",
+                pePatcherDesc: "Patcher e analisador binário PE32/PE32+ executado 100% no navegador via ArrayBuffer (zero upload). Ativa a flag Large Address Aware (4GB Patch / 0x0020) para eliminar crashes de memória em jogos clássicos de 32 bits, recalcula o PE Checksum folded de 16 bits, remove ASLR (~0x0040) para ponteiros estáticos, exporta patches .1337 para x64dbg, gera manifestos High-DPI e inclui o Fable3.exe real como sample de 1 clique.",
+                pePatcherOpen: "Abrir 4gb Patch"
             },
             terminal: {
                 title: "Console Interativo (SpetTerm)",
@@ -287,7 +291,11 @@ const PORTFOLIO_DATA = {
                 reshadeStudioTitle: "Spet's ReShade Studio",
                 reshadeStudioBadge: "Deterministic ReShade Preset & 3D LUT Studio (100% Math)",
                 reshadeStudioDesc: "100% mathematical client-side workbench (zero AI) for generating ReShade 6.8.0 presets and 3D LUTs (1024×32). Computes CIE LAB Reinhard statistical color transfers between source and reference frames, features standalone hardware filters (PSX 15-bit RGB555 Bayer Dither, 7th-Gen Anti-Piss & Next-Gen PBR ACES), auto-detects target game graphics APIs (d3d9/d3d11/d3d12/opengl/vulkan), and exports ready-to-play .ZIP bundles with DLL, .ini, SpetLUT.png, and HLSL (.fx) shaders.",
-                reshadeStudioOpen: "Open ReShade Studio"
+                reshadeStudioOpen: "Open ReShade Studio",
+                pePatcherTitle: "Spet's 4gb Patch",
+                pePatcherBadge: "Client-Side PE32/PE32+ Binary Patcher & 4GB LAA Studio",
+                pePatcherDesc: "100% client-side PE32/PE32+ binary header analyzer and patcher running in browser memory via ArrayBuffer (zero uploads). Enables Large Address Aware (4GB Patch / 0x0020) to eliminate 32-bit Out-of-Memory crashes, recalculates 16-bit folded PE Checksums, strips ASLR (~0x0040) for static pointers, exports x64dbg .1337 diffs, generates High-DPI manifests, and includes a real 1-click Fable3.exe sample.",
+                pePatcherOpen: "Open 4gb Patch"
             },
             terminal: {
                 title: "Interactive Console (SpetTerm)",
@@ -380,7 +388,7 @@ const PORTFOLIO_DATA = {
         }
     },
 
-    // CAREER & EXPERIENCE DATA - Fully localized dates and company descriptors
+    // CAREER & EXPERIENCE DATA
     experienceData: [
         {
             id: "exp_qa_sparky",
@@ -470,7 +478,7 @@ const PORTFOLIO_DATA = {
         }
     ],
 
-    // PROJECTS DATA - Uses ONLY authentic local images from assets/
+    // PROJECTS DATA
     projectsData: [
         {
             id: "outcaster_fps",
@@ -671,16 +679,17 @@ const PORTFOLIO_DATA = {
             caseStudyImages: [
                 "/assets/tool_easy_decompiler.png",
                 "/assets/tool_universal_file.png",
-                "/assets/tool_reshade_studio.jpg"
+                "/assets/tool_reshade_studio.jpg",
+                "/assets/tool_4gb_patch.png"
             ],
             title: { pt: "Suíte de Ferramentas Web & Engenharia Reversa", en: "Web Tools & Reverse Engineering Suite" },
             featured: true,
             live: "/tools/",
             liveLabel: { pt: "Explorar Ferramentas", en: "Open Tools Suite" },
-            tags: ["WebAssembly", "Rizin Core", "Ghidra Sleigh", "Game Archives", "Three.js", "AST Decompilation", "25+ Formats", "ReShade 3D LUT"],
+            tags: ["WebAssembly", "Rizin Core", "Ghidra Sleigh", "Game Archives", "PE32 4GB Patch", "Three.js", "25+ Formats", "ReShade 3D LUT"],
             description: {
-                pt: "Suíte completa de utilitários e analisadores de engenharia reversa executados no browser: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines: Bethesda, id Tech, Ubisoft, Rockstar, PlayStation), ReShade Studio (CIE LAB & 3D LUT Compiler) e Quick 3D Studio.",
-                en: "Comprehensive reverse engineering and archive extraction suite running client-side: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ game engines), ReShade Studio (CIE LAB & 3D LUT Compiler), and Quick 3D Studio."
+                pt: "Suíte completa de utilitários e analisadores de engenharia reversa executados no browser: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines: Bethesda, id Tech, Ubisoft, Rockstar, PlayStation), ReShade Studio (CIE LAB & 3D LUT Compiler), Spet's 4gb Patch (PE32/PE32+ LAA Patcher) e Quick 3D Studio.",
+                en: "Comprehensive reverse engineering and archive extraction suite running client-side: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ game engines), ReShade Studio (CIE LAB & 3D LUT Compiler), Spet's 4gb Patch (PE32/PE32+ LAA Patcher), and Quick 3D Studio."
             },
             caseStudy: {
                 challenge: {
@@ -1105,7 +1114,7 @@ const PORTFOLIO_DATA = {
         }
     ],
 
-    // 3D ICONS TECH STACK DATA - Compact, punchy, high-impact 3D badges
+    // 3D ICONS TECH STACK DATA
     techCategories: [
         {
             id: "systems",
@@ -1186,7 +1195,7 @@ const PORTFOLIO_DATA = {
         }
     ],
 
-    // JOURNAL ARTICLES - Authentic posts matching /journal
+    // JOURNAL ARTICLES
     journalEntries: [
         {
             id: "Tribute-To-BioWare-And-Mass-Effect",
@@ -3482,7 +3491,6 @@ const CosmicTrackPlayer = ({
     );
 };
 
-// Full Space 3.0 Cosmic Engine & Galaxy Map implementation (Mass Effect 3 Inspired)
 // Full Space 3.0 Cosmic Engine & Galaxy Map implementation (Mass Effect 3 Inspired)
 const SpaceCanvasV3 = ({
     skyboxIndex = 0,
@@ -6744,7 +6752,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
     );
 };
 
-// --- HERO SECTION: Clean, balanced, NO debugger box, no location ---
+// --- HERO SECTION ---
 const Hero = ({ onOpenCV, onToggleTerminal }) => {
     const { t, lang } = useContext(LanguageContext);
 
@@ -6759,7 +6767,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
         <section id="top" className="min-h-[85vh] pt-32 pb-16 flex items-center relative">
             <div className="max-w-4xl mx-auto px-6 w-full text-center sm:text-left">
                 
-                {/* Status Indicator (NO location) */}
+                {/* Status Indicator */}
                 <div className="inline-flex items-center gap-2 text-xs font-mono text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-6 shadow-sm shadow-primary/10">
                     <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-sm shadow-primary/50"></span>
                     <span>{t('hero.status')}</span>
@@ -7056,8 +7064,8 @@ const AboutSection = () => {
     );
 };
 
-// --- COMPACT & EXPANDABLE CAREER & EXPERIENCE TIMELINE ---
-// Dates corrected: QA: 2025-Present, Game: 2025-Present, Reverse: 2024-Present, IT: 2026-Present
+// --- CAREER & EXPERIENCE TIMELINE ---
+
 const ExperienceSection = () => {
     const { t, lang } = useContext(LanguageContext);
     const experiences = PORTFOLIO_DATA.experienceData;
@@ -7376,7 +7384,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                     {activeTitle}
                 </h3>
 
-                {/* Media banner using authentic assets or 3D model-viewer */}
+                {/* Media banner */}
                 <div className="rounded-xl overflow-hidden bg-black/80 border border-white/[0.08] mb-6 h-56 sm:h-72 relative flex items-center justify-center group/modalmedia">
                     {project.caseStudyModel ? (
                         <model-viewer
@@ -8339,6 +8347,30 @@ const ToolsSection = () => {
             )
         },
         {
+            id: '4gb-patch',
+            url: '/tools/4gb-patch/',
+            title: t('tools.pePatcherTitle') || "Spet's 4gb Patch",
+            badge: t('tools.pePatcherBadge') || "Client-Side PE32/PE32+ Binary Patcher & 4GB LAA Studio",
+            icon: '/assets/icons/spet_sprites/floppy_disk.png',
+            desc: t('tools.pePatcherDesc') || "100% client-side PE32/PE32+ binary header analyzer and patcher running in browser memory via ArrayBuffer. Enables Large Address Aware (4GB Patch / 0x0020), recalculates 16-bit folded PE Checksums, strips ASLR (~0x0040), exports x64dbg .1337 diffs, generates High-DPI manifests, and includes a real 1-click Fable3.exe sample.",
+            openText: t('tools.pePatcherOpen') || "Open 4gb Patch",
+            accentBorder: "border-[#E2A03F]/40 hover:border-[#E2A03F]/75 shadow-[0_8px_30px_rgba(226,160,63,0.14)]",
+            badgeColor: "text-[#E2A03F] border-[#E2A03F]/30",
+            buttonBg: "bg-[#E2A03F] hover:bg-[#EEB04F] shadow-[#E2A03F]/30 text-slate-950 font-bold",
+            pathColor: "text-[#E2A03F]/80",
+            tags: ['4GB Patch (0x0020)', 'PE32 / PE32+', '16-Bit Checksum', 'Strip ASLR (~0x0040)', 'x64dbg .1337 Export', 'High-DPI Manifest', 'Fable3.exe Sample'],
+            preview: (
+                <div className="relative w-full h-full min-h-[220px] bg-[#0B0C0E] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                    <img
+                        src="/assets/tool_4gb_patch.png"
+                        alt="Spet's 4gb Patch"
+                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
+                </div>
+            )
+        },
+        {
             id: 'quick-3d',
             url: '/tools/image-to-3d/',
             title: "Spet's Quick 3D Studio",
@@ -8447,7 +8479,7 @@ const ToolsSection = () => {
     );
 };
 
-// --- CONTACT SECTION: NO LOCATION ---
+// --- CONTACT SECTION ---
 const ContactSection = () => {
     const { t, lang } = useContext(LanguageContext);
     const [name, setName] = useState('');
@@ -15066,7 +15098,7 @@ const App = () => {
                     {/* Subtle top & bottom soft vignette for readability */}
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/75 pointer-events-none" />
 
-                    {/* Top Header: Restrained, authentic branding */}
+                    {/* Top Header */}
                     <div className="relative z-10 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
                             <span className="text-sm font-bold tracking-tight text-white">Eduardo Gelain</span>
@@ -15078,7 +15110,7 @@ const App = () => {
                         </div>
                     </div>
 
-                    {/* Bottom Status & Progress Dock: Clean, unboxed, zero AI-slop */}
+                    {/* Bottom Status & Progress Dock */}
                     <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                         <div className="max-w-sm w-full">
                             <div className="flex items-center justify-between text-xs mb-2">

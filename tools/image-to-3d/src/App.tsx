@@ -62,7 +62,6 @@ export default function App() {
     }, 4500);
   };
 
-  // Direct 2D-to-3D Image, Logo, Card & Emblem Procedural Extruder
   const handleExtrudeImage3D = async (
     imageSource: string,
     title: string,
@@ -133,7 +132,6 @@ export default function App() {
     }
   };
 
-  // Realtime back material updater without needing full re-extrusion
   const handleUpdateBackMaterialRealtime = async (options: {
     backMode: BackFaceMode;
     backColor: string;
@@ -154,7 +152,6 @@ export default function App() {
     }
   };
 
-  // Live Material Updates
   const handleUpdatePartMaterial = (
     partId: string,
     updates: Partial<Part3D['material']>
@@ -179,7 +176,6 @@ export default function App() {
     });
   };
 
-  // Export Binary .GLB
   const handleExportGlb = async () => {
     if (!rootGroupRef.current) return;
     try {
@@ -193,7 +189,6 @@ export default function App() {
     }
   };
 
-  // Export JSON .GLTF
   const handleExportGltf = async () => {
     if (!rootGroupRef.current) return;
     try {
@@ -206,7 +201,6 @@ export default function App() {
     }
   };
 
-  // Export .OBJ
   const handleExportObj = () => {
     if (!rootGroupRef.current) return;
     try {
@@ -219,7 +213,6 @@ export default function App() {
     }
   };
 
-  // Export Manifest JSON
   const handleExportManifest = () => {
     if (!blueprint) return;
     try {
@@ -249,7 +242,7 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#060717] font-sans text-zinc-100 flex flex-col">
-      {/* Top Header Bar */}
+
       <HeaderBar
         blueprint={blueprint}
         stats={stats}
@@ -266,9 +259,8 @@ export default function App() {
         className="hidden"
       />
 
-      {/* Main Studio Body: Viewport + Docked Right StudioInspector */}
       <div className="relative flex-1 w-full h-[calc(100vh-48px)] flex overflow-hidden">
-        {/* 3D Viewport */}
+
         <main className="relative flex-1 h-full overflow-hidden bg-[#050716]">
           <Viewport3D
             blueprint={blueprint}
@@ -287,7 +279,6 @@ export default function App() {
           />
         </main>
 
-        {/* Docked Right Studio Inspector */}
         <StudioInspector
           blueprint={blueprint}
           stats={stats}
@@ -318,7 +309,6 @@ export default function App() {
         />
       </div>
 
-      {/* Toast Notification */}
       {toast && (
         <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#120a2e]/95 via-[#1c0d3a]/95 to-[#0e0c29]/95 border border-purple-500/35 text-xs font-medium text-purple-100 shadow-[0_8px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(168,85,247,0.25)] backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-150">
           {toast.type === 'success' ? (
