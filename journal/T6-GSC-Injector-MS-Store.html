@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/#article",
-  "headline": "Open Source GSC Injector for Black Ops 2 (MS Store)",
-  "description": "Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.",
-  "datePublished": "Sep 20, 2026",
-  "articleSection": "Reverse Engineering",
-  "url": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
-  "mainEntityOfPage": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/#article",
+      "headline": "Open Source GSC Injector for Black Ops 2 (MS Store)",
+      "description": "Building the first 100% open-source C++ GSC injector for Black Ops 2 Microsoft Store edition with inline execution detours.",
+      "datePublished": "Sep 20, 2026",
+      "articleSection": "Reverse Engineering",
+      "url": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
+      "mainEntityOfPage": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What makes the Black Ops 2 Microsoft Store edition unique for modding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Microsoft Store / Xbox PC edition of Black Ops II is a 64-bit binary wrapped in modern Windows GDK security layers, lacking traditional Steam community mod support and featuring different internal function addresses."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Spet's open-source T6 MS Store GSC Injector work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Spet's injector hooks into the game's script compiler initialization routine, allocates memory for custom GSC scripts, and redirects the internal script loading table to execute custom community scripts natively."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

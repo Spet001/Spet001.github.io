@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/#article",
-  "headline": "UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)",
-  "description": "Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.",
-  "datePublished": "Sep 21, 2026",
-  "articleSection": "Security & GDK Architecture",
-  "url": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/",
-  "mainEntityOfPage": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/#article",
+      "headline": "UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)",
+      "description": "Architectural research into UWP/GDK sandbox entitlement tokens, license verification routines, and runtime memory hooks for legacy software preservation.",
+      "datePublished": "Sep 21, 2026",
+      "articleSection": "Security & GDK Architecture",
+      "url": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/",
+      "mainEntityOfPage": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the architecture of the Microsoft Store UWP/GDK sandbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Windows Game Development Kit (GDK) and UWP sandbox run games inside isolated AppContainers. Process tokens, virtualized registry hives, and capability bitmasks restrict inter-process communication and file access unless specific COM interfaces and memory offsets are detoured."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is UWP sandbox reverse engineering important for software preservation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "As older UWP games are delisted from the Microsoft Store, understanding license verification and COM entitlement calls enables researchers to archive legacy PC titles, preserve DLC access, and allow community modding offline."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

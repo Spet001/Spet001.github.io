@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/#article",
-  "headline": "GSC Injection on Black Ops 1 (MS Store)",
-  "description": "Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.",
-  "datePublished": "Sep 19, 2026",
-  "articleSection": "Game Modding",
-  "url": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/",
-  "mainEntityOfPage": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/#article",
+      "headline": "GSC Injection on Black Ops 1 (MS Store)",
+      "description": "Reverse engineering legacy T5 engine structures in modern Windows UWP wrappers using IDA Pro cross-references to build a lightweight GSC injector.",
+      "datePublished": "Sep 19, 2026",
+      "articleSection": "Game Modding",
+      "url": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/",
+      "mainEntityOfPage": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How was the Black Ops 1 Microsoft Store GSC Injector developed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By reverse engineering the 64-bit UWP executable of Call of Duty: Black Ops 1 with IDA Pro, tracing cross-references from legacy T5 engine string tokens to locate the runtime script loader, and implementing an inline memory detour in C++."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the Call of Duty: Black Ops 1 MS Store GSC Injector free and open source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, it is 100% open source and published in the msclients repository (gitlab.com/Spet001/msclients) for educational reverse engineering and custom offline modding."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

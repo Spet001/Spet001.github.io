@@ -39,6 +39,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-card": "node scripts/generate-card.js",
     "build:tools": "esbuild tools/image-to-3d/src/main.tsx --bundle --outfile=tools/image-to-3d/app.min.js --format=esm --minify",
     "build": "esbuild app.jsx --outfile=app.min.js --jsx=transform --jsx-factory=React.createElement --jsx-fragment=React.Fragment --minify && esbuild tools/image-to-3d/src/main.tsx --bundle --outfile=tools/image-to-3d/app.min.js --format=esm --minify && node build-journal.js",
     "watch": "esbuild app.jsx --outfile=app.min.js --jsx=transform --jsx-factory=React.createElement --jsx-fragment=React.Fragment --watch"

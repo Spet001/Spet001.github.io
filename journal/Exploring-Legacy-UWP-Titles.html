@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/#article",
-  "headline": "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
-  "description": "Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.",
-  "datePublished": "Oct 19, 2026",
-  "articleSection": "Reverse Engineering & Windows Internals",
-  "url": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
-  "mainEntityOfPage": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/#article",
+      "headline": "Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection",
+      "description": "Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.",
+      "datePublished": "Oct 19, 2026",
+      "articleSection": "Reverse Engineering & Windows Internals",
+      "url": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
+      "mainEntityOfPage": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does UWP Dumper inject code into restricted Windows 10/11 AppContainer sandboxes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "UWP Dumper leverages the Windows process creation lifecycle by spawning the target UWP package in a suspended state (DEBUG_PROCESS), modifying thread tokens and memory rights before AppContainer isolation takes effect, and safely injecting native C/C++ DLLs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can COD Points or microtransactions be spoofed client-side in UWP Call of Duty games?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. While client-side WinRT COM interfaces (such as IStoreContextServer) can be detoured to inspect catalog offerings and purchase intents, actual currency accounting and entitlement verification occur via cryptographically signed Server-to-Server (S2S) ticket validation against Xbox Live and Demonware."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

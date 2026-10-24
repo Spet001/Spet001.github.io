@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/Cloudflare-Workers-Backend/#article",
-  "headline": "Quick Entry: Having a Backend on a Static Website with Cloudflare workers!",
-  "description": "Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.",
-  "datePublished": "Sep 28, 2026",
-  "articleSection": "Serverless & Edge",
-  "url": "https://spet01.dev/journal/Cloudflare-Workers-Backend/",
-  "mainEntityOfPage": "https://spet01.dev/journal/Cloudflare-Workers-Backend/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/Cloudflare-Workers-Backend/#article",
+      "headline": "Quick Entry: Having a Backend on a Static Website with Cloudflare workers!",
+      "description": "Architecting zero-cost serverless backend APIs, rate limiters, and OAuth handlers for static GitHub Pages sites with Cloudflare Workers.",
+      "datePublished": "Sep 28, 2026",
+      "articleSection": "Serverless & Edge",
+      "url": "https://spet01.dev/journal/Cloudflare-Workers-Backend/",
+      "mainEntityOfPage": "https://spet01.dev/journal/Cloudflare-Workers-Backend/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/Cloudflare-Workers-Backend/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How can you build a zero-cost backend for a static website hosted on GitHub Pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By deploying serverless edge microservices on Cloudflare Workers. Cloudflare Workers run JavaScript/WASM at edge data centers with sub-10ms latency, handling dynamic APIs, visitor telemetry, rate limiting, and secure webhooks without running a traditional server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What features does Cloudflare Workers power on spet01.dev?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On spet01.dev, Cloudflare Workers manage the live global visitor analytics counter, rate-limited contact form submissions, and edge caching rules with zero server hosting costs."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

@@ -79,18 +79,18 @@
         },
         {
           "@type": "Question",
-          "name": "What is online_tu17_zm.wad?",
+          "name": "Are Demonware WAD files limited to Treyarch or used across Call of Duty engines (like MW3)?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware Publisher Storage WAD container (0x543377AB T3WAD header). It contains 4 zlib-compressed lumps for Zombies online services: playlists_zm.info, codtv-zm.json, voting-zm.json, and motd-zm-english.json."
+            "text": "Demonware Publisher Storage container archives were utilized across the Call of Duty engine lineage in general, spanning both Treyarch (T-Engine: T5, T6) and Infinity Ward (IW-Engine: Modern Warfare 3 / IW5). While Treyarch formalized the 0x543377AB T3WAD header, IW titles like MW3 also downloaded Demonware aggregate storage containers (playlists_tuXX.aggr and WAD blobs) to batch live-service network updates into single transactions."
           }
         },
         {
           "@type": "Question",
-          "name": "What are online_tu14_mp_english.wad and online_tu14_sp_english.wad?",
+          "name": "What are online_tu14_mp_english.wad and online_tu17_zm.wad?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "online_tu14_mp_english.wad and online_tu14_sp_english.wad are official Demonware Publisher Storage WAD archives (0x543377AB T3WAD format) used by Call of Duty: Black Ops 1 (Treyarch T5 engine, Title Update 14) to deliver online multiplayer playlists (playlists_mp.info), Mercenary contracts (contracts.dat), geographic matchmaking routing (geogroups.info), remote DVAR ACL rules (restrict_access_wad_mp.csv), and Message of the Day text (motd-mp-english.txt)."
+            "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware WAD container. online_tu14_mp_english.wad and online_tu14_sp_english.wad are the Call of Duty: Black Ops 1 (T5, Title Update 14) Demonware Publisher Storage WAD archives (0x543377AB T3WAD header) used to deliver multiplayer playlists, contracts, and geographic matchmaking rules."
           }
         },
         {
@@ -571,7 +571,8 @@
 <ul>
 <li><strong>What is <code>online_tu17_mp.wad</code>?</strong> <strong><code>online_tu17_mp.wad</code> is NOT a DOOM or Zandronum mod.</strong> It is an official, proprietary <strong>Call of Duty: Black Ops II (T6 — Title Update 17)</strong> online configuration container downloaded from <strong>Activision / Demonware Publisher Storage</strong> (<code>18397\pub\online_tu17_mp.wad</code>). It uses <strong>Treyarch&#39;s <code>T3WAD</code> binary format</strong> (magic header <strong><code>0x543377AB</code></strong> / <code>&quot;T3w\xAB&quot;</code>) and bundles 8 zlib-compressed lumps (<code>playlists_mp.info</code>, <code>codtv-mp.json</code>, <code>voting-mp.json</code>, <code>motd-mp-english.json</code>, <code>leagues.info</code>, <code>message_encryption.dat</code>, <code>entitlements.info</code>, and <code>youtube.info</code>).  </li>
 <li><strong>What is <code>online_tu17_zm.wad</code>?</strong> The <em>Call of Duty: Black Ops II</em> Zombies Title Update 17 Demonware WAD container (<code>playlists_zm.info</code>, <code>codtv-zm.json</code>, <code>voting-zm.json</code>, <code>motd-zm-english.json</code>).  </li>
-<li><strong>What are <code>online_tu14_mp_english.wad</code> &amp; <code>online_tu14_sp_english.wad</code>?</strong> The <em>Call of Duty: Black Ops 1</em> (T5 — Title Update 14) Demonware Publisher Storage WAD containers (<code>18301\pub\</code>) for Multiplayer and Singleplayer/Zombies.</li>
+<li><strong>What are <code>online_tu14_mp_english.wad</code> &amp; <code>online_tu14_sp_english.wad</code>?</strong> The <em>Call of Duty: Black Ops 1</em> (T5 — Title Update 14) Demonware Publisher Storage WAD containers (<code>18301\pub\</code>) for Multiplayer and Singleplayer/Zombies.  </li>
+<li><strong>Is this limited to Treyarch or across the Call of Duty engine family?</strong> Aggregated Demonware Publisher Storage containers (<code>.wad</code> and <code>.aggr</code>) were used across both <strong>Treyarch (T-Engine)</strong> and <strong>Infinity Ward (IW Engine)</strong> codebases in general. While Treyarch formalized the <code>0x543377AB</code> (<code>T3WAD</code>) format in T5/T6, Infinity Ward titles like <em>Modern Warfare 3</em> (IW5 — <code>18409\pub\</code>) likewise download compressed aggregate Publisher Storage containers (<code>playlists_tuXX.aggr</code> and online WAD lumps) to minimize LSP round-trips.</li>
 </ul>
 <p><img src="/assets/bo1_zpgdk_wad_download_runtime_log.png" alt="Demonware WAD Download in Call of Duty: Black Ops 1 MS Store Console"><br><em>Figure: Live engine console in ZPGDK (<code>t5s.exe</code> — Call of Duty: Black Ops 1 Microsoft Store) downloading and mounting <code>online_tu14_sp_english.wad</code> from Demonware Publisher Storage: <code>^3WAD: Big-endian WAD on Small-endian machine — Got Online WAD. 3 entries</code>.</em></p>
 </blockquote>
@@ -660,8 +661,9 @@ struct filelump_t {
 <p>During the 7th-generation console era (Xbox 360 / PS3 / PC), millions of concurrent players logging into <em>Black Ops 1</em> (T5) and <em>Black Ops 2</em> (T6) needed to download up to <strong>8 separate configuration files</strong> before entering a lobby (playlists, contracts, Message of the Day, COD TV menus, League Play divisions, voting polls, and DVAR restrictions).</p>
 <p>Issuing 8 separate Demonware LSP/HTTP file-transfer RPCs per player created massive transaction overhead on Demonware&#39;s backend.</p>
 <ul>
-<li><strong>Infinity Ward&#39;s solution</strong> (seen in <em>MW3</em> / <code>18409\pub\playlists_tu21.aggr</code>) was an aggregate <code>.aggr</code> blob.</li>
-<li><strong>Treyarch&#39;s solution</strong> (in <em>Black Ops 1</em> and <em>Black Ops 2</em>) was to build a custom <strong>zlib-compressed WAD container (<code>online_tuXX_&lt;mode&gt;.wad</code>)</strong>!</li>
+<li><strong>Infinity Ward&#39;s solution</strong> (seen in <em>Modern Warfare 3</em> / <code>18409\pub\playlists_tu21.aggr</code> and IW engine titles) was an aggregate <code>.aggr</code> and online WAD blob containing grouped playlists and matchmaking rules.</li>
+<li><strong>Treyarch&#39;s solution</strong> (in <em>Black Ops 1</em> and <em>Black Ops 2</em>) was to build a custom <strong>zlib-compressed WAD container (<code>online_tuXX_&lt;mode&gt;.wad</code>)</strong> stamped with their own magic header (<code>0x543377AB</code> / <code>T3w\xAB</code>)!</li>
+<li><strong>Across the T &amp; IW Engine Lineage:</strong> In both engine families, batching Demonware Publisher Storage files into single compressed container archives (<code>.wad</code> / <code>.aggr</code>) was the core architectural pattern to keep 7th-gen lobby joins fast and resilient.</li>
 </ul>
 <p>Instead of 8 network requests, the game downloads <strong>one single <code>.wad</code> file</strong> into RAM and mounts its lumps in memory.</p>
 <h3>2. Binary Specification of Treyarch&#39;s <code>T3WAD</code> (<code>0x543377AB</code>)</h3>

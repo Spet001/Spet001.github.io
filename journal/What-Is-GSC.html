@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/What-Is-GSC/#article",
-  "headline": "What is GSC? (Game Scripting C) Guide",
-  "description": "Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.",
-  "datePublished": "Sep 30, 2026",
-  "articleSection": "GSC Engine Internals",
-  "url": "https://spet01.dev/journal/What-Is-GSC/",
-  "mainEntityOfPage": "https://spet01.dev/journal/What-Is-GSC/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/What-Is-GSC/#article",
+      "headline": "What is GSC? (Game Scripting C) Guide",
+      "description": "Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.",
+      "datePublished": "Sep 30, 2026",
+      "articleSection": "GSC Engine Internals",
+      "url": "https://spet01.dev/journal/What-Is-GSC/",
+      "mainEntityOfPage": "https://spet01.dev/journal/What-Is-GSC/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/What-Is-GSC/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Game Scripting C (GSC) in Call of Duty engines?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GSC (Game Scripting C) is a proprietary, C-like scripting language and bytecode virtual machine engineered by Infinity Ward and Treyarch. It controls all high-level game logic, mission scripts, weapon mechanics, and Zombies rounds across Call of Duty titles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the GSC Bytecode Virtual Machine execute scripts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GSC files are compiled into binary bytecode blocks consisting of opcodes, string token hashes, and function exports. The engine's runtime VM stack evaluates these opcodes concurrently via cooperative multithreading threads ('waittill', 'notify', 'endon')."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

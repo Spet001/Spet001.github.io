@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/#article",
-  "headline": "Providing Open Source T6 Custom Game Modes GSC!",
-  "description": "Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.",
-  "datePublished": "Sep 27, 2026",
-  "articleSection": "Open Source Modding",
-  "url": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/",
-  "mainEntityOfPage": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/#article",
+      "headline": "Providing Open Source T6 Custom Game Modes GSC!",
+      "description": "Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.",
+      "datePublished": "Sep 27, 2026",
+      "articleSection": "Open Source Modding",
+      "url": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/",
+      "mainEntityOfPage": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What custom game modes are included in the open-source T6 GSC release?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The repository contains fully commented and customizable GSC game mode scripts for Call of Duty: Black Ops II, featuring custom infected survival rulesets, weapon progression modifiers, and dedicated server admin commands."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you install custom GSC mods in Call of Duty: Black Ops II?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By placing the compiled or uncompiled GSC files into the appropriate local scripts directory (e.g. %LOCALAPPDATA%\\Plutonium\\storage\\t6\\scripts\\ or injecting them into memory via an open-source GSC injector)."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 

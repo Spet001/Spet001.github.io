@@ -74,18 +74,18 @@ const ENTRY_FAQ_SCHEMA = {
             },
             {
                 "@type": "Question",
-                "name": "What is online_tu17_zm.wad?",
+                "name": "Are Demonware WAD files limited to Treyarch or used across Call of Duty engines (like MW3)?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware Publisher Storage WAD container (0x543377AB T3WAD header). It contains 4 zlib-compressed lumps for Zombies online services: playlists_zm.info, codtv-zm.json, voting-zm.json, and motd-zm-english.json."
+                    "text": "Demonware Publisher Storage container archives were utilized across the Call of Duty engine lineage in general, spanning both Treyarch (T-Engine: T5, T6) and Infinity Ward (IW-Engine: Modern Warfare 3 / IW5). While Treyarch formalized the 0x543377AB T3WAD header, IW titles like MW3 also downloaded Demonware aggregate storage containers (playlists_tuXX.aggr and WAD blobs) to batch live-service network updates into single transactions."
                 }
             },
             {
                 "@type": "Question",
-                "name": "What are online_tu14_mp_english.wad and online_tu14_sp_english.wad?",
+                "name": "What are online_tu14_mp_english.wad and online_tu17_zm.wad?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "online_tu14_mp_english.wad and online_tu14_sp_english.wad are official Demonware Publisher Storage WAD archives (0x543377AB T3WAD format) used by Call of Duty: Black Ops 1 (Treyarch T5 engine, Title Update 14) to deliver online multiplayer playlists (playlists_mp.info), Mercenary contracts (contracts.dat), geographic matchmaking routing (geogroups.info), remote DVAR ACL rules (restrict_access_wad_mp.csv), and Message of the Day text (motd-mp-english.txt)."
+                    "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware WAD container. online_tu14_mp_english.wad and online_tu14_sp_english.wad are the Call of Duty: Black Ops 1 (T5, Title Update 14) Demonware Publisher Storage WAD archives (0x543377AB T3WAD header) used to deliver multiplayer playlists, contracts, and geographic matchmaking rules."
                 }
             },
             {
@@ -198,6 +198,314 @@ const ENTRY_FAQ_SCHEMA = {
                 "acceptedAnswer": {
                     "@type": "Answer",
                     "text": "You can listen to the Mass Effect OST in the custom N7 audio player tab, or open the CLI Terminal by pressing '~' or clicking the terminal icon and typing '/shepard' or 'shepard' to execute the Systems Alliance Commander Shepard protocol."
+                }
+            }
+        ]
+    },
+    'Exploring-Legacy-UWP-Titles': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Exploring-Legacy-UWP-Titles/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How does UWP Dumper inject code into restricted Windows 10/11 AppContainer sandboxes?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "UWP Dumper leverages the Windows process creation lifecycle by spawning the target UWP package in a suspended state (DEBUG_PROCESS), modifying thread tokens and memory rights before AppContainer isolation takes effect, and safely injecting native C/C++ DLLs."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can COD Points or microtransactions be spoofed client-side in UWP Call of Duty games?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. While client-side WinRT COM interfaces (such as IStoreContextServer) can be detoured to inspect catalog offerings and purchase intents, actual currency accounting and entitlement verification occur via cryptographically signed Server-to-Server (S2S) ticket validation against Xbox Live and Demonware."
+                }
+            }
+        ]
+    },
+    'Gamifying-A-Galactic-Portfolio-Galaxy-Map': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Gamifying-A-Galactic-Portfolio-Galaxy-Map/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the 3D Galaxy Map on spet01.dev?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The 3D Galaxy Map is an interactive celestial interface built in Three.js WebGL and inspired by the Normandy CIC in Mass Effect. It renders software engineering projects as explorable solar systems and celestial bodies with orbital physics and space sound effects."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do you control the orbital camera in Galaxy Map mode?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Users can fly through the galaxy using the keyboard arrow keys or touch gestures, orbit individual project planets, view live telemetry data, and discover hidden interactive sectors directly in their browser."
+                }
+            }
+        ]
+    },
+    'DEVLOG-Outcaster-Unity-6': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/DEVLOG-Outcaster-Unity-6/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is Outcaster and what engine does it use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Outcaster is a retro 2.5D FPS template and Zombies Survival game created by Eduardo Gelain in Unity 6 using C# and DirectX 11. It features modular weapon state machines, raycast and ballistic projectile physics, and finite-state AI navigation."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the Live 3D HUD Preview in Outcaster?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Live 3D HUD Preview is a custom Unity Editor tool that renders weapon viewmodels, recoil animations, and camera bobbing inside the Inspector in edit-mode, eliminating the need to enter play-mode to iterate on weapon positioning and ergonomics."
+                }
+            }
+        ]
+    },
+    'Sparky-Rush-Steam-Release': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Sparky-Rush-Steam-Release/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is Sparky Rush: Purrils in Pawsville?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sparky Rush: Purrils in Pawsville is a commercial 3D platformer game released on Steam developed by Converting Minds, featuring high-speed platforming and feline mechanics."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What was Eduardo Gelain's QA engineering role on Sparky Rush?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Eduardo Gelain served as a Quality Assurance (QA) Analyst and technical tester, logging and verifying over 100 collider anomalies, resolving 20+ softlock edge cases, optimizing UI for ultrawide monitors, and benchmarking the game to maintain stable 60 FPS on entry-level hardware like the GeForce GT 710."
+                }
+            }
+        ]
+    },
+    'How-To-Optimize-ThreeJS-Scene-120-FPS': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/How-To-Optimize-ThreeJS-Scene-120-FPS/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How do you achieve 120 FPS in complex Three.js WebGL scenes?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Key techniques include using stateless GLSL vertex/fragment particle shaders, batching objects with InstancedMesh, frustum culling, eliminating garbage collection pauses in animation loops, and using translate3d sprite sheets instead of heavy HTML5 video elements to prevent D3D11 SwapChain presentation locks."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why should HTML5 video elements be avoided inside high-framerate WebGL viewports?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "HTML5 video decoding forces asynchronous Chromium compositor pipeline synchronization and lock contention on Windows DirectX SwapChains, capping refresh rates. Replacing videos with hardware-accelerated CSS/WebGL sprite sheets guarantees smooth 120 to 165+ FPS rendering."
+                }
+            }
+        ]
+    },
+    'Open-Source-3D-Assets': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Open-Source-3D-Assets/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What free 3D models are available for download on spet01.dev?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Eduardo Gelain released the complete original collection of low-poly 3D assets used in the portfolio, including the Jet, Astronaut, Orbital Rocket, Paratrooper, Space Chicken, Cop, and test Moon models in standard OBJ and glTF/GLB formats."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Are the 3D assets on spet01.dev free for commercial use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, they are distributed under open-source permissive licensing for indie game developers, educators, and creators to use in prototypes and commercial titles."
+                }
+            }
+        ]
+    },
+    'What-Is-GSC': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/What-Is-GSC/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is Game Scripting C (GSC) in Call of Duty engines?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "GSC (Game Scripting C) is a proprietary, C-like scripting language and bytecode virtual machine engineered by Infinity Ward and Treyarch. It controls all high-level game logic, mission scripts, weapon mechanics, and Zombies rounds across Call of Duty titles."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How does the GSC Bytecode Virtual Machine execute scripts?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "GSC files are compiled into binary bytecode blocks consisting of opcodes, string token hashes, and function exports. The engine's runtime VM stack evaluates these opcodes concurrently via cooperative multithreading threads ('waittill', 'notify', 'endon')."
+                }
+            }
+        ]
+    },
+    'Cloudflare-Workers-Backend': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Cloudflare-Workers-Backend/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How can you build a zero-cost backend for a static website hosted on GitHub Pages?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By deploying serverless edge microservices on Cloudflare Workers. Cloudflare Workers run JavaScript/WASM at edge data centers with sub-10ms latency, handling dynamic APIs, visitor telemetry, rate limiting, and secure webhooks without running a traditional server."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What features does Cloudflare Workers power on spet01.dev?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "On spet01.dev, Cloudflare Workers manage the live global visitor analytics counter, rate-limited contact form submissions, and edge caching rules with zero server hosting costs."
+                }
+            }
+        ]
+    },
+    'T6-Open-Source-GSC-Mods': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/T6-Open-Source-GSC-Mods/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What custom game modes are included in the open-source T6 GSC release?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The repository contains fully commented and customizable GSC game mode scripts for Call of Duty: Black Ops II, featuring custom infected survival rulesets, weapon progression modifiers, and dedicated server admin commands."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do you install custom GSC mods in Call of Duty: Black Ops II?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By placing the compiled or uncompiled GSC files into the appropriate local scripts directory (e.g. %LOCALAPPDATA%\\Plutonium\\storage\\t6\\scripts\\ or injecting them into memory via an open-source GSC injector)."
+                }
+            }
+        ]
+    },
+    'entry_0007': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/entry_0007/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the technical focus of entry 0007?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Entry 0007 covers advanced reverse engineering methodologies for commercial desktop script manager utilities, analyzing obfuscated binary runtimes, dynamic decryption hooks, and memory inspection."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How can readers access confidential journal entries like entry 0007?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Classified and confidential reverse engineering analyses are unlocked through an active subscription to Eduardo Gelain's technical Patreon at https://www.patreon.com/15458299/join."
+                }
+            }
+        ]
+    },
+    'UWP-GDK-Sandbox-Entitlement-Analysis': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/UWP-GDK-Sandbox-Entitlement-Analysis/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the architecture of the Microsoft Store UWP/GDK sandbox?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Windows Game Development Kit (GDK) and UWP sandbox run games inside isolated AppContainers. Process tokens, virtualized registry hives, and capability bitmasks restrict inter-process communication and file access unless specific COM interfaces and memory offsets are detoured."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why is UWP sandbox reverse engineering important for software preservation?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "As older UWP games are delisted from the Microsoft Store, understanding license verification and COM entitlement calls enables researchers to archive legacy PC titles, preserve DLC access, and allow community modding offline."
+                }
+            }
+        ]
+    },
+    'T6-GSC-Injector-MS-Store': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/T6-GSC-Injector-MS-Store/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What makes the Black Ops 2 Microsoft Store edition unique for modding?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Microsoft Store / Xbox PC edition of Black Ops II is a 64-bit binary wrapped in modern Windows GDK security layers, lacking traditional Steam community mod support and featuring different internal function addresses."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How does Spet's open-source T6 MS Store GSC Injector work?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Spet's injector hooks into the game's script compiler initialization routine, allocates memory for custom GSC scripts, and redirects the internal script loading table to execute custom community scripts natively."
+                }
+            }
+        ]
+    },
+    'T5-GSC-Injector-MS-Store': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/T5-GSC-Injector-MS-Store/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How was the Black Ops 1 Microsoft Store GSC Injector developed?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By reverse engineering the 64-bit UWP executable of Call of Duty: Black Ops 1 with IDA Pro, tracing cross-references from legacy T5 engine string tokens to locate the runtime script loader, and implementing an inline memory detour in C++."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is the Call of Duty: Black Ops 1 MS Store GSC Injector free and open source?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, it is 100% open source and published in the msclients repository (gitlab.com/Spet001/msclients) for educational reverse engineering and custom offline modding."
+                }
+            }
+        ]
+    },
+    'CW-GSC-Injection-MS-Store': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is dynamic pattern scanning (sigscanning) in game reverse engineering?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sigscanning is a technique where an injector scans process memory for distinctive byte sequences (opcodes) and wildcards rather than relying on hardcoded virtual addresses, allowing hooks to survive minor title updates."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why was heuristic pattern scanning necessary for Call of Duty: Black Ops Cold War GSC injection?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Modern games receive frequent live updates and title updates that shift memory layouts. The heuristic sigscanner built by Eduardo Gelain dynamically discovers the runtime GSC asset registry in Cold War without manual address updates."
                 }
             }
         ]
@@ -336,18 +644,36 @@ function build() {
             }
         };
 
-        const jsonLd = ENTRY_FAQ_SCHEMA[slug]
-            ? {
-                "@context": "https://schema.org",
-                "@graph": [
-                    blogPostingNode,
-                    ENTRY_FAQ_SCHEMA[slug]
-                ]
-            }
-            : {
-                "@context": "https://schema.org",
-                ...blogPostingNode
-            };
+        const faqNode = ENTRY_FAQ_SCHEMA[slug] || ENTRY_FAQ_SCHEMA[entry.id] || {
+            "@type": "FAQPage",
+            "@id": `https://spet01.dev/journal/${slug}/#faq`,
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": `What is covered in "${entry.title}"?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": description
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": `Who authored this research paper on ${entry.category || 'software development'}?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "This research paper was researched and authored by Eduardo Gelain (SpetDev), specializing in reverse engineering, systems programming, and game development."
+                    }
+                }
+            ]
+        };
+
+        const jsonLd = {
+            "@context": "https://schema.org",
+            "@graph": [
+                blogPostingNode,
+                faqNode
+            ]
+        };
 
         pageHtml = pageHtml.replace(
             /<script type="application\/ld\+json">[\s\S]*?<\/script>/,

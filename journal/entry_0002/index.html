@@ -43,25 +43,51 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "@id": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/#article",
-  "headline": "CW GSC Injection Findings",
-  "description": "Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.",
-  "datePublished": "Sep 18, 2026",
-  "articleSection": "Reverse Engineering",
-  "url": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/",
-  "mainEntityOfPage": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/#article",
+      "headline": "CW GSC Injection Findings",
+      "description": "Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.",
+      "datePublished": "Sep 18, 2026",
+      "articleSection": "Reverse Engineering",
+      "url": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/",
+      "mainEntityOfPage": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/CW-GSC-Injection-MS-Store/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is dynamic pattern scanning (sigscanning) in game reverse engineering?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sigscanning is a technique where an injector scans process memory for distinctive byte sequences (opcodes) and wildcards rather than relying on hardcoded virtual addresses, allowing hooks to survive minor title updates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why was heuristic pattern scanning necessary for Call of Duty: Black Ops Cold War GSC injection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Modern games receive frequent live updates and title updates that shift memory layouts. The heuristic sigscanner built by Eduardo Gelain dynamically discovers the runtime GSC asset registry in Cold War without manual address updates."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 
