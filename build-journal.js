@@ -31,10 +31,10 @@ const ENTRY_DESCRIPTIONS = {
     'entry_0015': 'Sparky Rush: Purrils in Pawsville commercial launch on Steam by Converting Minds! QA breakdown: hunting 100+ collider flaws, fixing ultrawide UI issues, solving 20+ softlocks, and 60 FPS profiling on a GT 710.',
     'How-To-Optimize-ThreeJS-Scene-120-FPS': 'Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.',
     'entry_0014': 'Engineering deep dive into optimizing a Three.js WebGL scene for 120–165+ FPS: stateless GLSL particle shaders, GPU InstancedMesh, replacing HTML5 video with GPU translate3d Sprite Sheets to eliminate D3D11 SwapChain contention, and Chromium compositor profiling.',
-    'What-Is-A-WAD-Modern-Games': 'Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.',
-    'entry_0013': 'Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.',
-    'Optimize-Old-Games-4GB-Patch-DXVK': 'A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.',
-    'entry_0012': 'A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.',
+    'What-Is-A-WAD-Modern-Games': 'What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.',
+    'entry_0013': 'What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.',
+    'Optimize-Old-Games-4GB-Patch-DXVK': 'A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using Spet\'s 4gb Patch Online (PE32/PE32+ Large Address Aware Studio) and DXVK Vulkan translation layer.',
+    'entry_0012': 'A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using Spet\'s 4gb Patch Online (PE32/PE32+ Large Address Aware Studio) and DXVK Vulkan translation layer.',
     'Open-Source-3D-Assets': 'Releasing all original low-poly 3D models from the portfolio simulation and game prototypes: Jet, Astronaut, Rocket, Paratrooper, Space Chicken, Jailson Mendes, Cop, and the RuTracker test Moon.',
     'entry_0011': 'Releasing all original low-poly 3D models from the portfolio simulation and game prototypes: Jet, Astronaut, Rocket, Paratrooper, Space Chicken, Jailson Mendes, Cop, and the RuTracker test Moon.',
     'What-Is-GSC': 'Comprehensive architectural guide to Game Scripting C (GSC), the bytecode VM engine behind Call of Duty titles by Eduardo Gelain.',
@@ -47,9 +47,57 @@ const ENTRY_DESCRIPTIONS = {
     'CW-GSC-Injection-MS-Store': 'Heuristic memory pattern scanning (sigscanning) in C++ to dynamically hook runtime script loaders in Call of Duty: Black Ops Cold War.',
     'T9-Mod-Manager-RE': 'Classified technical analysis on desktop script management software decompilation, runtime decryption routines, and bytecode extraction.',
     'entry_0007': 'Classified technical analysis on desktop script management software decompilation, runtime decryption routines, and bytecode extraction.',
-    'shame_for_the_leakers': 'Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.',
-    'Document-Explaining-Leaks': 'Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.',
-    'entry_0003': 'Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.'
+    'shame_for_the_leakers': 'Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.',
+    'Document-Explaining-Leaks': 'Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.',
+    'entry_0003': 'Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.'
+};
+
+const ENTRY_KEYWORDS = {
+    'What-Is-A-WAD-Modern-Games': 'online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad, T3WAD, 0x543377AB, Demonware Publisher Storage, Call of Duty Black Ops 2 WAD, Call of Duty Black Ops 1 WAD, Plutonium demonware pub wad, ZPGDK, What is a WAD, DOOM IWAD PWAD, id Tech 7 resources, Eduardo Gelain, SpetDev',
+    'Document-Explaining-Leaks': 'BO2 Crossplay Relay, ZPGDK GSC Injector, msclients, Call of Duty Black Ops 2 Crossplay, PS5 PC Crossplay BO2, Xirus, rolltide11, AAA Qurance, Waffle, Heretics Software, Spet, Eduardo Gelain, Stolen Code Disavowal',
+    'Optimize-Old-Games-4GB-Patch-DXVK': '4GB Patch Online, Large Address Aware, LAA Patcher, Fable 3 4GB Patch, Fable3.exe LAA, DXVK Vulkan Old Games, Spet 4gb Patch, PE32 Checksum',
+    'What-Is-ResurgeGDK': 'ResurgeGDK, Black Ops 3 Microsoft Store GDK, Steam to GDK BO3, xgameruntime.dll, BOIII Workshop Downloader, Ezz BOIII, GSC Injector BO3'
+};
+
+const ENTRY_FAQ_SCHEMA = {
+    'What-Is-A-WAD-Modern-Games': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is online_tu17_mp.wad? (O que é o arquivo online_tu17_mp.wad?)",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "online_tu17_mp.wad is NOT a DOOM or Zandronum multiplayer mod. It is an official Call of Duty: Black Ops II (Treyarch T6 engine, Title Update 17) online configuration archive downloaded from Activision / Demonware Publisher Storage (18397/pub/online_tu17_mp.wad). It uses Treyarch's proprietary T3WAD binary container format (magic bytes AB 77 33 54 / 0x543377AB) and bundles 8 zlib-compressed lumps: playlists_mp.info, codtv-mp.json, voting-mp.json, motd-mp-english.json, leagues.info, message_encryption.dat, entitlements.info, and youtube.info. Em português: online_tu17_mp.wad NÃO é um mod de DOOM; é um arquivo oficial de configuração online de Call of Duty: Black Ops 2 (Title Update 17) baixado do Demonware Publisher Storage da Activision."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is online_tu17_zm.wad?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware Publisher Storage WAD container (0x543377AB T3WAD header). It contains 4 zlib-compressed lumps for Zombies online services: playlists_zm.info, codtv-zm.json, voting-zm.json, and motd-zm-english.json."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What are online_tu14_mp_english.wad and online_tu14_sp_english.wad?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "online_tu14_mp_english.wad and online_tu14_sp_english.wad are official Demonware Publisher Storage WAD archives (0x543377AB T3WAD format) used by Call of Duty: Black Ops 1 (Treyarch T5 engine, Title Update 14) to deliver online multiplayer playlists (playlists_mp.info), Mercenary contracts (contracts.dat), geographic matchmaking routing (geogroups.info), remote DVAR ACL rules (restrict_access_wad_mp.csv), and Message of the Day text (motd-mp-english.txt)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I open or unpack online_tu17_mp.wad or online_tu14_mp_english.wad?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can inspect and extract Treyarch 0x543377AB Demonware .wad files directly in your browser using Spet's Universal Game File Opener at https://spet01.dev/tools/universal-file/ (100% client-side), or by parsing the 16-byte Little-Endian T3WadHeader (0x543377AB) and 44-byte Big-Endian directory entries and inflating each lump with zlib."
+                }
+            }
+        ]
+    }
 };
 
 function getSlug(entry) {
@@ -115,11 +163,17 @@ function build() {
             `<title>${entry.title} | Eduardo Gelain Technical Journal</title>`
         );
 
-        // 2. Meta description
+        // 2. Meta description & keywords
         pageHtml = pageHtml.replace(
             /<meta\s+name="description"\s+content="[^"]*">/,
             `<meta name="description" content="${description.replace(/"/g, '&quot;')}">`
         );
+        if (ENTRY_KEYWORDS[slug]) {
+            pageHtml = pageHtml.replace(
+                /<meta\s+name="keywords"\s+content="[^"]*">/,
+                `<meta name="keywords" content="${ENTRY_KEYWORDS[slug].replace(/"/g, '&quot;')}">`
+            );
+        }
 
         // 3. Canonical
         pageHtml = pageHtml.replace(
@@ -155,10 +209,10 @@ function build() {
             `<meta name="twitter:url" content="https://spet01.dev/journal/${slug}/">`
         );
 
-        // 6. Schema.org JSON-LD for this specific article
-        const jsonLd = {
-            "@context": "https://schema.org",
+        // 6. Schema.org JSON-LD for this specific article (plus FAQPage if defined)
+        const blogPostingNode = {
             "@type": "BlogPosting",
+            "@id": `https://spet01.dev/journal/${slug}/#article`,
             "headline": entry.title,
             "description": description,
             "datePublished": entry.date,
@@ -177,6 +231,19 @@ function build() {
                 "url": "https://spet01.dev"
             }
         };
+
+        const jsonLd = ENTRY_FAQ_SCHEMA[slug]
+            ? {
+                "@context": "https://schema.org",
+                "@graph": [
+                    blogPostingNode,
+                    ENTRY_FAQ_SCHEMA[slug]
+                ]
+            }
+            : {
+                "@context": "https://schema.org",
+                ...blogPostingNode
+            };
 
         pageHtml = pageHtml.replace(
             /<script type="application\/ld\+json">[\s\S]*?<\/script>/,

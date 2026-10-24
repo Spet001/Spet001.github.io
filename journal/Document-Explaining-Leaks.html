@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Document: Explaining Unauthorized Leaks & Network Architecture Analysis | Eduardo Gelain Technical Journal</title>
-    <meta name="description" content="Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.">
-    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <meta name="description" content="Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.">
+    <meta name="keywords" content="BO2 Crossplay Relay, ZPGDK GSC Injector, msclients, Call of Duty Black Ops 2 Crossplay, PS5 PC Crossplay BO2, Xirus, rolltide11, AAA Qurance, Waffle, Heretics Software, Spet, Eduardo Gelain, Stolen Code Disavowal">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -20,7 +20,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spet01.dev/journal/Document-Explaining-Leaks/">
     <meta property="og:title" content="Document: Explaining Unauthorized Leaks & Network Architecture Analysis | Eduardo Gelain">
-    <meta property="og:description" content="Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.">
+    <meta property="og:description" content="Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -35,7 +35,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://spet01.dev/journal/Document-Explaining-Leaks/">
     <meta name="twitter:title" content="Document: Explaining Unauthorized Leaks & Network Architecture Analysis | Eduardo Gelain">
-    <meta name="twitter:description" content="Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.">
+    <meta name="twitter:description" content="Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
@@ -44,8 +44,9 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
+  "@id": "https://spet01.dev/journal/Document-Explaining-Leaks/#article",
   "headline": "Document: Explaining Unauthorized Leaks & Network Architecture Analysis",
-  "description": "Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.",
+  "description": "Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.",
   "datePublished": "Sep 19, 2026",
   "articleSection": "Network Engineering & Security",
   "url": "https://spet01.dev/journal/Document-Explaining-Leaks/",
@@ -520,7 +521,7 @@
                         <span><i class="far fa-folder mr-1"></i> Network Engineering & Security</span>
                     </div>
                     <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Document: Explaining Unauthorized Leaks & Network Architecture Analysis</h1>
-                    <p class="text-slate-300 text-sm leading-relaxed">Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="Document-Explaining-Leaks">
 <blockquote>
@@ -551,6 +552,13 @@ Let this be etched into the record for the entire Call of Duty modding and rever
 <li><p><strong>YouTube Exploitation &amp; Rebranding — &quot;B33 AI&quot;:</strong><br>A YouTuber and bad actor operating under the alias <strong>B33 AI</strong> has published multiple videos (<a href="https://www.youtube.com/watch?v=e9-UFJnv6CY">Watch Evidence Video</a>) showcasing the Crossplay Relay.<br><strong>Every single one of their videos is running our original, stolen Relay code verbatim.</strong> The only modification they made was slapping a generic Real-Time Modding (RTM) tool interface over our proprietary network translation pipeline and memory patches, claiming the achievement as their own while completely scrubbing the names of the real creators (<strong>Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software, Spet</strong>).<br>Wrapping someone else&#39;s stolen protocol translation engine and memory patcher in a basic RTM UI does <strong>not</strong> make you an engineer, and it does <strong>not</strong> grant you authorship.</p>
 </li>
 <li><p><strong>Twitter/X Exploitation, RTM Tool Wrapper &amp; Paid Cheat Distribution — <code>@stevemoddz</code>:</strong><br>In a newly uncovered video on Twitter/X (<a href="https://x.com/stevemoddz/status/2112625464967581881?s=20">View Evidence Post</a>), an account operating under the handle <strong>@stevemoddz</strong> markets and sells a commercial &quot;RTM&quot; tool / cheat menu.<br>The indisputable smoking gun? In a specific frame of their own promotional video, the underlying window exposes our exact original project name: <strong>&quot;BO2 Crossplay&quot;</strong>.<br>Whoever repackaged our leaked repository and glued an RTM interface on top — likely by prompting an AI (<em>&quot;Claude, build an RTM tool with this codebase, make no mistakes&quot;</em>) — was so incompetent and detached from the actual low-level engineering that they didn&#39;t even notice or know how to change the internal project title. They took our platform-bridging code, slapped an AI-generated cheat wrapper over it, and are now actively selling paid cheats and disrupting public lobbies.<br><strong>Let this be stated with absolute clarity: The fundamental purpose, engineering ethos, and vision behind the BO2 Crossplay Relay was NEVER to enable cheats, commercialize exploits, or disrupt public matches.</strong> The project was conceived purely as a technical breakthrough in platform interop and game preservation — allowing friends on PC (Microsoft Store / GDK) and consoles (PlayStation 4/5, Xbox 360) to connect and play custom games together legitimately. Hijacking low-level network engineering research to peddle paid cheat tools to script kiddies is the lowest form of parasitic behavior.</p>
+</li>
+<li><p><strong>Twitter/X Repackaged &quot;Crack&quot; Redistribution (<code>@clpzy</code> Post) — Stolen Relay + Repackaged <code>msclients</code> GSC Injector + RTM Cheat Tool &amp; Formal Disavowal:</strong><br>Another Twitter/X post surfaced (<a href="https://x.com/clpzy/status/2113781826896400676?s=20">View Post</a>) showcasing and redistributing a bundle that combines our stolen <strong>BO2 Crossplay Relay</strong> with a Real-Time Modding (RTM) cheat tool and a blatantly repackaged build of my open-source <strong>ZPGDK / <code>msclients</code> GSC Injector</strong> (<a href="https://gitlab.com/Spet001/msclients"><code>gitlab.com/Spet001/msclients</code> — <code>src/client-t6-store/component/gsc_injector.cpp</code></a>) labeled <em>&quot;Microsoft Store Only&quot;</em> (because the underlying GDK memory hooks were stolen directly from my repository).<br><em>(Note: When contacted directly on Twitter/X, the poster <code>@clpzy</code> clarified that they did not create the crack/repackage themselves and were unaware of what code was stolen vs. AI-generated. Our statement here is not a personal attack on the poster, but a strict public warning regarding the stolen bundle being circulated).</em><br><strong>OFFICIAL DISAVOWAL &amp; STATEMENT ON BENIGN RE VS. MALICIOUS RTM CHEATING:</strong><br>Let this be 100% clear to players, developers, and Activision: <strong>Neither I (Spet) nor any of the other original creators of the Crossplay Relay (Xirus, rolltide11, AAA (Qurance), Waffle, Heretics Software) have ANYTHING to do with these RTM cheat bundles, and we want zero association with them.</strong>  </p>
+<ul>
+<li><strong>The BO2 Crossplay Relay</strong> was strictly an <strong>engineering and protocol study</strong> designed to achieve cross-platform interoperability in a legacy 2012 title that never had crossplay.  </li>
+<li><strong>The <code>msclients</code> GSC Injector</strong> is <strong>100% benign, open-source Reverse Engineering</strong> built so the community can load custom GSC mods, custom Zombies game modes, and preservation patches on the Microsoft Store / Xbox PC edition.  </li>
+<li><strong>The parasites taking our stolen Relay and open-source GSC injector, prompting an AI (<em>&quot;Claude, repackage this GSC injector and Relay tool, slap an RTM tool on it, make no mistakes&quot;</em>), and selling or distributing it with RTM cheat tools to ruin public lobbies should be actively hunted down and legally pursued by Activision.</strong></li>
+</ul>
 </li>
 </ol>
 </blockquote>

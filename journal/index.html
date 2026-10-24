@@ -7,7 +7,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Technical Journal | Eduardo Gelain – Reverse Engineering & Game Dev</title>
     <meta name="description" content="In-depth technical research papers, reverse engineering breakdowns, GSC bytecode VM analysis, UWP/GDK sandbox bypasses by Eduardo Gelain (SpetDev).">
-    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, ReShade Preset Studio, 4GB Patch Online, online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad, T3WAD, 0x543377AB, Demonware WAD, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, ResurgeGDK, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -148,6 +148,28 @@
           "url": "https://spet01.dev/journal/",
           "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
           "author": { "@id": "https://spet01.dev/#person" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://spet01.dev/#wad-faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is online_tu17_mp.wad? (O que é o arquivo online_tu17_mp.wad?)",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "online_tu17_mp.wad is NOT a DOOM or Zandronum multiplayer mod. It is an official Call of Duty: Black Ops II (Treyarch T6 engine, Title Update 17) online configuration container downloaded from Activision / Demonware Publisher Storage (18397/pub/online_tu17_mp.wad). It uses Treyarch's proprietary T3WAD binary format (magic bytes AB 77 33 54 / 0x543377AB) and bundles 8 zlib-compressed lumps: playlists_mp.info, codtv-mp.json, voting-mp.json, motd-mp-english.json, leagues.info, message_encryption.dat, entitlements.info, and youtube.info. Full reverse-engineering breakdown at https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are online_tu17_zm.wad, online_tu14_mp_english.wad, and online_tu14_sp_english.wad?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware WAD container. online_tu14_mp_english.wad and online_tu14_sp_english.wad are the Call of Duty: Black Ops 1 (T5, Title Update 14) Demonware Publisher Storage WAD archives (0x543377AB T3WAD header). Full specification at https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/."
+              }
+            }
+          ]
         }
       ]
     }
@@ -668,9 +690,9 @@
                     <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 18, 2026</time>
                         <h2 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-A-WAD-Modern-Games/" class="hover:text-primary transition-colors">What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8</a>
+                            <a href="/journal/What-Is-A-WAD-Modern-Games/" class="hover:text-primary transition-colors">What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8</a>
                         </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.</p>
                         <a href="/journal/What-Is-A-WAD-Modern-Games/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
                     <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
@@ -678,7 +700,7 @@
                         <h2 class="text-base font-bold text-white mb-2">
                             <a href="/journal/Optimize-Old-Games-4GB-Patch-DXVK/" class="hover:text-primary transition-colors">Quick Entry: How to Optimize Old Games Yourself with 4GB Patch and DXVK!</a>
                         </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using the 4GB Memory Patch (LAA) and DXVK Vulkan translation layer.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">A step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using Spet's 4gb Patch Online (PE32/PE32+ Large Address Aware Studio) and DXVK Vulkan translation layer.</p>
                         <a href="/journal/Optimize-Old-Games-4GB-Patch-DXVK/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
                     <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">
@@ -750,7 +772,7 @@
                         <h2 class="text-base font-bold text-white mb-2">
                             <a href="/journal/Document-Explaining-Leaks/" class="hover:text-primary transition-colors">Document: Explaining Unauthorized Leaks & Network Architecture Analysis</a>
                         </h2>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Technical statement and security disclosure on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing, HMAC-SHA1 translation, and crossplay relay topology.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.</p>
                         <a href="/journal/Document-Explaining-Leaks/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
                     <article class="p-5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-primary/40 transition-colors">

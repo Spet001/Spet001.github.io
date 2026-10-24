@@ -1255,11 +1255,11 @@ const PORTFOLIO_DATA = {
         },
         {
             id: "What-Is-A-WAD-Modern-Games",
-            title: "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
+            title: "What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8",
             date: "Oct 18, 2026",
             file: "What-Is-A-WAD-Modern-Games.md",
             category: "Reverse Engineering & File Formats",
-            excerpt: "Tracing the WAD lump filesystem from 1993 DOOM to reverse-engineering Treyarch's undocumented 0x543377AB Demonware WAD containers (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 resources."
+            excerpt: "What is online_tu17_mp.wad? Tracing the WAD lump filesystem from 1993 DOOM to reverse-engineering Treyarch's undocumented 0x543377AB (T3WAD) Demonware Publisher Storage WAD containers (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 resources."
         },
         {
             id: "Optimize-Old-Games-4GB-Patch-DXVK",
@@ -1331,7 +1331,7 @@ const PORTFOLIO_DATA = {
             date: "Sep 19, 2026",
             file: "Document-Explaining-Leaks.md",
             category: "Network Engineering & Security",
-            excerpt: "Technical disclosure and incident post-mortem on unauthorized repository dumps, alongside an in-depth architectural breakdown of low-latency UDP packet routing and crossplay relay topology."
+            excerpt: "Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation."
         },
         {
             id: "CW-GSC-Injection-MS-Store",
@@ -13365,6 +13365,18 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
     const { t, lang } = useContext(LanguageContext);
     const [entries, setEntries] = useState(PORTFOLIO_DATA.journalEntries || []);
     const [selectedId, setSelectedId] = useState(normalizePostId(activePostId) || (PORTFOLIO_DATA.journalEntries[0]?.id || 'What-Is-GSC'));
+    const initialPrerenderedRef = useRef((() => {
+        if (typeof document !== 'undefined') {
+            const preEl = document.getElementById('content');
+            if (preEl && preEl.innerHTML && preEl.innerHTML.trim().length > 0) {
+                return {
+                    slug: preEl.getAttribute('data-prerendered') || '',
+                    html: preEl.innerHTML
+                };
+            }
+        }
+        return null;
+    })());
     const [postContent, setPostContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -13505,7 +13517,14 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
         }
 
         const filename = entry ? entry.file : `${activeId}.md`;
-        setLoading(true);
+        const canonicalSlug = entry && entry.file ? entry.file.replace(/\.md$/, '') : activeId;
+        const hasInitialPrerendered = Boolean(
+            initialPrerenderedRef.current &&
+            (initialPrerenderedRef.current.slug === canonicalSlug || initialPrerenderedRef.current.slug === activeId)
+        );
+        if (!hasInitialPrerendered) {
+            setLoading(true);
+        }
         setError(null);
 
         fetch(`/journal/md/${encodeURIComponent(filename)}`)
@@ -13518,7 +13537,9 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                 setLoading(false);
             })
             .catch(err => {
-                setError(err.message);
+                if (!hasInitialPrerendered) {
+                    setError(err.message);
+                }
                 setLoading(false);
             });
 
@@ -14014,18 +14035,20 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                             </div>
                         )}
 
-                        {!loading && !translating && !error && !isLocked && displayedMarkdown && (
+                        {!loading && !translating && !error && !isLocked && (displayedMarkdown || (initialPrerenderedRef.current && (initialPrerenderedRef.current.slug === activeArticleSlug || initialPrerenderedRef.current.slug === selectedId))) && (
                             <>
                                 <div
                                     id="journal-reader"
                                     className="markdown-body leading-relaxed text-slate-300 selection:bg-primary selection:text-white"
                                     dangerouslySetInnerHTML={{
-                                        __html: window.DOMPurify 
-                                            ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(displayedMarkdown) : displayedMarkdown, {
-                                                ADD_TAGS: ['model-viewer', 'iframe'],
-                                                ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick', 'translate']
-                                            })
-                                            : (window.marked ? window.marked.parse(displayedMarkdown) : displayedMarkdown)
+                                        __html: displayedMarkdown
+                                            ? (window.DOMPurify 
+                                                ? window.DOMPurify.sanitize(window.marked ? window.marked.parse(displayedMarkdown) : displayedMarkdown, {
+                                                    ADD_TAGS: ['model-viewer', 'iframe'],
+                                                    ADD_ATTR: ['src', 'alt', 'auto-rotate', 'camera-controls', 'shadow-intensity', 'exposure', 'style', 'poster', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'download', 'data-model-src', 'onclick', 'translate']
+                                                })
+                                                : (window.marked ? window.marked.parse(displayedMarkdown) : displayedMarkdown))
+                                            : (initialPrerenderedRef.current?.html || '')
                                     }}
                                 />
                                 <JournalComments

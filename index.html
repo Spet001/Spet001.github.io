@@ -8,7 +8,7 @@
     <title>Eduardo Gelain | Software & Game Developer</title>
     <meta name="description"
         content="Portfólio de Eduardo Gelain (SpetDev) - Engenharia Reversa, Ferramentas WebAssembly, Desenvolvimento de Jogos (C++, C#, Unity) e Arquitetura de Software.">
-    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, ReShade Preset Studio, 4GB Patch Online, online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad, T3WAD, 0x543377AB, Demonware WAD, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, ResurgeGDK, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -149,6 +149,28 @@
           "url": "https://spet01.dev/journal/",
           "description": "Research papers and engineering deep-dives into reverse engineering, game scripting engines, and sandbox security.",
           "author": { "@id": "https://spet01.dev/#person" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://spet01.dev/#wad-faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is online_tu17_mp.wad? (O que é o arquivo online_tu17_mp.wad?)",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "online_tu17_mp.wad is NOT a DOOM or Zandronum multiplayer mod. It is an official Call of Duty: Black Ops II (Treyarch T6 engine, Title Update 17) online configuration container downloaded from Activision / Demonware Publisher Storage (18397/pub/online_tu17_mp.wad). It uses Treyarch's proprietary T3WAD binary format (magic bytes AB 77 33 54 / 0x543377AB) and bundles 8 zlib-compressed lumps: playlists_mp.info, codtv-mp.json, voting-mp.json, motd-mp-english.json, leagues.info, message_encryption.dat, entitlements.info, and youtube.info. Full reverse-engineering breakdown at https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are online_tu17_zm.wad, online_tu14_mp_english.wad, and online_tu14_sp_english.wad?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware WAD container. online_tu14_mp_english.wad and online_tu14_sp_english.wad are the Call of Duty: Black Ops 1 (T5, Title Update 14) Demonware Publisher Storage WAD archives (0x543377AB T3WAD header). Full specification at https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/."
+              }
+            }
+          ]
         }
       ]
     }
@@ -965,7 +987,73 @@
                         </div>
                     </div>
 
-                    <!-- Tool 3: Quick 3D Studio -->
+                    <!-- Tool 3: ReShade Studio -->
+                    <div class="rounded-2xl glass-panel border border-emerald-500/30 hover:border-emerald-400/60 shadow-[0_8px_30px_rgba(16,185,129,0.12)] overflow-hidden transition-all duration-300">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
+                            <div class="lg:col-span-7 bg-[#060911] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex items-center justify-center">
+                                <img src="/assets/tool_reshade_studio.png" alt="Spet's ReShade Studio" class="w-full h-auto object-cover" loading="lazy" />
+                            </div>
+                            <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-emerald-950/20 via-black/40 to-transparent">
+                                <div>
+                                    <div class="text-[11px] font-mono text-emerald-400 font-semibold tracking-wider uppercase mb-1.5">
+                                        Deterministic Color Grading &amp; 3D LUT Studio
+                                    </div>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's ReShade Studio</h3>
+                                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                                        100% mathematical color-grading workstation and 3D LUT generator. Matches any game screenshot to a reference frame via Reinhard CIE LAB statistical color transfer and exports ready-to-drop ReShade .ini presets, custom .fx HLSL shaders, and 3D LUT textures.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1.5 mb-6">
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-emerald-200/90 border border-emerald-500/20">CIE LAB Reinhard</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-emerald-200/90 border border-emerald-500/20">3D LUT Generator</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-emerald-200/90 border border-emerald-500/20">HLSL Shaders (.fx)</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-emerald-200/90 border border-emerald-500/20">Zero AI</span>
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                    <a href="/tools/reshade-studio/" class="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs transition-colors shadow-lg shadow-emerald-600/30 flex items-center gap-2">
+                                        <span>Open ReShade Studio</span>
+                                        <i class="fas fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                    <span class="text-[11px] font-mono text-emerald-400/80">/tools/reshade-studio/</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool 4: 4gb Patch Online -->
+                    <div class="rounded-2xl glass-panel border border-[#E2A03F]/30 hover:border-[#E2A03F]/60 shadow-[0_8px_30px_rgba(226,160,63,0.12)] overflow-hidden transition-all duration-300">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
+                            <div class="lg:col-span-7 bg-[#0B0C0E] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex items-center justify-center">
+                                <img src="/assets/tool_4gb_patch.png" alt="Spet's 4gb Patch" class="w-full h-auto object-cover" loading="lazy" />
+                            </div>
+                            <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-amber-950/20 via-black/40 to-transparent">
+                                <div>
+                                    <div class="text-[11px] font-mono text-[#E2A03F] font-semibold tracking-wider uppercase mb-1.5">
+                                        Client-Side PE32/PE32+ Binary Patcher &amp; 4GB LAA Studio
+                                    </div>
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">Spet's 4gb Patch</h3>
+                                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                                        100% client-side PE32/PE32+ binary header analyzer and patcher running in browser memory via ArrayBuffer. Enables Large Address Aware (4GB Patch / 0x0020), recalculates 16-bit folded PE Checksums, strips ASLR (~0x0040), exports x64dbg .1337 diffs, generates High-DPI manifests, and includes a built-in 1-click Fable3.exe sample.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1.5 mb-6">
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">4GB Patch (0x0020)</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">PE32 / PE32+</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">16-Bit Checksum</span>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-amber-200/90 border border-amber-500/20">Fable3.exe Sample</span>
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
+                                    <a href="/tools/4gb-patch/" class="px-5 py-2.5 rounded-lg bg-[#E2A03F] hover:bg-[#EEB04F] text-slate-950 font-bold text-xs transition-colors shadow-lg shadow-[#E2A03F]/30 flex items-center gap-2">
+                                        <span>Open 4gb Patch</span>
+                                        <i class="fas fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                    <span class="text-[11px] font-mono text-[#E2A03F]/80">/tools/4gb-patch/</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool 5: Quick 3D Studio -->
                     <div class="rounded-2xl glass-panel border border-purple-500/30 hover:border-purple-400/60 shadow-[0_8px_30px_rgba(168,85,247,0.12)] overflow-hidden transition-all duration-300">
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
                             <div class="lg:col-span-7 bg-[#040612] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex items-center justify-center">
@@ -1015,9 +1103,20 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 22, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/Tribute-To-BioWare-And-Mass-Effect/" class="hover:text-primary transition-colors">Farewell, BioWare: A Tribute to Mass Effect &amp; How the Normandy Shaped This Portfolio</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            A tribute to BioWare and the Mass Effect trilogy following EA's closure of BioWare and cancellation of the new Mass Effect: how the Systems Alliance HUD and Normandy CIC Galaxy Map shaped the 3D design of spet01.dev, plus the new Mass Effect OST Jukebox tab and /shepard CLI protocol.
+                        </p>
+                        <a href="/journal/Tribute-To-BioWare-And-Mass-Effect/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 21, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-ResurgeGDK/" class="hover:text-primary transition-colors">What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support & Local Telemetry</a>
+                            <a href="/journal/What-Is-ResurgeGDK/" class="hover:text-primary transition-colors">What is ResurgeGDK? Architectural Deep Dive: Steam-to-GDK Conversion, Workshop Support &amp; Local Telemetry</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.
@@ -1028,7 +1127,7 @@
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 19, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/Exploring-Legacy-UWP-Titles/" class="hover:text-primary transition-colors">Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion & UWP Dumper Injection</a>
+                            <a href="/journal/Exploring-Legacy-UWP-Titles/" class="hover:text-primary transition-colors">Exploring Legacy UWP Titles: Hooking Undocumented WinRT Store APIs, COD Points Ingestion &amp; UWP Dumper Injection</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Reverse engineering legacy Windows 10 UWP games (Call of Duty: Infinite Warfare): weaponizing UWP Dumper suspended process lifecycle for AppContainer DLL injection, VMT hooking undocumented IStoreContextServer COM interface, intercepting COD Points package requests, and analyzing why client-side Server-to-Server DLC spoofing fails.
@@ -1050,7 +1149,7 @@
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 16, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/DEVLOG-Outcaster-Unity-6/" class="hover:text-primary transition-colors">DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling & Zombies Survival</a>
+                            <a href="/journal/DEVLOG-Outcaster-Unity-6/" class="hover:text-primary transition-colors">DEVLOG: Rebuilding Outcaster from Scratch in Unity 6 — Live 3D HUD Tooling &amp; Zombies Survival</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             DEVLOG: Rebuilding Outcaster from scratch in Unity 6 (DX11). Engineering a custom LIVE 3D HUD Preview in the Inspector for zero-play-mode 2.5D weapon authoring, modular architecture, and a COD Zombies-style Survival Mode.
@@ -1083,10 +1182,10 @@
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Oct 18, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/What-Is-A-WAD-Modern-Games/" class="hover:text-primary transition-colors">What is a WAD? From 1993 DOOM to Demonware WADs in Call of Duty</a>
+                            <a href="/journal/What-Is-A-WAD-Modern-Games/" class="hover:text-primary transition-colors">What is a WAD? From 1993 DOOM to Demonware WADs in Call of Duty (online_tu17_mp.wad)</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
-                            Technical deep dive into the WAD file format: from id Tech 1 to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad).
+                            What is online_tu17_mp.wad? It is NOT a DOOM mod — it is an official Call of Duty: Black Ops 2 (T6 — Title Update 17) Demonware Publisher Storage WAD archive (magic header 0x543377AB / T3WAD) containing zlib-compressed playlists_mp.info, codtv-mp.json, and leagues.info, alongside Black Ops 1's online_tu14_mp_english.wad and online_tu14_sp_english.wad.
                         </p>
                         <a href="/journal/What-Is-A-WAD-Modern-Games/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
@@ -1097,7 +1196,7 @@
                             <a href="/journal/Optimize-Old-Games-4GB-Patch-DXVK/" class="hover:text-primary transition-colors">How to Optimize Old Games Yourself with 4GB Patch and DXVK!</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
-                            Step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using LAA and DXVK Vulkan translation.
+                            Step-by-step practical guide to fixing stuttering and crashes in classic DirectX games using Spet's 4gb Patch Online (PE32/PE32+ LAA Studio) and DXVK Vulkan translation.
                         </p>
                         <a href="/journal/Optimize-Old-Games-4GB-Patch-DXVK/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
@@ -1136,9 +1235,20 @@
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 27, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/T6-Open-Source-GSC-Mods/" class="hover:text-primary transition-colors">Providing Open Source T6 Custom Game Modes GSC!</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Open-sourcing custom game modes for Call of Duty: Black Ops 2 (T6) to preserve community game modifications.
+                        </p>
+                        <a href="/journal/T6-Open-Source-GSC-Mods/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
                         <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 21, 2026</time>
                         <h3 class="text-base font-bold text-white mb-2">
-                            <a href="/journal/UWP-GDK-Sandbox-Entitlement-Analysis/" class="hover:text-primary transition-colors">UWP/GDK Sandbox & Entitlement Architecture Analysis (Legacy Preservation)</a>
+                            <a href="/journal/UWP-GDK-Sandbox-Entitlement-Analysis/" class="hover:text-primary transition-colors">UWP/GDK Sandbox &amp; Entitlement Architecture Analysis (Legacy Preservation)</a>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-3">
                             Analyzing UWP/GDK sandbox pre-installed DLC assets and cryptographic entitlement verification routines.
@@ -1166,6 +1276,17 @@
                             IDA Pro cross-referencing and offset discovery for legacy engine memory hooks inside modern Windows containers.
                         </p>
                         <a href="/journal/T5-GSC-Injector-MS-Store/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
+                    </article>
+
+                    <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">
+                        <time class="text-xs font-mono text-slate-500 mb-2 block">Sep 19, 2026</time>
+                        <h3 class="text-base font-bold text-white mb-2">
+                            <a href="/journal/Document-Explaining-Leaks/" class="hover:text-primary transition-colors">Document: Explaining Unauthorized Leaks &amp; Network Architecture Analysis</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            Technical statement, formal disavowal of RTM cheat bundles, and security disclosure on unauthorized repository dumps of the BO2 Crossplay Relay and repackaged msclients GSC Injector, alongside an architectural breakdown of UDP packet routing and HMAC-SHA1 translation.
+                        </p>
+                        <a href="/journal/Document-Explaining-Leaks/" class="text-xs font-bold text-primary hover:underline">Read Research Paper →</a>
                     </article>
 
                     <article class="p-5 rounded-xl glass-panel hover:border-primary/40 transition-colors">

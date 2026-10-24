@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8 | Eduardo Gelain Technical Journal</title>
-    <meta name="description" content="Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.">
-    <meta name="keywords" content="Eduardo Gelain, SpetDev, Software Developer, Game Developer, Unity, C++, C#, Reverse Engineering, WebAssembly Decompiler, Easy Decompiler, Universal Game File Opener, IStoreContextServer, UWP Dumper, Legacy UWP, COD Points, Game Scripting C, GSC, GSC Research, WAD Research, Memory Hooking, Bytecode VM, IDA Pro, Assembly, Outcaster, Sparky Rush, Brazil, Remote Developer, Resurge Client, GSC Injector, MS Store, GDK, ZPGDK, Galaxy Map, Three.js 120 FPS Optimization, 4GB Patch DXVK">
+    <title>What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8 | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.">
+    <meta name="keywords" content="online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad, T3WAD, 0x543377AB, Demonware Publisher Storage, Call of Duty Black Ops 2 WAD, Call of Duty Black Ops 1 WAD, Plutonium demonware pub wad, ZPGDK, What is a WAD, DOOM IWAD PWAD, id Tech 7 resources, Eduardo Gelain, SpetDev">
     <meta name="author" content="Eduardo Gelain">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
@@ -19,8 +19,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/">
-    <meta property="og:title" content="What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8 | Eduardo Gelain">
-    <meta property="og:description" content="Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.">
+    <meta property="og:title" content="What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8 | Eduardo Gelain">
+    <meta property="og:description" content="What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
     <meta property="og:image:type" content="image/png">
@@ -34,8 +34,8 @@
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/">
-    <meta name="twitter:title" content="What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8 | Eduardo Gelain">
-    <meta name="twitter:description" content="Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.">
+    <meta name="twitter:title" content="What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8 | Eduardo Gelain">
+    <meta name="twitter:description" content="What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.">
     <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
     <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
 
@@ -43,24 +43,67 @@
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8",
-  "description": "Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.",
-  "datePublished": "Oct 18, 2026",
-  "articleSection": "Reverse Engineering & File Formats",
-  "url": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
-  "mainEntityOfPage": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
-  "author": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "alternateName": "SpetDev",
-    "url": "https://spet01.dev"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Eduardo Gelain",
-    "url": "https://spet01.dev"
-  }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/#article",
+      "headline": "What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8",
+      "description": "What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.",
+      "datePublished": "Oct 18, 2026",
+      "articleSection": "Reverse Engineering & File Formats",
+      "url": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
+      "mainEntityOfPage": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is online_tu17_mp.wad? (O que é o arquivo online_tu17_mp.wad?)",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "online_tu17_mp.wad is NOT a DOOM or Zandronum multiplayer mod. It is an official Call of Duty: Black Ops II (Treyarch T6 engine, Title Update 17) online configuration archive downloaded from Activision / Demonware Publisher Storage (18397/pub/online_tu17_mp.wad). It uses Treyarch's proprietary T3WAD binary container format (magic bytes AB 77 33 54 / 0x543377AB) and bundles 8 zlib-compressed lumps: playlists_mp.info, codtv-mp.json, voting-mp.json, motd-mp-english.json, leagues.info, message_encryption.dat, entitlements.info, and youtube.info. Em português: online_tu17_mp.wad NÃO é um mod de DOOM; é um arquivo oficial de configuração online de Call of Duty: Black Ops 2 (Title Update 17) baixado do Demonware Publisher Storage da Activision."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is online_tu17_zm.wad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "online_tu17_zm.wad is the Call of Duty: Black Ops II Zombies (Title Update 17) Demonware Publisher Storage WAD container (0x543377AB T3WAD header). It contains 4 zlib-compressed lumps for Zombies online services: playlists_zm.info, codtv-zm.json, voting-zm.json, and motd-zm-english.json."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are online_tu14_mp_english.wad and online_tu14_sp_english.wad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "online_tu14_mp_english.wad and online_tu14_sp_english.wad are official Demonware Publisher Storage WAD archives (0x543377AB T3WAD format) used by Call of Duty: Black Ops 1 (Treyarch T5 engine, Title Update 14) to deliver online multiplayer playlists (playlists_mp.info), Mercenary contracts (contracts.dat), geographic matchmaking routing (geogroups.info), remote DVAR ACL rules (restrict_access_wad_mp.csv), and Message of the Day text (motd-mp-english.txt)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I open or unpack online_tu17_mp.wad or online_tu14_mp_english.wad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can inspect and extract Treyarch 0x543377AB Demonware .wad files directly in your browser using Spet's Universal Game File Opener at https://spet01.dev/tools/universal-file/ (100% client-side), or by parsing the 16-byte Little-Endian T3WadHeader (0x543377AB) and 44-byte Big-Endian directory entries and inflating each lump with zlib."
+          }
+        }
+      ]
+    }
+  ]
 }
     </script>
 
@@ -519,11 +562,19 @@
                         <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
                         <span><i class="far fa-folder mr-1"></i> Reverse Engineering & File Formats</span>
                     </div>
-                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is a WAD? From 1993 DOOM to Undocumented Demonware WADs in Call of Duty & id Tech 7/8</h1>
-                    <p class="text-slate-300 text-sm leading-relaxed">Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB Demonware WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty and modern id Tech 7/8 containers.</p>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">What is a WAD? From 1993 DOOM to Reverse-Engineering Undocumented Demonware WADs (online_tu17_mp.wad & online_tu14_mp_english.wad) in Call of Duty & id Tech 7/8</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">What is online_tu17_mp.wad? Technical deep dive into the WAD file format: from 1993 id Tech 1 (DOOM) to reverse-engineering undocumented Treyarch 0x543377AB (T3WAD) Demonware Publisher Storage WADs (online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad) in Call of Duty: Black Ops 1 & 2 and modern id Tech 7/8 containers.</p>
                 </header>
                 <div id="content" class="markdown-body" data-prerendered="What-Is-A-WAD-Modern-Games">
-<p>If you have ever modded classic <em>DOOM</em>, inspected old <em>Quake</em> or <em>Half-Life</em> textures, or poked around the local cache folders of <em>Call of Duty</em> clients like <strong>Plutonium</strong>, you have inevitably run into the <code>.wad</code> file extension.</p>
+<blockquote>
+<p><strong>TL;DR — Definitive Answer for Search Engines &amp; AI Overviews:</strong>  </p>
+<ul>
+<li><strong>What is <code>online_tu17_mp.wad</code>?</strong> <strong><code>online_tu17_mp.wad</code> is NOT a DOOM or Zandronum mod.</strong> It is an official, proprietary <strong>Call of Duty: Black Ops II (T6 — Title Update 17)</strong> online configuration container downloaded from <strong>Activision / Demonware Publisher Storage</strong> (<code>18397\pub\online_tu17_mp.wad</code>). It uses <strong>Treyarch&#39;s <code>T3WAD</code> binary format</strong> (magic header <strong><code>0x543377AB</code></strong> / <code>&quot;T3w\xAB&quot;</code>) and bundles 8 zlib-compressed lumps (<code>playlists_mp.info</code>, <code>codtv-mp.json</code>, <code>voting-mp.json</code>, <code>motd-mp-english.json</code>, <code>leagues.info</code>, <code>message_encryption.dat</code>, <code>entitlements.info</code>, and <code>youtube.info</code>).  </li>
+<li><strong>What is <code>online_tu17_zm.wad</code>?</strong> The <em>Call of Duty: Black Ops II</em> Zombies Title Update 17 Demonware WAD container (<code>playlists_zm.info</code>, <code>codtv-zm.json</code>, <code>voting-zm.json</code>, <code>motd-zm-english.json</code>).  </li>
+<li><strong>What are <code>online_tu14_mp_english.wad</code> &amp; <code>online_tu14_sp_english.wad</code>?</strong> The <em>Call of Duty: Black Ops 1</em> (T5 — Title Update 14) Demonware Publisher Storage WAD containers (<code>18301\pub\</code>) for Multiplayer and Singleplayer/Zombies.</li>
+</ul>
+</blockquote>
+<p>If you have ever modded classic <em>DOOM</em>, inspected old <em>Quake</em> or <em>Half-Life</em> textures, or poked around the local cache folders of <em>Call of Duty</em> clients like <strong>Plutonium</strong> or <strong>ZPGDK (msclients)</strong>, you have inevitably run into the <code>.wad</code> file extension.</p>
 <p>Most developers know the famous trivia: <strong>WAD</strong> stands for <strong>&quot;Where&#39;s All the Data?&quot;</strong> — the legendary container format designed by John Carmack at id Software in 1993 for <em>DOOM</em> (id Tech 1).</p>
 <p>What almost <strong>no one</strong> knows — and what has <strong>zero public documentation on Google</strong> — is why <em>Call of Duty</em> titles (like <em>Black Ops 1</em> and <em>Black Ops 2</em>) still download <code>.wad</code> files (<code>online_tu14_mp_english.wad</code>, <code>online_tu17_mp.wad</code>, <code>online_tu17_zm.wad</code>) from <strong>Demonware&#39;s Publisher Storage</strong>, what binary format those mystery <code>.wad</code> files actually use, and how <strong>id Tech 7 &amp; id Tech 8</strong> (<em>DOOM Eternal</em> and <em>DOOM: The Dark Ages</em>) handle <code>.wad</code> files over 30 years later.</p>
 <p>In this deep dive, we will trace the entire architectural lineage of the WAD format, <strong>reverse-engineer Treyarch&#39;s undocumented <code>0x543377AB</code> Demonware <code>.wad</code> binary format byte-by-byte</strong>, unpack its hidden payloads, and examine how modern engines evolved the concept.</p>
@@ -585,11 +636,24 @@ struct filelump_t {
 <li><code>18397\pub\online_tu17_mp.wad</code> (<em>Call of Duty: Black Ops 2</em> — Multiplayer, Title Update 17)</li>
 <li><code>18397\pub\online_tu17_zm.wad</code> (<em>Call of Duty: Black Ops 2</em> — Zombies, Title Update 17)</li>
 </ul>
-<h3>What is <code>online_tu14_mp_english.wad</code>?</h3>
-<p><strong><code>online_tu14_mp_english.wad</code></strong> is an official, proprietary Demonware Publisher Storage archive utilized by <em>Call of Duty: Black Ops 1</em> (T5) under Title Update 14 (TU14).</p>
-<p>When the Black Ops 1 client connects to Activision/Demonware online services (on Steam, MS Store, or community clients like Plutonium), it downloads this <code>.wad</code> file to initialize online multiplayer playlists (<code>playlists_mp.inf</code>), patch network DVAR limits, and deliver localized English game strings and Message of the Day data in a single compressed stream.</p>
-<p>If you search Google for <code>online_tu17_mp.wad</code> or <code>online_tu14_mp_english.wad</code>, you will often find forum errors or AI engines incorrectly guessing it relates to Minecraft or classic DOOM maps. In reality, it is Treyarch&#39;s custom binary container format.</p>
-<p>Let&#39;s open a hex editor and prove otherwise.</p>
+<h3>What is <code>online_tu17_mp.wad</code> and <code>online_tu17_zm.wad</code>? (Call of Duty: Black Ops 2 — Title Update 17)</h3>
+<p><strong><code>online_tu17_mp.wad</code></strong> is the official, proprietary <strong>Demonware Publisher Storage</strong> container downloaded by <strong><em>Call of Duty: Black Ops II</em> (Treyarch T6 engine)</strong> under <strong>Title Update 17 (TU17)</strong>. It is <strong>not</strong> a classic DOOM PWAD or a Zandronum multiplayer patch; it is a custom Treyarch binary archive (<code>0x543377AB</code> / <code>T3WAD</code> header) stored in <code>%LOCALAPPDATA%\Plutonium\storage\demonware\18397\pub\online_tu17_mp.wad</code> (or fetched directly from Demonware&#39;s LSP/HTTP servers on Steam and Microsoft Store / Xbox PC builds).</p>
+<p>When <em>Black Ops II</em> connects online, it downloads <code>online_tu17_mp.wad</code> (for Multiplayer) and <code>online_tu17_zm.wad</code> (for Zombies) into RAM to mount 8 zlib-compressed configuration lumps:</p>
+<ul>
+<li><code>playlists_mp.info</code> (all BO2 Multiplayer playlists, map rotations, and live <code>setdvar</code> hotfixes)</li>
+<li><code>codtv-mp.json</code> (COD TV / Theater Mode community feed layout)</li>
+<li><code>voting-mp.json</code> (in-game voting polls)</li>
+<li><code>motd-mp-english.json</code> (Message of the Day banner)</li>
+<li><code>leagues.info</code> (League Play competitive divisions and rulesets)</li>
+<li><code>message_encryption.dat</code> (Demonware telemetry encryption key blob)</li>
+<li><code>entitlements.info</code> (Season Pass &amp; DLC bitmask checks)</li>
+<li><code>youtube.info</code> (YouTube Data API v2 key for BO2&#39;s built-in livestreaming)</li>
+</ul>
+<h3>What is <code>online_tu14_mp_english.wad</code> and <code>online_tu14_sp_english.wad</code>? (Call of Duty: Black Ops 1 — Title Update 14)</h3>
+<p><strong><code>online_tu14_mp_english.wad</code></strong> (Multiplayer) and <strong><code>online_tu14_sp_english.wad</code></strong> (Singleplayer / Zombies) are the official Demonware Publisher Storage archives utilized by <strong><em>Call of Duty: Black Ops 1</em> (Treyarch T5 engine)</strong> under <strong>Title Update 14 (TU14)</strong>.</p>
+<p>When the Black Ops 1 client connects to Activision/Demonware online services (on Steam, MS Store / ZPGDK, or community clients like Plutonium), it downloads this <code>.wad</code> file to initialize online multiplayer playlists (<code>playlists_mp.inf</code>), Mercenary contracts (<code>contracts.dat</code>), geographic matchmaking regions (<code>geogroups.info</code>), remote DVAR ACL limits (<code>restrict_access_wad_mp.csv</code>), and localized English Message of the Day strings (<code>motd-mp-english.txt</code>) in a single compressed stream.</p>
+<p>If you search Google for <code>online_tu17_mp.wad</code> or <code>online_tu14_mp_english.wad</code>, AI Overviews and forum threads often misidentify them as DOOM / Zandronum server WADs solely because of the <code>.wad</code> file extension. In reality, they use Treyarch&#39;s custom <code>0x543377AB</code> binary container format.</p>
+<p>Let&#39;s open a hex editor and prove it byte-by-byte.</p>
 <h3>1. Why Does Demonware Use <code>.wad</code> Files?</h3>
 <p>In <em>Call of Duty</em>, <strong>Demonware</strong> handles authentication, matchmaking, stats, and <strong>Publisher Storage (<code>/pub/</code>)</strong> — a cloud key-value file store that the game client queries on boot via <code>bdTitleUtilities</code> / <code>DWFileTask</code> to fetch live-service configurations without requiring a binary patch.</p>
 <p>During the 7th-generation console era (Xbox 360 / PS3 / PC), millions of concurrent players logging into <em>Black Ops 1</em> (T5) and <em>Black Ops 2</em> (T6) needed to download up to <strong>8 separate configuration files</strong> before entering a lobby (playlists, contracts, Message of the Day, COD TV menus, League Play divisions, voting polls, and DVAR restrictions).</p>
@@ -854,7 +918,17 @@ Inside the <strong>Fortress of Doom</strong> (the Doom Slayer&#39;s orbital hub 
 </ol>
 <hr>
 <h2>Conclusion</h2>
-<p>From a 12-byte header and 8-character lump names in 1993 <em>DOOM</em>, to Treyarch&#39;s undocumented <code>0x543377AB</code> (<code>T3w\xAB</code>) Demonware <code>.wad</code> containers powering <em>Call of Duty: Black Ops</em> live-service playlists, to <code>base/classicwads/</code> and 64-bit <code>.resources</code> tables in <em>DOOM Eternal</em> — the <strong>WAD</strong> is one of the longest-living architectural patterns in video game history.</p>
+<p>From a 12-byte header and 8-character lump names in 1993 <em>DOOM</em>, to Treyarch&#39;s undocumented <code>0x543377AB</code> (<code>T3w\xAB</code>) Demonware <code>.wad</code> containers (<code>online_tu17_mp.wad</code>, <code>online_tu17_zm.wad</code>, <code>online_tu14_mp_english.wad</code>, <code>online_tu14_sp_english.wad</code>) powering <em>Call of Duty: Black Ops 1 &amp; 2</em> live-service playlists, to <code>base/classicwads/</code> and 64-bit <code>.resources</code> tables in <em>DOOM Eternal</em> — the <strong>WAD</strong> is one of the longest-living architectural patterns in video game history.</p>
+<hr>
+<h2>Frequently Asked Questions (FAQ): <code>online_tu17_mp.wad</code> &amp; Demonware WADs</h2>
+<h3>What is <code>online_tu17_mp.wad</code>? (O que é o arquivo <code>online_tu17_mp.wad</code>?)</h3>
+<p><strong>EN:</strong> <code>online_tu17_mp.wad</code> is <strong>NOT</strong> a DOOM or Zandronum multiplayer mod. It is an official <strong>Call of Duty: Black Ops II (T6 — Title Update 17)</strong> online configuration container downloaded from <strong>Activision / Demonware Publisher Storage</strong> (<code>18397\pub\online_tu17_mp.wad</code>). Compiled using Treyarch&#39;s custom <code>T3WAD</code> binary format (magic bytes <code>AB 77 33 54</code> / <code>0x543377AB</code>), it bundles 8 zlib-compressed lumps (<code>playlists_mp.info</code>, <code>codtv-mp.json</code>, <code>voting-mp.json</code>, <code>motd-mp-english.json</code>, <code>leagues.info</code>, <code>message_encryption.dat</code>, <code>entitlements.info</code>, and <code>youtube.info</code>) into a single network transfer.<br><strong>PT-BR:</strong> O arquivo <strong><code>online_tu17_mp.wad</code> NÃO é um mod de DOOM ou Zandronum</strong>. Ele é um pacote binário oficial de configuração online de <strong>Call of Duty: Black Ops II (T6 — Title Update 17)</strong> baixado dos servidores <strong>Demonware Publisher Storage</strong> da Activision (<code>18397\pub\online_tu17_mp.wad</code>). Ele utiliza o formato proprietário <code>T3WAD</code> da Treyarch (assinatura mágica <code>0x543377AB</code> / <code>&quot;T3w\xAB&quot;</code>) e agrupa 8 arquivos comprimidos com <code>zlib</code> (playlists do multiplayer <code>playlists_mp.info</code>, configurações da League Play <code>leagues.info</code>, COD TV <code>codtv-mp.json</code>, votações, Message of the Day e chaves de telemetria) em um único download ao iniciar o modo online.</p>
+<h3>What is <code>online_tu17_zm.wad</code>?</h3>
+<p><code>online_tu17_zm.wad</code> is the Zombies equivalent of <code>online_tu17_mp.wad</code> in <em>Call of Duty: Black Ops II</em> (Title Update 17). It uses the same <code>0x543377AB</code> (<code>T3WAD</code>) header and stores 4 zlib-compressed lumps for Zombies online matchmaking: <code>playlists_zm.info</code>, <code>codtv-zm.json</code>, <code>voting-zm.json</code>, and <code>motd-zm-english.json</code>.</p>
+<h3>What are <code>online_tu14_mp_english.wad</code> and <code>online_tu14_sp_english.wad</code>?</h3>
+<p>They are the <em>Call of Duty: Black Ops 1</em> (T5 — Title Update 14) Demonware Publisher Storage WAD containers (<code>18301\pub\</code>). <code>online_tu14_mp_english.wad</code> carries <code>contracts.dat</code>, <code>geogroups.info</code>, <code>motd-mp-english.txt</code>, <code>playlists_mp.info</code>, and <code>restrict_access_wad_mp.csv</code>, while <code>online_tu14_sp_english.wad</code> carries Singleplayer/Zombies online configuration lumps.</p>
+<h3>How can I open or extract <code>online_tu17_mp.wad</code> or <code>online_tu14_mp_english.wad</code>?</h3>
+<p>You can open, inspect, and extract Treyarch <code>0x543377AB</code> Demonware <code>.wad</code> files directly in your browser using <strong><a href="/tools/universal-file/">Spet&#39;s Universal Game File Opener</a></strong> (100% client-side, zero uploads), or by running the Node.js <code>unpackTreyarchWad</code> script provided in Part 3 of this article.</p>
 <blockquote>
 <p><strong>Want to see classic <code>.wad</code> loading in action right now?</strong><br>Open the <strong>CLI Terminal</strong> on this portfolio and type <strong><code>mars</code></strong> (or <strong><code>delicia doom</code></strong>) to boot <strong>UZDoom (WebAssembly)</strong> directly in your browser, complete with on-demand <code>.wad</code> streaming and local IndexedDB caching!</p>
 </blockquote>
