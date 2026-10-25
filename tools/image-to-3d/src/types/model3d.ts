@@ -82,6 +82,71 @@ export interface CollisionHull {
   offset: [number, number, number];
 }
 
+export type UnityNodeCategory = 'architecture' | 'prop' | 'billboard' | 'light';
+
+export interface UnityGlbInclusionOptions {
+  includePropsDetails: boolean;
+  includeBillboardsSprites: boolean;
+  includeSceneLights: boolean;
+}
+
+export interface UnityPrefabItem {
+  id: string;
+  name: string;
+  signature: string;
+  count: number;
+  dimensions: [number, number, number];
+  category: 'prop' | 'billboard';
+  thumbnailDataUrl?: string;
+  colorHex: string;
+  prefabGroup: any;
+  instances: Array<{
+    name: string;
+    unityPosition: { x: number; y: number; z: number };
+    unityRotationEulerDeg: { x: number; y: number; z: number };
+    scale: { x: number; y: number; z: number };
+  }>;
+}
+
+export interface UnityTextureItem {
+  id: string;
+  name: string;
+  filename: string;
+  slot: 'map' | 'emissiveMap' | 'sprite';
+  width: number;
+  height: number;
+  dataUrl: string;
+  usedByMeshes: string[];
+}
+
+export interface UnityLightItem {
+  id: string;
+  name: string;
+  type: string;
+  colorHex: string;
+  intensity: number;
+  range: number;
+  decay?: number;
+  angleDeg?: number;
+  /** Position converted to Unity Left-Handed coordinate system (X inverted: -x, y, z) */
+  position: { x: number; y: number; z: number };
+  /** Original Three.js Right-Handed position (for reference) */
+  threeJsPosition: { x: number; y: number; z: number };
+  rotationEulerDeg?: { x: number; y: number; z: number };
+}
+
+export interface UnityExportSuiteData {
+  prefabs: UnityPrefabItem[];
+  textures: UnityTextureItem[];
+  lights: UnityLightItem[];
+  counts: {
+    architectureMeshes: number;
+    propMeshes: number;
+    billboardSprites: number;
+    sceneLights: number;
+  };
+}
+
 export interface Model3DBlueprint {
   id: string;
   title: string;
@@ -96,9 +161,10 @@ export interface Model3DBlueprint {
   parts: Part3D[];
   createdAt: string;
   promptUsed?: string;
-  sourceType: 'text' | 'image' | 'preset';
+  sourceType: 'text' | 'image' | 'preset' | 'html';
   thumbnailUrl?: string;
   sourceImage?: string;
+  sourceHtml?: string;
   shapeMode?: ShapeMode;
   backImage?: string;
   backMode?: BackFaceMode;
@@ -108,6 +174,7 @@ export interface Model3DBlueprint {
   backMirror?: boolean;
   customGroup?: any;
   backgroundMode?: BackgroundMode;
+  unitySuite?: UnityExportSuiteData;
 }
 
 export type ShapeMode = 'auto' | 'card' | 'contour' | 'plaque';

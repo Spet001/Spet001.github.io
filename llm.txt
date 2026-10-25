@@ -49,7 +49,10 @@ Eduardo has developed high-performance, client-side developer workstations runni
 4. **Spet's 4gb Patch Online (PE32/PE32+ LAA Binary Studio)**
    - URL: https://spet01.dev/tools/4gb-patch/
    - Description: 100% client-side PE32/PE32+ binary header analyzer and patcher running in browser memory via ArrayBuffer. Enables Large Address Aware (4GB Patch / 0x0020), recalculates 16-bit folded PE Checksums, strips ASLR (~0x0040), exports x64dbg .1337 diffs, generates High-DPI manifests, and includes a built-in 1-click Fable3.exe sample.
-5. **Spet's Quick 3D Studio (2D-to-3D Procedural Mesh Extruder)**
+5. **Spet's xCloudFX Studio (AI Upscaler, Image Enhancer, 120Hz FPS & Low-Latency Standalone Extension)**
+   - URL: https://spet01.dev/tools/xcloudfx/
+   - Description: Real-time WebGL2 upscaler (Spet Hybrid: FSR + DoG, AMD FSR 1.0, Anime4K v3.2 DoG, TAAU Anti-Ghosting), H.264 macroblock de-blocking filter, 120Hz monotonic sub-frame pacer with zero-ghosting frame generation, and 0ms WebRTC jitter buffer unlocker for Xbox Cloud Gaming. Exports a standalone Manifest V3 Extension (.ZIP — no Tampermonkey required, unlike Better xCloud) or optional .user.js script, and includes a Universal Browser Video Enhancer triggered by pressing HOME twice (2x) on YouTube, Anime, or Twitch.
+6. **Spet's Quick 3D Studio (2D-to-3D Procedural Mesh Extruder)**
    - URL: https://spet01.dev/tools/image-to-3d/
    - Description: Deterministic procedural 2D-to-3D mesh engine and binary .GLB/.GLTF exporter built with Three.js and WebGL 2.0 without AI hallucinations. Converts logos, emblems, and collectible trading cards (Yu-Gi-Oh!, Pokémon, Magic) into production-ready 3D models with PBR shaders, bevel extrusion, and UV backface mapping.
 

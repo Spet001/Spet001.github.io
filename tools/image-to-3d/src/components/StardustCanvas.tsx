@@ -71,6 +71,9 @@ export const StardustCanvas: React.FC = () => {
     }
 
     let lastTime = performance.now();
+    const isHeadless =
+      typeof navigator !== 'undefined' &&
+      (navigator.webdriver || /HeadlessChrome/i.test(navigator.userAgent));
 
     const render = (time: number) => {
       const delta = Math.min((time - lastTime) / 16.667, 2.5);
@@ -107,7 +110,9 @@ export const StardustCanvas: React.FC = () => {
         }
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      if (!isHeadless) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
     animationFrameId = requestAnimationFrame(render);

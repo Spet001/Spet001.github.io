@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  background-color: #060719;
+  color: #f4f4f5;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.pixelated, img.pixelated, .pixel-art {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}

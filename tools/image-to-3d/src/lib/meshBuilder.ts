@@ -60,17 +60,56 @@ export function buildModelFromBlueprint(blueprint?: Model3DBlueprint | null): Bu
 
   if (blueprint?.customGroup) {
     const custom = blueprint.customGroup as THREE.Group;
+    const partOverrides = new Map<string, Part3D>();
+    if (blueprint.parts) {
+      blueprint.parts.forEach((p) => partOverrides.set(p.id, p));
+    }
+
     custom.children.forEach((child) => {
+      if ((child as any).isLight) {
+        const clonedLight = child.clone() as THREE.Light;
+        const exportIntensity =
+          child.userData?.exportIntensity ?? (child as THREE.Light).intensity ?? 1;
+        // Keep preview intensity at 0 so studio lighting in Viewport3D stays balanced, while preserving exportIntensity for GLTFExporter
+        clonedLight.intensity = 0;
+        clonedLight.visible = child.visible;
+        clonedLight.userData = {
+          ...child.userData,
+          unityCategory: 'light',
+          exportIntensity,
+        };
+        modelContent.add(clonedLight);
+        return;
+      }
+
       if (child instanceof THREE.Mesh) {
         const cloned = child.clone();
+        cloned.visible = child.visible;
         cloned.material = Array.isArray(child.material)
           ? child.material.map((m) => m.clone())
           : child.material.clone();
-        cloned.userData = { ...child.userData, originalMaterial: cloned.material };
+
+        const partId = cloned.userData.partId || `part_${Math.random()}`;
+        const overridePart = partOverrides.get(partId);
+        if (overridePart && !Array.isArray(cloned.material) && cloned.material instanceof THREE.MeshStandardMaterial) {
+          cloned.material.color.set(overridePart.material.color);
+          cloned.material.roughness = overridePart.material.roughness;
+          cloned.material.metalness = overridePart.material.metalness;
+          if (overridePart.material.emissive) {
+            cloned.material.emissive.set(overridePart.material.emissive);
+            cloned.material.emissiveIntensity = overridePart.material.emissiveIntensity ?? 1.0;
+          }
+          cloned.material.needsUpdate = true;
+        }
+
+        cloned.userData = {
+          ...child.userData,
+          partId,
+          originalMaterial: cloned.material,
+        };
         modelContent.add(cloned);
         basePositions.set(cloned, cloned.position.clone());
 
-        const partId = cloned.userData.partId || `part_${Math.random()}`;
         if (!partsMap.has(partId)) partsMap.set(partId, []);
         partsMap.get(partId)!.push(cloned);
 

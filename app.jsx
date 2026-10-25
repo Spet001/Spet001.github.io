@@ -118,10 +118,14 @@ const PORTFOLIO_DATA = {
                 pePatcherTitle: "Spet's 4gb Patch",
                 pePatcherBadge: "Patcher PE32/PE32+ & 4GB LAA Studio",
                 pePatcherDesc: "Patcher e analisador binário PE32/PE32+ executado 100% no navegador via ArrayBuffer (zero upload). Ativa a flag Large Address Aware (4GB Patch / 0x0020) para eliminar crashes de memória em jogos clássicos de 32 bits, recalcula o PE Checksum folded de 16 bits, remove ASLR (~0x0040) para ponteiros estáticos, exporta patches .1337 para x64dbg, gera manifestos High-DPI e inclui o Fable3.exe real como sample de 1 clique.",
-                pePatcherOpen: "Abrir 4gb Patch"
+                pePatcherOpen: "Abrir 4gb Patch",
+                xcloudfxTitle: "Spet's xCloudFX Studio",
+                xcloudfxBadge: "AI Upscaler, Image Enhancer, 120Hz FPS & Low-Latency Extension",
+                xcloudfxDesc: "AI Upscale (Spet Hybrid: FSR + DoG & Anime4K), Image Enhancer (De-blocking H.264 + RCAS + Full RGB), FPS Melhorado (120Hz Sub-Frame Pacing + Zero-Ghosting FrameGen) e Baixa Latência (0ms Jitter Buffer + 1080p 20Mbps Unlocker). Tudo em uma Extensão Manifest V3 standalone (não precisa de Tampermonkey, diferente do Better xCloud!) ou script opcional — teste a preview ao vivo e baixe em /tools/xcloudfx/. EXTRA DA EXTENSÃO: Quer assistir no YouTube ou Anime? Aperte HOME 2x que o FX injeta no seu vídeo!",
+                xcloudfxOpen: "Abrir xCloudFX Studio"
             },
             terminal: {
-                title: "Console Interativo (SpetTerm)",
+                title: "Console Interativo (Spet@term Web)",
                 subtitle: "Digite 'help' para listar comandos disponíveis."
             },
             contact: {
@@ -295,10 +299,14 @@ const PORTFOLIO_DATA = {
                 pePatcherTitle: "Spet's 4gb Patch",
                 pePatcherBadge: "Client-Side PE32/PE32+ Binary Patcher & 4GB LAA Studio",
                 pePatcherDesc: "100% client-side PE32/PE32+ binary header analyzer and patcher running in browser memory via ArrayBuffer (zero uploads). Enables Large Address Aware (4GB Patch / 0x0020) to eliminate 32-bit Out-of-Memory crashes, recalculates 16-bit folded PE Checksums, strips ASLR (~0x0040) for static pointers, exports x64dbg .1337 diffs, generates High-DPI manifests, and includes a real 1-click Fable3.exe sample.",
-                pePatcherOpen: "Open 4gb Patch"
+                pePatcherOpen: "Open 4gb Patch",
+                xcloudfxTitle: "Spet's xCloudFX Studio",
+                xcloudfxBadge: "AI Upscaler, Image Enhancer, 120Hz FPS & Low-Latency Extension",
+                xcloudfxDesc: "AI Upscale (Spet Hybrid: FSR + DoG & Anime4K), Image Enhancer (H.264 De-blocking + RCAS + Full RGB), Improved FPS (120Hz Sub-Frame Pacing + Zero-Ghosting FrameGen), and Low Latency (0ms Jitter Buffer + 1080p 20Mbps Unlocker). All packaged in a standalone Manifest V3 Extension (no Tampermonkey required, unlike Better xCloud!) or optional userscript — test the live preview and download at /tools/xcloudfx/. EXTENSION BONUS: Watching YouTube or Anime? Press HOME 2x and FX injects directly into your video!",
+                xcloudfxOpen: "Open xCloudFX Studio"
             },
             terminal: {
-                title: "Interactive Console (SpetTerm)",
+                title: "Interactive Console (Spet@term Web)",
                 subtitle: "Type 'help' to see all available commands."
             },
             contact: {
@@ -675,21 +683,24 @@ const PORTFOLIO_DATA = {
             id: "spet_web_tools_suite",
             category: "tools",
             categoryLabel: { pt: "Ferramentas & Utilitários Web", en: "Web Tooling & Reverse Engineering" },
-            image: "/assets/tool_easy_decompiler.png",
+            image: "/assets/spetdev_tools_cover.jpg",
             caseStudyImages: [
+                "/assets/spetdev_tools_cover.jpg",
                 "/assets/tool_easy_decompiler.png",
                 "/assets/tool_universal_file.png",
+                "/assets/tool_xcloudfx.png",
                 "/assets/tool_reshade_studio.jpg",
-                "/assets/tool_4gb_patch.png"
+                "/assets/tool_4gb_patch.png",
+                "/assets/tool_quick_3d_studio.png"
             ],
             title: { pt: "Suíte de Ferramentas Web & Engenharia Reversa", en: "Web Tools & Reverse Engineering Suite" },
             featured: true,
             live: "/tools/",
             liveLabel: { pt: "Explorar Ferramentas", en: "Open Tools Suite" },
-            tags: ["WebAssembly", "Rizin Core", "Ghidra Sleigh", "Game Archives", "PE32 4GB Patch", "Three.js", "25+ Formats", "ReShade 3D LUT"],
+            tags: ["WebAssembly", "xCloudFX Studio", "Rizin Core", "Ghidra Sleigh", "Game Archives", "PE32 4GB Patch", "Three.js", "ReShade 3D LUT"],
             description: {
-                pt: "Suíte completa de utilitários e analisadores de engenharia reversa executados no browser: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines: Bethesda, id Tech, Ubisoft, Rockstar, PlayStation), ReShade Studio (CIE LAB & 3D LUT Compiler), Spet's 4gb Patch (PE32/PE32+ LAA Patcher) e Quick 3D Studio.",
-                en: "Comprehensive reverse engineering and archive extraction suite running client-side: Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ game engines), ReShade Studio (CIE LAB & 3D LUT Compiler), Spet's 4gb Patch (PE32/PE32+ LAA Patcher), and Quick 3D Studio."
+                pt: "Suíte completa de utilitários e analisadores executados no browser: xCloudFX Studio (AI Upscaler, Image Enhancer, 120Hz FPS & Baixa Latência em Extensão Standalone + HOME 2x no YouTube/Anime), Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines), ReShade Studio (CIE LAB & 3D LUT Compiler), Spet's 4gb Patch e Quick 3D Studio.",
+                en: "Comprehensive reverse engineering and graphics tooling suite running client-side: xCloudFX Studio (AI Upscaler, Image Enhancer, 120Hz FPS & Low-Latency Standalone Extension + HOME 2x on YouTube/Anime), Easy Decompiler (Rizin + Ghidra Sleigh WASM), Universal Game File Opener (25+ engines), ReShade Studio (CIE LAB & 3D LUT Compiler), Spet's 4gb Patch, and Quick 3D Studio."
             },
             caseStudy: {
                 challenge: {
@@ -1135,27 +1146,27 @@ const PORTFOLIO_DATA = {
                 { 
                     name: "IDA Pro", 
                     level: "Disassembly & Hex-Rays", 
-                    icon3d: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='ida-bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230891b2'/%3E%3Cstop offset='100%25' stop-color='%23164e63'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23ida-bg)'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='12.5' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/%3E%3Ctext x='32' y='37' font-family='system-ui,-apple-system,sans-serif' font-weight='900' font-size='19' fill='%23e0f2fe' text-anchor='middle' letter-spacing='-0.5'%3EIDA%3C/text%3E%3Ctext x='32' y='50' font-family='monospace' font-weight='800' font-size='9' fill='%2338bdf8' text-anchor='middle' letter-spacing='2'%3EPRO%3C/text%3E%3C/svg%3E" 
+                    icon3d: "/assets/icons/re_tools/ida_pro.png" 
                 },
                 { 
                     name: "x64dbg (xdbg64)", 
                     level: "Dynamic x64/x32 Debugger", 
-                    icon3d: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='xdbg-bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231e293b'/%3E%3Cstop offset='100%25' stop-color='%230f172a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23xdbg-bg)'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='12.5' fill='none' stroke='rgba(74,222,128,0.4)' stroke-width='1.5'/%3E%3Cpath d='M25 22h14M32 16v12M24 18l4 4-4 4M40 18l-4 4 4 4' stroke='%234ade80' stroke-width='2' stroke-linecap='round'/%3E%3Ctext x='32' y='49' font-family='monospace' font-weight='900' font-size='11' fill='%2386efac' text-anchor='middle' letter-spacing='0.5'%3Ex64dbg%3C/text%3E%3C/svg%3E" 
+                    icon3d: "/assets/icons/re_tools/x64dbg.png" 
                 },
                 { 
                     name: "ReClass.NET", 
                     level: "Memory Struct Reversing", 
-                    icon3d: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='rc-bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23581c87'/%3E%3Cstop offset='100%25' stop-color='%232e1065'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23rc-bg)'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='12.5' fill='none' stroke='rgba(216,180,254,0.35)' stroke-width='1.5'/%3E%3Crect x='19' y='15' width='26' height='17' rx='3' fill='none' stroke='%23d8b4fe' stroke-width='1.8'/%3E%3Cline x1='19' y1='21' x2='45' y2='21' stroke='%23d8b4fe' stroke-width='1.2'/%3E%3Cline x1='19' y1='27' x2='45' y2='27' stroke='%23d8b4fe' stroke-width='1.2'/%3E%3Ctext x='32' y='49' font-family='system-ui,-apple-system,sans-serif' font-weight='900' font-size='9' fill='%23f3e8ff' text-anchor='middle' letter-spacing='0.5'%3EReClass%3C/text%3E%3C/svg%3E" 
+                    icon3d: "/assets/icons/re_tools/reclass.png" 
                 },
                 { 
                     name: "ILSpy", 
                     level: ".NET & CIL Bytecode Analysis", 
-                    icon3d: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='il-bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ea580c'/%3E%3Cstop offset='100%25' stop-color='%239a3412'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23il-bg)'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='12.5' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/%3E%3Ccircle cx='28' cy='24' r='9' fill='none' stroke='%23ffedd5' stroke-width='2.5'/%3E%3Cline x1='35' y1='31' x2='44' y2='40' stroke='%23ffedd5' stroke-width='3' stroke-linecap='round'/%3E%3Ctext x='28' y='27.5' font-family='system-ui,sans-serif' font-weight='900' font-size='9' fill='%23fff' text-anchor='middle'%3E.NET%3C/text%3E%3Ctext x='32' y='52' font-family='monospace' font-weight='900' font-size='10.5' fill='%23ffedd5' text-anchor='middle' letter-spacing='1'%3EILSPY%3C/text%3E%3C/svg%3E" 
+                    icon3d: "/assets/icons/re_tools/ilspy.png" 
                 },
                 { 
                     name: "Cheat Engine (CE)", 
                     level: "Memory Scanner & Disassembler", 
-                    icon3d: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='ce-bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2316a34a'/%3E%3Cstop offset='100%25' stop-color='%2314532d'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23ce-bg)'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='12.5' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/%3E%3Ctext x='32' y='36' font-family='system-ui,-apple-system,sans-serif' font-weight='900' font-size='21' fill='%23dcfce7' text-anchor='middle' letter-spacing='-0.5'%3ECE%3C/text%3E%3Ctext x='32' y='49' font-family='monospace' font-weight='800' font-size='8.5' fill='%2386efac' text-anchor='middle' letter-spacing='1'%3ESCANNER%3C/text%3E%3C/svg%3E" 
+                    icon3d: "/assets/icons/re_tools/cheat_engine.png" 
                 }
             ]
         },
@@ -5634,7 +5645,7 @@ const SpaceCanvasV3 = ({
                         <div className="w-24 h-24 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin shadow-[0_0_35px_rgba(56,189,248,0.7)]"></div>
                         <div className="text-center space-y-1 font-mono">
                             <div className="text-xs text-cyan-400 font-bold tracking-widest uppercase animate-pulse">
-                                [ MASS RELAY TRANSIT // WARP VELOCITY ]
+                                MASS RELAY TRANSIT
                             </div>
                             <div className="text-sm text-white font-bold tracking-wider">
                                 {warpCinematic.targetName}
@@ -6672,7 +6683,7 @@ const TopBar = ({ onOpenCV, onToggleTerminal, onOpenEasterMenu, onOpenPatreon, o
                     <button
                         onClick={onToggleTerminal}
                         className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-md bg-white/[0.04] border border-white/[0.1] text-slate-300 hover:text-white hover:border-primary/50 transition-colors whitespace-nowrap"
-                        title="Open SpetTerm CLI (Ctrl+K)"
+                        title="Open Spet@term Web (Ctrl+K)"
                     >
                         <i className="fas fa-terminal text-primary text-[11px]"></i>
                         <span>CLI</span>
@@ -6815,7 +6826,7 @@ const Hero = ({ onOpenCV, onToggleTerminal }) => {
                     <button
                         onClick={onToggleTerminal}
                         className="px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.08] text-slate-300 text-sm font-mono hover:text-white hover:border-slate-500 transition-colors flex items-center gap-2"
-                        title="Open SpetTerm CLI"
+                        title="Open Spet@term Web"
                     >
                         <i className="fas fa-terminal text-primary"></i>
                         <span>CLI</span>
@@ -8288,11 +8299,11 @@ const ToolsSection = () => {
             pathColor: "text-cyan-400/80",
             tags: ['WebAssembly', 'Rizin Core', 'Ghidra Sleigh', 'x86 / x64', 'ARM / MIPS', 'PE32 / ELF', 'CFG Recovery'],
             preview: (
-                <div className="relative w-full h-full min-h-[220px] bg-[#05070B] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                <div className="relative w-full aspect-video bg-[#05070B] flex items-center justify-center overflow-hidden border-b border-white/[0.08] group">
                     <img
                         src="/assets/tool_easy_decompiler.png"
                         alt="Spet's Easy Online Decompiler"
-                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
                 </div>
@@ -8312,11 +8323,35 @@ const ToolsSection = () => {
             pathColor: "text-amber-400/80",
             tags: ['Bethesda BSA/BA2', 'Ubisoft FORGE', 'Rockstar RPF', 'PlayStation PKG', 'CRIWARE Audio', 'FromSoft BND', 'CoD FastFiles', 'id Tech WAD/PAK'],
             preview: (
-                <div className="relative w-full h-full min-h-[220px] bg-[#0B0F17] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                <div className="relative w-full aspect-video bg-[#0B0F17] flex items-center justify-center overflow-hidden border-b border-white/[0.08] group">
                     <img
                         src="/assets/tool_universal_file.png"
                         alt="Spet's Universal Game File Opener"
-                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
+                </div>
+            )
+        },
+        {
+            id: 'xcloudfx',
+            url: '/tools/xcloudfx/',
+            title: t('tools.xcloudfxTitle') || "Spet's xCloudFX Studio",
+            badge: t('tools.xcloudfxBadge') || "AI Upscaler, Image Enhancer, 120Hz FPS & Low-Latency Extension",
+            icon: '/assets/icons/spet_sprites/green_chip.png',
+            desc: t('tools.xcloudfxDesc') || "AI Upscale (Spet Hybrid: FSR + DoG & Anime4K), Image Enhancer (H.264 De-blocking + RCAS + Full RGB), Improved FPS (120Hz Sub-Frame Pacing + Zero-Ghosting FrameGen), and Low Latency (0ms Jitter Buffer + 1080p 20Mbps Unlocker). Standalone Manifest V3 Extension (no Tampermonkey needed, unlike Better xCloud!) + press HOME 2x on YouTube/Anime to inject FX into any video!",
+            openText: t('tools.xcloudfxOpen') || "Open xCloudFX Studio",
+            accentBorder: "border-[#107c10]/50 hover:border-[#22c55e]/80 shadow-[0_8px_30px_rgba(16,124,16,0.18)]",
+            badgeColor: "text-[#4ade80] border-[#107c10]/40",
+            buttonBg: "bg-[#107c10] hover:bg-[#15803d] shadow-[#107c10]/30 text-white font-bold",
+            pathColor: "text-[#4ade80]/80",
+            tags: ['AI Upscale (FSR + DoG)', 'Anime4K v3.2', '120Hz + FrameGen', '0ms Jitter Buffer', 'Sem Tampermonkey (.ZIP)', 'HOME 2x YouTube/Anime', '1080p 20Mbps'],
+            preview: (
+                <div className="relative w-full aspect-video bg-[#070b07] flex items-center justify-center overflow-hidden border-b border-white/[0.08] group">
+                    <img
+                        src="/assets/tool_xcloudfx.png"
+                        alt="Spet's xCloudFX Studio"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
                 </div>
@@ -8336,11 +8371,11 @@ const ToolsSection = () => {
             pathColor: "text-[#FF9472]/80",
             tags: ['CIE LAB Reinhard', '3D LUT (1024×32)', 'PSX RGB555 Dither', 'Anti-Piss Filter', 'ReShade 6.8.0 ZIP', 'HLSL Shaders (.fx)', 'Auto Game API DB'],
             preview: (
-                <div className="relative w-full h-full min-h-[220px] bg-[#0B0F17] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                <div className="relative w-full aspect-video bg-[#0B0F17] flex items-center justify-center overflow-hidden border-b border-white/[0.08] group">
                     <img
                         src="/assets/tool_reshade_studio.jpg"
                         alt="Spet's ReShade Studio"
-                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
                 </div>
@@ -8360,11 +8395,11 @@ const ToolsSection = () => {
             pathColor: "text-[#E2A03F]/80",
             tags: ['4GB Patch (0x0020)', 'PE32 / PE32+', '16-Bit Checksum', 'Strip ASLR (~0x0040)', 'x64dbg .1337 Export', 'High-DPI Manifest', 'Fable3.exe Sample'],
             preview: (
-                <div className="relative w-full h-full min-h-[220px] bg-[#0B0C0E] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+                <div className="relative w-full aspect-video bg-[#0B0C0E] flex items-center justify-center overflow-hidden border-b border-white/[0.08] group">
                     <img
                         src="/assets/tool_4gb_patch.png"
                         alt="Spet's 4gb Patch"
-                        className="w-full h-full object-cover object-left-top transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
                 </div>
@@ -8384,11 +8419,11 @@ const ToolsSection = () => {
             pathColor: "text-purple-400/80",
             tags: ['Three.js', 'WebGL 2.0', 'Procedural 3D', 'GLTF / GLB Exporter', 'PBR Shaders'],
             preview: (
-                <div className="relative w-full h-full min-h-[220px] bg-[#040612] flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08]">
+                <div className="relative w-full aspect-video bg-[#040612] flex items-center justify-center overflow-hidden border-b border-white/[0.08] group">
                     <img
                         src="/assets/tool_quick_3d_studio.png"
                         alt="Spet's Quick 3D Studio"
-                        className="w-full h-full object-cover object-left-top"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
                 </div>
@@ -8400,7 +8435,7 @@ const ToolsSection = () => {
         <section id="tools" className="py-16 relative border-t border-white/[0.08]">
             <div className="max-w-6xl mx-auto px-6 space-y-8">
                 
-                <div className="text-center sm:text-left mb-8">
+                <div className="text-center sm:text-left mb-6">
                     <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                         {t('tools.title')}
                     </h2>
@@ -8409,66 +8444,63 @@ const ToolsSection = () => {
                     </p>
                 </div>
 
-                {/* All Tools Grid / Stack */}
-                <div className="space-y-6">
+                {/* All Tools 2x Per Row Compact Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {toolsList.map((tool) => (
                         <div
                             key={tool.id}
-                            className={`glass-panel rounded-2xl border ${tool.accentBorder} overflow-hidden transition-all duration-300`}
+                            className={`glass-panel rounded-xl border ${tool.accentBorder} overflow-hidden transition-all duration-300 flex flex-col`}
                         >
-                            <div className="grid lg:grid-cols-12 gap-0 items-stretch">
-                                
-                                {/* Visual Preview Panel */}
-                                <div className="lg:col-span-6 xl:col-span-7 relative flex items-center justify-center overflow-hidden">
-                                    {tool.preview}
-                                </div>
+                            {/* Visual Preview Header */}
+                            <div className="w-full relative overflow-hidden shrink-0">
+                                {tool.preview}
+                            </div>
 
-                                {/* Description & Action Panel */}
-                                <div className="lg:col-span-6 xl:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-white/[0.02] via-black/40 to-transparent">
-                                    <div>
-                                        <div className={`text-[11px] font-mono font-semibold tracking-wider uppercase mb-1.5 flex items-center gap-2 ${tool.badgeColor.split(' ')[0]}`}>
-                                            {tool.icon && (
-                                                <img
-                                                    src={tool.icon}
-                                                    alt=""
-                                                    className="w-4 h-4 pixelated shrink-0 inline-block"
-                                                />
-                                            )}
-                                            <span>{tool.badge}</span>
-                                        </div>
-
-                                        <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
-                                            {tool.title}
-                                        </h3>
-
-                                        <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                                            {tool.desc}
-                                        </p>
-
-                                        <div className="flex flex-wrap gap-1.5 mb-6">
-                                            {tool.tags.map((tag, i) => (
-                                                <span key={i} className={`text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-200 border ${tool.badgeColor.split(' ')[1]}`}>
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
+                            {/* Description & Action Body */}
+                            <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-br from-white/[0.02] via-black/40 to-transparent">
+                                <div>
+                                    <div className={`text-[10px] font-mono font-semibold tracking-wider uppercase mb-1 flex items-center gap-1.5 ${tool.badgeColor.split(' ')[0]}`}>
+                                        {tool.icon && (
+                                            <img
+                                                src={tool.icon}
+                                                alt=""
+                                                className="w-3.5 h-3.5 pixelated shrink-0 inline-block"
+                                            />
+                                        )}
+                                        <span className="truncate">{tool.badge}</span>
                                     </div>
 
-                                    <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-4">
-                                        <a
-                                            href={tool.url}
-                                            className={`px-5 py-2.5 rounded-lg ${tool.buttonBg} text-white text-xs font-semibold transition-colors shadow-lg flex items-center gap-2 cursor-pointer`}
-                                        >
-                                            <span>{tool.openText}</span>
-                                            <i className="fas fa-arrow-right text-[10px]"></i>
-                                        </a>
+                                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight mb-1.5">
+                                        {tool.title}
+                                    </h3>
 
-                                        <span className={`text-[11px] font-mono ${tool.pathColor}`}>
-                                            {tool.url}
-                                        </span>
+                                    <p className="text-xs text-slate-300 leading-relaxed mb-3.5">
+                                        {tool.desc}
+                                    </p>
+
+                                    <div className="flex flex-wrap gap-1 mb-4">
+                                        {tool.tags.map((tag, i) => (
+                                            <span key={i} className={`text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04] text-slate-200 border ${tool.badgeColor.split(' ')[1]}`}>
+                                                {tag}
+                                            </span>
+                                        ))}
                                     </div>
-
                                 </div>
+
+                                <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between gap-3">
+                                    <a
+                                        href={tool.url}
+                                        className={`px-3.5 py-2 rounded-lg ${tool.buttonBg} text-white text-[11px] font-semibold transition-colors shadow-md flex items-center gap-1.5 cursor-pointer shrink-0`}
+                                    >
+                                        <span>{tool.openText}</span>
+                                        <i className="fas fa-arrow-right text-[9px]"></i>
+                                    </a>
+
+                                    <span className={`text-[10px] font-mono truncate ${tool.pathColor}`}>
+                                        {tool.url}
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
                     ))}
@@ -8482,12 +8514,7 @@ const ToolsSection = () => {
 // --- CONTACT SECTION ---
 const ContactSection = () => {
     const { t, lang } = useContext(LanguageContext);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [subject, setSubject] = useState('');
-    const [message, setMessage] = useState('');
     const [copied, setCopied] = useState(false);
-    const [status, setStatus] = useState(null); // 'success' | 'error'
 
     const handleCopyEmail = () => {
         playSoftClick();
@@ -8496,31 +8523,11 @@ const ContactSection = () => {
         setTimeout(() => setCopied(false), 2500);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        playSoftClick();
-
-        if (!name || !email || !message) {
-            setStatus('error');
-            return;
-        }
-
-        const mailtoUrl = `mailto:gelain15mj@gmail.com?subject=${encodeURIComponent(subject || 'Contato via Portfólio')}&body=${encodeURIComponent(`Nome: ${name}\nEmail: ${email}\n\nMensagem:\n${message}`)}`;
-        window.location.href = mailtoUrl;
-
-        setStatus('success');
-        setName('');
-        setEmail('');
-        setSubject('');
-        setMessage('');
-        setTimeout(() => setStatus(null), 5000);
-    };
-
     return (
-        <section id="contact" className="py-8 relative border-t border-white/[0.08]">
+        <section id="contact" className="py-10 relative border-t border-white/[0.08]">
             <div className="max-w-5xl mx-auto px-6">
                 
-                <div className="max-w-2xl mb-8">
+                <div className="max-w-2xl mb-6">
                     <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                         {t('contact.title')}
                     </h2>
@@ -8529,133 +8536,60 @@ const ContactSection = () => {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-12 gap-8 items-start">
-                    
-                    {/* Left: Contact Info (NO LOCATION) */}
-                    <div className="md:col-span-5 space-y-4">
-                        <div className="glass-panel rounded-xl p-5 border border-white/[0.08] space-y-4">
-                            <div>
-                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                                    <img src="/assets/icons/spet_sprites/radio_tower.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
-                                    <span>{lang === 'pt' ? 'E-mail Direto' : 'Direct Email'}</span>
-                                </div>
-                                <div className="flex items-center justify-between gap-2">
-                                    <span className="text-sm font-semibold text-white font-mono select-all truncate">
-                                        gelain15mj@gmail.com
-                                    </span>
-                                    <button
-                                        onClick={handleCopyEmail}
-                                        className="px-2.5 py-1 text-xs font-medium rounded bg-white/[0.08] hover:bg-primary text-white transition-colors shrink-0"
-                                        title={t('contact.copyEmail')}
-                                    >
-                                        <i className={`fas ${copied ? 'fa-check text-emerald-300' : 'fa-copy'} mr-1 text-[11px]`}></i>
-                                        {copied ? t('contact.copied') : t('contact.copyEmail')}
-                                    </button>
-                                </div>
+                <div className="glass-panel rounded-xl p-5 sm:p-6 border border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-6 md:gap-10">
+                        <div>
+                            <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                                <img src="/assets/icons/spet_sprites/radio_tower.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                                <span>{lang === 'pt' ? 'E-mail Direto' : 'Direct Email'}</span>
                             </div>
-
-                            <div className="pt-3 border-t border-white/[0.06]">
-                                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                                    <img src="/assets/icons/spet_sprites/audio_speaker.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
-                                    <span>Discord</span>
-                                </div>
-                                <div className="text-sm font-semibold text-white font-mono">
-                                    Spet001
-                                </div>
+                            <div className="flex items-center gap-3">
+                                <a
+                                    href="mailto:gelain15mj@gmail.com"
+                                    className="text-sm font-semibold text-white hover:text-primary font-mono select-all transition-colors"
+                                >
+                                    gelain15mj@gmail.com
+                                </a>
+                                <button
+                                    onClick={handleCopyEmail}
+                                    className="px-2.5 py-1 text-xs font-medium rounded bg-white/[0.08] hover:bg-primary text-white transition-colors shrink-0"
+                                    title={t('contact.copyEmail')}
+                                >
+                                    <i className={`fas ${copied ? 'fa-check text-emerald-300' : 'fa-copy'} mr-1 text-[11px]`}></i>
+                                    {copied ? t('contact.copied') : t('contact.copyEmail')}
+                                </button>
                             </div>
                         </div>
 
-                        {/* Social profiles list */}
-                        <div className="flex items-center gap-3 text-slate-400 p-2">
-                            <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="GitHub">
-                                <i className="fab fa-github"></i>
-                            </a>
-                            <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="GitLab">
-                                <i className="fab fa-gitlab"></i>
-                            </a>
-                            <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="Itch.io">
-                                <i className="fab fa-itch-io"></i>
-                            </a>
-                            <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="NexusMods">
-                                <i className="fas fa-cube"></i>
-                            </a>
-                            <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="LinkedIn">
-                                <i className="fab fa-linkedin"></i>
-                            </a>
+                        <div className="sm:pl-6 sm:border-l border-white/[0.08]">
+                            <div className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                                <img src="/assets/icons/spet_sprites/audio_speaker.png" alt="" className="w-3.5 h-3.5 pixelated inline-block" />
+                                <span>Discord</span>
+                            </div>
+                            <div className="text-sm font-semibold text-white font-mono select-all">
+                                Spet001
+                            </div>
                         </div>
                     </div>
 
-                    {/* Right: Direct message form */}
-                    <div className="md:col-span-7">
-                        <form onSubmit={handleSubmit} className="glass-panel rounded-xl p-5 sm:p-6 border border-white/[0.08] space-y-4">
-                            <div className="grid sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.nameLabel')} *</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.emailLabel')} *</label>
-                                    <input
-                                        type="email"
-                                        required
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.subjectLabel')}</label>
-                                <input
-                                    type="text"
-                                    value={subject}
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-semibold text-slate-300 mb-1">{t('contact.messageLabel')} *</label>
-                                <textarea
-                                    required
-                                    rows="4"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    className="w-full px-3 py-2 text-xs bg-white/[0.04] border border-white/[0.1] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-primary transition-colors resize-none"
-                                ></textarea>
-                            </div>
-
-                            {status === 'success' && (
-                                <div className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-lg flex items-center gap-2">
-                                    <i className="fas fa-check-circle"></i>
-                                    <span>{t('contact.successMsg')}</span>
-                                </div>
-                            )}
-
-                            {status === 'error' && (
-                                <div className="text-xs text-rose-400 bg-rose-500/10 border border-rose-500/30 p-2.5 rounded-lg flex items-center gap-2">
-                                    <i className="fas fa-exclamation-triangle"></i>
-                                    <span>{t('contact.errorMsg')}</span>
-                                </div>
-                            )}
-
-                            <button
-                                type="submit"
-                                className="w-full py-2.5 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition-colors shadow-md shadow-primary/20 flex items-center justify-center gap-2"
-                            >
-                                <i className="fas fa-paper-plane text-[11px]"></i>
-                                <span>{t('contact.sendBtn')}</span>
-                            </button>
-                        </form>
+                    {/* Social profiles list */}
+                    <div className="flex items-center gap-4 text-slate-400 pt-4 md:pt-0 border-t md:border-t-0 border-white/[0.06]">
+                        <a href="https://github.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="GitHub">
+                            <i className="fab fa-github"></i>
+                        </a>
+                        <a href="https://gitlab.com/Spet001" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="GitLab">
+                            <i className="fab fa-gitlab"></i>
+                        </a>
+                        <a href="https://spet01.itch.io/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="Itch.io">
+                            <i className="fab fa-itch-io"></i>
+                        </a>
+                        <a href="https://www.nexusmods.com/profile/Spet001/mods" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="NexusMods">
+                            <i className="fas fa-cube"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/eduardo-gelain/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors text-lg" title="LinkedIn">
+                            <i className="fab fa-linkedin"></i>
+                        </a>
                     </div>
-
                 </div>
 
             </div>
@@ -9696,8 +9630,8 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                         <i className="fas fa-times"></i>
                     </button>
 
-                    <div className="w-12 h-12 rounded-xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-primary mx-auto mb-3 text-xl">
-                        <i className="fas fa-gamepad"></i>
+                    <div className="w-12 h-12 rounded-xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center mx-auto mb-3">
+                        <img src="/assets/icons/spet_sprites/gba_console.png" alt="" className="w-7 h-7 pixelated" />
                     </div>
 
                     <h3 className="text-lg font-bold text-white mb-1">
@@ -9712,23 +9646,15 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                             onClick={() => onSelectGame('quake')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-primary/50 hover:bg-primary/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
-                            <span className="flex items-center gap-2">
-                                <i className="fas fa-crosshairs text-primary"></i>
-                                <span>{t('easter.quake')}</span>
-                            </span>
+                            <span>{t('easter.quake')}</span>
                             <i className="fas fa-play text-[10px] text-slate-400"></i>
                         </button>
-
-                        
 
                         <button
                             onClick={() => onSelectGame('zombies')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-primary/50 hover:bg-primary/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
-                            <span className="flex items-center gap-2">
-                                <i className="fas fa-skull text-rose-400"></i>
-                                <span>{t('easter.zombies')}</span>
-                            </span>
+                            <span>{t('easter.zombies')}</span>
                             <i className="fas fa-play text-[10px] text-slate-400"></i>
                         </button>
 
@@ -9736,10 +9662,7 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                             onClick={() => onSelectGame('project115')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-red-500/50 hover:bg-red-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
-                            <span className="flex items-center gap-2">
-                                <i className="fas fa-biohazard text-red-400"></i>
-                                <span>{t('easter.project115')}</span>
-                            </span>
+                            <span>{t('easter.project115')}</span>
                             <i className="fas fa-play text-[10px] text-slate-400"></i>
                         </button>
 
@@ -9747,10 +9670,7 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                             onClick={() => onSelectGame('delicia_doom')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-orange-500/50 hover:bg-orange-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
-                            <span className="flex items-center gap-2">
-                                <span className="text-orange-400 text-sm leading-none">🍊</span>
-                                <span>{t('easter.deliciaDoom')}</span>
-                            </span>
+                            <span>{t('easter.deliciaDoom')}</span>
                             <i className="fas fa-play text-[10px] text-slate-400"></i>
                         </button>
 
@@ -9758,10 +9678,7 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
                             onClick={() => onSelectGame('music')}
                             className="w-full py-2.5 px-4 rounded-lg bg-white/[0.05] border border-white/[0.1] hover:border-cyan-500/50 hover:bg-cyan-500/10 text-white text-xs font-semibold flex items-center justify-between transition-colors"
                         >
-                            <span className="flex items-center gap-2">
-                                <i className="fas fa-music text-cyan-400"></i>
-                                <span>{t('easter.music')}</span>
-                            </span>
+                            <span>{t('easter.music')}</span>
                             <i className="fas fa-play text-[10px] text-slate-400"></i>
                         </button>
                     </div>
@@ -9814,7 +9731,7 @@ const EasterEggModal = ({ activeGame, onClose, onSelectGame }) => {
             {/* Top Bar for Game */}
             <div className="h-12 bg-[#050505]/95 backdrop-blur-md border-b border-white/[0.1] px-4 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2 text-sm font-bold text-white font-mono">
-                    <i className="fas fa-gamepad text-primary"></i>
+                    <img src="/assets/icons/spet_sprites/gba_console.png" alt="" className="w-5 h-5 pixelated" />
                     <span>{gameTitle}</span>
                 </div>
 
@@ -10293,7 +10210,7 @@ const SettingsModal = ({
 const TerminalModal = ({ isOpen, onClose, onOpenCV, onOpenEaster, onMusicCommand, activeMusicTrack, onOpenSettings, onOpen3DViewer, onNavigateJournal, initialMessage, isGalaxyMapActive }) => {
     const [history, setHistory] = useState(() => {
         const base = [
-            { type: 'system', text: "SpetTerm CLI v2.4 (x86_64-pc-windows-uwp)" },
+            { type: 'system', text: "Spet@term Web v2.4 (x86_64-pc-windows-uwp)" },
             { type: 'system', text: "Type 'help' to see all available commands. Press Esc to exit." }
         ];
         if (initialMessage) {
@@ -10951,7 +10868,7 @@ CLI Controls: 'music next', 'music prev', 'music random', 'music stop', 'music l
   quake      - Launch Quake 1 in browser
   cv         - Open curriculum vitae (resume)
   clear      - Clear terminal screen
-  exit       - Close SpetTerm console`
+  exit       - Close Spet@term console`
                 });
                 break;
             case 'about':
@@ -11048,7 +10965,7 @@ Scripting: Python, PowerShell, Electron, Git`
                         <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
                         <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
-                        <span className="ml-2 text-[11px] text-slate-300">spet_console.exe</span>
+                        <span className="ml-2 text-[11px] text-slate-300">spetaterm.exe</span>
                     </div>
                     <div className="flex items-center gap-2">
                         {activeMusicTrack && (
@@ -13251,7 +13168,7 @@ const DeliciaPlayer = ({ isActive, onClose, lang }) => {
                 />
             </div>
             <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2.5 px-3.5 py-2 bg-[#120800]/95 border border-orange-500/60 rounded-xl shadow-xl shadow-orange-950/60 text-orange-200 text-xs backdrop-blur-xl animate-fade-in select-none">
-                <span className="text-lg animate-bounce select-none">🍊</span>
+                <img src="/assets/icons/spet_sprites/audio_speaker.png" alt="" className="w-5 h-5 pixelated shrink-0" />
                 <div className="flex flex-col">
                     <div className="flex items-center gap-1.5">
                         <span className="font-bold text-orange-400 font-mono text-[11px] leading-tight">DELÍCIA PROTOCOL</span>
@@ -15182,15 +15099,11 @@ const App = () => {
                     {/* Top Header */}
                     <div className="relative z-10 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                            <img src="/assets/icons/spet_sprites/portal_wormhole.png" alt="" className="w-4 h-4 pixelated" />
-                            <span className="text-sm font-bold tracking-tight text-white font-mono">SpetDev // Galaxy Engine</span>
-                            <span className="text-slate-600 text-xs">/</span>
-                            <span className="text-xs font-mono text-cyan-400">
-                                {galaxyLoading.isExiting ? '[WARP_DEACTIVATION]' : '[WARP_ENGAGEMENT_SEQUENCE]'}
-                            </span>
+                            <img src="/favicon.svg" alt="SpetDev" className="w-5 h-5 rounded-md shrink-0 shadow-sm" />
+                            <span className="text-sm font-bold tracking-tight text-white font-mono">Galaxy Map</span>
                         </div>
                         <div className="text-xs text-slate-500 font-mono hidden sm:block">
-                            {galaxyLoading.isExiting ? 'RELAY: DOCKED // DESYNAPSE' : 'RELAY: ACTIVE // 55,000 BODIES'}
+                            {galaxyLoading.isExiting ? 'RELAY: DOCKED' : '55,000 BODIES'}
                         </div>
                     </div>
 

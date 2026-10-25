@@ -1,30 +1,123 @@
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
-import { Model3DBlueprint, ViewportStats } from '../types/model3d';
+import {
+  Model3DBlueprint,
+  UnityGlbInclusionOptions,
+  UnityNodeCategory,
+  ViewportStats,
+} from '../types/model3d';
+import { bakeUVRepeatOnGeometryAndMaterial } from './htmlSceneConverter';
+
+/**
+ * Prepares a cloned export group sanitized for `GLTFExporter` with `{ onlyVisible: true }`:
+ * - Preserves 1:1 original world scale in meters
+ * - Applies Unity Export Suite visibility toggles:
+ *   - `includePropsDetails` (`'prop'`)
+ *   - `includeBillboardsSprites` (`'billboard'`)
+ *   - `includeSceneLights` (`'light'` / `isLight`)
+ * - Automatically bakes `texture.repeat` / `texture.offset` directly into geometry UVs (`bakeUVRepeatOnGeometryAndMaterial`)
+ * - Resolves multi-material arrays on `THREE.Mesh` (`material[4] || material[0]` or group-mapped)
+ */
+export function buildSanitizedExportGroup(
+  rootGroup: THREE.Group,
+  name: string,
+  unityInclusion?: UnityGlbInclusionOptions
+): THREE.Group {
+  const exportGroup = new THREE.Group();
+  exportGroup.name = name;
+
+  const includePropsDetails = unityInclusion?.includePropsDetails ?? true;
+  const includeBillboardsSprites = unityInclusion?.includeBillboardsSprites ?? true;
+  const includeSceneLights = unityInclusion?.includeSceneLights ?? true;
+
+  rootGroup.updateMatrixWorld(true);
+
+  rootGroup.traverse((child) => {
+    // Handle Scene Lights (`isLight`) controlled by `includeSceneLights` and exported via `{ onlyVisible: true }`
+    if ((child as any).isLight) {
+      const clonedLight = child.clone() as THREE.Light;
+      const exportIntensity =
+        child.userData?.exportIntensity ?? (child as THREE.Light).intensity ?? 1;
+      clonedLight.intensity = exportIntensity;
+      clonedLight.position.setFromMatrixPosition(child.matrixWorld);
+      clonedLight.visible = Boolean(includeSceneLights && child.visible !== false);
+      clonedLight.updateMatrix();
+      exportGroup.add(clonedLight);
+      return;
+    }
+
+    if (child instanceof THREE.Mesh && (child.userData.partId || child.geometry)) {
+      let parentCheck: THREE.Object3D | null = child.parent;
+      let isHiddenHelper = false;
+      while (parentCheck) {
+        if (
+          parentCheck.name === 'Collision_Visualizers' ||
+          parentCheck.name === 'Sockets_Visualizers'
+        ) {
+          isHiddenHelper = true;
+          break;
+        }
+        parentCheck = parentCheck.parent;
+      }
+      if (isHiddenHelper) return;
+
+      const cat = child.userData?.unityCategory as UnityNodeCategory | undefined;
+      let isNodeVisible = child.visible !== false;
+      if (cat === 'prop' && !includePropsDetails) {
+        isNodeVisible = false;
+      } else if (cat === 'billboard' && !includeBillboardsSprites) {
+        isNodeVisible = false;
+      }
+
+      child.updateMatrix();
+      child.updateMatrixWorld(true);
+
+      const clonedGeo = child.geometry.clone();
+      clonedGeo.applyMatrix4(child.matrixWorld);
+
+      let finalMaterial: THREE.Material | THREE.Material[];
+
+      if (Array.isArray(child.material)) {
+        if (
+          child.geometry.groups &&
+          child.geometry.groups.length === 3 &&
+          child.material.length === 3
+        ) {
+          finalMaterial = child.material.slice();
+          finalMaterial.forEach((m) => bakeUVRepeatOnGeometryAndMaterial(clonedGeo, m));
+        } else {
+          clonedGeo.clearGroups();
+          finalMaterial = child.material[4] || child.material[0];
+          bakeUVRepeatOnGeometryAndMaterial(clonedGeo, finalMaterial);
+        }
+      } else {
+        finalMaterial = child.material;
+        bakeUVRepeatOnGeometryAndMaterial(clonedGeo, finalMaterial);
+      }
+
+      const cleanMesh = new THREE.Mesh(clonedGeo, finalMaterial);
+      cleanMesh.name = child.name || 'Part';
+      cleanMesh.visible = isNodeVisible;
+      cleanMesh.updateMatrix();
+
+      exportGroup.add(cleanMesh);
+    }
+  });
+
+  return exportGroup;
+}
 
 export async function exportToGlb(
   rootGroup: THREE.Group,
-  filename: string = 'model.glb'
+  filename: string = 'model.glb',
+  unityInclusion?: UnityGlbInclusionOptions
 ): Promise<Blob> {
   const exporter = new GLTFExporter();
-
-  const exportGroup = new THREE.Group();
-  exportGroup.name = filename.replace(/\.(glb|gltf)$/i, '');
-
-  rootGroup.traverse((child) => {
-
-    if (child instanceof THREE.Mesh && child.userData.partId) {
-      const clonedMesh = child.clone();
-      clonedMesh.material = Array.isArray(child.material) ? child.material.slice() : child.material;
-      clonedMesh.geometry = child.geometry.clone();
-      clonedMesh.geometry.applyMatrix4(child.matrixWorld);
-      clonedMesh.position.set(0, 0, 0);
-      clonedMesh.rotation.set(0, 0, 0);
-      clonedMesh.scale.set(1, 1, 1);
-      clonedMesh.updateMatrix();
-      exportGroup.add(clonedMesh);
-    }
-  });
+  const exportGroup = buildSanitizedExportGroup(
+    rootGroup,
+    filename.replace(/\.(glb|gltf)$/i, ''),
+    unityInclusion
+  );
 
   return new Promise((resolve, reject) => {
     exporter.parse(
@@ -34,7 +127,6 @@ export async function exportToGlb(
           const blob = new Blob([result], { type: 'model/gltf-binary' });
           resolve(blob);
         } else {
-
           const jsonString = JSON.stringify(result, null, 2);
           const blob = new Blob([jsonString], { type: 'application/json' });
           resolve(blob);
@@ -47,6 +139,7 @@ export async function exportToGlb(
       {
         binary: true,
         embedImages: true,
+        onlyVisible: true,
       }
     );
   });
@@ -54,25 +147,15 @@ export async function exportToGlb(
 
 export async function exportToGltf(
   rootGroup: THREE.Group,
-  filename: string = 'model.gltf'
+  filename: string = 'model.gltf',
+  unityInclusion?: UnityGlbInclusionOptions
 ): Promise<Blob> {
   const exporter = new GLTFExporter();
-  const exportGroup = new THREE.Group();
-  exportGroup.name = filename.replace(/\.(glb|gltf)$/i, '');
-
-  rootGroup.traverse((child) => {
-    if (child instanceof THREE.Mesh && child.userData.partId) {
-      const clonedMesh = child.clone();
-      clonedMesh.material = Array.isArray(child.material) ? child.material.slice() : child.material;
-      clonedMesh.geometry = child.geometry.clone();
-      clonedMesh.geometry.applyMatrix4(child.matrixWorld);
-      clonedMesh.position.set(0, 0, 0);
-      clonedMesh.rotation.set(0, 0, 0);
-      clonedMesh.scale.set(1, 1, 1);
-      clonedMesh.updateMatrix();
-      exportGroup.add(clonedMesh);
-    }
-  });
+  const exportGroup = buildSanitizedExportGroup(
+    rootGroup,
+    filename.replace(/\.(glb|gltf)$/i, ''),
+    unityInclusion
+  );
 
   return new Promise((resolve, reject) => {
     exporter.parse(
@@ -86,6 +169,7 @@ export async function exportToGltf(
       {
         binary: false,
         embedImages: true,
+        onlyVisible: true,
       }
     );
   });
@@ -102,7 +186,7 @@ export function exportToObj(
   let uvOffset = 1;
 
   rootGroup.traverse((child) => {
-    if (child instanceof THREE.Mesh && child.userData.partId) {
+    if (child instanceof THREE.Mesh && child.userData.partId && child.visible) {
       const geometry = child.geometry;
       const positionAttr = geometry.getAttribute('position');
       const normalAttr = geometry.getAttribute('normal');
@@ -176,6 +260,53 @@ export function exportToObj(
   return new Blob([output], { type: 'text/plain' });
 }
 
+/**
+ * Generates a Unity-ready JSON file containing all scene lights (with Left-Handed Unity positions,
+ * Hex color, range, and intensity) and prefab instance transforms.
+ */
+export function exportUnityLightsAndTransformsJson(
+  blueprint: Model3DBlueprint,
+  stats: ViewportStats
+): Blob {
+  const lights = blueprint.unitySuite?.lights || [];
+  const prefabs = blueprint.unitySuite?.prefabs || [];
+
+  const payload = {
+    schemaVersion: '1.0.0',
+    sceneTitle: blueprint.title,
+    coordinateSystem: 'Unity Left-Handed (X: -RightHandedX, Y: Up, Z: Forward, 1 unit = 1 meter)',
+    dimensionsMeters: stats.dimensions,
+    lightsCount: lights.length,
+    lights: lights.map((l) => ({
+      id: l.id,
+      name: l.name,
+      type: l.type,
+      position: l.position,
+      colorHex: l.colorHex,
+      range: l.range,
+      intensity: l.intensity,
+      ...(l.decay !== undefined ? { decay: l.decay } : {}),
+      ...(l.angleDeg !== undefined ? { spotAngleDeg: l.angleDeg } : {}),
+      threeJsRightHandedPosition: l.threeJsPosition,
+    })),
+    prefabGroups: prefabs.map((p) => ({
+      id: p.id,
+      prefabName: p.name,
+      category: p.category,
+      instanceCount: p.count,
+      dimensionsMeters: {
+        width: p.dimensions[0],
+        height: p.dimensions[1],
+        depth: p.dimensions[2],
+      },
+      pivotOrigin: { x: 0, y: 0, z: 0 },
+      instances: p.instances,
+    })),
+  };
+
+  return new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+}
+
 export function generateManifestJson(
   blueprint: Model3DBlueprint,
   stats: ViewportStats
@@ -240,5 +371,14 @@ export function downloadBlob(blob: Blob, filename: string) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  URL.revokeObjectURL(url);
+}
+
+export function downloadDataUrl(dataUrl: string, filename: string) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }

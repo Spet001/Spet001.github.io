@@ -3,7 +3,12 @@ import {
   Upload,
   Download,
   RotateCw,
-  Sparkles,
+  Code2,
+  FileCode2,
+  Box,
+  Image as ImageIcon,
+  Sun,
+  CheckSquare,
 } from 'lucide-react';
 import {
   BackgroundMode,
@@ -13,13 +18,21 @@ import {
   Part3D,
   RenderMode,
   ShapeMode,
+  UnityGlbInclusionOptions,
+  UnityPrefabItem,
+  UnityTextureItem,
   ViewportStats,
 } from '../types/model3d';
 import { OFFICIAL_CARD_BACKS } from '../lib/presetModels';
+import { HtmlConversionOptions } from '../lib/htmlSceneConverter';
+
+export type InspectorTab = 'extrude' | 'html2glb' | 'unity' | 'shading' | 'materials';
 
 interface StudioInspectorProps {
   blueprint: Model3DBlueprint | null;
   stats: ViewportStats;
+  activeTab: InspectorTab;
+  onSetActiveTab: (tab: InspectorTab) => void;
   renderMode: RenderMode;
   onSetRenderMode: (mode: RenderMode) => void;
   lightingPreset: LightingPreset;
@@ -39,6 +52,13 @@ interface StudioInspectorProps {
   onExportGltf: () => void;
   onExportObj: () => void;
   onExportManifest: () => void;
+  unityInclusion: UnityGlbInclusionOptions;
+  onChangeUnityInclusion: (next: UnityGlbInclusionOptions) => void;
+  onExportPrefabGlb: (prefab: UnityPrefabItem) => void;
+  onExportAllPrefabsGlb: () => void;
+  onExportTexturePng: (tex: UnityTextureItem) => void;
+  onExportAllTexturesPng: () => void;
+  onExportLightsJson: () => void;
   onExtrudeImage3D: (
     imageSource: string,
     title: string,
@@ -56,6 +76,11 @@ interface StudioInspectorProps {
     backgroundTolerance?: number,
     addPedestal?: boolean
   ) => void;
+  onConvertHtmlScene3D: (
+    htmlContent: string,
+    customTitle: string,
+    options: HtmlConversionOptions
+  ) => void;
   onUpdateBackMaterialRealtime?: (options: {
     backMode: BackFaceMode;
     backColor: string;
@@ -71,6 +96,8 @@ interface StudioInspectorProps {
 export const StudioInspector: React.FC<StudioInspectorProps> = ({
   blueprint,
   stats,
+  activeTab,
+  onSetActiveTab,
   renderMode,
   onSetRenderMode,
   lightingPreset,
@@ -90,14 +117,20 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
   onExportGltf,
   onExportObj,
   onExportManifest,
+  unityInclusion,
+  onChangeUnityInclusion,
+  onExportPrefabGlb,
+  onExportAllPrefabsGlb,
+  onExportTexturePng,
+  onExportAllTexturesPng,
+  onExportLightsJson,
   onExtrudeImage3D,
+  onConvertHtmlScene3D,
   onUpdateBackMaterialRealtime,
   onTriggerCameraPreset,
   isGenerating,
   generationStep,
 }) => {
-  const [activeTab, setActiveTab] = useState<'extrude' | 'shading' | 'materials'>('extrude');
-
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [extrudeDepth, setExtrudeDepth] = useState<number>(0.14);
   const [extrudeBevel, setExtrudeBevel] = useState<number>(0.012);
@@ -105,8 +138,8 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
   const [extrudeTitle, setExtrudeTitle] = useState<string>('Custom 3D Mesh');
   const [shapeMode, setShapeMode] = useState<ShapeMode>('auto');
   const [backgroundMode, setBackgroundMode] = useState<BackgroundMode>('auto');
-  const [backgroundTolerance, setBackgroundTolerance] = useState<number>(0.18);
-  const [addPedestal, setAddPedestal] = useState<boolean>(false);
+  const [backgroundTolerance] = useState<number>(0.18);
+  const [addPedestal] = useState<boolean>(false);
 
   const [backMode, setBackMode] = useState<BackFaceMode>('repeat_front');
   const [backColor, setBackColor] = useState<string>('#18181b');
@@ -115,10 +148,25 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
   const [backRoughness, setBackRoughness] = useState<number>(0.4);
   const [backMetalness, setBackMetalness] = useState<number>(0.2);
 
+  // HTML -> 3D GLB Converter State (1:1 Original Scale in Meters enforced)
+  const [htmlCode, setHtmlCode] = useState<string>('');
+  const [htmlFileName, setHtmlFileName] = useState<string>('No file loaded');
+  const [htmlAssetTitle, setHtmlAssetTitle] = useState<string>('Three.js Scene');
+  const [centerOnGround, setCenterOnGround] = useState<boolean>(true);
+  const [includeEnvironmentMeshes, setIncludeEnvironmentMeshes] = useState<boolean>(false);
+  const [autoExportGlb, setAutoExportGlb] = useState<boolean>(true);
+
+  const hasHtmlSceneLoaded = Boolean(blueprint?.sourceHtml || blueprint?.unitySuite);
+  const unitySuite = blueprint?.unitySuite;
+
   useEffect(() => {
     if (!blueprint) return;
     if (blueprint.sourceImage && !uploadedImage) {
       setUploadedImage(blueprint.sourceImage);
+    }
+    if (blueprint.sourceHtml) {
+      setHtmlCode(blueprint.sourceHtml);
+      setHtmlAssetTitle(blueprint.title);
     }
     if (blueprint.title && blueprint.title !== 'Custom 3D Mesh') {
       setExtrudeTitle(blueprint.title);
@@ -181,6 +229,27 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
     reader.readAsDataURL(file);
   };
 
+  const handleHtmlFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = (event.target?.result as string) || '';
+      const cleanTitle = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+      setHtmlFileName(file.name);
+      setHtmlCode(text);
+      setHtmlAssetTitle(cleanTitle);
+
+      onConvertHtmlScene3D(text, cleanTitle, {
+        centerOnGround,
+        includeEnvironmentMeshes,
+        autoExportGlb,
+      });
+    };
+    reader.readAsText(file);
+  };
+
   const handleBackImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -234,15 +303,297 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
     );
   };
 
-  const selectedPart = blueprint?.parts?.find((p) => p.id === selectedPartId) || blueprint?.parts?.[0] || null;
+  const selectedPart =
+    blueprint?.parts?.find((p) => p.id === selectedPartId) || blueprint?.parts?.[0] || null;
+
+  const renderUnityExportSuitePanel = () => {
+    if (!unitySuite) return null;
+
+    return (
+      <div
+        data-testid="unity-export-suite"
+        className="space-y-3 rounded-lg border border-emerald-500/40 bg-gradient-to-b from-[#061824]/95 via-[#081a2c]/95 to-[#0b132b]/95 p-3 shadow-[0_0_24px_rgba(16,185,129,0.15)]"
+      >
+        {/* Suite Header & 1:1 Scale + UV Bake Status */}
+        <div className="flex items-center justify-between border-b border-emerald-500/25 pb-2">
+          <div className="flex items-center gap-1.5">
+            <Box className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-emerald-300">
+              Unity Export Suite
+            </span>
+          </div>
+          <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-400/40 text-[10px] font-mono text-emerald-200">
+            1:1 Scale (Meters)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-1.5 text-[10px] font-mono">
+          <div className="p-1.5 rounded bg-[#05101d]/90 border border-emerald-500/25">
+            <span className="text-zinc-400 block">World Size (1:1)</span>
+            <span className="text-emerald-200 font-semibold">
+              {stats.dimensions.x} × {stats.dimensions.y} × {stats.dimensions.z} m
+            </span>
+          </div>
+          <div className="p-1.5 rounded bg-[#05101d]/90 border border-cyan-500/25">
+            <span className="text-zinc-400 block">UV Repeat / Tiling</span>
+            <span className="text-cyan-200 font-semibold">
+              Auto-Baked (Vertex UVs)
+            </span>
+          </div>
+        </div>
+
+        {/* Main .GLB Inclusion Toggles (All ON by default) */}
+        <div className="space-y-1.5 pt-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-300 flex items-center gap-1">
+              <CheckSquare className="w-3 h-3 text-cyan-400" />
+              Main .GLB Inclusion Toggles
+            </span>
+            <span className="text-[9px] font-mono text-zinc-400">onlyVisible: true</span>
+          </div>
+
+          <div className="space-y-1">
+            <label className="flex items-center justify-between px-2 py-1.5 rounded bg-[#071529]/90 border border-cyan-500/25 hover:border-cyan-400/50 cursor-pointer text-xs transition-colors">
+              <div className="pr-2">
+                <span className="text-zinc-100 block text-[11px] font-medium">
+                  Include 3D Props & Details
+                </span>
+                <span className="text-[9px] font-mono text-cyan-300/75 block">
+                  Props or BoundingBox ≤ 3.6m ({unitySuite.counts.propMeshes} meshes)
+                </span>
+              </div>
+              <input
+                type="checkbox"
+                checked={unityInclusion.includePropsDetails}
+                onChange={(e) =>
+                  onChangeUnityInclusion({
+                    ...unityInclusion,
+                    includePropsDetails: e.target.checked,
+                  })
+                }
+                className="rounded accent-emerald-400 cursor-pointer shrink-0"
+              />
+            </label>
+
+            <label className="flex items-center justify-between px-2 py-1.5 rounded bg-[#071529]/90 border border-cyan-500/25 hover:border-cyan-400/50 cursor-pointer text-xs transition-colors">
+              <div className="pr-2">
+                <span className="text-zinc-100 block text-[11px] font-medium">
+                  Include 2.5D Billboards / Sprites
+                </span>
+                <span className="text-[9px] font-mono text-cyan-300/75 block">
+                  THREE.Sprite & transparent vertical planes ({unitySuite.counts.billboardSprites})
+                </span>
+              </div>
+              <input
+                type="checkbox"
+                checked={unityInclusion.includeBillboardsSprites}
+                onChange={(e) =>
+                  onChangeUnityInclusion({
+                    ...unityInclusion,
+                    includeBillboardsSprites: e.target.checked,
+                  })
+                }
+                className="rounded accent-emerald-400 cursor-pointer shrink-0"
+              />
+            </label>
+
+            <label className="flex items-center justify-between px-2 py-1.5 rounded bg-[#071529]/90 border border-cyan-500/25 hover:border-cyan-400/50 cursor-pointer text-xs transition-colors">
+              <div className="pr-2">
+                <span className="text-zinc-100 block text-[11px] font-medium">
+                  Include Scene Lights
+                </span>
+                <span className="text-[9px] font-mono text-cyan-300/75 block">
+                  Active isLight nodes in GLTFExporter ({unitySuite.lights.length} lights)
+                </span>
+              </div>
+              <input
+                type="checkbox"
+                checked={unityInclusion.includeSceneLights}
+                onChange={(e) =>
+                  onChangeUnityInclusion({
+                    ...unityInclusion,
+                    includeSceneLights: e.target.checked,
+                  })
+                }
+                className="rounded accent-emerald-400 cursor-pointer shrink-0"
+              />
+            </label>
+          </div>
+        </div>
+
+        {/* Separate Unity-Ready Exports */}
+        <div className="space-y-2.5 border-t border-emerald-500/25 pt-2.5">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 block">
+            Separate Exports (Unity-Ready)
+          </span>
+
+          {/* 1. Export Individual Prefabs (.GLB) */}
+          <div className="space-y-1.5 rounded bg-[#061224]/90 border border-cyan-500/25 p-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-semibold text-cyan-200 flex items-center gap-1">
+                  <Box className="w-3.5 h-3.5 text-cyan-400" />
+                  Individual Prefabs (.GLB)
+                </span>
+                <span className="text-[9px] font-mono text-zinc-400 block">
+                  Grouped by size + texture · Pivot (X:0, minY:0, Z:0)
+                </span>
+              </div>
+              {unitySuite.prefabs.length > 0 && (
+                <button
+                  type="button"
+                  onClick={onExportAllPrefabsGlb}
+                  className="px-2 py-1 rounded bg-cyan-600/30 hover:bg-cyan-500/40 border border-cyan-400/50 text-[10px] font-mono text-cyan-100 transition-colors cursor-pointer shrink-0"
+                >
+                  Export All ({unitySuite.prefabs.length})
+                </button>
+              )}
+            </div>
+
+            {unitySuite.prefabs.length === 0 ? (
+              <div className="text-[10px] font-mono text-zinc-400 py-1">
+                No standalone props (≤ 3.6m) detected in this scene.
+              </div>
+            ) : (
+              <div className="max-h-36 overflow-y-auto space-y-1 pr-0.5">
+                {unitySuite.prefabs.map((prefab) => (
+                  <div
+                    key={prefab.id}
+                    className="flex items-center justify-between gap-2 px-2 py-1 rounded bg-[#091933]/90 border border-cyan-500/20 text-[11px]"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-medium text-cyan-100 truncate">
+                          {prefab.name}
+                        </span>
+                        <span className="px-1 py-0.2 rounded bg-cyan-500/20 text-[9px] font-mono text-cyan-300 shrink-0">
+                          ×{prefab.count}
+                        </span>
+                      </div>
+                      <span className="text-[9px] font-mono text-zinc-400 block">
+                        {prefab.dimensions[0]}×{prefab.dimensions[1]}×{prefab.dimensions[2]}m · Pivot(0,0,0)
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onExportPrefabGlb(prefab)}
+                      className="px-2 py-1 rounded bg-emerald-600/30 hover:bg-emerald-500/45 border border-emerald-400/50 text-[10px] font-mono text-emerald-100 flex items-center gap-1 shrink-0 cursor-pointer transition-colors"
+                      title={`Download ${prefab.name}.glb with ground-centered origin pivot`}
+                    >
+                      <Download className="w-3 h-3" />
+                      .GLB
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 2. Export All Textures / Sprites (.PNG) */}
+          <div className="space-y-1.5 rounded bg-[#061224]/90 border border-purple-500/25 p-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-semibold text-purple-200 flex items-center gap-1">
+                  <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+                  Textures & Sprites (.PNG)
+                </span>
+                <span className="text-[9px] font-mono text-zinc-400 block">
+                  material.map, emissiveMap & CanvasTexture ({unitySuite.textures.length})
+                </span>
+              </div>
+              {unitySuite.textures.length > 0 && (
+                <button
+                  type="button"
+                  onClick={onExportAllTexturesPng}
+                  className="px-2 py-1 rounded bg-purple-600/30 hover:bg-purple-500/45 border border-purple-400/50 text-[10px] font-mono text-purple-100 transition-colors cursor-pointer shrink-0"
+                >
+                  Export All .PNG ({unitySuite.textures.length})
+                </button>
+              )}
+            </div>
+
+            {unitySuite.textures.length === 0 ? (
+              <div className="text-[10px] font-mono text-zinc-400 py-1">
+                No procedural or image textures found on scene materials.
+              </div>
+            ) : (
+              <div className="max-h-36 overflow-y-auto space-y-1 pr-0.5">
+                {unitySuite.textures.map((tex) => (
+                  <div
+                    key={tex.id}
+                    className="flex items-center justify-between gap-2 px-2 py-1 rounded bg-[#120d2b]/90 border border-purple-500/20 text-[11px]"
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <img
+                        src={tex.dataUrl}
+                        alt={tex.name}
+                        className="w-6 h-6 rounded object-cover bg-black border border-purple-400/30 shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <span className="font-medium text-purple-100 truncate block">
+                          {tex.name}
+                        </span>
+                        <span className="text-[9px] font-mono text-zinc-400 block">
+                          {tex.slot} · {tex.width}×{tex.height}px
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onExportTexturePng(tex)}
+                      className="px-2 py-1 rounded bg-purple-600/30 hover:bg-purple-500/45 border border-purple-400/50 text-[10px] font-mono text-purple-100 flex items-center gap-1 shrink-0 cursor-pointer transition-colors"
+                    >
+                      <Download className="w-3 h-3" />
+                      .PNG
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 3. Export Lights & Transforms (.JSON) */}
+          <div className="rounded bg-[#061224]/90 border border-amber-500/25 p-2 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-semibold text-amber-200 flex items-center gap-1">
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  Lights & Transforms (.JSON)
+                </span>
+                <span className="text-[9px] font-mono text-zinc-400 block">
+                  Unity Left-Handed (X:-x, Y:y, Z:z), Hex, Range & Intensity
+                </span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded bg-amber-500/15 border border-amber-400/30 text-[9px] font-mono text-amber-200">
+                {unitySuite.lights.length} light{unitySuite.lights.length === 1 ? '' : 's'}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={onExportLightsJson}
+              className="w-full py-1.5 px-2.5 rounded bg-gradient-to-r from-amber-600/35 via-orange-600/30 to-yellow-600/35 hover:from-amber-500/45 hover:to-yellow-500/45 border border-amber-400/50 text-[11px] font-mono font-medium text-amber-100 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_12px_rgba(245,158,11,0.2)]"
+            >
+              <Download className="w-3.5 h-3.5 text-amber-300" />
+              <span>Export Lights & Transforms (.JSON)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <aside className="w-80 h-full flex flex-col bg-gradient-to-b from-[#07081b]/95 via-[#0e0a29]/95 to-[#160731]/95 border-l border-purple-500/25 text-zinc-100 select-none shrink-0 z-10 backdrop-blur-xl shadow-[-12px_0_40px_rgba(0,0,0,0.7)]">
-
-      <div className="flex items-center border-b border-purple-500/25 bg-[#050616]/90 px-2.5 py-2 gap-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
+    <aside className="w-80 h-full flex flex-col bg-gradient-to-b from-[#07081b]/95 via-[#0e0a29]/95 to-[#160731]/95 border-l border-purple-500/25 text-zinc-100 select-none shrink-0 z-10 shadow-[-12px_0_40px_rgba(0,0,0,0.7)]">
+      <div
+        className={`grid ${
+          hasHtmlSceneLoaded ? 'grid-cols-5' : 'grid-cols-4'
+        } border-b border-purple-500/25 bg-[#050616]/90 px-1.5 py-2 gap-1 shadow-[0_2px_12px_rgba(0,0,0,0.4)]`}
+      >
         <button
-          onClick={() => setActiveTab('extrude')}
-          className={`flex-1 py-1.5 text-xs rounded-md transition-all text-center font-medium ${
+          type="button"
+          onClick={() => onSetActiveTab('extrude')}
+          className={`py-1.5 text-[10px] rounded-md transition-all text-center font-medium whitespace-nowrap ${
             activeTab === 'extrude'
               ? 'bg-gradient-to-r from-violet-600/35 via-fuchsia-600/25 to-pink-600/35 text-pink-200 font-semibold border border-pink-400/50 shadow-[0_0_16px_rgba(236,72,153,0.35)]'
               : 'text-zinc-400 hover:text-pink-200 hover:bg-pink-950/20 border border-transparent'
@@ -251,18 +602,45 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
           Extruder
         </button>
         <button
-          onClick={() => setActiveTab('shading')}
-          className={`flex-1 py-1.5 text-xs rounded-md transition-all text-center font-medium ${
-            activeTab === 'shading'
-              ? 'bg-gradient-to-r from-cyan-600/35 via-blue-600/25 to-indigo-600/35 text-cyan-200 font-semibold border border-cyan-400/50 shadow-[0_0_16px_rgba(6,182,212,0.35)]'
+          type="button"
+          onClick={() => onSetActiveTab('html2glb')}
+          className={`py-1.5 text-[10px] rounded-md transition-all text-center font-medium whitespace-nowrap ${
+            activeTab === 'html2glb'
+              ? 'bg-gradient-to-r from-cyan-600/40 via-sky-600/30 to-blue-600/40 text-cyan-200 font-semibold border border-cyan-400/50 shadow-[0_0_16px_rgba(6,182,212,0.35)]'
               : 'text-zinc-400 hover:text-cyan-200 hover:bg-cyan-950/20 border border-transparent'
+          }`}
+        >
+          HTML → GLB
+        </button>
+        {hasHtmlSceneLoaded && (
+          <button
+            type="button"
+            onClick={() => onSetActiveTab('unity')}
+            className={`py-1.5 text-[10px] rounded-md transition-all text-center font-medium whitespace-nowrap ${
+              activeTab === 'unity'
+                ? 'bg-gradient-to-r from-emerald-600/40 via-teal-600/30 to-cyan-600/40 text-emerald-200 font-semibold border border-emerald-400/50 shadow-[0_0_16px_rgba(16,185,129,0.35)]'
+                : 'text-emerald-300/80 hover:text-emerald-200 hover:bg-emerald-950/25 border border-emerald-500/20'
+            }`}
+            title="Unity Export Suite"
+          >
+            Unity Suite
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => onSetActiveTab('shading')}
+          className={`py-1.5 text-[10px] rounded-md transition-all text-center font-medium whitespace-nowrap ${
+            activeTab === 'shading'
+              ? 'bg-gradient-to-r from-indigo-600/35 via-blue-600/25 to-cyan-600/35 text-indigo-200 font-semibold border border-indigo-400/50 shadow-[0_0_16px_rgba(99,102,241,0.35)]'
+              : 'text-zinc-400 hover:text-indigo-200 hover:bg-indigo-950/20 border border-transparent'
           }`}
         >
           Viewport
         </button>
         <button
-          onClick={() => setActiveTab('materials')}
-          className={`flex-1 py-1.5 text-xs rounded-md transition-all text-center font-medium ${
+          type="button"
+          onClick={() => onSetActiveTab('materials')}
+          className={`py-1.5 text-[10px] rounded-md transition-all text-center font-medium whitespace-nowrap ${
             activeTab === 'materials'
               ? 'bg-gradient-to-r from-amber-600/30 via-purple-600/25 to-violet-600/35 text-amber-200 font-semibold border border-amber-400/50 shadow-[0_0_16px_rgba(245,158,11,0.35)]'
               : 'text-zinc-400 hover:text-amber-200 hover:bg-amber-950/20 border border-transparent'
@@ -273,10 +651,8 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
       </div>
 
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs scrollbar-thin scrollbar-thumb-purple-900/50">
-
         {activeTab === 'extrude' && (
           <div className="space-y-4">
-
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-mono tracking-wider uppercase text-pink-300">
@@ -537,9 +913,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                       }}
                       className="rounded accent-purple-400 cursor-pointer"
                     />
-                    <span className="text-zinc-200">
-                      Mirror horizontal coordinates
-                    </span>
+                    <span className="text-zinc-200">Mirror horizontal coordinates</span>
                   </label>
                   <div className="text-[10px] text-purple-300/70 font-mono">
                     {backMirror
@@ -570,7 +944,9 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                       }}
                       className="w-5 h-5 rounded border border-purple-500/40 cursor-pointer bg-transparent"
                     />
-                    <span className="font-mono text-[10px] text-purple-300 uppercase">{backColor}</span>
+                    <span className="font-mono text-[10px] text-purple-300 uppercase">
+                      {backColor}
+                    </span>
                   </div>
                 </div>
               )}
@@ -689,7 +1065,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <RotateCw className="w-3.5 h-3.5" />
                     <span>Rebuild 3D Mesh</span>
                   </>
                 )}
@@ -698,9 +1074,163 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
           </div>
         )}
 
+        {activeTab === 'html2glb' && (
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-mono tracking-wider uppercase text-cyan-300">
+                  Three.js HTML Scene
+                </span>
+                <span className="text-[10px] text-cyan-300/80 font-mono truncate max-w-[130px]">
+                  {htmlFileName}
+                </span>
+              </div>
+
+              <label className="flex items-center justify-center gap-2.5 p-2.5 rounded-lg border border-dashed border-cyan-500/35 hover:border-cyan-400/80 bg-gradient-to-br from-[#081529]/85 to-[#0f1f3d]/85 hover:from-[#0c1d38] hover:to-[#152952] cursor-pointer transition-all text-left shadow-[0_0_18px_rgba(6,182,212,0.12)]">
+                <FileCode2 className="w-5 h-5 text-cyan-400 shrink-0 drop-shadow-[0_0_10px_rgba(6,182,212,0.7)]" />
+                <div>
+                  <span className="text-xs font-medium text-cyan-200 block">
+                    Upload Three.js .HTML File
+                  </span>
+                  <span className="text-[10px] text-cyan-300/60 block">
+                    Extracts Scene / Meshes & converts to 1:1 .GLB
+                  </span>
+                </div>
+                <input
+                  type="file"
+                  accept=".html,.htm,.js,text/html"
+                  onChange={handleHtmlFileUpload}
+                  className="hidden"
+                />
+              </label>
+
+              <div className="space-y-1 pt-0.5">
+                <label className="text-[10px] font-mono uppercase text-cyan-300/80 block">
+                  Output .GLB Asset Name
+                </label>
+                <input
+                  type="text"
+                  value={htmlAssetTitle}
+                  onChange={(e) => setHtmlAssetTitle(e.target.value)}
+                  className="w-full bg-[#071024] border border-cyan-500/30 rounded px-2.5 py-1 text-xs text-cyan-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/50 shadow-inner"
+                  placeholder="Scene Asset Title..."
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1 border-t border-purple-500/25 pt-2.5">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="threejs-html-editor"
+                  className="text-[11px] font-mono tracking-wider uppercase text-cyan-300"
+                >
+                  HTML / Three.js Source Code
+                </label>
+                <span className="text-[10px] font-mono text-zinc-400">
+                  {htmlCode.length.toLocaleString()} chars
+                </span>
+              </div>
+              <textarea
+                id="threejs-html-editor"
+                value={htmlCode}
+                onChange={(e) => setHtmlCode(e.target.value)}
+                rows={hasHtmlSceneLoaded ? 4 : 7}
+                spellCheck={false}
+                placeholder="Paste HTML with <script> containing your THREE.Scene() or THREE.Mesh() code..."
+                className="w-full bg-[#060919] border border-cyan-500/30 rounded-lg p-2 text-[11px] font-mono text-cyan-100 focus:outline-none focus:border-cyan-400 leading-snug resize-y"
+              />
+            </div>
+
+            <div className="space-y-1 border-t border-purple-500/25 pt-2.5">
+              <span className="text-[11px] font-mono tracking-wider uppercase text-emerald-300 block">
+                Conversion Pipeline Options
+              </span>
+              <div className="grid grid-cols-1 gap-1">
+                <label className="flex items-center justify-between px-2 py-1.5 rounded bg-[#0a132c]/80 border border-cyan-500/25 cursor-pointer text-xs">
+                  <span className="text-zinc-200">Auto-Download .GLB on Convert</span>
+                  <input
+                    type="checkbox"
+                    checked={autoExportGlb}
+                    onChange={(e) => setAutoExportGlb(e.target.checked)}
+                    className="rounded accent-cyan-400 cursor-pointer"
+                  />
+                </label>
+                <label className="flex items-center justify-between px-2 py-1.5 rounded bg-[#0a132c]/80 border border-cyan-500/25 cursor-pointer text-xs">
+                  <span className="text-zinc-200">Align Pivot Flush to Ground (Y=0)</span>
+                  <input
+                    type="checkbox"
+                    checked={centerOnGround}
+                    onChange={(e) => setCenterOnGround(e.target.checked)}
+                    className="rounded accent-cyan-400 cursor-pointer"
+                  />
+                </label>
+                <label className="flex items-center justify-between px-2 py-1.5 rounded bg-[#0a132c]/80 border border-cyan-500/25 cursor-pointer text-xs">
+                  <span className="text-zinc-200">Include Backdrop / Skybox Planes</span>
+                  <input
+                    type="checkbox"
+                    checked={includeEnvironmentMeshes}
+                    onChange={(e) => setIncludeEnvironmentMeshes(e.target.checked)}
+                    className="rounded accent-cyan-400 cursor-pointer"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="border-t border-purple-500/25 pt-2.5">
+              <button
+                type="button"
+                disabled={!htmlCode.trim() || isGenerating}
+                onClick={() =>
+                  onConvertHtmlScene3D(htmlCode, htmlAssetTitle, {
+                    centerOnGround,
+                    includeEnvironmentMeshes,
+                    autoExportGlb,
+                  })
+                }
+                className="w-full py-2 rounded-md bg-gradient-to-r from-cyan-600 via-sky-600 to-violet-600 hover:from-cyan-500 hover:via-sky-500 hover:to-violet-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-40 shadow-[0_0_22px_rgba(6,182,212,0.45)] border border-cyan-400/40"
+              >
+                {isGenerating ? (
+                  <>
+                    <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>{generationStep || 'Extracting Scene...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Code2 className="w-4 h-4" />
+                    <span>
+                      {autoExportGlb
+                        ? 'Convert HTML Scene & Export .GLB'
+                        : 'Convert HTML Scene to 3D'}
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Automatically show Unity Export Suite panel whenever an HTML scene is loaded */}
+            {hasHtmlSceneLoaded && renderUnityExportSuitePanel()}
+          </div>
+        )}
+
+        {activeTab === 'unity' && (
+          <div className="space-y-3">
+            {hasHtmlSceneLoaded ? (
+              renderUnityExportSuitePanel()
+            ) : (
+              <div className="p-4 rounded bg-[#0c152c]/80 border border-cyan-500/25 text-center space-y-2 text-zinc-300">
+                <span className="text-xs font-semibold block text-emerald-300">
+                  No Three.js HTML Scene Loaded
+                </span>
+                <span className="text-[11px] text-cyan-200/70 block">
+                  Upload or convert a Three.js .HTML scene in the HTML → GLB tab to unlock the Unity Export Suite.
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === 'shading' && (
           <div className="space-y-4">
-
             <div className="space-y-1.5">
               <span className="text-[11px] font-mono tracking-wider uppercase text-cyan-300 block">
                 Render Mode
@@ -716,6 +1246,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                 ].map((mode) => (
                   <button
                     key={mode.id}
+                    type="button"
                     onClick={() => onSetRenderMode(mode.id as RenderMode)}
                     className={`py-1.5 text-xs rounded transition-all text-center ${
                       renderMode === mode.id
@@ -742,6 +1273,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                 ].map((preset) => (
                   <button
                     key={preset.id}
+                    type="button"
                     onClick={() => onSetLightingPreset(preset.id as LightingPreset)}
                     className={`py-1.5 text-xs rounded transition-all text-center ${
                       lightingPreset === preset.id
@@ -864,7 +1396,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
               <div className="p-4 rounded bg-[#150e2e]/70 border border-purple-500/25 text-center space-y-1 text-zinc-300">
                 <span className="text-xs font-semibold block text-amber-300">No Mesh Loaded</span>
                 <span className="text-[11px] text-purple-200/70 block">
-                  Upload an image in the Extruder tab to inspect and edit PBR material properties.
+                  Upload an image in the Extruder tab or convert a Three.js HTML scene to inspect and edit PBR materials.
                 </span>
               </div>
             ) : (
@@ -879,6 +1411,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
                       return (
                         <button
                           key={part.id}
+                          type="button"
                           onClick={() => onSelectPart(part.id)}
                           className={`w-full flex items-center justify-between p-2 rounded text-left transition-all border text-xs ${
                             isSelected
@@ -980,6 +1513,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
 
       <div className="p-3 border-t border-purple-500/25 bg-[#050616]/95 space-y-2">
         <button
+          type="button"
           onClick={onExportGlb}
           disabled={!blueprint || isGenerating}
           className="w-full py-2.5 rounded-md bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-500 hover:from-violet-500 hover:via-fuchsia-500 hover:to-cyan-400 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_22px_rgba(192,38,211,0.5)] border border-pink-400/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
@@ -995,6 +1529,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
 
         <div className="grid grid-cols-3 gap-1.5 text-[11px]">
           <button
+            type="button"
             onClick={onExportGltf}
             disabled={!blueprint || isGenerating}
             className="py-1 rounded bg-[#0f173b]/85 hover:bg-[#18265e] text-cyan-200 hover:text-white text-center border border-cyan-500/30 disabled:opacity-40 transition-colors shadow-[0_0_8px_rgba(6,182,212,0.1)]"
@@ -1002,6 +1537,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
             .GLTF
           </button>
           <button
+            type="button"
             onClick={onExportObj}
             disabled={!blueprint || isGenerating}
             className="py-1 rounded bg-[#201238]/85 hover:bg-[#321c58] text-pink-200 hover:text-white text-center border border-pink-500/30 disabled:opacity-40 transition-colors shadow-[0_0_8px_rgba(236,72,153,0.1)]"
@@ -1009,6 +1545,7 @@ export const StudioInspector: React.FC<StudioInspectorProps> = ({
             .OBJ
           </button>
           <button
+            type="button"
             onClick={onExportManifest}
             disabled={!blueprint || isGenerating}
             className="py-1 rounded bg-[#102430]/85 hover:bg-[#183a4d] text-emerald-200 hover:text-white text-center border border-emerald-500/30 disabled:opacity-40 transition-colors shadow-[0_0_8px_rgba(52,211,153,0.1)]"
