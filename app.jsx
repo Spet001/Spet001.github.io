@@ -489,6 +489,44 @@ const PORTFOLIO_DATA = {
     // PROJECTS DATA
     projectsData: [
         {
+            id: "spetaterm",
+            title: "Spet@term (Native C++20 Terminal & Micro-IDE)",
+            category: "tools",
+            categoryLabel: { pt: "Sistemas & Ferramentas Nativas", en: "Systems & Native Tooling" },
+            image: "/assets/spetaterm_home.png",
+            caseStudyImages: [
+                "/assets/spetaterm_home.png",
+                "/assets/spetaterm_workspace.png",
+                "/assets/spetaterm_editor.png",
+                "/assets/spetaterm_viewer.png",
+                "/assets/spetaterm_settings.png"
+            ],
+            repo: "https://github.com/Spet001/Spet-Term",
+            live: "https://github.com/Spet001/Spet-Term",
+            liveLabel: { pt: "Ver no GitHub", en: "View on GitHub" },
+            journalId: "Building-Custom-Windows-Terminal-Cpp20",
+            featured: true,
+            tags: ["C++20", "Win32 API", "Direct2D 1.1", "ConPTY", "DirectWrite", "DirectComposition", "Media Foundation", "Low-Level Systems"],
+            description: {
+                pt: "Emulador de terminal nativo e micro-IDE para Windows 10/11 desenvolvido em C++20 puro com renderização acelerada por Direct2D/DirectWrite e integração ao subsistema ConPTY. Combina terminal de altíssima performance, explorador de arquivos retrô (Win98), editor de código embutido com syntax highlighting, visualizador de imagens/sprites para gamedev e suporte a wallpapers de vídeo via Media Foundation com DXVA — tudo em um binário standalone de apenas ~1.6 MB e pegada de memória idle de ~3.6 MB.",
+                en: "Native Windows 10/11 terminal emulator and micro-IDE crafted in pure C++20 with Direct2D/DirectWrite hardware-accelerated rendering and ConPTY subsystem integration. Combines a high-velocity terminal, collapsible retro Win98 workspace explorer, inline code editor with syntax highlighting, inline media/sprite viewer for game dev, and DXVA hardware-decoded video wallpapers via Media Foundation — all compiled into a ~1.6 MB standalone binary consuming only ~3.6 MB idle memory."
+            },
+            caseStudy: {
+                challenge: {
+                    pt: "Terminais modernos no Windows sofrem com consumo excessivo de memória (Electron/web runtimes), dependência de dezenas de DLLs externas e falta de ferramentas embutidas para inspeção rápida de código e assets de jogos durante sessões longas de desenvolvimento e manutenção do sistema.",
+                    en: "Modern Windows terminals suffer from bloated memory usage (Electron/web runtimes), heavy DLL dependencies, and an absence of built-in tooling for quick code inspection and game asset previewing during lengthy development and sysadmin workflows."
+                },
+                solution: {
+                    pt: "Desenvolvimento do zero contra APIs nativas do Win32, Direct2D 1.1, DirectWrite e DirectComposition, gerenciamento de processos ConPTY com suporte completo a VT100 e alternate screen buffer (diskpart, vim, scripts), motor Git in-process sem overhead de subprocessos, e decodificação de vídeo MP4 por hardware (IMFSourceReader) com pausa automática para zero consumo de CPU/GPU em background.",
+                    en: "Engineered from scratch against Win32, Direct2D 1.1, DirectWrite, and DirectComposition APIs, ConPTY process management with full VT100 and alternate screen buffer support (diskpart, vim, scripts), in-process Git tree parsing avoiding process spawning overhead, and DXVA-accelerated MP4 wallpaper playback pausing on unfocus for zero background CPU/GPU drain."
+                },
+                impact: {
+                    pt: "Substitui ferramentas pesadas por um ambiente unificado ultrarrápido: ~1.6 MB executável, 0 DLLs externas, inicialização sub-milissegundo e um ecossistema produtivo completo para desenvolvedores e administradores de sistema.",
+                    en: "Replaces heavy terminal toolchains with an ultra-responsive unified environment: ~1.6 MB binary, 0 external DLLs, sub-millisecond startup, and an all-in-one productive ecosystem for devs and power users."
+                }
+            }
+        },
+        {
             id: "outcaster_fps",
             category: "gamedev",
             categoryLabel: { pt: "Desenvolvimento de Jogos", en: "Game Development" },
@@ -1208,6 +1246,14 @@ const PORTFOLIO_DATA = {
 
     // JOURNAL ARTICLES
     journalEntries: [
+        {
+            id: "Building-Custom-Windows-Terminal-Cpp20",
+            title: "Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term)",
+            date: "Nov 3, 2026",
+            file: "Building-Custom-Windows-Terminal-Cpp20.md",
+            category: "Systems Programming & Windows Internals",
+            excerpt: "Why spend weeks building a custom Windows terminal emulator from scratch? Architectural breakdown of Spet@term: pure C++20, Win32 ConPTY subsystem, Direct2D/DirectWrite rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM."
+        },
         {
             id: "Tribute-To-BioWare-And-Mass-Effect",
             title: "Farewell, BioWare: A Tribute to Mass Effect & How the Normandy Shaped This Portfolio",

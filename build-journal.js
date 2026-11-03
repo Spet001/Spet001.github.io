@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'Building-Custom-Windows-Terminal-Cpp20': 'Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.',
+    'entry_0021': 'Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.',
     'Tribute-To-BioWare-And-Mass-Effect': 'A tribute to BioWare and the Mass Effect trilogy following EA\'s closure of BioWare and cancellation of the new Mass Effect: how the Systems Alliance HUD and Normandy CIC Galaxy Map shaped the 3D design of spet01.dev, plus the new Mass Effect OST Jukebox tab and /shepard CLI protocol.',
     'entry_0020': 'A tribute to BioWare and the Mass Effect trilogy following EA\'s closure of BioWare and cancellation of the new Mass Effect: how the Systems Alliance HUD and Normandy CIC Galaxy Map shaped the 3D design of spet01.dev, plus the new Mass Effect OST Jukebox tab and /shepard CLI protocol.',
     'What-Is-ResurgeGDK': 'Architectural deep dive into ResurgeGDK: bridging Call of Duty: Black Ops III from Steam to the Microsoft Store GDK runtime, detouring COM interfaces in xgameruntime.dll, virtualizing AppX packages for offline DLC preservation, mounting Steam Workshop mods via BOIII Downloader VFS, emulating local GobbleGum telemetry (999x inventory), and embedding Ezz BOIII client security with an integrated GSC bytecode injector.',
@@ -53,6 +55,7 @@ const ENTRY_DESCRIPTIONS = {
 };
 
 const ENTRY_KEYWORDS = {
+    'Building-Custom-Windows-Terminal-Cpp20': 'Spet@term, Custom Windows Terminal, C++20 Terminal Emulator, Windows ConPTY API, Direct2D Terminal, DirectWrite Subpixel ClearType, Micro-IDE, Win32 Terminal, Win98 Workspace Explorer, DXVA Video Wallpaper, Low Memory Terminal, Eduardo Gelain, SpetDev',
     'What-Is-A-WAD-Modern-Games': 'online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad, T3WAD, 0x543377AB, Demonware Publisher Storage, Call of Duty Black Ops 2 WAD, Call of Duty Black Ops 1 WAD, Plutonium demonware pub wad, ZPGDK, What is a WAD, DOOM IWAD PWAD, id Tech 7 resources, Eduardo Gelain, SpetDev',
     'Document-Explaining-Leaks': 'BO2 Crossplay Relay, ZPGDK GSC Injector, msclients, Call of Duty Black Ops 2 Crossplay, PS5 PC Crossplay BO2, Xirus, rolltide11, AAA Qurance, Waffle, Heretics Software, Spet, Eduardo Gelain, Stolen Code Disavowal',
     'Optimize-Old-Games-4GB-Patch-DXVK': '4GB Patch Online, Large Address Aware, LAA Patcher, Fable 3 4GB Patch, Fable3.exe LAA, DXVK Vulkan Old Games, Spet 4gb Patch, PE32 Checksum',
@@ -60,6 +63,36 @@ const ENTRY_KEYWORDS = {
 };
 
 const ENTRY_FAQ_SCHEMA = {
+    'Building-Custom-Windows-Terminal-Cpp20': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is Spet@term?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Spet@term is a high-performance native Windows terminal emulator and micro-IDE written in C++20. It builds directly against Win32, Direct2D 1.1, DirectWrite, DirectComposition, and the Windows Pseudo Console (ConPTY) APIs, providing an integrated workspace file explorer, inline code editor, image/sprite viewer, and DXVA video wallpapers in a standalone ~1.6 MB executable consuming ~3.6 MB idle RAM."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why build a custom terminal emulator for Windows instead of using Windows Terminal or Electron?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Modern Electron/web-based terminals consume hundreds of megabytes of RAM and introduce noticeable input latency, while standard consoles lack integrated developer tooling like quick file inspection and retro workspace navigation. By writing directly to Win32 and Direct2D, Spet@term delivers sub-millisecond rendering, zero external DLL dependencies, and a customized game developer workflow without background resource drain."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does Spet@term support full-screen interactive console applications like diskpart, vim, and python?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. Spet@term integrates directly with the native Windows ConPTY (CreatePseudoConsole) API and maintains alternate screen buffers (VT100 escape sequences like \\x1b[?1049h), enabling seamless execution of diskpart, vim, python, and interactive CLI programs without scrollback corruption."
+                }
+            }
+        ]
+    },
     'What-Is-A-WAD-Modern-Games': {
         "@type": "FAQPage",
         "@id": "https://spet01.dev/journal/What-Is-A-WAD-Modern-Games/#faq",

@@ -1,5 +1,12 @@
 [
     {
+        "id": "entry_0021",
+        "title": "Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term)",
+        "date": "Nov 3, 2026",
+        "category": "Systems Programming & Windows Internals",
+        "file": "Building-Custom-Windows-Terminal-Cpp20.md"
+    },
+    {
         "id": "entry_0020",
         "title": "Farewell, BioWare: A Tribute to Mass Effect & How the Normandy Shaped This Portfolio",
         "date": "Oct 22, 2026",
