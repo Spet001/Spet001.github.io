@@ -37,3 +37,9 @@ coverage/
 qa*.js
 diagnose.js
 serve-local.cjs
+
+
+# Workspace configurations
+.agents/
+.agent/
+skills/
