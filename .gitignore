@@ -43,3 +43,7 @@ serve-local.cjs
 .agents/
 .agent/
 skills/
+
+# GitHub Stubs (standalone repositories)
+docs/github-stubs/
+github-stubs/
