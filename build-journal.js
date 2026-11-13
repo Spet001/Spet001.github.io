@@ -17,6 +17,8 @@ const MASTER_JOURNAL_INDEX = path.join(JOURNAL_DIR, 'index.html');
 
 // Accurate SEO descriptions for each entry
 const ENTRY_DESCRIPTIONS = {
+    'Xbox-Backcompat-PC-Fusion-AOT': 'Reverse engineering Microsoft\'s PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.',
+    'entry_0022': 'Reverse engineering Microsoft\'s PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.',
     'Building-Custom-Windows-Terminal-Cpp20': 'Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.',
     'entry_0021': 'Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.',
     'Tribute-To-BioWare-And-Mass-Effect': 'A tribute to BioWare and the Mass Effect trilogy following EA\'s closure of BioWare and cancellation of the new Mass Effect: how the Systems Alliance HUD and Normandy CIC Galaxy Map shaped the 3D design of spet01.dev, plus the new Mass Effect OST Jukebox tab and /shepard CLI protocol.',
@@ -55,6 +57,7 @@ const ENTRY_DESCRIPTIONS = {
 };
 
 const ENTRY_KEYWORDS = {
+    'Xbox-Backcompat-PC-Fusion-AOT': 'Xbox Backward Compatibility PC, Emu.exe, Project Fusion, Phoenix Compiler Phx, xeo3 DLL, xefu DLL, MOVBE AVX2 Ivy Bridge, XmlLite.dll IAT Proxy, Xbox 360 Static Recompilation, XenonRecomp, KOTOR II Microsoft Store, Eduardo Gelain, SpetDev',
     'Building-Custom-Windows-Terminal-Cpp20': 'Spet@term, Custom Windows Terminal, C++20 Terminal Emulator, Windows ConPTY API, Direct2D Terminal, DirectWrite Subpixel ClearType, Micro-IDE, Win32 Terminal, Win98 Workspace Explorer, DXVA Video Wallpaper, Low Memory Terminal, Eduardo Gelain, SpetDev',
     'What-Is-A-WAD-Modern-Games': 'online_tu17_mp.wad, online_tu17_zm.wad, online_tu14_mp_english.wad, online_tu14_sp_english.wad, T3WAD, 0x543377AB, Demonware Publisher Storage, Call of Duty Black Ops 2 WAD, Call of Duty Black Ops 1 WAD, Plutonium demonware pub wad, ZPGDK, What is a WAD, DOOM IWAD PWAD, id Tech 7 resources, Eduardo Gelain, SpetDev',
     'Document-Explaining-Leaks': 'BO2 Crossplay Relay, ZPGDK GSC Injector, msclients, Call of Duty Black Ops 2 Crossplay, PS5 PC Crossplay BO2, Xirus, rolltide11, AAA Qurance, Waffle, Heretics Software, Spet, Eduardo Gelain, Stolen Code Disavowal',
@@ -63,6 +66,36 @@ const ENTRY_KEYWORDS = {
 };
 
 const ENTRY_FAQ_SCHEMA = {
+    'Xbox-Backcompat-PC-Fusion-AOT': {
+        "@type": "FAQPage",
+        "@id": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How does Microsoft's new OG Xbox backward compatibility on PC work?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The PC release runs Emu.exe (Project Fusion), a ~1 MB host/micro-hypervisor that emulates the Xbox 360 environment rather than Original Xbox hardware directly. All PowerPC code—including xb1krnl.exe, the Xbox 360 HUD, and the game—is statically AOT-compiled by Microsoft's Phoenix (Phx) compiler into native x86-64 DLLs (xeo3_*.dll and xefu_*.dll)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does Emu.exe crash with 0xC000001D on pre-Haswell CPUs like Ivy Bridge?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The AOT-compiled xeo3_*.dll and xefu_*.dll modules emit MOVBE instructions for PowerPC big-endian byte swapping, and the 64 MB xefu_c9e3cbd7_*.dll binary also emits integer AVX2 instructions. Pre-Haswell CPUs such as the Intel Core i5-3470 (Ivy Bridge, 2012) lack MOVBE and AVX2 and throw STATUS_ILLEGAL_INSTRUCTION (0xC000001D)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can redirecting to the leftover _no.dll files fix pre-Haswell CPUs?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Forcing xeo3_5fb3687c_001748c4_no.dll into Slot 0 via an XmlLite.dll IAT LoadLibraryW proxy clears the initial 0xC000001D boot crash and initializes VGPU/D3D12, but Emu.exe aborts in EmulatorSwapThreads with a fatal missing-thread error. Furthermore, the xefu_*.dll modules have no _no.dll fallback builds."
+                }
+            }
+        ]
+    },
     'Building-Custom-Windows-Terminal-Cpp20': {
         "@type": "FAQPage",
         "@id": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/#faq",

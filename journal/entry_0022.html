@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash) | Eduardo Gelain Technical Journal</title>
+    <meta name="description" content="Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.">
+    <meta name="keywords" content="Xbox Backward Compatibility PC, Emu.exe, Project Fusion, Phoenix Compiler Phx, xeo3 DLL, xefu DLL, MOVBE AVX2 Ivy Bridge, XmlLite.dll IAT Proxy, Xbox 360 Static Recompilation, XenonRecomp, KOTOR II Microsoft Store, Eduardo Gelain, SpetDev">
+    <meta name="author" content="Eduardo Gelain">
+    <meta name="robots" content="noindex, follow">
+
+    <!-- Canonical URL & Alternate Discovery -->
+    <link rel="canonical" href="https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/">
+    <link rel="alternate" type="text/plain" href="https://spet01.dev/llm.txt" title="LLM & AI Crawler Context">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/">
+    <meta property="og:title" content="Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash) | Eduardo Gelain">
+    <meta property="og:description" content="Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.">
+    <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:secure_url" content="https://spet01.dev/assets/portweb.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1668">
+    <meta property="og:image:height" content="506">
+    <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+    <meta property="og:site_name" content="Eduardo Gelain Portfolio">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/">
+    <meta name="twitter:title" content="Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash) | Eduardo Gelain">
+    <meta name="twitter:description" content="Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.">
+    <meta name="twitter:image" content="https://spet01.dev/assets/portweb.png">
+    <meta name="twitter:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/#article",
+      "headline": "Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash)",
+      "description": "Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.",
+      "datePublished": "Nov 12, 2026",
+      "articleSection": "Reverse Engineering & Emulation",
+      "url": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/",
+      "mainEntityOfPage": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/",
+      "author": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "alternateName": "SpetDev",
+        "url": "https://spet01.dev"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Eduardo Gelain",
+        "url": "https://spet01.dev"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does Microsoft's new OG Xbox backward compatibility on PC work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The PC release runs Emu.exe (Project Fusion), a ~1 MB host/micro-hypervisor that emulates the Xbox 360 environment rather than Original Xbox hardware directly. All PowerPC code—including xb1krnl.exe, the Xbox 360 HUD, and the game—is statically AOT-compiled by Microsoft's Phoenix (Phx) compiler into native x86-64 DLLs (xeo3_*.dll and xefu_*.dll)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does Emu.exe crash with 0xC000001D on pre-Haswell CPUs like Ivy Bridge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The AOT-compiled xeo3_*.dll and xefu_*.dll modules emit MOVBE instructions for PowerPC big-endian byte swapping, and the 64 MB xefu_c9e3cbd7_*.dll binary also emits integer AVX2 instructions. Pre-Haswell CPUs such as the Intel Core i5-3470 (Ivy Bridge, 2012) lack MOVBE and AVX2 and throw STATUS_ILLEGAL_INSTRUCTION (0xC000001D)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can redirecting to the leftover _no.dll files fix pre-Haswell CPUs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Forcing xeo3_5fb3687c_001748c4_no.dll into Slot 0 via an XmlLite.dll IAT LoadLibraryW proxy clears the initial 0xC000001D boot crash and initializes VGPU/D3D12, but Emu.exe aborts in EmulatorSwapThreads with a fatal missing-thread error. Furthermore, the xefu_*.dll modules have no _no.dll fallback builds."
+          }
+        }
+      ]
+    }
+  ]
+}
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown & Sanitizer for Mascot Chat & Technical Journal -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#00aaff',
+                        primaryHover: '#0077b6',
+                        dark: '#050505',
+                        darkPanel: 'rgba(5, 5, 5, 0.85)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for base tweaks -->
+    <style>
+        /* High-DPI Pixel-Art Sprite Rendering (prevents bilinear blur on 2K/4K & browser zoom) */
+        .pixelated,
+        img.pixelated,
+        .pixel-art {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        html {
+            scroll-behavior: smooth !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+        }
+
+        
+        /* High-contrast OLED Pitch Black Theme Override */
+        [data-site-color="pitch-black"],
+        [data-site-color="pitch-black"] body,
+        body.pitch-black {
+            background-color: #000000 !important;
+        }
+        [data-site-color="pitch-black"] .glass-panel {
+            background: rgba(0, 0, 0, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.85) !important;
+        }
+        [data-site-color="pitch-black"] header.scrolled,
+        [data-site-color="pitch-black"] .bg-\[\#05070c\]\/95 {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+        }
+        [data-site-color="pitch-black"] footer,
+        [data-site-color="pitch-black"] ::-webkit-scrollbar-track,
+        [data-site-color="pitch-black"] .bg-\[\#050505\]\/95,
+        [data-site-color="pitch-black"] .bg-\[\#080808\],
+        [data-site-color="pitch-black"] .bg-\[\#0e1424\] {
+            background-color: #000000 !important;
+        }
+
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            cursor: none !important;
+            overflow-x: hidden;
+        }
+
+        a,
+        button,
+        .clickable { cursor: none !important; }
+
+        .glass-panel {
+            background: rgba(8, 10, 15, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 170, 255, 0.35);
+            box-shadow: 0 12px 35px -10px rgba(0, 170, 255, 0.18), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Custom Scrollbar for Journal Entries */
+        .journal-entries-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.7);
+        }
+        .journal-entries-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+            margin: 4px 0;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .journal-entries-scroll::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+        }
+
+        .fade-in-section {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
+        /* Subtle Project Card Fade-In on Filter & Search */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .project-card-animate {
+            animation: cardFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        /* Hover-lift animation & inner border glow effect for Featured Projects grid cards */
+        #projects article {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+            position: relative;
+        }
+
+        #projects article:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 170, 255, 0.6) !important;
+            box-shadow: 
+                inset 0 0 0 1px rgba(0, 170, 255, 0.45),
+                inset 0 0 22px rgba(0, 170, 255, 0.15),
+                0 16px 36px -8px rgba(0, 170, 255, 0.24),
+                0 12px 28px -6px rgba(0, 0, 0, 0.65) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-card-animate {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            #projects article:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Custom Cursor (GPU-composited via rAF-coalesced translate3d, zero style recalculation on 1000Hz mice) */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00aaff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%) scale(1);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        #custom-cursor[data-hover="1"] {
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #fff;
+        }
+
+        /* Mascot Companion styles */
+        @keyframes astroFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1.5deg); }
+        }
+        .astro-float {
+            animation: astroFloat 3.5s ease-in-out infinite;
+        }
+
+        /* Subtle bubble entrance animations and transitions */
+        @keyframes mascotBubbleIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes mascotAiGlow {
+            0% {
+                border-color: rgba(56, 189, 248, 0.75);
+                box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+            }
+            100% {
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        @keyframes typingCursorBlink {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0; transform: scaleY(0.7); }
+        }
+
+        .mascot-typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 15px;
+            background-color: #38bdf8;
+            margin-left: 3px;
+            vertical-align: -1px;
+            animation: typingCursorBlink 0.75s infinite ease-in-out;
+            border-radius: 1px;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+        }
+
+        .mascot-bubble-user {
+            animation: mascotBubbleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mascot-bubble-ai {
+            animation: mascotBubbleIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .mascot-bubble-ai.new-arrival {
+            animation: mascotBubbleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, mascotAiGlow 1.4s ease-out forwards;
+        }
+
+        @keyframes wavePulse {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .typing-dot-1 { animation: wavePulse 1.2s infinite ease-in-out 0s; }
+        .typing-dot-2 { animation: wavePulse 1.2s infinite ease-in-out 0.2s; }
+        .typing-dot-3 { animation: wavePulse 1.2s infinite ease-in-out 0.4s; }
+
+        .mascot-chat-content p { margin-bottom: 0.5rem; line-height: 1.5; }
+        .mascot-chat-content p:last-child { margin-bottom: 0; }
+        .mascot-chat-content ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .mascot-chat-content code { background: rgba(15, 23, 42, 0.85); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85em; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .mascot-chat-content pre { background: #080d1a; padding: 0.75rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mascot-chat-content pre code { background: transparent; padding: 0; color: #e2e8f0; border: none; }
+        .mascot-chat-content a { color: #38bdf8; text-decoration: underline; }
+        .mascot-chat-content strong { color: #fff; font-weight: 600; }
+    
+        @keyframes walk-back-and-forth {
+            0% { transform: translateX(0) scaleX(1); }
+            49% { transform: translateX(150px) scaleX(1); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            99% { transform: translateX(0) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        .galo-astronauta {
+            animation: walk-back-and-forth 12s linear infinite;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1.6rem;
+            margin-left: 1rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        /* Journal Markdown Reader Styles */
+        .markdown-body h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff; }
+        .markdown-body h2 { font-size: 1.45rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .markdown-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e2e8f0; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+        .markdown-body a { color: #00aaff; text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-body a:hover { color: #38bdf8; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.35rem; }
+        .markdown-body blockquote { border-left: 4px solid #00aaff; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-bottom: 1.25rem; background: rgba(0, 170, 255, 0.05); padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body code { background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875em; color: #38bdf8; }
+        .markdown-body pre { background-color: rgba(5, 5, 5, 0.95); padding: 1.1rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .markdown-body pre code { background-color: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.85em; }
+        .markdown-body img { max-width: 100%; border-radius: 0.75rem; margin: 1.25rem 0; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .markdown-body hr { border-color: rgba(255, 255, 255, 0.08); margin: 2rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 0.75rem; text-align: left; }
+        .markdown-body th { background: rgba(255,255,255,0.05); color: #fff; }
+</style>
+
+    <!-- React & Three.js Libraries -->
+    <script>
+        // Fix Chromium bug on large internal blob: URLs in Three.js GLTFLoader (r128):
+        // ImageBitmapLoader fails with net::ERR_ABORTED ("TypeError: Failed to fetch") on large blobs (moon.glb & nebula0.glb).
+        // Forcing TextureLoader (HTMLImageElement) guarantees reliable loading across all browsers.
+        window.createImageBitmap = undefined;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style>
+        .text-glow {
+            text-shadow: 0px 2px 8px rgba(0,0,0,0.9), 0px 4px 20px rgba(0,0,0,0.8);
+        }
+        .text-glow-none {
+            text-shadow: none !important;
+        }
+        @media print {
+            #astro-assistant,
+            #astro-chat-window,
+            #custom-cursor,
+            #initial-loading-screen,
+            nav,
+            header,
+            footer,
+            canvas,
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script>
+        try {
+            var _cfg = JSON.parse(localStorage.getItem('spet_portfolio_settings') || '{}');
+            if (_cfg.siteColor === 'pitch-black') {
+                document.documentElement.setAttribute('data-site-color', 'pitch-black');
+            }
+        } catch (e) {}
+    </script>
+</head>
+
+<body class="antialiased selection:bg-primary selection:text-white">
+    <div id="custom-cursor"></div>
+    <!-- Pre-hydration initial loading overlay -->
+    <div id="initial-loading-screen" data-nosnippet="true" aria-hidden="true" class="fixed inset-0 z-[99998] bg-[#050505] flex flex-col justify-between p-8 sm:p-12 select-none transition-opacity duration-700 ease-out" style="background-color: #050505;">
+        <div class="flex items-center gap-2.5">
+            <span class="text-sm font-semibold tracking-tight text-white">Eduardo Gelain</span>
+            <span class="text-slate-600">/</span>
+            <span class="text-xs text-slate-400">SpetDev</span>
+        </div>
+
+        <div class="max-w-xs w-full">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+                <span>Iniciando ambiente...</span>
+                <span>···</span>
+            </div>
+            <div class="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
+                <div class="h-full bg-primary/70 rounded-full w-1/3 animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.dismissInitialLoadingScreen = function() {
+            var el = document.getElementById('initial-loading-screen');
+            if (el && el.parentNode) {
+                el.style.transition = 'opacity 0.7s ease-out';
+                el.style.opacity = '0';
+                el.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    if (el && el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                }, 700);
+            }
+        };
+    </script>
+    <div id="root">
+        <!-- Pre-rendered Semantic HTML for SEO, Search Crawlers, and AI Agents -->
+        <!-- This content is parsed and indexed immediately by Googlebot, Bing, GPTBot, ClaudeBot, PerplexityBot, and Applebot before JavaScript hydrates -->
+        <header class="fixed top-0 w-full z-50 bg-[#050505]/92 backdrop-blur-md border-b border-white/[0.08]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-tighter text-white">
+                    <i class="fas fa-terminal text-primary"></i>
+                    <span>Spet<span class="text-primary">Dev</span></span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
+                    <a href="#tools" class="hover:text-primary transition-colors">Tools</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-book-open"></i> Technical Journal
+                    </a>
+                </div>
+            </div>
+        </header>
+
+                <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 max-w-4xl mx-auto">
+            <div class="mb-8 flex items-center justify-between text-xs">
+                <a href="/" class="text-primary hover:underline font-mono">← Back to Home (SpetDev)</a>
+                <a href="/journal/" class="text-slate-400 hover:text-white font-mono">All Articles →</a>
+            </div>
+            <article class="p-6 sm:p-10 rounded-2xl bg-[#0a0f1d]/80 border border-white/[0.08] shadow-2xl backdrop-blur-md">
+                <header class="mb-8 pb-6 border-b border-white/[0.08]">
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 mb-3">
+                        <time><i class="far fa-calendar-alt mr-1"></i> Nov 12, 2026</time>
+                        <span><i class="far fa-user mr-1"></i> Eduardo Gelain (SpetDev)</span>
+                        <span><i class="far fa-folder mr-1"></i> Reverse Engineering & Emulation</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash)</h1>
+                    <p class="text-slate-300 text-sm leading-relaxed">Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.</p>
+                </header>
+                <div id="content" class="markdown-body" data-prerendered="Xbox-Backcompat-PC-Fusion-AOT">
+<blockquote>
+<p><strong>Technical Scope:</strong>  </p>
+<ul>
+<li><strong>Target:</strong> <em>Star Wars: Knights of the Old Republic II</em> (Microsoft Store / GDK PC release, <code>EmuMenu 2611.1009.5900.0</code>)  </li>
+<li><strong>Runtime:</strong> <code>Emu.exe</code> (Project <em>Fusion</em>, ~1 MB) + Phoenix (<code>Phx</code>) AOT-compiled <code>xeo3_*.dll</code> and <code>xefu_*.dll</code> modules  </li>
+<li><strong>Test Hardware:</strong> Intel Core i5-3470 (Ivy Bridge, 2012; AVX1 + SSE4.2, no <code>MOVBE</code> or <code>AVX2</code>) + NVIDIA GeForce RTX 3050  </li>
+<li><strong>Author:</strong> Eduardo Gelain (SpetDev) · November 12, 2026</li>
+</ul>
+</blockquote>
+<hr>
+<p>Microsoft pushed its official Original Xbox backward compatibility runtime to PC today. Grabbing <em>Star Wars: Knights of the Old Republic II</em> from the Microsoft Store immediately revealed something unexpected in the game directory: even though KOTOR II is a 2004 Original Xbox title, the PC wrapper isn&#39;t emulating the original Xbox directly. It is running the <strong>Xbox 360</strong> backward compatibility stack (<code>xb1krnl.exe</code>, <code>hud.xex</code>, <code>huduiskin.xex</code>, <code>ximecore.xex</code>, <code>TDATA</code>) inside a 1 MB host executable named <code>Emu.exe</code> (codename <em>Fusion</em>).</p>
+<p>On an older Intel Core i5-3470 (Ivy Bridge, 2012), the game crashes right after launch with <code>0xC000001D</code> (<code>STATUS_ILLEGAL_INSTRUCTION</code>). Because the game folder sits next to a full set of <code>_no.dll</code> (&quot;No Optimizations&quot;) fallback modules that Microsoft left behind, I disassembled the binaries and wrote a quick <code>XmlLite.dll</code> IAT proxy to force those fallback DLLs into Slot 0 and see if pre-Haswell hardware could boot it.</p>
+<hr>
+<h2>1. How <code>Emu.exe</code> Actually Works (Spoiler: There Is No JIT)</h2>
+<p>Anyone expecting a dynamic PowerPC recompiler like Xenia inside <code>Emu.exe</code> won&#39;t find one. At roughly 1 MB, <code>Emu.exe</code> contains zero PowerPC interpreter or JIT code. Instead, it acts as a micro-hypervisor and hardware host:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Subsystem</th>
+<th align="left">Evidence Inside <code>Emu.exe</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Guest Address Space</strong></td>
+<td align="left"><code>setup_guest_memory_layout</code> reserves <strong>8 GB contiguous</strong> via <code>VirtualAlloc2</code> and placeholders, then maps views with <code>MapViewOfFile3</code> to mirror the Xbox 360 virtual memory map.</td>
+</tr>
+<tr>
+<td align="left"><strong>Kernel &amp; Hypervisor</strong></td>
+<td align="left">Exposes <code>GuestAllocatePages</code>, <code>GuestProtectPages</code>, <code>GuestQueryPages</code>, and strings like <code>Illegal hypervisor API %s ordinal %d invoked. Guest IAR=%x LR=%x</code> and <code>KeStartGuestProcessor() ... Xenon Idle thread</code>.</td>
+</tr>
+<tr>
+<td align="left"><strong>Storage &amp; OG Xbox Layer</strong></td>
+<td align="left">Mounts virtual partitions for <code>Harddisk</code>, <code>Flash</code>, <code>FlashWriteable</code>, and <code>TDATA</code> (OG Xbox save/title data), plus XEX replacement hashing.</td>
+</tr>
+<tr>
+<td align="left"><strong>GPU &amp; Windowing</strong></td>
+<td align="left">Creates <code>XeO3 Window</code>, spawns <code>VBlank Timer</code> and <code>GPU Timer</code> threads (<code>InitGpuAndTimers</code>), and loads <code>VGPUDX12.dll</code>, <code>D3D12Core.dll</code>, and <code>dxcompiler.dll</code> from the app directory (with <code>VGPUNULL.dll</code> as a fallback string).</td>
+</tr>
+</tbody></table>
+<p>All actual PowerPC code (the Xbox 360 kernel, the HUD, system libraries, and the game binary itself) was <strong>statically ahead-of-time (AOT) compiled</strong> on Microsoft&#39;s build servers using the <strong>Phoenix Compiler (<code>Phx</code>)</strong> backend. Internal PDB paths left in the binaries confirm the pipeline:</p>
+<pre><code class="language-text">F:\_work\1\titles.bin\Release\x64\ppc\system\free\Fusion\xb1krnlPri\xefu_69c41281_00027bcf.pdb
+</code></pre>
+<p>During startup, <code>Emu.exe</code> calls <code>InitializePrecompiledDll</code> (<code>0x140075350</code> / <code>sub_1400740E0</code> -&gt; <code>sub_1400746F0</code>), loads the AOT-compiled DLLs via <code>LoadLibraryW</code>, and resolves four exported symbols: <code>InitPrecompiledDll</code>, <code>CleanupPrecompiledDll</code>, <code>PrecompiledPointers</code>, and <code>PrecompiledImportTable</code>. <code>Emu.exe</code> populates <code>PrecompiledPointers</code> with host callbacks so Xbox 360 kernel syscalls call straight back into the hypervisor.</p>
+<hr>
+<h2>2. Why Ivy Bridge Fails: <code>MOVBE</code>, <code>AVX2</code>, and the Missing <code>_no.dll</code> Files</h2>
+<p><code>Emu.exe</code> itself is compiled with <code>/arch:AVX</code> (<code>FUN_140048620</code> uses <code>VPXOR</code>, <code>VMOVUPS</code>, and <code>VMOVDQU</code> while logging <code>Host CPU processor: %s</code>). Since the Core i5-3470 supports AVX1, <code>Emu.exe</code> clears its own CPU checks cleanly.</p>
+<p>The illegal instruction fault happens inside the AOT DLLs. PowerPC is big-endian and x86-64 is little-endian, so Microsoft&#39;s Phoenix backend emits <code>MOVBE</code> everywhere for byte-swapped memory loads and stores. Hardware support for <code>MOVBE</code> arrived in 2013 with Intel Haswell and AMD Jaguar (Xbox One). Ivy Bridge missed it by one generation.</p>
+<p>In the game folder, almost every <code>xeo3_*.dll</code> module ships alongside an unoptimized <code>*_no.dll</code> twin that replaces <code>MOVBE</code> with standard <code>MOV</code> + <code>BSWAP</code> sequences. Running <code>pefile</code> and <code>capstone</code> locally across the modules exposed two problems with assuming <code>_no.dll</code> alone fixes pre-Haswell compatibility:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Module</th>
+<th align="right">Size (bytes)</th>
+<th align="center">Has <code>_no.dll</code>?</th>
+<th align="left"><code>MOVBE</code> Count</th>
+<th align="left"><code>ymm</code> / AVX2 Findings</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>xeo3_5fb3687c_001748c4.dll</code> (Slot 0 kernel)</td>
+<td align="right">1,285,120</td>
+<td align="center">Yes (3,817,984)</td>
+<td align="left"><strong>19,056</strong> (first at <code>0x180001031</code>)</td>
+<td align="left">1,055 AVX1 float <code>ymm</code> (<code>vcvtps2pd</code>), <strong>0</strong> AVX2 <code>vp* ymm</code></td>
+</tr>
+<tr>
+<td align="left"><code>xeo3_5fb3687c_001748c4_no.dll</code> (Slot 1 fallback)</td>
+<td align="right">3,817,984</td>
+<td align="center">—</td>
+<td align="left"><strong>0</strong> (uses <code>BSWAP</code>)</td>
+<td align="left">1,141 AVX1 float <code>ymm</code>, <strong>0</strong> AVX2 <code>vp* ymm</code></td>
+</tr>
+<tr>
+<td align="left"><code>xefu_69c41281_00027bcf.dll</code> (<code>xb1krnl.exe</code>)</td>
+<td align="right">1,656,832</td>
+<td align="center"><strong>No</strong></td>
+<td align="left">Present (<code>0x180001021</code>)</td>
+<td align="left">0 <code>ymm</code></td>
+</tr>
+<tr>
+<td align="left"><code>xefu_c9e3cbd7_976c5a9b_961b6528_2fbd8470_d5f46859.dll</code></td>
+<td align="right">64,007,680</td>
+<td align="center"><strong>No</strong></td>
+<td align="left">Present (<code>0x180008179</code>)</td>
+<td align="left"><strong>Contains AVX2 integer <code>ymm</code></strong>: <code>vpmaddwd</code>, <code>vpsubd</code>, <code>vpslld</code>, <code>vpaddsw</code>, <code>vpsubusb</code>, <code>vpcmpeqw</code></td>
+</tr>
+</tbody></table>
+<p>Both <code>xefu_*.dll</code> modules lack <code>_no.dll</code> counterparts, and the 64 MB main binary uses integer AVX2 instructions (<code>vpmaddwd</code> at <code>0x1807211e5</code>, <code>vpsubd</code> at <code>0x180fa3d37</code>, <code>vpcmpeqw</code> at <code>0x181f04e8d</code>) on top of <code>MOVBE</code>.</p>
+<hr>
+<h2>3. Intercepting <code>LoadLibraryW</code> with an <code>XmlLite.dll</code> IAT Proxy</h2>
+<p>Static patching of <code>Emu.exe</code> breaks its Authenticode signature and triggers silent GDK integrity termination, and launching <code>Emu.exe</code> directly without <code>EmuMenu.exe</code> arguments exits immediately. Checking <code>IMAGE_DIRECTORY_ENTRY_IMPORT</code> and <code>IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT</code> on <code>Emu.exe</code> also showed it does not import <code>version.dll</code> at all.</p>
+<p>Instead, <code>Emu.exe</code> imports <code>XmlLite.dll</code> (only <code>CreateXmlReader</code>), which is not on Windows&#39; <code>KnownDLLs</code> list. There is one catch: <code>gamelaunchhelper.exe</code> (via <code>gameplatformservices.dll</code>) also loads <code>XmlLite.dll</code> from the game folder and requires <code>CreateXmlWriter</code>. Forwarding all 6 real exports from <code>System32\XmlLite.dll</code> and restricting the IAT hook to <code>Emu.exe</code> keeps the launcher happy.</p>
+<p>Here is the core of the proxy (<code>proxy_xmllite.cpp</code>) used to redirect Slot 0 <code>xeo3_*</code> loads to <code>*_no.dll</code> and clone Slot 1 into <code>*_no_s1.dll</code> so both slots keep distinct <code>HMODULE</code>s and <code>.data</code> segments:</p>
+<pre><code class="language-cpp">static std::wstring ResolveNoOptPath(LPCWSTR lpLibFileName) {
+    if (!lpLibFileName) return L&quot;&quot;;
+    std::wstring path(lpLibFileName);
+
+    size_t slashPos = path.find_last_of(L&quot;\\/&quot;);
+    std::wstring fileName = (slashPos == std::wstring::npos) ? path : path.substr(slashPos + 1);
+
+    bool isTargetPrefix = (_wcsnicmp(fileName.c_str(), L&quot;xeo3_&quot;, 5) == 0) ||
+                          (_wcsnicmp(fileName.c_str(), L&quot;xefu_&quot;, 5) == 0);
+    if (!isTargetPrefix) return path;
+
+    // Clone Slot 1 (*_no.dll -&gt; *_no_s1.dll) to isolate global .data state between slots
+    if (fileName.size() &gt;= 7 &amp;&amp; _wcsicmp(fileName.c_str() + fileName.size() - 7, L&quot;_no.dll&quot;) == 0) {
+        if (!g_ModuleDir.empty()) {
+            std::wstring s1Name = fileName.substr(0, fileName.size() - 4) + L&quot;_s1.dll&quot;;
+            std::wstring s1Path = g_ModuleDir + s1Name;
+            if (GetFileAttributesW(s1Path.c_str()) == INVALID_FILE_ATTRIBUTES) {
+                CopyFileW(path.c_str(), s1Path.c_str(), FALSE);
+            }
+            if (GetFileAttributesW(s1Path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+                LogShim(L&quot;[SLOT1-CLONE] %s -&gt; %s&quot;, path.c_str(), s1Path.c_str());
+                return s1Path;
+            }
+        }
+        return path;
+    }
+
+    // Redirect Slot 0 (*.dll -&gt; *_no.dll) when an unoptimized build exists
+    if (path.size() &gt;= 4 &amp;&amp; _wcsicmp(path.c_str() + path.size() - 4, L&quot;.dll&quot;) == 0) {
+        std::wstring noOptPath = path.substr(0, path.size() - 4) + L&quot;_no.dll&quot;;
+        if (GetFileAttributesW(noOptPath.c_str()) != INVALID_FILE_ATTRIBUTES) {
+            LogShim(L&quot;[REDIRECT] %s -&gt; %s&quot;, path.c_str(), noOptPath.c_str());
+            return noOptPath;
+        }
+    }
+
+    return path;
+}
+
+HMODULE WINAPI Hooked_LoadLibraryW(LPCWSTR lpLibFileName) {
+    std::wstring target = ResolveNoOptPath(lpLibFileName);
+    return Orig_LoadLibraryW(target.c_str());
+}
+
+HMODULE WINAPI Hooked_LoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags) {
+    std::wstring target = ResolveNoOptPath(lpLibFileName);
+    return Orig_LoadLibraryExW(target.c_str(), hFile, dwFlags);
+}
+</code></pre>
+<p>In <code>DllMain</code>, <code>IsTargetProcessEmu()</code> checks <code>GetModuleFileNameW(nullptr, ...)</code> for <code>Emu.exe</code> before patching <code>KERNEL32.dll!LoadLibraryW</code> and <code>KERNEL32.dll!LoadLibraryExW</code> in the executable&#39;s IAT.</p>
+<h3>What Happened at Runtime</h3>
+<p>Redirecting <code>xeo3_5fb3687c_001748c4.dll</code> to <code>xeo3_5fb3687c_001748c4_no.dll</code> immediately eliminated the <code>0xC000001D</code> boot crash. <code>Emu.exe</code> logged the <code>i5-3470</code>, selected the <strong>NVIDIA GeForce RTX 3050</strong>, allocated every VGPU D3D12 descriptor and resource heap (<code>SamplerHeap</code>, <code>GuestConstantBufferHeap</code>, <code>GuestShadowedTextureHeap</code>), and entered Xbox 360 thread scheduling.</p>
+<p>Then it died inside <code>EmulatorSwapThreads</code> (<code>0x14007c077</code>):</p>
+<pre><code class="language-text">(3844) GENERAL Host CPU processor:         Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz
+(3844) GRAPHICS Selected GPU processor: NVIDIA GeForce RTX 3050
+(40f8) GENERAL FATAL ERROR - Swaping to or from a non-existant thread:
+     OldThread==0x80140300
+     NewThread==0x80140164
+</code></pre>
+<p>Cloning Slot 1 into <code>xeo3_5fb3687c_001748c4_no_s1.dll</code> confirmed the crash wasn&#39;t caused by shared <code>.data</code> state across a single <code>HMODULE</code>:</p>
+<pre><code class="language-text">[INIT] XmlLite.dll proxy attached to Emu.exe (PID=9636).
+[IAT] Patched KERNEL32.dll!LoadLibraryW
+[IAT] Patched KERNEL32.dll!LoadLibraryExW
+[REDIRECT] ...\xeo3_5fb3687c_001748c4.dll -&gt; ...\xeo3_5fb3687c_001748c4_no.dll
+[SLOT1-CLONE] ...\xeo3_5fb3687c_001748c4_no.dll -&gt; ...\xeo3_5fb3687c_001748c4_no_s1.dll
+</code></pre>
+<p>Even with isolated <code>HMODULE</code>s, running <code>xeo3_5fb3687c_001748c4_no.dll</code> in Slot 0 leaves thread <code>0x80140300</code> or <code>0x80140164</code> missing from <code>Emu.exe</code>&#39;s internal thread map when <code>EmulatorSwapThreads</code> executes.</p>
+<hr>
+<h2>4. Microsoft <em>Fusion</em> vs. Community Static Recompilation (<code>XenonRecomp</code> / <code>N64Recomp</code>)</h2>
+<p>Both Microsoft&#39;s <em>Fusion</em> runtime and community static recompilers like <code>XenonRecomp</code> and <code>N64Recomp</code> start from the same premise: translate console machine code ahead of time instead of burning CPU cycles on a runtime JIT. Their engineering trade-offs diverge quickly from there:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Dimension</th>
+<th align="left">Microsoft <em>Fusion</em> (<code>Emu.exe</code> + <code>xeo3</code>/<code>xefu</code>)</th>
+<th align="left">Community Static Recomps (<code>XenonRecomp</code>, <code>N64Recomp</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Translator Output</strong></td>
+<td align="left">Closed x86-64 binary DLLs emitted directly by Microsoft&#39;s <strong>Phoenix (<code>Phx</code>)</strong> backend.</td>
+<td align="left">Lifts PowerPC/MIPS to portable <strong>C/C++ source</strong>, compiled locally with Clang, GCC, or MSVC.</td>
+</tr>
+<tr>
+<td align="left"><strong>CPU ISA Lock-in</strong></td>
+<td align="left">Locked at build time. Unpaired <code>xefu_*</code> DLLs hardcode <code>MOVBE</code> + <code>AVX2</code>, breaking pre-Haswell CPUs.</td>
+<td align="left">Target-agnostic. Compile without <code>-march=haswell</code> / <code>-mavx2</code> and the same game runs on Ivy Bridge, Core 2, Linux, or ARM64.</td>
+</tr>
+<tr>
+<td align="left"><strong>OS / Kernel Model</strong></td>
+<td align="left">Recompiles the full 360 OS (<code>xb1krnl.exe</code>, <code>hud.xex</code>, <code>xeo3_*</code>) inside a micro-hypervisor.</td>
+<td align="left"><strong>HLE (High-Level Emulation):</strong> recompiles only the game executable and reimplements kernel syscalls natively in C++.</td>
+</tr>
+<tr>
+<td align="left"><strong>Endianness</strong></td>
+<td align="left">Emitted directly as <code>MOVBE</code> (optimized) or <code>MOV</code> + <code>BSWAP</code> (<code>_no.dll</code>) in AOT assembly.</td>
+<td align="left">Expressed via C++ byteswap intrinsics (<code>_byteswap_*</code> / <code>__builtin_bswap*</code>), leaving instruction selection to the local compiler.</td>
+</tr>
+<tr>
+<td align="left"><strong>Catalog Scalability</strong></td>
+<td align="left">Built for batch-converting dozens of certified titles without per-game HLE rewrites.</td>
+<td align="left">Hand-tuned per title (jump tables, indirect calls, custom HLE), yielding modifiable open-source ports.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Where This Leaves Pre-Haswell Hardware</h2>
+<p>Pure <code>_no.dll</code> redirection cannot boot the runtime on Ivy Bridge for two independent reasons: <code>xeo3_5fb3687c_001748c4_no.dll</code> triggers <code>EmulatorSwapThreads</code> (<code>Swaping to or from a non-existant thread</code>) when forced into Slot 0, and neither <code>xefu_69c41281_00027bcf.dll</code> (<code>MOVBE</code>) nor the 64 MB <code>xefu_c9e3cbd7_...dll</code> (<code>MOVBE</code> + <code>AVX2</code>) has a <code>_no.dll</code> build at all.</p>
+<p>Any software workaround on pre-Haswell CPUs would need a process-wide <code>AddVectoredExceptionHandler</code> (VEH) catching <code>0xC000001D</code> across the original DLLs to decode and emulate <code>MOVBE</code> and <code>AVX2</code> instructions in software, or dynamic binary rewriting of <code>MOVBE</code> -&gt; <code>BSWAP</code> on private memory pages. Because PowerPC guest code executes <code>MOVBE</code> on almost every big-endian memory access, kernel-to-user exception trapping in hot loops would tank frame rates even if it reached the title screen. On Haswell (4th Gen Intel) or Excavator (AMD) and newer, the unmodified binaries run natively.</p>
+
+                </div>
+            </article>
+        </main>
+
+        <footer class="py-8 border-t border-white/[0.08] text-center text-xs text-slate-500">
+            <p>Eduardo Gelain · SpetDev. All rights reserved.</p>
+            <p class="mt-1">
+                <a href="/sitemap.xml" class="hover:underline text-slate-400">Sitemap</a> · 
+                <a href="/llm.txt" class="hover:underline text-slate-400">LLM Context</a> · 
+                <a href="/privacy.html" class="hover:underline text-slate-400">Privacy Policy</a>
+            </p>
+        </footer>
+
+        <noscript>
+            <div class="p-6 bg-[#050505]/95 backdrop-blur-md border-t border-primary/40 text-center text-slate-300 text-sm">
+                <p><strong>Note:</strong> JavaScript is optional. All portfolio projects, technical skills, and research journal articles above are fully accessible without scripts.</p>
+            </div>
+        </noscript>
+    </div>
+
+    <script defer src="/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('custom-cursor');
+            if (!cursor) return;
+
+            let cx = -100, cy = -100;
+            let lastTarget = null;
+            let isHover = false;
+            let rafPending = false;
+
+            const updateCursor = () => {
+                rafPending = false;
+                const nextHover = Boolean(
+                    lastTarget &&
+                    lastTarget.closest &&
+                    lastTarget.closest('a, button, .clickable')
+                );
+                if (nextHover !== isHover) {
+                    isHover = nextHover;
+                    cursor.dataset.hover = isHover ? '1' : '0';
+                }
+                cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) scale(${isHover ? 1.5 : 1})`;
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                cx = e.clientX;
+                cy = e.clientY;
+                lastTarget = e.target;
+                if (!rafPending) {
+                    rafPending = true;
+                    requestAnimationFrame(updateCursor);
+                }
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>
