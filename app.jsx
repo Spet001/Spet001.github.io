@@ -147,17 +147,7 @@ const PORTFOLIO_DATA = {
             footer: {
                 hint: "P.S. Não há easter eggs aqui...",
                 joke: "É Spet, Spet01 ou Spet001? O meu username depende puramente de quantos Spets já existiam naquela plataforma!",
-                rights: "Eduardo Gelain · SpetDev. Todos os direitos reservados.",
-                newsletter: {
-                    title: "Newsletter do Journal Técnico",
-                    desc: "Receba atualizações por e-mail sempre que uma nova análise de engenharia reversa, sandbox ou modding for publicada no Journal.",
-                    placeholder: "seu.email@exemplo.com",
-                    button: "Inscrever-se",
-                    subscribing: "Inscrevendo...",
-                    success: "Inscrição confirmada! Você receberá as próximas publicações do Journal.",
-                    error: "Por favor, insira um e-mail válido.",
-                    note: "Sem spam. Apenas artigos técnicos e novas pesquisas."
-                }
+                rights: "Eduardo Gelain · SpetDev. Todos os direitos reservados."
             },
             easter: {
                 title: "Easter Egg Vault",
@@ -328,17 +318,7 @@ const PORTFOLIO_DATA = {
             footer: {
                 hint: "P.S. There are no easter eggs here...",
                 joke: "Is it Spet, Spet01, or Spet001? My username purely depends on how many Spets were already taken on that platform!",
-                rights: "Eduardo Gelain · SpetDev. All rights reserved.",
-                newsletter: {
-                    title: "Technical Journal Newsletter",
-                    desc: "Receive email updates whenever a new reverse engineering breakdown, sandbox bypass, or game tooling post is published.",
-                    placeholder: "your.email@example.com",
-                    button: "Subscribe",
-                    subscribing: "Subscribing...",
-                    success: "Subscription confirmed! You'll receive updates on upcoming Journal releases.",
-                    error: "Please enter a valid email address.",
-                    note: "No spam. Purely deep-dive technical research and engineering posts."
-                }
+                rights: "Eduardo Gelain · SpetDev. All rights reserved."
             },
             easter: {
                 title: "Easter Egg Vault",
@@ -693,8 +673,8 @@ const PORTFOLIO_DATA = {
                 "/assets/spetaterm_settings.png"
             ],
             repo: "https://github.com/Spet001/Spet-Term",
-            live: "https://github.com/Spet001/Spet-Term",
-            liveLabel: { pt: "Ver no GitHub", en: "View on GitHub" },
+            live: "https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS",
+            liveLabel: { pt: "Get on Microsoft Store", en: "Get on Microsoft Store" },
             journalId: "Building-Custom-Windows-Terminal-Cpp20",
             featured: true,
             tags: ["C++20", "Win32 API", "Direct2D 1.1", "ConPTY", "DirectWrite", "DirectComposition", "Media Foundation", "Low-Level Systems"],
@@ -1243,9 +1223,16 @@ const PORTFOLIO_DATA = {
             ]
         }
     ],
-
     // JOURNAL ARTICLES
     journalEntries: [
+        {
+            id: "Xbox-Backcompat-PC-Fusion-AOT",
+            title: "Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash)",
+            date: "Nov 12, 2026",
+            file: "Xbox-Backcompat-PC-Fusion-AOT.md",
+            category: "Reverse Engineering & Emulation",
+            excerpt: "Disassembly of Emu.exe (Project Fusion) and Phoenix (Phx) AOT-compiled xeo3/xefu DLLs in KOTOR II (Microsoft Store): why PowerPC byte-swapping emits MOVBE and AVX2 instructions that crash Ivy Bridge with 0xC000001D, and why an XmlLite.dll IAT LoadLibraryW proxy redirecting to _no.dll aborts in EmulatorSwapThreads."
+        },
         {
             id: "Building-Custom-Windows-Terminal-Cpp20",
             title: "Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term)",
@@ -7614,7 +7601,7 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                             rel="noreferrer"
                             className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
                         >
-                            <i className="fas fa-external-link-alt"></i> {project.liveLabel ? (typeof project.liveLabel === "object" ? project.liveLabel[lang] : project.liveLabel) : t('projects.liveDemo')}
+                            <i className={project.live.includes('apps.microsoft.com') ? "fab fa-microsoft" : "fas fa-external-link-alt"}></i> {project.liveLabel ? (typeof project.liveLabel === "object" ? project.liveLabel[lang] : project.liveLabel) : t('projects.liveDemo')}
                         </a>
                     )}
                     {project.id === "technical_journal" && (
@@ -7998,7 +7985,7 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                     <div className="mt-4 pt-3 border-t border-white/[0.04]">
                                         <ProjectTags tags={p.tags} lang={lang} />
 
-                                        <div className="flex items-center justify-between pt-1">
+                                        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                                             <button
                                                 onClick={() => { playSoftClick(); setActiveModalProject(p); }}
                                                 className="text-xs font-semibold text-primary hover:text-white transition-colors flex items-center gap-1"
@@ -8032,15 +8019,29 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                                     </a>
                                                 )}
                                                 {p.live && p.id !== 'free_3d_assets' && p.id !== 'technical_journal' && (
-                                                    <a
-                                                        href={p.live}
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
-                                                        title={p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Live Link"}
-                                                    >
-                                                        <i className="fas fa-external-link-alt"></i>
-                                                    </a>
+                                                    p.live.includes('apps.microsoft.com') ? (
+                                                        <a
+                                                            href={p.live}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="px-2.5 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white border border-primary/30 flex items-center gap-1.5 transition-colors text-[11px] font-semibold whitespace-nowrap"
+                                                            title={p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Get on Microsoft Store"}
+                                                        >
+                                                            <i className="fab fa-microsoft text-[11px]"></i>
+                                                            <span>{p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Get on Microsoft Store"}</span>
+                                                        </a>
+                                                    ) : (
+                                                        <a
+                                                            href={p.live}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="w-7 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white flex items-center justify-center transition-colors text-xs"
+                                                            title={p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Live Link"}
+                                                        >
+                                                            <i className="fas fa-external-link-alt"></i>
+                                                        </a>
+                                                    )
                                                 )}
                                                 {p.id === 'technical_journal' && (
                                                     <a
@@ -8643,61 +8644,9 @@ const ContactSection = () => {
     );
 };
 
-// --- FOOTER: Preserves Exact Original Quote & Journal Newsletter ---
+// --- FOOTER: Preserves Exact Original Quote ---
 const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigatePrivacy, currentView }) => {
     const { t, lang } = useContext(LanguageContext);
-    const [email, setEmail] = useState('');
-    const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
-    const [statusMsg, setStatusMsg] = useState('');
-
-    const handleSubscribe = async (e) => {
-        e.preventDefault();
-        const trimmedEmail = email.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!trimmedEmail || !emailRegex.test(trimmedEmail)) {
-            setStatus('error');
-            setStatusMsg(t('footer.newsletter.error'));
-            return;
-        }
-
-        setStatus('loading');
-        setStatusMsg('');
-
-        try {
-            const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    service_id: 'port_news',
-                    template_id: 'template_v3tak8u',
-                    user_id: 'u1SUhm-JQLEo2LZgw',
-                    template_params: {
-                        user_email: trimmedEmail
-                    }
-                })
-            });
-
-            if (res.ok) {
-                setStatus('success');
-                setStatusMsg(t('footer.newsletter.success'));
-                setEmail('');
-                try {
-                    const saved = JSON.parse(localStorage.getItem('journal_newsletter_subscribers') || '[]');
-                    if (!saved.includes(trimmedEmail)) saved.push(trimmedEmail);
-                    localStorage.setItem('journal_newsletter_subscribers', JSON.stringify(saved));
-                } catch (err) {}
-            } else {
-                const errorData = await res.text();
-                console.error('EmailJS Error:', errorData);
-                setStatus('error');
-                setStatusMsg(t('footer.newsletter.error'));
-            }
-        } catch (err) {
-            console.error('Network Error:', err);
-            setStatus('error');
-            setStatusMsg('Network error. Try again later.');
-        }
-    };
 
     return (
         <footer className="py-12 border-t border-white/[0.08] bg-[#030303] text-center text-xs text-slate-500 relative">
@@ -8724,74 +8673,6 @@ const Footer = ({ onOpenEasterMenu, onNavigateHome, onNavigateJournal, onNavigat
                     </p>
                 </div>
 
-                {/* NEWSLETTER SUBSCRIPTION FORM (Bottom of Footer) */}
-                <div className="pt-6 border-t border-white/[0.06]">
-                    <div className="max-w-md mx-auto p-5 rounded-xl glass-panel text-center space-y-3 shadow-2xl">
-                        <div className="flex items-center justify-center gap-2 text-white font-semibold text-xs sm:text-sm">
-                            <img src="/assets/icons/notepad_file-0.png" alt="" className="w-4 h-4 pixelated inline-block" />
-                            <span>{t('footer.newsletter.title')}</span>
-                        </div>
-                        <p className="text-slate-400 text-[11px] leading-relaxed max-w-sm mx-auto">
-                            {t('footer.newsletter.desc')}
-                        </p>
-
-                        <form onSubmit={handleSubscribe} className="pt-1 space-y-2">
-                            <div className="flex flex-col sm:flex-row items-stretch gap-2">
-                                <div className="relative flex-1">
-                                    <i className="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => {
-                                            setEmail(e.target.value);
-                                            if (status !== 'idle') setStatus('idle');
-                                        }}
-                                        placeholder={t('footer.newsletter.placeholder')}
-                                        disabled={status === 'loading'}
-                                        aria-label="Newsletter email address"
-                                        className="w-full pl-8 pr-3 py-2 rounded-lg bg-black/60 border border-white/[0.12] text-white text-xs placeholder-slate-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 transition-colors disabled:opacity-50"
-                                    />
-                                </div>
-                                <button
-                                    type="submit"
-                                    disabled={status === 'loading'}
-                                    className="px-4 py-2 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1.5 whitespace-nowrap disabled:opacity-60 cursor-pointer clickable"
-                                >
-                                    {status === 'loading' ? (
-                                        <>
-                                            <i className="fas fa-circle-notch fa-spin text-[10px]"></i>
-                                            <span>{t('footer.newsletter.subscribing')}</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <i className="fas fa-paper-plane text-[10px]"></i>
-                                            <span>{t('footer.newsletter.button')}</span>
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-
-                            {status === 'success' && (
-                                <div className="text-emerald-400 text-[11px] text-center flex items-center justify-center gap-1.5 pt-1">
-                                    <i className="fas fa-check-circle"></i>
-                                    <span>{statusMsg || t('footer.newsletter.success')}</span>
-                                </div>
-                            )}
-
-                            {status === 'error' && (
-                                <div className="text-rose-400 text-[11px] text-center flex items-center justify-center gap-1.5 pt-1">
-                                    <i className="fas fa-exclamation-circle"></i>
-                                    <span>{statusMsg || t('footer.newsletter.error')}</span>
-                                </div>
-                            )}
-
-                            <p className="text-[10px] text-slate-500 text-center pt-0.5">
-                                <i className="fas fa-shield-alt text-slate-600 mr-1"></i>
-                                {t('footer.newsletter.note')}
-                            </p>
-                        </form>
-                    </div>
-                </div>
 
                 <div className="pt-3 text-slate-600 text-[11px]">
                     {t('footer.rights')}
@@ -13876,7 +13757,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                 </aside>
 
                 {/* Right Column: Markdown Reader */}
-                <main className="lg:col-span-8 glass-panel rounded-2xl p-6 sm:p-10 border border-white/[0.08] shadow-2xl backdrop-blur-xl min-h-[600px] flex flex-col justify-between">
+                <article className="lg:col-span-8 glass-panel rounded-2xl p-6 sm:p-10 border border-white/[0.08] shadow-2xl backdrop-blur-xl min-h-[600px] flex flex-col justify-between">
                     <div>
                         {/* Header Details */}
                         {activeEntry && (
@@ -14037,7 +13918,7 @@ const JournalView = ({ activePostId, onSelectPost, onBackToHome, onOpenPatreon }
                             </button>
                         </div>
                     </div>
-                </main>
+                </article>
 
             </div>
         </div>

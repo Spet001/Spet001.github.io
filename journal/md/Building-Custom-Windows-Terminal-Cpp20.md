@@ -6,6 +6,7 @@
 > - **Binary Footprint:** ~1.6 MB standalone executable, 0 third-party runtime DLLs  
 > - **Idle Memory:** ~3.6 MB – 18 MB working set (compared to 300+ MB on Electron alternatives)  
 > - **Repository:** [github.com/Spet001/Spet-Term](https://github.com/Spet001/Spet-Term)  
+> - **Microsoft Store:** [Get on Microsoft Store](https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS)  
 > - **Author:** Eduardo Gelain (SpetDev) · November 3, 2026
 
 ---
@@ -20,6 +21,9 @@
         Whether you are partitioning storage arrays with <code>diskpart</code>, compiling C++ game engines with Clang/LLVM, inspecting reverse engineering dumps, or orchestrating local automation scripts, a software engineer spends a massive fraction of their professional life in front of a console prompt. We built <strong>Spet@term</strong> to unite sub-millisecond native performance with game developer workflows—inline code editing, sprite inspection, and retro Win98 workspace navigation—in a featherweight 1.6 MB executable.
     </p>
     <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+        <a href="https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.35rem; background: #0078d4; color: #ffffff; text-decoration: none; border-radius: 0.6rem; font-weight: 700; font-size: 0.85rem; box-shadow: 0 6px 18px rgba(0, 120, 212, 0.35);">
+            <i class="fab fa-microsoft"></i> Get on Microsoft Store
+        </a>
         <a href="https://github.com/Spet001/Spet-Term" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.35rem; background: #0284c7; color: #ffffff; text-decoration: none; border-radius: 0.6rem; font-weight: 700; font-size: 0.85rem; box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);">
             <i class="fab fa-github"></i> Inspect Spet@term Repository
         </a>
@@ -166,7 +170,8 @@ Building **Spet@term** solidified an engineering truth that is easy to forget in
 
 A terminal shouldn't be a generic black box where you dread executing multi-step scripts. With built-in workspace exploration, instant file editing, media viewing, and hardware acceleration, your console becomes a true development command center.
 
-The project is fully open-source on GitHub:
-👉 **[https://github.com/Spet001/Spet-Term](https://github.com/Spet001/Spet-Term)**
+The project is open-source on GitHub and available directly on the Microsoft Store:
+- GitHub: **[https://github.com/Spet001/Spet-Term](https://github.com/Spet001/Spet-Term)**
+- Microsoft Store: **[Get on Microsoft Store](https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS)**
 
 *Grab the repository, run `.\build.ps1` with Clang, and experience how light and fast a Windows terminal can truly feel.*

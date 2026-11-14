@@ -44,6 +44,10 @@ serve-local.cjs
 .agent/
 skills/
 
+# Internal agent & architecture docs (private workspace notes)
+AGENTS.md
+docs/ARCHITECTURE.md
+
 # GitHub Stubs (standalone repositories)
 docs/github-stubs/
 github-stubs/

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash) | Eduardo Gelain Technical Journal</title>
+    <title>Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash) | SpetDev</title>
     <meta name="description" content="Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.">
     <meta name="keywords" content="Xbox Backward Compatibility PC, Emu.exe, Project Fusion, Phoenix Compiler Phx, xeo3 DLL, xefu DLL, MOVBE AVX2 Ivy Bridge, XmlLite.dll IAT Proxy, Xbox 360 Static Recompilation, XenonRecomp, KOTOR II Microsoft Store, Eduardo Gelain, SpetDev">
     <meta name="author" content="Eduardo Gelain">
@@ -17,8 +17,10 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     <meta property="og:url" content="https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/">
+    <meta property="article:published_time" content="2026-11-12">
+    <meta property="article:author" content="Eduardo Gelain">
     <meta property="og:title" content="Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash) | Eduardo Gelain">
     <meta property="og:description" content="Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
@@ -28,8 +30,8 @@
     <meta property="og:image:height" content="506">
     <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
     <meta property="og:site_name" content="Eduardo Gelain Portfolio">
-    <meta property="og:locale" content="pt_BR">
-    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="pt_BR">
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
@@ -45,11 +47,17 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "BlogPosting",
+      "@type": [
+        "TechArticle",
+        "BlogPosting"
+      ],
       "@id": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/#article",
       "headline": "Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash)",
       "description": "Reverse engineering Microsoft's PC Xbox backward compatibility runtime (Emu.exe / Project Fusion): static Phoenix (Phx) AOT recompilation of the Xbox 360 kernel and OG Xbox titles, MOVBE and AVX2 instruction audits on xeo3/xefu DLLs, and testing an XmlLite.dll IAT LoadLibraryW proxy on an Intel Core i5-3470.",
-      "datePublished": "Nov 12, 2026",
+      "image": "https://spet01.dev/assets/portweb.png",
+      "inLanguage": "en-US",
+      "datePublished": "2026-11-12",
+      "dateModified": "2026-11-12",
       "articleSection": "Reverse Engineering & Emulation",
       "url": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/",
       "mainEntityOfPage": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/",
@@ -64,6 +72,30 @@
         "name": "Eduardo Gelain",
         "url": "https://spet01.dev"
       }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spet01.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Technical Journal",
+          "item": "https://spet01.dev/journal/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Microsoft's New OG Xbox PC Backcompat Is Actually an Xbox 360 AOT Recomp (And Why Pre-Haswell CPUs Crash)",
+          "item": "https://spet01.dev/journal/Xbox-Backcompat-PC-Fusion-AOT/"
+        }
+      ]
     },
     {
       "@type": "FAQPage",
@@ -526,13 +558,13 @@
                     <span>Spet<span class="text-primary">Dev</span></span>
                 </a>
                 <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
-                    <a href="#about" class="hover:text-primary transition-colors">About</a>
-                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
-                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
-                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="/#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="/#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="/#skills" class="hover:text-primary transition-colors">Tech Stack</a>
                     <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
-                    <a href="#tools" class="hover:text-primary transition-colors">Tools</a>
-                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                    <a href="/#tools" class="hover:text-primary transition-colors">Tools</a>
+                    <a href="/#contact" class="hover:text-primary transition-colors">Contact</a>
                 </nav>
                 <div class="flex items-center gap-3">
                     <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">

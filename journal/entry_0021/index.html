@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term) | Eduardo Gelain Technical Journal</title>
+    <title>Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term) | SpetDev</title>
     <meta name="description" content="Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.">
     <meta name="keywords" content="Spet@term, Custom Windows Terminal, C++20 Terminal Emulator, Windows ConPTY API, Direct2D Terminal, DirectWrite Subpixel ClearType, Micro-IDE, Win32 Terminal, Win98 Workspace Explorer, DXVA Video Wallpaper, Low Memory Terminal, Eduardo Gelain, SpetDev">
     <meta name="author" content="Eduardo Gelain">
@@ -17,8 +17,10 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://spet01.dev/sitemap.xml">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     <meta property="og:url" content="https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/">
+    <meta property="article:published_time" content="2026-11-03">
+    <meta property="article:author" content="Eduardo Gelain">
     <meta property="og:title" content="Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term) | Eduardo Gelain">
     <meta property="og:description" content="Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.">
     <meta property="og:image" content="https://spet01.dev/assets/portweb.png">
@@ -28,8 +30,8 @@
     <meta property="og:image:height" content="506">
     <meta property="og:image:alt" content="Eduardo Gelain - Portfólio de Software e Jogos">
     <meta property="og:site_name" content="Eduardo Gelain Portfolio">
-    <meta property="og:locale" content="pt_BR">
-    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="pt_BR">
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
@@ -45,11 +47,17 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "BlogPosting",
+      "@type": [
+        "TechArticle",
+        "BlogPosting"
+      ],
       "@id": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/#article",
       "headline": "Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term)",
       "description": "Why build a custom Windows terminal emulator from scratch? Architectural deep dive into Spet@term: pure C++20, Win32 ConPTY subsystem integration, Direct2D/DirectWrite sub-millisecond rendering, DXVA hardware-decoded video wallpapers, in-process Git tree resolution, and built-in micro-IDE tooling in a ~1.6 MB standalone binary consuming only ~3.6 MB idle RAM.",
-      "datePublished": "Nov 3, 2026",
+      "image": "https://spet01.dev/assets/spetaterm_home.png",
+      "inLanguage": "en-US",
+      "datePublished": "2026-11-03",
+      "dateModified": "2026-11-03",
       "articleSection": "Systems Programming & Windows Internals",
       "url": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/",
       "mainEntityOfPage": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/",
@@ -64,6 +72,30 @@
         "name": "Eduardo Gelain",
         "url": "https://spet01.dev"
       }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spet01.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Technical Journal",
+          "item": "https://spet01.dev/journal/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Why Build a Custom Windows Terminal? Escaping the Boring Default CLI with C++20, ConPTY & Direct2D (Spet@term)",
+          "item": "https://spet01.dev/journal/Building-Custom-Windows-Terminal-Cpp20/"
+        }
+      ]
     },
     {
       "@type": "FAQPage",
@@ -526,13 +558,13 @@
                     <span>Spet<span class="text-primary">Dev</span></span>
                 </a>
                 <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
-                    <a href="#about" class="hover:text-primary transition-colors">About</a>
-                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
-                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
-                    <a href="#skills" class="hover:text-primary transition-colors">Tech Stack</a>
+                    <a href="/#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="/#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="/#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="/#skills" class="hover:text-primary transition-colors">Tech Stack</a>
                     <a href="/journal/" class="text-primary font-bold hover:underline">Journal</a>
-                    <a href="#tools" class="hover:text-primary transition-colors">Tools</a>
-                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                    <a href="/#tools" class="hover:text-primary transition-colors">Tools</a>
+                    <a href="/#contact" class="hover:text-primary transition-colors">Contact</a>
                 </nav>
                 <div class="flex items-center gap-3">
                     <a href="/journal/" class="px-3.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/40 text-xs font-bold hover:bg-primary/30 transition-colors">
@@ -566,6 +598,7 @@
 <li><strong>Binary Footprint:</strong> ~1.6 MB standalone executable, 0 third-party runtime DLLs  </li>
 <li><strong>Idle Memory:</strong> ~3.6 MB – 18 MB working set (compared to 300+ MB on Electron alternatives)  </li>
 <li><strong>Repository:</strong> <a href="https://github.com/Spet001/Spet-Term">github.com/Spet001/Spet-Term</a>  </li>
+<li><strong>Microsoft Store:</strong> <a href="https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS">Get on Microsoft Store</a>  </li>
 <li><strong>Author:</strong> Eduardo Gelain (SpetDev) · November 3, 2026</li>
 </ul>
 </blockquote>
@@ -580,6 +613,9 @@
         Whether you are partitioning storage arrays with <code>diskpart</code>, compiling C++ game engines with Clang/LLVM, inspecting reverse engineering dumps, or orchestrating local automation scripts, a software engineer spends a massive fraction of their professional life in front of a console prompt. We built <strong>Spet@term</strong> to unite sub-millisecond native performance with game developer workflows—inline code editing, sprite inspection, and retro Win98 workspace navigation—in a featherweight 1.6 MB executable.
     </p>
     <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+        <a href="https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.35rem; background: #0078d4; color: #ffffff; text-decoration: none; border-radius: 0.6rem; font-weight: 700; font-size: 0.85rem; box-shadow: 0 6px 18px rgba(0, 120, 212, 0.35);">
+            <i class="fab fa-microsoft"></i> Get on Microsoft Store
+        </a>
         <a href="https://github.com/Spet001/Spet-Term" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.35rem; background: #0284c7; color: #ffffff; text-decoration: none; border-radius: 0.6rem; font-weight: 700; font-size: 0.85rem; box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);">
             <i class="fab fa-github"></i> Inspect Spet@term Repository
         </a>
@@ -749,8 +785,11 @@ CreateProcessW(
 <h2>5. Takeaways &amp; Future Roadmap</h2>
 <p>Building <strong>Spet@term</strong> solidified an engineering truth that is easy to forget in the modern web-dominated software world: <strong>when you write directly to the operating system&#39;s native graphics and process APIs in modern C++, you achieve a level of speed, resource efficiency, and responsiveness that web frameworks simply cannot replicate.</strong></p>
 <p>A terminal shouldn&#39;t be a generic black box where you dread executing multi-step scripts. With built-in workspace exploration, instant file editing, media viewing, and hardware acceleration, your console becomes a true development command center.</p>
-<p>The project is fully open-source on GitHub:
-👉 <strong><a href="https://github.com/Spet001/Spet-Term">https://github.com/Spet001/Spet-Term</a></strong></p>
+<p>The project is open-source on GitHub and available directly on the Microsoft Store:</p>
+<ul>
+<li>GitHub: <strong><a href="https://github.com/Spet001/Spet-Term">https://github.com/Spet001/Spet-Term</a></strong></li>
+<li>Microsoft Store: <strong><a href="https://apps.microsoft.com/store/detail/9P4DZWVXRXQW?cid=DevShareMCLPCS">Get on Microsoft Store</a></strong></li>
+</ul>
 <p><em>Grab the repository, run <code>.\build.ps1</code> with Clang, and experience how light and fast a Windows terminal can truly feel.</em></p>
 
                 </div>

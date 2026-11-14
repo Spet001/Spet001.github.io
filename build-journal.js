@@ -589,6 +589,25 @@ function getSlug(entry) {
     return entry.file ? entry.file.replace(/\.md$/, '') : entry.id;
 }
 
+function parseIsoDate(dateStr) {
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+    return '2026-10-11';
+}
+
+function localizeEnglishShell(html) {
+    return html
+        .replace(/<html lang="pt-br"/i, '<html lang="en"')
+        .replace(/<meta property="og:locale" content="pt_BR">/i, '<meta property="og:locale" content="en_US">')
+        .replace(/<meta property="og:locale:alternate" content="en_US">/i, '<meta property="og:locale:alternate" content="pt_BR">')
+        .replace(/href="#(about|experience|projects|skills|tools|contact)"/g, 'href="/#$1"');
+}
+
 function build() {
     console.log('[SSG Journal] Starting static site generation for Journal articles...');
     
@@ -598,7 +617,7 @@ function build() {
     }
     
     const entries = JSON.parse(fs.readFileSync(ENTRIES_FILE, 'utf8'));
-    let templateHtml = fs.readFileSync(ROOT_INDEX_FILE, 'utf8');
+    let templateHtml = localizeEnglishShell(fs.readFileSync(ROOT_INDEX_FILE, 'utf8'));
     if (!templateHtml.includes('id="initial-loading-screen" data-nosnippet="true" aria-hidden="true"')) {
         templateHtml = templateHtml.replace(
             '<div id="initial-loading-screen"',
@@ -613,10 +632,16 @@ function build() {
         const slug = getSlug(entry);
         const mdPath = path.join(MD_DIR, entry.file || `${slug}.md`);
         let articleHtml = '';
+        let articleImage = 'https://spet01.dev/assets/portweb.png';
+        const isoDate = parseIsoDate(entry.date);
         const description = ENTRY_DESCRIPTIONS[slug] || ENTRY_DESCRIPTIONS[entry.id] || `${entry.title} - Technical research paper by Eduardo Gelain (SpetDev).`;
 
         if (fs.existsSync(mdPath)) {
             const mdContent = fs.readFileSync(mdPath, 'utf8').replace(/^\s*#\s+[^\r\n]+[\r\n]*/, '');
+            const imgMatch = mdContent.match(/!\[[^\]]*\]\((\/assets\/[^)\s]+)\)/) || mdContent.match(/<img[^>]+src="(\/assets\/[^"]+)"/i);
+            if (imgMatch && imgMatch[1]) {
+                articleImage = `https://spet01.dev${imgMatch[1]}`;
+            }
             articleHtml = marked.parse(mdContent);
         } else {
             // Locked / Patreon entry fallback representation
@@ -636,9 +661,10 @@ function build() {
         let pageHtml = templateHtml;
 
         // 1. Title
+        const titleSuffix = entry.title.length > 75 ? 'SpetDev' : 'Eduardo Gelain Technical Journal';
         pageHtml = pageHtml.replace(
             /<title>[^<]+<\/title>/,
-            `<title>${entry.title} | Eduardo Gelain Technical Journal</title>`
+            `<title>${entry.title} | ${titleSuffix}</title>`
         );
 
         // 2. Meta description & keywords
@@ -669,8 +695,12 @@ function build() {
             `<meta property="og:description" content="${description.replace(/"/g, '&quot;')}">`
         );
         pageHtml = pageHtml.replace(
+            /<meta\s+property="og:type"\s+content="[^"]*">/,
+            '<meta property="og:type" content="article">'
+        );
+        pageHtml = pageHtml.replace(
             /<meta\s+property="og:url"\s+content="[^"]*">/,
-            `<meta property="og:url" content="https://spet01.dev/journal/${slug}/">`
+            `<meta property="og:url" content="https://spet01.dev/journal/${slug}/">\n    <meta property="article:published_time" content="${isoDate}">\n    <meta property="article:author" content="Eduardo Gelain">`
         );
 
         // 5. Twitter
@@ -689,11 +719,14 @@ function build() {
 
         // 6. Schema.org JSON-LD for this specific article (plus FAQPage if defined)
         const blogPostingNode = {
-            "@type": "BlogPosting",
+            "@type": ["TechArticle", "BlogPosting"],
             "@id": `https://spet01.dev/journal/${slug}/#article`,
             "headline": entry.title,
             "description": description,
-            "datePublished": entry.date,
+            "image": articleImage,
+            "inLanguage": "en-US",
+            "datePublished": isoDate,
+            "dateModified": isoDate,
             "articleSection": entry.category || "Reverse Engineering",
             "url": `https://spet01.dev/journal/${slug}/`,
             "mainEntityOfPage": `https://spet01.dev/journal/${slug}/`,
@@ -708,6 +741,31 @@ function build() {
                 "name": "Eduardo Gelain",
                 "url": "https://spet01.dev"
             }
+        };
+
+        const breadcrumbNode = {
+            "@type": "BreadcrumbList",
+            "@id": `https://spet01.dev/journal/${slug}/#breadcrumb`,
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://spet01.dev/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Technical Journal",
+                    "item": "https://spet01.dev/journal/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": entry.title,
+                    "item": `https://spet01.dev/journal/${slug}/`
+                }
+            ]
         };
 
         const faqNode = ENTRY_FAQ_SCHEMA[slug] || ENTRY_FAQ_SCHEMA[entry.id] || {
@@ -737,6 +795,7 @@ function build() {
             "@context": "https://schema.org",
             "@graph": [
                 blogPostingNode,
+                breadcrumbNode,
                 faqNode
             ]
         };
@@ -933,16 +992,6 @@ ${journalCardsHtml}
     console.log(`[SSG Journal] Updated /privacy.html and /privacy/index.html with unified Space 2.0 shell.`);
 
     // 4. Automatically generate /sitemap.xml from entries.json so new entries are always indexed
-    const parseIsoDate = (dateStr) => {
-        const d = new Date(dateStr);
-        if (!isNaN(d.getTime())) {
-            const yyyy = d.getFullYear();
-            const mm = String(d.getMonth() + 1).padStart(2, '0');
-            const dd = String(d.getDate()).padStart(2, '0');
-            return `${yyyy}-${mm}-${dd}`;
-        }
-        return '2026-10-11';
-    };
 
     const latestDate = entries.length > 0 ? parseIsoDate(entries[0].date) : '2026-10-11';
     const sitemapUrls = [];
@@ -979,14 +1028,7 @@ ${journalCardsHtml}
 
   <!-- Journal Articles (Canonical Static Prerendered SEO URLs Only) -->
 ${sitemapUrls.join('\n')}
-
   <!-- Tools Suite -->
-  <url>
-    <loc>https://spet01.dev/tools/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
   <url>
     <loc>https://spet01.dev/tools/xcloudfx/</loc>
     <lastmod>2026-10-24</lastmod>
