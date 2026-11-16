@@ -7595,14 +7595,26 @@ const ProjectModal = ({ project, onClose, lang, onOpen3DViewer, onNavigateJourna
                         </a>
                     )}
                     {project.live && !isLockedState && project.id !== "free_3d_assets" && project.id !== "technical_journal" && (
-                        <a
-                            href={project.live}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
-                        >
-                            <i className={project.live.includes('apps.microsoft.com') ? "fab fa-microsoft" : "fas fa-external-link-alt"}></i> {project.liveLabel ? (typeof project.liveLabel === "object" ? project.liveLabel[lang] : project.liveLabel) : t('projects.liveDemo')}
-                        </a>
+                        project.live.includes('apps.microsoft.com') ? (
+                            <a
+                                href={project.live}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center hover:opacity-90 hover:scale-[1.02] transition-all shrink-0"
+                                title="Get it from Microsoft Store"
+                            >
+                                <img src="/assets/Get_it_from_Microsoft_Badge.svg" alt="Get it from Microsoft" className="h-9 w-auto block" />
+                            </a>
+                        ) : (
+                            <a
+                                href={project.live}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primaryHover text-white flex items-center gap-2 transition-colors shadow-lg shadow-primary/25"
+                            >
+                                <i className="fas fa-external-link-alt"></i> {project.liveLabel ? (typeof project.liveLabel === "object" ? project.liveLabel[lang] : project.liveLabel) : t('projects.liveDemo')}
+                            </a>
+                        )
                     )}
                     {project.id === "technical_journal" && (
                         <a
@@ -8025,11 +8037,10 @@ const ProjectsSection = ({ onNavigateJournal }) => {
                                                             target="_blank"
                                                             rel="noreferrer"
                                                             onClick={(e) => e.stopPropagation()}
-                                                            className="px-2.5 h-7 rounded-md bg-primary/20 hover:bg-primary text-primary hover:text-white border border-primary/30 flex items-center gap-1.5 transition-colors text-[11px] font-semibold whitespace-nowrap"
-                                                            title={p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Get on Microsoft Store"}
+                                                            className="inline-flex items-center hover:opacity-90 hover:scale-[1.03] transition-all shrink-0"
+                                                            title="Get it from Microsoft Store"
                                                         >
-                                                            <i className="fab fa-microsoft text-[11px]"></i>
-                                                            <span>{p.liveLabel ? (typeof p.liveLabel === "object" ? p.liveLabel[lang] : p.liveLabel) : "Get on Microsoft Store"}</span>
+                                                            <img src="/assets/Get_it_from_Microsoft_Badge.svg" alt="Get it from Microsoft" className="h-7 w-auto block" />
                                                         </a>
                                                     ) : (
                                                         <a
